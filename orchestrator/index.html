@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="el" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orchestrator v4 — Εκπαιδευτικό Σύστημα</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--tr:background 0.3s,color 0.3s,border-color 0.3s;}
+  [data-theme="dark"]{
+    --bg:#1a1410;--sf:rgba(255,255,255,0.04);--sf2:rgba(0,0,0,0.3);
+    --tx:#f5f0e8;--mu:#6b5d4f;
+    --go:#c4862a;--gd:rgba(196,134,42,0.2);--gm:rgba(196,134,42,0.12);--gh:rgba(196,134,42,0.06);
+    --ru:#8b3a1f;--ru2:#6b2a10;--rsh:rgba(139,58,31,0.4);
+    --cb:#111008;--ct:#d4c5a0;
+    --gr:#4a7c59;--bh:rgba(196,134,42,0.3);--rh:rgba(196,134,42,0.08);
+    --eb:rgba(192,57,43,0.1);--ebr:rgba(192,57,43,0.3);
+    --trk:#3a2e22;--er:#c0392b;
+    --ed-bg:#0d0b07;--ed-ok:rgba(74,124,89,0.2);--ed-err:rgba(192,57,43,0.2);
+    --ml-bg:rgba(196,134,42,0.05);--ml-sel:rgba(196,134,42,0.18);
+  }
+  [data-theme="light"]{
+    --bg:#faf7f2;--sf:rgba(0,0,0,0.03);--sf2:rgba(255,255,255,0.88);
+    --tx:#2a1f14;--mu:#8a7560;
+    --go:#9a6318;--gd:rgba(154,99,24,0.18);--gm:rgba(154,99,24,0.1);--gh:rgba(154,99,24,0.05);
+    --ru:#7a3018;--ru2:#5a2010;--rsh:rgba(122,48,24,0.25);
+    --cb:#ede8dc;--ct:#2a1a08;
+    --gr:#2d6640;--bh:rgba(154,99,24,0.25);--rh:rgba(154,99,24,0.06);
+    --eb:rgba(192,57,43,0.06);--ebr:rgba(192,57,43,0.25);
+    --trk:#d4c5a0;--er:#a02020;
+    --ed-bg:#f5f0e6;--ed-ok:rgba(45,102,64,0.12);--ed-err:rgba(160,32,32,0.1);
+    --ml-bg:rgba(154,99,24,0.04);--ml-sel:rgba(154,99,24,0.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Cormorant Garamond',Georgia,serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;transition:var(--tr);}
+  [data-theme="dark"] body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.6;}
+  .app{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:40px 24px;}
+
+  /* THEME BTN */
+  .theme-btn{position:fixed;top:20px;right:20px;z-index:100;display:flex;align-items:center;gap:8px;background:var(--sf);border:1px solid var(--gd);border-radius:24px;padding:7px 14px 7px 10px;cursor:pointer;backdrop-filter:blur(8px);transition:all 0.2s;user-select:none;}
+  .theme-btn:hover{border-color:var(--go);background:var(--gm);}
+  .trk{width:34px;height:18px;background:var(--trk);border-radius:9px;position:relative;transition:background 0.3s;flex-shrink:0;}
+  .thm{width:12px;height:12px;background:var(--go);border-radius:50%;position:absolute;top:3px;left:3px;transition:transform 0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.3);}
+  [data-theme="light"] .thm{transform:translateX(16px);}
+  .tlbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);letter-spacing:1px;white-space:nowrap;}
+
+  /* HEADER */
+  header{text-align:center;margin-bottom:48px;padding-bottom:32px;border-bottom:1px solid var(--bh);}
+  .hlbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--go);text-transform:uppercase;margin-bottom:12px;opacity:0.8;}
+  h1{font-size:clamp(32px,5vw,56px);font-weight:300;letter-spacing:-1px;line-height:1.1;}
+  h1 em{font-style:italic;color:var(--go);}
+  .sub{margin-top:12px;font-size:16px;color:var(--mu);font-style:italic;font-weight:300;}
+
+  /* CARD */
+  .card{background:var(--sf);border:1px solid var(--gd);border-radius:4px;padding:28px;margin-bottom:20px;transition:var(--tr);}
+  .slbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--go);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+  .slbl::after{content:'';flex:1;height:1px;background:var(--gd);}
+
+  /* TABS */
+  .tabs{display:flex;border:1px solid var(--gd);border-radius:3px;overflow:hidden;margin-bottom:16px;}
+  .tab{flex:1;padding:9px 16px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;background:transparent;border:none;color:var(--mu);transition:all 0.2s;text-align:center;}
+  .tab:not(:last-child){border-right:1px solid var(--gd);}
+  .tab.active{background:var(--gm);color:var(--go);}
+  .tab:hover:not(.active){background:var(--gh);color:var(--tx);}
+  .panel{display:none;}.panel.active{display:block;}
+  .hint{font-size:13px;color:var(--mu);font-style:italic;margin-bottom:10px;line-height:1.5;}
+
+  textarea{width:100%;background:var(--sf2);border:1px solid var(--gd);border-radius:3px;color:var(--tx);font-family:'Cormorant Garamond',serif;font-size:16px;padding:16px;resize:vertical;line-height:1.6;transition:border-color 0.2s,var(--tr);min-height:140px;}
+  textarea.mono{font-family:'JetBrains Mono',monospace;font-size:12px;min-height:180px;}
+  textarea:focus{outline:none;border-color:var(--go);}
+  textarea::placeholder{color:var(--mu);font-style:italic;}
+  textarea.mono::placeholder{font-style:normal;}
+
+  .srow{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
+  .srow label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);letter-spacing:1px;text-transform:uppercase;}
+  select{background:var(--sf2);border:1px solid var(--gd);border-radius:3px;color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 10px;cursor:pointer;transition:var(--tr);}
+  select:focus{outline:none;border-color:var(--go);}
+
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .chip{padding:5px 12px;border:1px solid var(--gd);border-radius:20px;font-size:13px;color:var(--mu);cursor:pointer;transition:all 0.2s;font-style:italic;}
+  .chip:hover{border-color:var(--go);color:var(--go);background:var(--gh);}
+
+  /* APP TOGGLES */
+  .apps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:9px;margin-top:12px;}
+  .app-toggle{display:flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--gd);border-radius:3px;cursor:pointer;background:var(--sf);transition:all 0.2s;user-select:none;}
+  .app-toggle:hover{border-color:rgba(196,134,42,0.5);background:var(--gh);}
+  .app-toggle.active{border-color:var(--go);background:var(--gm);}
+  .ti{font-size:18px;}.tn{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx);line-height:1.3;}
+  .app-toggle.active .tn{color:var(--go);}
+
+  /* MEDIA MODE TOGGLE */
+  .media-bar{display:flex;align-items:center;gap:12px;margin-top:20px;padding:14px 16px;background:var(--ml-bg);border:1px solid var(--gd);border-radius:3px;}
+  .media-bar-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);letter-spacing:2px;text-transform:uppercase;white-space:nowrap;}
+  .media-status{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);flex:1;}
+  .media-status.ok{color:var(--gr);}
+  .media-status.err{color:var(--er);}
+  .media-status.loading{color:var(--go);}
+  .mode-pills{display:flex;gap:0;border:1px solid var(--gd);border-radius:3px;overflow:hidden;}
+  .mode-pill{padding:6px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;background:transparent;border:none;color:var(--mu);transition:all 0.2s;}
+  .mode-pill:not(:last-child){border-right:1px solid var(--gd);}
+  .mode-pill.active{background:var(--gm);color:var(--go);}
+  .mode-pill:hover:not(.active){background:var(--gh);color:var(--tx);}
+  .reload-btn{padding:5px 10px;background:transparent;border:1px solid var(--gd);border-radius:2px;color:var(--mu);font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;transition:all 0.2s;}
+  .reload-btn:hover{border-color:var(--go);color:var(--go);}
+
+  /* MEDIA PICK PANEL */
+  .pick-panel{display:none;margin-top:16px;border:1px solid var(--gd);border-radius:3px;overflow:hidden;}
+  .pick-panel.visible{display:block;}
+  .pick-header{padding:10px 16px;background:var(--rh);border-bottom:1px solid var(--gd);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--go);letter-spacing:2px;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;}
+  .pick-selall{font-size:10px;color:var(--mu);cursor:pointer;transition:color 0.2s;}
+  .pick-selall:hover{color:var(--go);}
+  .pick-list{max-height:280px;overflow-y:auto;}
+  .pick-item{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--gd);cursor:pointer;transition:background 0.15s;}
+  .pick-item:last-child{border-bottom:none;}
+  .pick-item:hover{background:var(--gh);}
+  .pick-item.selected{background:var(--ml-sel);}
+  .pick-item input[type=checkbox]{accent-color:var(--go);width:14px;height:14px;flex-shrink:0;cursor:pointer;}
+  .pick-thumb{width:36px;height:36px;border-radius:2px;object-fit:cover;flex-shrink:0;background:var(--gd);}
+  .pick-thumb-placeholder{width:36px;height:36px;border-radius:2px;background:var(--gd);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .pick-info{flex:1;min-width:0;}
+  .pick-title{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .pick-meta{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--mu);margin-top:2px;}
+  .pick-apps{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--go);margin-top:2px;}
+  .pick-none{padding:20px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);font-style:italic;}
+
+  /* GEN BTN */
+  .gen-btn{width:100%;margin-top:20px;padding:16px 32px;background:linear-gradient(135deg,var(--ru),var(--ru2));border:1px solid rgba(139,58,31,0.5);border-radius:3px;color:#f5f0e8;font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;letter-spacing:1px;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;}
+  .gen-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent);opacity:0;transition:opacity 0.2s;}
+  .gen-btn:hover::before{opacity:1;}
+  .gen-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px var(--rsh);}
+  .gen-btn:active{transform:translateY(0);}
+  .gen-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+
+  /* STATUS */
+  .status{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);text-align:center;margin-top:10px;min-height:18px;transition:all 0.3s;}
+  .status.active{color:var(--go);}.status.done{color:var(--gr);}.status.error{color:var(--er);}
+
+  /* RESULTS */
+  .results{display:flex;flex-direction:column;gap:20px;}
+  .result-card{border:1px solid var(--gd);border-radius:4px;overflow:hidden;animation:slideIn 0.35s ease forwards;opacity:0;transform:translateY(8px);}
+  @keyframes slideIn{to{opacity:1;transform:translateY(0);}}
+  .rhead{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;background:var(--rh);border-bottom:1px solid var(--gd);}
+  .rtrow{display:flex;align-items:center;gap:10px;}
+  .ric{font-size:20px;}
+  .rname{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--go);letter-spacing:1px;display:flex;align-items:center;gap:6px;}
+  .rurl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);margin-top:2px;}
+  .badge{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 6px;border-radius:2px;letter-spacing:1px;text-transform:uppercase;}
+  .bok{background:rgba(74,124,89,0.2);color:var(--gr);border:1px solid rgba(74,124,89,0.3);}
+  .berr{background:rgba(192,57,43,0.15);color:var(--er);border:1px solid rgba(192,57,43,0.3);}
+  .rbtn-group{display:flex;gap:8px;align-items:center;}
+  .copy-btn,.regen-btn,.dl-btn{padding:6px 12px;background:transparent;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;}
+  .dl-btn{border:1px solid var(--gd);color:var(--mu);}
+  .dl-btn:hover{background:var(--gm);color:var(--go);border-color:var(--go);}
+  .copy-btn{border:1px solid var(--gd);color:var(--go);}
+  .copy-btn:hover{background:var(--gm);}
+  .copy-btn.copied{color:var(--gr);border-color:var(--gr);}
+  .copy-btn:disabled{opacity:0.4;cursor:not-allowed;}
+  .regen-btn{border:1px solid var(--gd);color:var(--mu);}
+  .regen-btn:hover{color:var(--go);border-color:var(--go);background:var(--gh);}
+
+  /* MEDIA USED STRIP */
+  .media-used{padding:8px 18px;border-bottom:1px solid var(--gd);background:var(--ml-bg);display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .media-chip{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 8px;border-radius:2px;background:var(--gm);color:var(--go);border:1px solid var(--gd);}
+  .media-missing{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 8px;border-radius:2px;background:var(--eb);color:var(--er);border:1px solid var(--ebr);}
+
+  /* EDITABLE JSON */
+  .edit-wrapper{position:relative;}
+  .edit-area{width:100%;min-height:180px;max-height:360px;background:var(--ed-bg);border:none;border-top:1px solid var(--gd);color:var(--ct);font-family:'JetBrains Mono',monospace;font-size:12px;padding:18px;resize:vertical;line-height:1.7;outline:none;transition:background 0.2s;overflow-y:auto;}
+  .edit-area.valid{border-top:2px solid rgba(74,124,89,0.5);background:var(--ed-ok);}
+  .edit-area.invalid{border-top:2px solid rgba(192,57,43,0.5);background:var(--ed-err);}
+  .edit-status{padding:6px 18px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;background:var(--sf);border-top:1px solid var(--gd);display:flex;align-items:center;gap:8px;}
+  .edit-status.v-ok{color:var(--gr);}.edit-status.v-err{color:var(--er);}
+  .edit-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+  .v-ok .edit-dot{background:var(--gr);}.v-err .edit-dot{background:var(--er);}
+
+  /* LOADING */
+  .loading-card{border:1px solid var(--gd);border-radius:4px;padding:22px;display:flex;align-items:center;gap:14px;}
+  .dots{display:flex;gap:5px;}
+  .dot{width:7px;height:7px;background:var(--go);border-radius:50%;animation:pulse 1.2s ease infinite;}
+  .dot:nth-child(2){animation-delay:0.2s;}.dot:nth-child(3){animation-delay:0.4s;}
+  @keyframes pulse{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1)}}
+  .ltxt{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--mu);}
+  .err-card{background:var(--eb);border:1px solid var(--ebr);border-radius:4px;padding:18px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--er);}
+  .queue-info{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);text-align:center;margin-top:6px;letter-spacing:1px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <button class="theme-btn" onclick="toggleTheme()">
+    <div class="trk"><div class="thm"></div></div>
+    <span class="tlbl" id="tlbl">ΣΚΟΤΕΙΝΟ</span>
+  </button>
+
+  <header>
+    <div class="hlbl">Εκπαιδευτικό Σύστημα Διαχείρισης</div>
+    <h1>Lesson <em>Orchestrator</em></h1>
+    <p class="sub">Μετατροπή διδακτικού υλικού σε JSON · Media Library ενσωματωμένο</p>
+  </header>
+
+  <div class="card">
+    <!-- SOURCE TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('text')" id="tab-text">✍️&nbsp; Ελεύθερο κείμενο</button>
+      <button class="tab" onclick="switchTab('json')" id="tab-json">📋&nbsp; Από υπάρχον JSON</button>
+    </div>
+
+    <div class="panel active" id="panel-text">
+      <p class="hint">Θέμα μαθήματος, σημειώσεις, απόσπασμα κειμένου.</p>
+      <textarea id="lessonInput" placeholder="π.χ. «Εικονομαχία 726–843 μ.Χ. — Ιωάννης Δαμασκηνός, Θεόδωρος Στουδίτης, Β΄ Σύνοδος Νικαίας 787»"></textarea>
+      <div class="chips">
+        <div class="chip" onclick="setEx(0)">Πλατωνική Πολιτεία</div>
+        <div class="chip" onclick="setEx(1)">Βασίλειος Καισαρείας</div>
+        <div class="chip" onclick="setEx(2)">Αρχαία Αγορά Αθηνών</div>
+        <div class="chip" onclick="setEx(3)">Εικονομαχία</div>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-json">
+      <div class="srow">
+        <label>Πηγή JSON από:</label>
+        <select id="srcApp">
+          <option value="timeline">🗺️ Timeline Explorer</option>
+          <option value="investigation">🕵️ Investigation Board</option>
+          <option value="history3d">🏛️ History Explorer 3D</option>
+          <option value="mindpalace">🧠 Mind Palace</option>
+          <option value="anchor">⚓ Living Anchor</option>
+          <option value="books">📖 Interactive Books</option>
+          <option value="notebook">📔 Notebook Media</option>
+          <option value="personalpage">🌐 Personal Page</option>
+        </select>
+      </div>
+      <p class="hint">Επικόλλησε το JSON μιας εφαρμογής — το μετατρέπω για τις επιλεγμένες.</p>
+      <textarea id="srcJson" class="mono" placeholder='[{"id":1773388754927,"year":"499-400 π.Χ.","title":"Χρυσός Αιώνας",...}]'></textarea>
+    </div>
+
+    <!-- TARGET APPS -->
+    <div style="margin-top:22px;">
+      <div class="slbl">Εξαγωγή σε εφαρμογές</div>
+      <div class="apps-grid" id="appsGrid"></div>
+    </div>
+
+    <!-- MEDIA LIBRARY BAR -->
+    <div class="media-bar">
+      <span class="media-bar-label">📚 Media</span>
+      <span class="media-status" id="mlStatus">Φορτώνεται…</span>
+      <div class="mode-pills">
+        <button class="mode-pill active" id="pill-auto" onclick="setMode('auto')">Auto</button>
+        <button class="mode-pill" id="pill-pick" onclick="setMode('pick')">Pick</button>
+      </div>
+      <button class="reload-btn" onclick="loadLibrary(true)" title="Ανανέωση library">↻</button>
+      <button class="reload-btn" onclick="toggleImportPanel()" title="Εισαγωγή media_library.json">📥 Import</button>
+      <button class="reload-btn" onclick="toggleQuickNote()" title="Προσθήκη νέου media">+ Quick</button>
+    </div>
+
+    <!-- IMPORT PANEL -->
+    <div class="pick-panel" id="importPanel" style="margin-top:12px;">
+      <div class="pick-header">
+        <span>📥 Import — Επικόλλησε το περιεχόμενο του media_library.json</span>
+        <span class="pick-selall" onclick="toggleImportPanel()">Κλείσιμο</span>
+      </div>
+      <div style="padding:12px 16px;display:flex;flex-direction:column;gap:8px;">
+        <textarea id="importJsonArea" class="mono" placeholder='{"meta":{"last_updated":"..."},"media":[...]}' style="min-height:100px;max-height:180px;"></textarea>
+        <div style="display:flex;gap:8px;">
+          <button onclick="importFromPaste()" style="flex:1;padding:8px;background:var(--gm);border:1px solid var(--go);border-radius:3px;color:var(--go);font-family:JetBrains Mono,monospace;font-size:11px;cursor:pointer;">✓ Φόρτωση Library</button>
+          <button onclick="document.getElementById('importJsonArea').value='';toggleImportPanel();" style="flex:1;padding:8px;background:transparent;border:1px solid var(--gd);border-radius:3px;color:var(--mu);font-family:JetBrains Mono,monospace;font-size:11px;cursor:pointer;">Ακύρωση</button>
+        </div>
+        <div id="import-status" style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--gr);min-height:14px;"></div>
+      </div>
+    </div>
+
+    <!-- PICK PANEL (visible only in Pick mode) -->
+    <div class="pick-panel" id="pickPanel">
+      <div class="pick-header">
+        <span>Επίλεξε media για ενσωμάτωση</span>
+        <span class="pick-selall" onclick="toggleSelectAll()">Επιλογή όλων</span>
+      </div>
+      <div class="pick-list" id="pickList"></div>
+    </div>
+
+    <!-- QUICK NOTE PANEL -->
+  <div class="pick-panel" id="quickNotePanel" style="margin-top:12px;">
+    <div class="pick-header">
+      <span>➕ Quick Note — Νέο Media</span>
+      <span class="pick-selall" onclick="toggleQuickNote()">Κλείσιμο</span>
+    </div>
+    <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;gap:8px;align-items:center;">
+        <label style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--mu);letter-spacing:1px;min-width:60px;">ID</label>
+        <input type="text" id="qn-id" placeholder="IMG-027" style="flex:1;background:var(--sf2);border:1px solid var(--gd);border-radius:3px;color:var(--tx);font-family:JetBrains Mono,monospace;font-size:11px;padding:6px 10px;">
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <label style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--mu);letter-spacing:1px;min-width:60px;">Τίτλος</label>
+        <input type="text" id="qn-title" placeholder="π.χ. Παύλος στην Αθήνα" style="flex:1;background:var(--sf2);border:1px solid var(--gd);border-radius:3px;color:var(--tx);font-family:JetBrains Mono,monospace;font-size:11px;padding:6px 10px;">
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <label style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--mu);letter-spacing:1px;min-width:60px;">URL</label>
+        <input type="text" id="qn-url" placeholder="https://i.ibb.co/..." style="flex:1;background:var(--sf2);border:1px solid var(--gd);border-radius:3px;color:var(--tx);font-family:JetBrains Mono,monospace;font-size:11px;padding:6px 10px;">
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <label style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--mu);letter-spacing:1px;min-width:60px;">Tags</label>
+        <input type="text" id="qn-tags" placeholder="Αθήνα, Παύλος, 1ος αιώνας" style="flex:1;background:var(--sf2);border:1px solid var(--gd);border-radius:3px;color:var(--tx);font-family:JetBrains Mono,monospace;font-size:11px;padding:6px 10px;">
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <label style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--mu);letter-spacing:1px;min-width:60px;">Apps</label>
+        <input type="text" id="qn-apps" placeholder="Timeline Map; Mind Palace; UE5" style="flex:1;background:var(--sf2);border:1px solid var(--gd);border-radius:3px;color:var(--tx);font-family:JetBrains Mono,monospace;font-size:11px;padding:6px 10px;">
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button onclick="addQuickNote()" style="flex:1;padding:8px;background:var(--gm);border:1px solid var(--go);border-radius:3px;color:var(--go);font-family:JetBrains Mono,monospace;font-size:11px;cursor:pointer;">+ Προσθήκη στη Library</button>
+        <button onclick="exportLibraryJSON()" style="flex:1;padding:8px;background:transparent;border:1px solid var(--gd);border-radius:3px;color:var(--mu);font-family:JetBrains Mono,monospace;font-size:11px;cursor:pointer;">↓ Export Library JSON</button>
+      </div>
+      <div id="qn-status" style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--gr);min-height:16px;"></div>
+    </div>
+  </div>
+
+  <button class="gen-btn" id="genBtn" onclick="generate()">✦ Δημιουργία JSON για τις επιλεγμένες εφαρμογές</button>
+    <div class="status" id="statusBar">Επιλέξτε εφαρμογές και εισάγετε θέμα ή JSON πηγής</div>
+    <div class="queue-info" id="queueInfo"></div>
+  <div id="savedPanel" style="margin-top:10px;"></div>
+  </div>
+
+  <div id="results" class="results"></div>
+</div>
+
+<script>
+// Media library embedded (artifact sandbox δεν επιτρέπει fetch από GitHub)
+const EMBEDDED_MEDIA = {"meta":{"last_updated":"2026-05-09"},"media":[
+  {"media_id":"IMG-002","type":"image","title":"Δελφοί — Χάρτης Κλασικής Ελλάδας","url":"https://i.ibb.co/h1mwhLDV/Mapping-Classical-Greece-7.jpg","app_context":["Mind Palace Debate","Explorer History","Timeline Map","Interactive Book"],"tags":["Δελφοί","τόπος","αρχαία Ελλάδα"],"status":"active"},
+  {"media_id":"IMG-003","type":"image","title":"Ολυμπία — Χάρτης Κλασικής Ελλάδας","url":"https://i.ibb.co/7xQJ0dGf/Mapping-Classical-Greece.jpg","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"tags":["Ολυμπία","τόπος","αρχαία Ελλάδα"],"status":"active"},
+  {"media_id":"IMG-004","type":"image","title":"Παράδοση ιδεών — διάγραμμα","url":"https://i.ibb.co/k28pSzCJ/Digital-Knowledge-Archaeology-pptx-5.jpg","app_context":["Mind Palace Debate","Explorer History","Timeline Map","Interactive Book"],"tags":["ιστορία ιδεών","φιλοσοφία","διάγραμμα"],"status":"active"},
+  {"media_id":"IMG-005","type":"image","title":"Ρώμη — Εκκλησιαστική Ιστορία","url":"https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg","app_context":["Timeline Map"],"tags":["Ρώμη","εκκλησιαστική ιστορία"],"status":"active"},
+  {"media_id":"IMG-008","type":"image","title":"Αρχαία Αγορά Αθήνα","url":"https://i.ibb.co/4ZmrLG2J/1775331843223.png","app_context":["UE5","Timeline Map","Explorer History"],"tags":["Αθήνα","αρχαία αγορά","Παύλος","1ος αιώνας"],"status":"active"},
+  {"media_id":"IMG-009","type":"image","title":"Αρχαία Αθήνα — Ακρόπολη","url":"https://i.ibb.co/KjgH0PWm/Screenshot-2026-05-09-14-13-53-871-com-android-chrome-edit.jpg","app_context":["UE5","Timeline Map"],"tags":["Αθήνα","ακρόπολη","Αθηνά"],"status":"active"},
+  {"media_id":"IMG-010","type":"image","title":"Ραφαήλ — Σχολή Αθηνών","url":"https://i.ibb.co/cXsZqTDS/Screenshot-2026-05-09-13-31-02-474-com-android-chrome-edit.jpg","app_context":["UE5","Timeline Map","Mind Palace Debate"],"tags":["Ραφαήλ","Σχολή Αθηνών","φιλοσοφία"],"status":"active"},
+  {"media_id":"IMG-011","type":"image","title":"Εισαγωγή — Sacred Blueprint","url":"https://i.ibb.co/nMwjVrmC/The-Sacred-Blueprint-page-0001.jpg","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"tags":["μετοχή","θείο","Sacred Blueprint","εισαγωγή"],"status":"active"},
+  {"media_id":"IMG-012","type":"image","title":"Σταθμός 1 — Πλάτων","url":"https://i.ibb.co/LDN0sWGp/The-Sacred-Blueprint-page-0002.jpg","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"tags":["Πλάτων","μετοχή","ιδέες","Αθήνα","427 π.Χ."],"status":"active"},
+  {"media_id":"IMG-013","type":"image","title":"Σταθμός 2 — Αριστοτέλης","url":"https://i.ibb.co/PGmWDBjt/The-Sacred-Blueprint-page-0014.jpg","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"tags":["Αριστοτέλης","τελεολογία","Αθήνα","384 π.Χ."],"status":"active"},
+  {"media_id":"IMG-014","type":"image","title":"Σταθμός 3 — Στωικισμός","url":"https://i.ibb.co/q3Ty33Vq/The-Sacred-Blueprint-page-0005.jpg","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"tags":["Στωικισμός","Λόγος","σπερματικοί λόγοι","3ος αιώνας π.Χ."],"status":"active"},
+  {"media_id":"IMG-015","type":"image","title":"Σταθμός 4 — Ιωάννης Θεολόγος","url":"https://i.ibb.co/6RDfMcx1/The-Sacred-Blueprint-page-0013.jpg","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"tags":["Ιωάννης","Λόγος","ενανθρώπηση","Έφεσος","1ος αιώνας"],"status":"active"},
+  {"media_id":"IMG-016","type":"image","title":"Σταθμός 5 — Ωριγένης","url":"https://i.ibb.co/V0S43ngy/The-Sacred-Blueprint-page-0012.jpg","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"tags":["Ωριγένης","Αλεξάνδρεια","ψυχές","185 μ.Χ."],"status":"active"},
+  {"media_id":"IMG-017","type":"image","title":"Σταθμός 6 — Γρηγόριος Θεολόγος","url":"https://i.ibb.co/twQyyfQP/The-Sacred-Blueprint-page-0011.jpg","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"tags":["Γρηγόριος Θεολόγος","αποφατισμός","φως","329 μ.Χ."],"status":"active"},
+  {"media_id":"IMG-018","type":"image","title":"Σταθμός 7 — Γρηγόριος Νύσσης","url":"https://i.ibb.co/nNYp6P4B/The-Sacred-Blueprint-page-0006.jpg","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"tags":["Γρηγόριος Νύσσης","επέκταση","άπειρο","335 μ.Χ."],"status":"active"},
+  {"media_id":"IMG-019","type":"image","title":"Σταθμός 8 — Διονύσιος Αρεοπαγίτης","url":"https://i.ibb.co/n861J2T2/The-Sacred-Blueprint-page-0003.jpg","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book","UE5"],"tags":["Διονύσιος","ιεραρχία","απορροές","5ος αιώνας"],"status":"active"},
+  {"media_id":"IMG-020","type":"image","title":"Σταθμός 9 — Μάξιμος Ομολογητής","url":"https://i.ibb.co/8nJp0wwB/The-Sacred-Blueprint-page-0015.jpg","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"tags":["Μάξιμος","λόγοι όντων","θέληση","580 μ.Χ."],"status":"active"},
+  {"media_id":"IMG-021","type":"image","title":"Σταθμός 10 — Συμεών Νέος Θεολόγος","url":"https://i.ibb.co/TqcDJYxK/The-Sacred-Blueprint-page-0008.jpg","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"tags":["Συμεών","άκτιστο φως","εμπειρία","949 μ.Χ."],"status":"active"},
+  {"media_id":"IMG-022","type":"image","title":"Σταθμός 11 — Γρηγόριος Παλαμάς","url":"https://i.ibb.co/F49ZXsfF/The-Sacred-Blueprint-page-0009.jpg","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"tags":["Παλαμάς","ησυχασμός","ουσία","ενέργεια","1296 μ.Χ."],"status":"active"},
+  {"media_id":"IMG-026","type":"image","title":"Απόστολος Παύλος — Άρειος Πάγος","url":"https://i.ibb.co/0pQ7s22p/1778347932481.png","app_context":["Timeline Map","UE5","Explorer History","Mind Palace Debate"],"tags":["Παύλος","Άρειος Πάγος","Αθήνα","κήρυγμα","1ος αιώνας","Διονύσιος"],"status":"active"}
+]};
+
+// ── THEME ─────────────────────────────────────────────────────
+function toggleTheme(){
+  const h=document.documentElement,d=h.dataset.theme==='dark';
+  h.dataset.theme=d?'light':'dark';
+  document.getElementById('tlbl').textContent=d?'ΦΩΤΕΙΝΟ':'ΣΚΟΤΕΙΝΟ';
+  localStorage.setItem('orc-theme',h.dataset.theme);
+}
+(function(){
+  const s=localStorage.getItem('orc-theme');
+  if(s) document.documentElement.dataset.theme=s;
+  window.addEventListener('DOMContentLoaded',()=>{
+    const l=document.getElementById('tlbl');
+    if(l) l.textContent=document.documentElement.dataset.theme==='light'?'ΦΩΤΕΙΝΟ':'ΣΚΟΤΕΙΝΟ';
+  });
+})();
+
+// ── TABS ──────────────────────────────────────────────────────
+let curTab='text';
+function switchTab(t){
+  curTab=t;
+  ['text','json'].forEach(id=>{
+    document.getElementById('tab-'+id).classList.toggle('active',id===t);
+    document.getElementById('panel-'+id).classList.toggle('active',id===t);
+  });
+}
+
+// ── MEDIA MODE ────────────────────────────────────────────────
+let mediaMode = 'auto'; // 'auto' | 'pick'
+let mediaLibrary = [];  // loaded from GitHub
+let selectedMedia = new Set(); // media_ids chosen in Pick mode
+
+function setMode(m){
+  mediaMode = m;
+  document.getElementById('pill-auto').classList.toggle('active', m==='auto');
+  document.getElementById('pill-pick').classList.toggle('active', m==='pick');
+  const pp = document.getElementById('pickPanel');
+  if(m==='pick'){
+    pp.classList.add('visible');
+    renderPickList();
+  } else {
+    pp.classList.remove('visible');
+  }
+  localStorage.setItem('orc-media-mode', m);
+}
+
+async function loadLibrary(force=false){
+  const st = document.getElementById('mlStatus');
+  st.textContent='Φορτώνεται…'; st.className='media-status loading';
+  try{
+    mediaLibrary = (EMBEDDED_MEDIA.media || []).filter(m=>m.status==='active');
+    st.textContent = `✓ ${mediaLibrary.length} στοιχεία · ενσωματωμένο · ${EMBEDDED_MEDIA.meta?.last_updated||''}`;
+    st.className='media-status ok';
+    if(mediaMode==='pick') renderPickList();
+  } catch(e){
+    st.textContent='✗ Σφάλμα φόρτωσης';
+    st.className='media-status err';
+    mediaLibrary=[];
+  }
+}
+
+function renderPickList(filterInput=''){
+  const list = document.getElementById('pickList');
+  const items = mediaLibrary.filter(m=>
+    !filterInput ||
+    m.title.toLowerCase().includes(filterInput.toLowerCase()) ||
+    (m.tags||[]).join(' ').toLowerCase().includes(filterInput.toLowerCase())
+  );
+  if(!items.length){
+    list.innerHTML='<div class="pick-none">Δεν βρέθηκαν αποτελέσματα</div>';
+    return;
+  }
+  list.innerHTML = items.map(m=>{
+    const sel = selectedMedia.has(m.media_id);
+    const typeIcon = {youtube:'▶️',image:'🖼️',google_slides:'📊',interactive_book:'📖'}[m.type]||'📎';
+    const apps = (m.app_context||[]).join(', ');
+    return `<div class="pick-item${sel?' selected':''}" onclick="toggleMedia('${m.media_id}',this)">
+      <input type="checkbox" ${sel?'checked':''} onclick="event.stopPropagation();toggleMedia('${m.media_id}',this.closest('.pick-item'))">
+      <div class="pick-thumb-placeholder">${typeIcon}</div>
+      <div class="pick-info">
+        <div class="pick-title">${m.title}</div>
+        <div class="pick-meta">${m.media_id} · ${m.type}</div>
+        <div class="pick-apps">${apps}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleMedia(id, el){
+  if(selectedMedia.has(id)) selectedMedia.delete(id);
+  else selectedMedia.add(id);
+  el.classList.toggle('selected', selectedMedia.has(id));
+  const cb = el.querySelector('input[type=checkbox]');
+  if(cb) cb.checked = selectedMedia.has(id);
+}
+
+function toggleSelectAll(){
+  const allIds = mediaLibrary.map(m=>m.media_id);
+  const allSel = allIds.every(id=>selectedMedia.has(id));
+  if(allSel){ allIds.forEach(id=>selectedMedia.delete(id)); }
+  else { allIds.forEach(id=>selectedMedia.add(id)); }
+  renderPickList();
+}
+
+// ── APPS ──────────────────────────────────────────────────────
+const APPS=[
+  {id:'timeline',     icon:'🗺️',name:'Timeline Explorer',   url:'https://dporpatonelis-crypto.github.io/Map-Timeline/'},
+  {id:'investigation',icon:'🕵️',name:'Investigation Board', url:'https://idea-weaver-board.vercel.app/'},
+  {id:'history3d',    icon:'🏛️',name:'History Explorer 3D', url:'https://history-explorer-3d.vercel.app/'},
+  {id:'mindpalace',   icon:'🏛️',name:'Mind Palace Debate',   url:'https://dporpatonelis-crypto.github.io/mind-palace-cases/'},
+  {id:'anchor',       icon:'⚓',name:'Living Anchor',        url:''},
+  {id:'books',        icon:'📖',name:'Interactive Books',    url:'https://dporpatonelis-crypto.github.io/interactive-books/index.html'},
+  {id:'unreal',       icon:'🎮',name:'Unreal Engine 5',      url:''},
+  {id:'notebook',     icon:'📔',name:'Notebook Media',       url:''},
+  {id:'personalpage', icon:'🌐',name:'Personal Page',        url:''},
+];
+const EX=[
+  `Πλατωνική Πολιτεία, Βιβλίο VII — Ο Μύθος του Σπηλαίου. Δεσμώτες που βλέπουν μόνο σκιές. Η απελευθέρωση ως μεταστροφή ψυχής (περιαγωγή). Βασικές έννοιες: είδωλα, αλήθεια, φιλόσοφος-βασιλέας, παιδεία.`,
+  `Βασίλειος Καισαρείας (330-379 μ.Χ.) — Μεγάλος Καππαδόκης Πατέρας. Δόγμα Τριάδας, Φιλοκαλία, κοινοβιακή ζωή (Ασκητικά). Σχέση με Γρηγόριο Θεολόγο και Νύσσης. Αντιπαράθεση με Ευνόμιο.`,
+  `Αρχαία Αγορά Αθηνών (5ος αι. π.Χ.) — Χώρος δημοκρατίας και φιλοσοφίας. Στοά Ποικίλη, Θόλος, Βουλευτήριο. Σωκράτης, Αναξαγόρας. Τόπος δικαιοσύνης, εμπορίου και ιδεών.`,
+  `Εικονομαχία (726–843 μ.Χ.) — Μεγαλύτερη θεολογική κρίση Βυζαντίου. Ιωάννης Δαμασκηνός, Θεόδωρος Στουδίτης. Β΄ Σύνοδος Νικαίας (787). Αποκατάσταση 843.`,
+];
+function setEx(i){document.getElementById('lessonInput').value=EX[i];switchTab('text');}
+function initToggles(){
+  const g=document.getElementById('appsGrid');
+  APPS.forEach(a=>{
+    const d=document.createElement('div');
+    d.className='app-toggle active';d.dataset.id=a.id;
+    d.innerHTML=`<span class="ti">${a.icon}</span><span class="tn">${a.name}</span>`;
+    d.onclick=()=>d.classList.toggle('active');
+    g.appendChild(d);
+  });
+}
+function getSel(){return[...document.querySelectorAll('.app-toggle.active')].map(d=>d.dataset.id);}
+
+// ── MEDIA MATCHING ────────────────────────────────────────────
+// Returns {appId: [matching media items]} based on topic text and app
+function matchMedia(topicText, appId){
+  if(!mediaLibrary.length) return [];
+
+  // Normalize app name for matching app_context
+  const appAliases = {
+    timeline:['Timeline','Timeline Map','Timeline Explorer'],
+    investigation:['Investigation','Investigation Board','Mind Palace'],
+    history3d:['History Explorer','Explorer History','Explorer','History Explorer 3D','3D'],
+    mindpalace:['Mind Palace'],
+    anchor:['Living Anchor','Anchor'],
+    books:['Interactive Book','Interactive Books','Books'],
+    notebook:['Notebook','Notebook Media','Interactive Book','Timeline Map','Explorer History'],
+    personalpage:['Personal Page','Notebook Media','Interactive Book','Explorer History','Timeline Map'],
+  };
+
+  const aliases = appAliases[appId]||[];
+  const words = topicText.toLowerCase().split(/\s+|[,;.—–]/).filter(Boolean);
+
+  return mediaLibrary.filter(m=>{
+    // Check app_context match
+    const appMatch = (m.app_context||[]).some(ac=>
+      aliases.some(al=>ac.toLowerCase().includes(al.toLowerCase()))
+    );
+    if(!appMatch) return false;
+
+    // Check topic relevance via tags and title
+    const haystack = [m.title, ...(m.tags||[])].join(' ').toLowerCase();
+    const relevance = words.some(w=>w.length>3 && haystack.includes(w));
+    return relevance;
+  });
+}
+
+// Build media context string for the prompt
+function buildMediaContext(appId, topicText){
+  let items = [];
+
+  if(mediaMode==='pick'){
+    // Use only selected items that match this app
+    const appAliases = {
+      timeline:['Timeline','Timeline Map','Timeline Explorer'],
+      investigation:['Investigation','Investigation Board'],
+      history3d:['History Explorer','Explorer History','Explorer','History Explorer 3D'],
+      mindpalace:['Mind Palace','Mind Palace Debate','investigation','debate'],
+      anchor:['Living Anchor','Anchor'],
+      books:['Interactive Book','Interactive Books','Books'],
+      unreal:['UE5','Unreal','Unreal Engine'],
+      notebook:['Notebook','Notebook Media','Interactive Book','Timeline Map','Explorer History'],
+      personalpage:['Personal Page','Notebook Media','Interactive Book','Explorer History','Timeline Map'],
+    };
+    const aliases = appAliases[appId]||[];
+    items = mediaLibrary.filter(m=>
+      selectedMedia.has(m.media_id) &&
+      (m.app_context||[]).some(ac=>aliases.some(al=>ac.toLowerCase().includes(al.toLowerCase())))
+    );
+  } else {
+    // Auto mode: match by topic
+    items = matchMedia(topicText, appId);
+  }
+
+  if(!items.length) return null;
+
+  const lines = items.map(m=>{
+    const field = mediaFieldMap(m.type, appId);
+    return `- ${m.media_id} | ${m.type} | "${m.title}" | url: ${m.url} | χρήση στο πεδίο: ${field}`;
+  }).join('\n');
+
+  return `\nΔΙΑΘΕΣΙΜΑ MEDIA από το library (βάλε τα κατάλληλα URLs στο JSON):\n${lines}`;
+}
+
+function mediaFieldMap(type, appId){
+  if(type==='image') return appId==='timeline'?'img':(appId==='notebook'||appId==='personalpage')?'image (media.slides[].url ή text[].content ως ref)':'image';
+  if(type==='youtube') return (appId==='books'||appId==='notebook'||appId==='personalpage')?'videoId (media.audio[].url)':'(reference)';
+  if(type==='google_slides') return appId==='timeline'?'slides':(appId==='notebook'||appId==='personalpage')?'slides[].url':'slidesUrl';
+  return 'url';
+}
+
+// Extract which media were actually used in the output JSON
+function extractUsedMedia(jsonStr){
+  const used=[], missing=[];
+  mediaLibrary.forEach(m=>{
+    if(jsonStr.includes(m.url)) used.push(m.media_id);
+  });
+  return used;
+}
+
+// ── API ───────────────────────────────────────────────────────
+async function claude(sys,usr){
+  const r=await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:8000,
+      system:sys,messages:[{role:"user",content:usr}]})
+  });
+  const d=await r.json();
+  if(!r.ok) throw new Error(d.error?.message||'API Error');
+  return d.content[0].text.trim();
+}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// ── PROMPTS ───────────────────────────────────────────────────
+function promptText(appId,lesson){
+  const ts=Date.now(),today=new Date().toISOString().split('T')[0];
+  const mediaCtx = buildMediaContext(appId, lesson) || '';
+
+  const sc={
+    timeline:`Δημιούργησε JSON array με 1 εγγραφή για Timeline Explorer:
+[{"id":${ts},"year":"<χρονολογία>","title":"<τίτλος>","desc":"<1 πρόταση>","img":"<URL εικόνας ή κενό>","location":"<τόπος>","lat":<αριθμός>,"lng":<αριθμός>,"zoom":7,"slides":"<URL slides ή κενό>"}]
+Χρησιμοποίησε τα media URLs αν υπάρχουν. ΜΟΝΟ JSON array '['.`,
+    investigation:`Δημιούργησε JSON για Investigation Board:
+{"topic":"<θέμα>","clues":[{"title":"","description":"","type":"evidence|suspect|note"}]}
+5-7 clues με ποικιλία types. ΜΟΝΟ JSON '{'.`,
+    history3d:`Δημιούργησε JSON για History Explorer 3D:
+{"characters":[{"id":"char_1","name":"","role":"","description":"","position_x":0,"position_y":0,"position_z":0,"rotation":0}],"dialogs":[{"character_id":"char_1","trigger":"","text":"","response_options":["",""]}],"facts":[{"id":"fact_1","title":"","content":"","era":""}],"screens":{"title":"","background":"bg-agora.jpg"}}
+2 characters, 2 dialogs, 3 facts. ΜΟΝΟ JSON '{'.`,
+    mindpalace:`Δημιούργησε JSON για Mind Palace Debate (Η Υπόθεση του Φιλοσόφου).
+Δομή:
+{
+  "case_id":"<slug>","title":"<τίτλος>","method":"comparative","status":"complete",
+  "investigation_board":{
+    "figures":[
+      {"name":"<Φιλόσοφος/Πρόσωπο 1>","work":"<Έργο>","era":"<εποχή>"},
+      {"name":"<Φιλόσοφος/Πρόσωπο 2>","work":"<Έργο>","era":"<εποχή>"}
+    ],
+    "concepts":{"core":"<Κεντρική έννοια>"},
+    "clues":[
+      {"id":"c1","title":"","content":"","source":"","type":"argument","difficulty":1},
+      {"id":"c2","title":"","content":"","source":"","type":"contradiction","difficulty":2},
+      {"id":"c3","title":"","content":"","source":"","type":"evidence","difficulty":2},
+      {"id":"c4","title":"","content":"","source":"","type":"argument","difficulty":3},
+      {"id":"c5","title":"","content":"","source":"","type":"synthesis","difficulty":3}
+    ],
+    "connections":[
+      {"from":"c1","to":"c2","type":"contrast","description":""},
+      {"from":"c2","to":"c3","type":"development","description":""},
+      {"from":"c3","to":"c4","type":"contrast","description":""},
+      {"from":"c4","to":"c5","type":"agreement","description":""}
+    ]
+  },
+  "mind_palace":{
+    "rooms":[
+      {"id":"r1","name":"","theme":"library","unlock_requirements":["c1","c2"],"central_question":""},
+      {"id":"r2","name":"","theme":"temple","unlock_requirements":["c3","c4","c5"],"central_question":""}
+    ],
+    "dialogues":[
+      {"room_id":"r1","greeting":"<NPC π.χ. Σωκράτης>",
+       "questions":["<ερώτηση 1>","<ερώτηση 2>","<ερώτηση 3>"],
+       "suggested_answers":["<απάντηση 1>","<απάντηση 2>","<απάντηση 3>"],
+       "revelation":"<τελικό συμπέρασμα room 1>"},
+      {"room_id":"r2","greeting":"<NPC π.χ. Πλάτων>",
+       "questions":["<ερώτηση 1>","<ερώτηση 2>","<ερώτηση 3>"],
+       "suggested_answers":["<απάντηση 1>","<απάντηση 2>","<απάντηση 3>"],
+       "revelation":"<τελικό συμπέρασμα room 2>"}
+    ]
+  }
+}
+5 clues, 2 connections types (contrast/development/agreement), 2 rooms. ΜΟΝΟ JSON '{'.`,
+    unreal:`Δημιούργησε JSON για Unreal Engine 5 scenario (C++ only, no Blueprints).
+Δομή:
+{"id":"<slug>","version":"1.0","title":"<τίτλος>","subtitle":"<υπότιτλος>",
+"characters":{"char1":{"displayName":"","shortName":"","color":"#1a4a8b"}},
+"acts":[{"id":"act_intro","title":"","type":"cinematic",
+"dialogues":[{"id":"d_01","speaker":"char1","text":"","audioUrl":"{{audio_char1_01}}","animation":"gesture_welcome","camera":"medium_char1","subtitle":true}],
+"playerChoice":{"prompt":"","displayStyle":"radial_menu","choices":[{"id":"c1","label":"","nextAct":"act_2"}]}}]}
+2 χαρακτήρες, 3 acts, 2-3 dialogues ανά act. ΜΟΝΟ JSON '{'.`,
+    anchor:`Δημιούργησε JSON για Living Anchor:
+{"metadata":{"title":"","source":"","date":"${today}"},"anchors":[{"id":"<slug>","phrase":"","layers":{"literal":"","structural":"","critical":""},"causality":{"cause":"","consequence":""}}]}
+3-4 anchors. ΜΟΝΟ JSON '{'.`,
+    books:`Δημιούργησε JSON για Interactive Books:
+{"pages":[{"number":1,"type":"text","title":"","subtitle":"","content":["",""],"image":"<URL ή κενό>","videoId":"<YouTube ID ή κενό>","slidesUrl":"<URL ή κενό>"}]}
+3-4 σελίδες. Χρησιμοποίησε media URLs αν υπάρχουν. ΜΟΝΟ JSON '{'.`,
+    notebook:`Δημιούργησε JSON για το Notebook Media — σκελετός για ένα μάθημα.
+Δομή:
+{
+  "title": "<τίτλος notebook>",
+  "date": "<ημερομηνία σήμερα>",
+  "chapters": [
+    {
+      "index": 1,
+      "title": "<τίτλος μαθήματος>",
+      "html": "<p><strong>Θέμα:</strong> <σύντομη περιγραφή></p><p><em>Βασικές έννοιες: ...</em></p>",
+      "text": "<ίδιο ως plain text>",
+      "stickies": ["<σύντομη σημείωση 1>", "<σύντομη σημείωση 2>"],
+      "media": {
+        "audio": [
+          {"id": "mi_audio_1", "label": "<τίτλος audio>", "url": "<URL ή κενό>", "notes": "<οδηγία για χρήση>"}
+        ],
+        "slides": [
+          {"id": "mi_slides_1", "label": "<τίτλος παρουσίασης>", "url": "<Google Slides embed URL ή κενό>", "notes": "<θέμα παρουσίασης>"}
+        ],
+        "notebooklm": [
+          {"id": "mi_nlm_1", "label": "NotebookLM — <θέμα>", "url": "", "notes": "<τι να ρωτήσεις στο NotebookLM για αυτό το θέμα>"}
+        ],
+        "pdf": [
+          {"id": "mi_pdf_1", "label": "<τίτλος PDF>", "url": "<URL ή κενό>", "notes": "<ποιες σελίδες / τι να διαβάσεις>"}
+        ],
+        "text": [
+          {"id": "mi_text_1", "label": "<τίτλος αποσπάσματος>", "url": "", "content": "<σύντομο απόσπασμα πηγής ή σημείωση>", "notes": ""}
+        ]
+      }
+    }
+  ]
+}
+Χρησιμοποίησε media URLs από τη library αν υπάρχουν (slides→slides[].url, audio/youtube→audio[].url, image→text[].content ως ref).
+Γέμισε το html με εκπαιδευτικό περιεχόμενο. Τα notes εξηγούν πώς να χρησιμοποιηθεί κάθε media στην τάξη.
+ΜΟΝΟ JSON '{'.`,
+    personalpage:`Δημιούργησε JSON για την Personal Page (Notebook Media Manager) — ενότητα μαθήματος για το hub.
+Το Personal Page δέχεται ΑΚΡΙΒΩΣ το ίδιο schema με το Notebook Media.
+Δομή:
+{
+  "title": "<τίτλος ενότητας/θέματος>",
+  "date": "<ημερομηνία σήμερα>",
+  "chapters": [
+    {
+      "index": 1,
+      "title": "<τίτλος κεφαλαίου — σύντομος>",
+      "html": "<p><strong>Θέμα:</strong> <πλούσια HTML περιγραφή της ενότητας></p><ul><li><strong>Βασικές έννοιες:</strong> ...</li><li><strong>Πηγές:</strong> ...</li><li><strong>Ερωτήματα προς διερεύνηση:</strong> ...</li></ul>",
+      "text": "<ίδιο περιεχόμενο ως plain text για αναζήτηση>",
+      "stickies": ["<σύντομη παιδαγωγική σημείωση 1>", "<σύντομη σημείωση 2>", "<σύντομη σημείωση 3>"],
+      "media": {
+        "audio": [
+          {"id": "pp_audio_1", "label": "<τίτλος audio ή podcast>", "url": "<URL ή κενό>", "notes": "<πότε/πώς να το χρησιμοποιήσεις στο μάθημα>"}
+        ],
+        "slides": [
+          {"id": "pp_slides_1", "label": "<τίτλος παρουσίασης>", "url": "<Google Slides pubembed URL ή κενό>", "notes": "<σε ποιο σημείο του μαθήματος>"}
+        ],
+        "notebooklm": [
+          {"id": "pp_nlm_1", "label": "NotebookLM — <θέμα>", "url": "", "notes": "<ερώτηση προς το NotebookLM για βαθύτερη ανάλυση>"}
+        ],
+        "pdf": [
+          {"id": "pp_pdf_1", "label": "<τίτλος κειμένου/πηγής>", "url": "<URL ή κενό>", "notes": "<ποιο μέρος να διαβαστεί, γιατί>"}
+        ],
+        "text": [
+          {"id": "pp_text_1", "label": "<τίτλος αποσπάσματος ή σημείωσης>", "url": "", "content": "<σύντομο απόσπασμα πηγής, παράθεμα ή εκπαιδευτική σημείωση>", "notes": "<σχόλιο χρήσης>"}
+        ]
+      }
+    }
+  ]
+}
+Κανόνες:
+- Χρησιμοποίησε media URLs από τη library: slides→slides[].url, audio/youtube→audio[].url, εικόνες→text[].content ως παράθεμα αναφοράς
+- Γέμισε το html με πλούσιο εκπαιδευτικό περιεχόμενο (bold, em, ul/li επιτρέπονται)
+- Τα stickies είναι σύντομες παιδαγωγικές υπενθυμίσεις για τον δάσκαλο
+- Τα notes κάθε media εξηγούν ΠΟΤΕ/ΠΩΣ να χρησιμοποιηθεί στην τάξη
+- Μπορείς να φτιάξεις 1-2 chapters αν το θέμα το απαιτεί
+ΜΟΝΟ JSON '{'.`,
+  };
+  return{
+    s:`Εκπαιδευτικός βοηθός. Μετατρέπεις υλικό σε JSON. ΜΟΝΟ έγκυρο JSON — χωρίς backticks, χωρίς markdown.`,
+    u:`Θέμα μαθήματος:\n${lesson}${mediaCtx}\n\n${sc[appId]}`
+  };
+}
+
+function promptJSON(targetId,srcId,srcJson){
+  const today=new Date().toISOString().split('T')[0],ts=Date.now();
+  const input = curTab==='json' ? document.getElementById('lessonInput').value||srcJson : srcJson;
+  const mediaCtx = buildMediaContext(targetId, input)||'';
+  const tsc={
+    timeline:`Εξαγωγή για Timeline: [{"id":${ts},"year":"","title":"","desc":"","img":"","location":"","lat":0,"lng":0,"zoom":7,"slides":""}]`,
+    investigation:`Εξαγωγή για Investigation Board: {"topic":"","clues":[{"title":"","description":"","type":"evidence"}]}`,
+    history3d:`Εξαγωγή για History Explorer 3D: {"characters":[],"dialogs":[],"facts":[],"screens":{"title":"","background":"bg-agora.jpg"}}`,
+    mindpalace:`Εξαγωγή για Mind Palace Debate: {"case_id":"","title":"","method":"comparative","status":"complete","investigation_board":{"figures":[],"concepts":{"core":""},"clues":[],"connections":[]},"mind_palace":{"rooms":[],"dialogues":[{"room_id":"r1","greeting":"","questions":[],"suggested_answers":[],"revelation":""}]}}}`,  
+    unreal:`Εξαγωγή για Unreal Engine 5 scenario: {"id":"","version":"1.0","title":"","subtitle":"","characters":{},"acts":[]}`,
+    anchor:`Εξαγωγή για Living Anchor: {"metadata":{"title":"","source":"","date":"${today}"},"anchors":[{"id":"","phrase":"","layers":{"literal":"","structural":"","critical":""},"causality":{"cause":"","consequence":""}}]}`,
+    books:`Εξαγωγή για Interactive Books: {"pages":[{"number":1,"type":"text","title":"","subtitle":"","content":[],"image":"","videoId":"","slidesUrl":""}]}`,
+    notebook:`Εξαγωγή για Notebook Media: {"title":"","date":"${today}","chapters":[{"index":1,"title":"","html":"<p></p>","text":"","stickies":[],"media":{"audio":[{"id":"mi_audio_1","label":"","url":"","notes":""}],"slides":[{"id":"mi_slides_1","label":"","url":"","notes":""}],"notebooklm":[{"id":"mi_nlm_1","label":"","url":"","notes":""}],"pdf":[{"id":"mi_pdf_1","label":"","url":"","notes":""}],"text":[{"id":"mi_text_1","label":"","url":"","content":"","notes":""}]}}]}`,
+    personalpage:`Εξαγωγή για Personal Page (Notebook Media Manager) — ίδιο schema με Notebook Media: {"title":"","date":"${today}","chapters":[{"index":1,"title":"","html":"<p></p>","text":"","stickies":[],"media":{"audio":[{"id":"pp_audio_1","label":"","url":"","notes":""}],"slides":[{"id":"pp_slides_1","label":"","url":"","notes":""}],"notebooklm":[{"id":"pp_nlm_1","label":"","url":"","notes":""}],"pdf":[{"id":"pp_pdf_1","label":"","url":"","notes":""}],"text":[{"id":"pp_text_1","label":"","url":"","content":"","notes":""}]}}]}`,
+  };
+  return{
+    s:`Εκπαιδευτικός βοηθός. Μετατρέπεις JSON μεταξύ εφαρμογών. ΜΟΝΟ έγκυρο JSON.`,
+    u:`JSON από "${srcId}":\n${srcJson}${mediaCtx}\n\nΜετέτρεψέ το για "${targetId}".\n${tsc[targetId]}\nΜΟΝΟ JSON.`
+  };
+}
+
+// ── EDITOR ────────────────────────────────────────────────────
+function makeEditor(appId,jsonStr){
+  const wrap=document.createElement('div');wrap.className='edit-wrapper';
+  const ta=document.createElement('textarea');
+  ta.className='edit-area';ta.id=`edit-${appId}`;ta.value=jsonStr;ta.spellcheck=false;
+  const bar=document.createElement('div');bar.className='edit-status';
+  bar.innerHTML=`<span class="edit-dot"></span><span class="edit-msg"></span>`;
+  function validate(){
+    try{
+      JSON.parse(ta.value.trim());
+      ta.classList.remove('invalid');ta.classList.add('valid');
+      bar.classList.remove('v-err');bar.classList.add('v-ok');
+      bar.querySelector('.edit-msg').textContent='✓ ΕΓΚΥΡΟ JSON';
+      const btn=document.querySelector(`#res-${appId} .copy-btn`);
+      if(btn) btn.disabled=false;
+    }catch(e){
+      ta.classList.remove('valid');ta.classList.add('invalid');
+      bar.classList.remove('v-ok');bar.classList.add('v-err');
+      bar.querySelector('.edit-msg').textContent='✗ '+e.message.substring(0,60);
+      const btn=document.querySelector(`#res-${appId} .copy-btn`);
+      if(btn) btn.disabled=true;
+    }
+  }
+  ta.addEventListener('input',validate);validate();
+  wrap.appendChild(ta);wrap.appendChild(bar);
+  return wrap;
+}
+
+function downloadJSON(id, appId){
+  const ta = document.getElementById(`edit-${id}`);
+  // For unreal, offer all 3 files
+  if(appId === 'unreal'){
+    try{
+      const parsed = JSON.parse(ta.value);
+      // scenario.json
+      dlFile(`scenario_${parsed.id||id}.json`, JSON.stringify(parsed, null, 2));
+      // assets skeleton
+      const assets = buildAssetsFromScenario(parsed);
+      setTimeout(()=>dlFile(`assets_${parsed.id||id}.json`, JSON.stringify(assets, null, 2)), 400);
+      // manifest entry
+      const mEntry = buildManifestEntry(parsed);
+      setTimeout(()=>dlFile(`manifest_entry_${parsed.id||id}.json`, JSON.stringify(mEntry, null, 2)), 800);
+    } catch(e){ alert('Μη έγκυρο JSON'); }
+    return;
+  }
+  // All other apps — single file download
+  try{
+    const val = ta.value.trim();
+    JSON.parse(val); // validate
+    dlFile(`${appId}_${Date.now()}.json`, JSON.stringify(JSON.parse(val), null, 2));
+  } catch(e){ alert('Μη έγκυρο JSON'); }
+}
+
+function dlFile(name, content){
+  // Sandbox δεν επιτρέπει download — εμφανίζουμε modal για copy-paste
+  showDownloadModal(name, content);
+}
+
+function showDownloadModal(name, content){
+  // Remove existing modal if any
+  const existing = document.getElementById('dl-modal');
+  if(existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'dl-modal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;padding:20px;';
+  modal.innerHTML = `
+    <div style="background:var(--bg);border:1px solid var(--go);border-radius:4px;width:100%;max-width:700px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:var(--rh);border-bottom:1px solid var(--gd);">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--go);">↓ ${name}</span>
+        <div style="display:flex;gap:8px;">
+          <button id="dl-copy-btn" style="padding:6px 14px;background:var(--gm);border:1px solid var(--go);border-radius:2px;color:var(--go);font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;">Αντιγραφή</button>
+          <button onclick="document.getElementById('dl-modal').remove()" style="padding:6px 12px;background:transparent;border:1px solid var(--gd);border-radius:2px;color:var(--mu);font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;">✕</button>
+        </div>
+      </div>
+      <div style="padding:8px 14px;background:var(--ml-bg);border-bottom:1px solid var(--gd);">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--mu);letter-spacing:.1em;">Αντέγραψε → αποθήκευσε ως <strong style="color:var(--tx)">${name}</strong></span>
+      </div>
+      <textarea id="dl-content" readonly style="flex:1;background:var(--ed-bg);color:var(--ct);font-family:'JetBrains Mono',monospace;font-size:11px;padding:16px;border:none;outline:none;resize:none;min-height:300px;line-height:1.6;">${content.replace(/</g,'&lt;')}</textarea>
+    </div>`;
+  document.body.appendChild(modal);
+
+  // Auto-select content
+  const ta = document.getElementById('dl-content');
+  ta.value = content;
+  ta.select();
+
+  // Copy button
+  document.getElementById('dl-copy-btn').addEventListener('click', function(){
+    navigator.clipboard.writeText(content).then(()=>{
+      this.textContent = '✓ Αντιγράφηκε';
+      this.style.color = 'var(--gr)';
+      this.style.borderColor = 'var(--gr)';
+    }).catch(()=>{
+      ta.select(); document.execCommand('copy');
+      this.textContent = '✓ Αντιγράφηκε';
+    });
+  });
+
+  // Close on backdrop click
+  modal.addEventListener('click', e => { if(e.target === modal) modal.remove(); });
+}
+
+function buildAssetsFromScenario(scenario){
+  const assets = { _comment: `Assets για ${scenario.id}`, assets: {} };
+  (scenario.acts||[]).forEach(act => {
+    // Extract audioUrls from dialogues
+    (act.dialogues||[]).forEach(d => {
+      const m = (d.audioUrl||'').match(/\{\{(\w+)\}\}/);
+      if(m) assets.assets[m[1]] = { type:'audio', label: d.speaker+' — '+act.title, url:'', speaker: d.speaker, dialogueId: d.id };
+    });
+    // Narration
+    if(act.narration?.audioUrl){
+      const m = act.narration.audioUrl.match(/\{\{(\w+)\}\}/);
+      if(m) assets.assets[m[1]] = { type:'audio', label:'Narration — '+act.title, url:'', speaker:'narrator' };
+    }
+    // Environment screens
+    Object.values(act.environmentScreens||{}).forEach(s => {
+      if(s.contentId && !assets.assets[s.contentId])
+        assets.assets[s.contentId] = { type:'image', label: s.contentId, url:'', displayTarget:'environment_screen' };
+    });
+  });
+  return assets;
+}
+
+function buildManifestEntry(scenario){
+  return {
+    id: scenario.id,
+    title: scenario.title,
+    subtitle: scenario.subtitle||'',
+    description: scenario.subtitle||'',
+    thumbnail: `${scenario.id}/thumbnail.jpg`,
+    scenarioFile: `scenarios/${scenario.id}/scenario.json`,
+    sublevel: `/Game/Maps/Sublevels/SL_${scenario.id}`,
+    assetsUrl: `https://raw.githubusercontent.com/dporpatonelis-crypto/sheetunreal/refs/heads/main/scenarios/${scenario.id}/assets.json`,
+    characters: Object.keys(scenario.characters||{}),
+    themes: [],
+    estimatedDuration: 15,
+    difficulty: 'intermediate',
+    environment: 'ancient_library',
+    status: 'draft'
+  };
+}
+
+function copyJSON(id){
+  const ta=document.getElementById(`edit-${id}`);
+  const btn=document.querySelector(`#res-${id} .copy-btn`);
+  try{
+    navigator.clipboard.writeText(JSON.stringify(JSON.parse(ta.value),null,2)).then(()=>{
+      btn.textContent='✓ Αντιγράφηκε';btn.classList.add('copied');
+      setTimeout(()=>{btn.textContent='Αντιγραφή';btn.classList.remove('copied');},2000);
+    });
+  }catch{btn.textContent='✗ Σφάλμα';setTimeout(()=>{btn.textContent='Αντιγραφή';},2000);}
+}
+
+// ── GENERATE ─────────────────────────────────────────────────
+async function generate(){
+  const sel=getSel();
+  if(!sel.length){setS('Επιλέξτε τουλάχιστον μία εφαρμογή.','error');return;}
+
+  let input='',isJson=curTab==='json';
+  if(isJson){
+    input=document.getElementById('srcJson').value.trim();
+    if(!input){setS('Επικολλήστε JSON πηγής.','error');return;}
+    try{JSON.parse(input);}catch{setS('Το JSON πηγής δεν είναι έγκυρο.','error');return;}
+  } else {
+    input=document.getElementById('lessonInput').value.trim();
+    if(!input){setS('Εισάγετε θέμα μαθήματος.','error');return;}
+  }
+
+  const srcId=document.getElementById('srcApp').value;
+  const btn=document.getElementById('genBtn');
+  btn.disabled=true;
+  document.getElementById('results').innerHTML='';
+  document.getElementById('queueInfo').textContent='';
+
+  const apps=APPS.filter(a=>sel.includes(a.id));
+
+  apps.forEach(a=>{
+    const d=document.createElement('div');d.id=`loading-${a.id}`;d.className='loading-card';
+    d.innerHTML=`<div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="ltxt">${a.icon} Αναμονή… ${a.name}</div>`;
+    document.getElementById('results').appendChild(d);
+  });
+
+  setS(`Σειριακή εκτέλεση — 0/${apps.length}`,'active');
+
+  for(let i=0;i<apps.length;i++){
+    const a=apps[i];
+    const ld=document.getElementById(`loading-${a.id}`);
+    ld.querySelector('.ltxt').textContent=`${a.icon} Δημιουργία JSON για ${a.name}…`;
+    setS(`Επεξεργασία ${i+1}/${apps.length}: ${a.name}…`,'active');
+    document.getElementById('queueInfo').textContent=
+      apps.slice(i+1).length?`Ουρά: ${apps.slice(i+1).map(x=>x.icon).join(' ')} (${apps.length-i-1} ακόμη)`:'';
+
+    try{
+      const {s,u}=isJson?promptJSON(a.id,srcId,input):promptText(a.id,input);
+      const raw=await claude(s,u);
+      let parsed,ok=true;
+      try{
+        const c=raw.replace(/^```[\w]*\n?/,'').replace(/\n?```$/,'').trim();
+        parsed=JSON.parse(c);
+      }catch{parsed={error:'Μη έγκυρο JSON',raw};ok=false;}
+      const pretty=JSON.stringify(parsed,null,2);
+
+      // Auto-save to localStorage
+      try {
+        const savedKey = 'orc_last_' + a.id;
+        localStorage.setItem(savedKey, pretty);
+        localStorage.setItem(savedKey + '_ts', new Date().toLocaleString('el-GR'));
+        localStorage.setItem('orc_last_app', a.id);
+      } catch(e) {}
+
+      // Find which media were used
+      const usedIds=extractUsedMedia(pretty);
+      const matchedForApp=mediaMode==='pick'
+        ?[...selectedMedia]
+        :matchMedia(input,a.id).map(m=>m.media_id);
+      const missingIds=matchedForApp.filter(id=>!usedIds.includes(id));
+
+      const card=document.createElement('div');card.id=`res-${a.id}`;card.className='result-card';
+
+      // Build media strip
+      let mediaStrip='';
+      if(usedIds.length||missingIds.length){
+        const usedChips=usedIds.map(id=>`<span class="media-chip">✓ ${id}</span>`).join('');
+        const missingChips=missingIds.map(id=>`<span class="media-missing">○ ${id} κενό</span>`).join('');
+        mediaStrip=`<div class="media-used">${usedChips}${missingChips}</div>`;
+      }
+
+      card.innerHTML=`
+        <div class="rhead">
+          <div class="rtrow">
+            <span class="ric">${a.icon}</span>
+            <div>
+              <div class="rname">${a.name.toUpperCase()} <span class="badge ${ok?'bok':'berr'}">${ok?'✓ ΕΓΚΥΡΟ':'✗ ΣΦΑΛΜΑ'}</span></div>
+              ${a.url?`<div class="rurl">${a.url}</div>`:''}
+            </div>
+          </div>
+          <div class="rbtn-group">
+            <button class="regen-btn" onclick="regenOne('${a.id}')">↻ Ξανά</button>
+            <button class="dl-btn" onclick="downloadJSON('${a.id}','${a.id}')">↓ JSON</button>
+            <button class="copy-btn" onclick="copyJSON('${a.id}')">Αντιγραφή</button>
+          </div>
+        </div>
+        ${mediaStrip}
+        <div id="editor-slot-${a.id}"></div>`;
+
+      ld.replaceWith(card);
+      document.getElementById(`editor-slot-${a.id}`).appendChild(makeEditor(a.id,pretty));
+      setS(`✓ ${i+1}/${apps.length} ολοκληρώθηκαν`,i===apps.length-1?'done':'active');
+
+    }catch(err){
+      const e=document.createElement('div');e.className='err-card';
+      e.innerHTML=`${a.icon} <b>${a.name}</b>: ${err.message}`;ld.replaceWith(e);
+    }
+    if(i<apps.length-1) await sleep(800);
+  }
+
+  btn.disabled=false;
+  document.getElementById('queueInfo').textContent='';
+  setS('✦ Όλα τα JSON είναι έτοιμα — επεξεργαστείτε και αντιγράψτε','done');
+}
+
+// ── REGEN ────────────────────────────────────────────────────
+async function regenOne(appId){
+  const btn=document.querySelector(`#res-${appId} .regen-btn`);
+  const slot=document.getElementById(`editor-slot-${appId}`);
+  btn.disabled=true;btn.textContent='…';
+  slot.innerHTML='<div class="loading-card" style="border:none;padding:14px 18px;"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="ltxt">Αναδημιουργία…</div></div>';
+  const isJson=curTab==='json';
+  const input=isJson?document.getElementById('srcJson').value.trim():document.getElementById('lessonInput').value.trim();
+  const srcId=document.getElementById('srcApp').value;
+  try{
+    const {s,u}=isJson?promptJSON(appId,srcId,input):promptText(appId,input);
+    const raw=await claude(s,u);
+    let parsed,ok=true;
+    try{const c=raw.replace(/^```[\w]*\n?/,'').replace(/\n?```$/,'').trim();parsed=JSON.parse(c);}
+    catch{parsed={error:'Μη έγκυρο JSON',raw};ok=false;}
+    const pretty=JSON.stringify(parsed,null,2);
+    const badge=document.querySelector(`#res-${appId} .badge`);
+    if(badge){badge.className='badge '+(ok?'bok':'berr');badge.textContent=ok?'✓ ΕΓΚΥΡΟ':'✗ ΣΦΑΛΜΑ';}
+    slot.innerHTML='';
+    slot.appendChild(makeEditor(appId,pretty));
+  }catch(err){
+    slot.innerHTML=`<div style="padding:14px 18px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--er);">✗ ${err.message}</div>`;
+  }
+  btn.disabled=false;btn.textContent='↻ Ξανά';
+}
+
+function setS(msg,state=''){
+  const b=document.getElementById('statusBar');b.textContent=msg;b.className='status '+state;
+}
+
+// ── IMPORT LIBRARY ───────────────────────────────────────────
+function toggleImportPanel(){
+  const p = document.getElementById('importPanel');
+  p.classList.toggle('visible');
+  if(p.classList.contains('visible')) p.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function importFromPaste(){
+  const raw = document.getElementById('importJsonArea').value.trim();
+  const st  = document.getElementById('import-status');
+  if(!raw){ st.style.color='var(--er)'; st.textContent='✗ Επικόλλησε πρώτα το JSON'; return; }
+  try{
+    const data = JSON.parse(raw);
+    mediaLibrary = (data.media || []).filter(m => m.status === 'active');
+    const mlSt = document.getElementById('mlStatus');
+    mlSt.textContent = '✓ ' + mediaLibrary.length + ' στοιχεία · imported · ' + (data.meta?.last_updated||'');
+    mlSt.className = 'media-status ok';
+    if(mediaMode==='pick') renderPickList();
+    st.style.color='var(--gr)';
+    st.textContent = '✓ Φορτώθηκαν ' + mediaLibrary.length + ' στοιχεία';
+    document.getElementById('importJsonArea').value = '';
+    setTimeout(()=>toggleImportPanel(), 1200);
+  } catch(err){
+    st.style.color='var(--er)';
+    st.textContent = '✗ Μη έγκυρο JSON: ' + err.message.substring(0,60);
+  }
+}
+
+// ── QUICK NOTE ────────────────────────────────────────────────
+function toggleQuickNote(){
+  const p = document.getElementById('quickNotePanel');
+  p.classList.toggle('visible');
+  if(p.classList.contains('visible')) p.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function addQuickNote(){
+  const id    = document.getElementById('qn-id').value.trim();
+  const title = document.getElementById('qn-title').value.trim();
+  const url   = document.getElementById('qn-url').value.trim();
+  const tags  = document.getElementById('qn-tags').value.trim().split(',').map(t=>t.trim()).filter(Boolean);
+  const apps  = document.getElementById('qn-apps').value.trim().split(';').map(a=>a.trim()).filter(Boolean);
+  const st    = document.getElementById('qn-status');
+
+  if(!id || !title || !url){ st.style.color='var(--er)'; st.textContent='✗ ID, Τίτλος και URL είναι υποχρεωτικά'; return; }
+  if(mediaLibrary.find(m => m.media_id === id)){ st.style.color='var(--er)'; st.textContent='✗ Το ID ' + id + ' υπάρχει ήδη'; return; }
+
+  // Auto-detect type
+  let type = 'image';
+  if(url.includes('youtube') || url.includes('youtu.be')) type = 'youtube';
+  else if(url.includes('docs.google.com/presentation')) type = 'google_slides';
+  else if(url.includes('github.io') && url.includes('book')) type = 'interactive_book';
+
+  mediaLibrary.push({
+    media_id: id, type, title, url,
+    app_context: apps,
+    tags,
+    status: 'active',
+    date_added: new Date().toISOString().slice(0,10),
+    notes: 'Quick Note'
+  });
+
+  // Clear form
+  ['qn-id','qn-title','qn-url','qn-tags','qn-apps'].forEach(f => document.getElementById(f).value = '');
+  st.style.color='var(--gr)';
+  st.textContent = '✓ Προστέθηκε: ' + id + ' — ' + title;
+  document.getElementById('mlStatus').textContent = '✓ ' + mediaLibrary.length + ' στοιχεία';
+
+  if(mediaMode==='pick') renderPickList();
+}
+
+function exportLibraryJSON(){
+  const data = {
+    meta: { last_updated: new Date().toISOString().slice(0,10), source: 'Orchestrator Quick Note' },
+    media: mediaLibrary
+  };
+  const content = JSON.stringify(data, null, 2);
+  showDownloadModal('media_library_' + new Date().toISOString().slice(0,10) + '.json', content);
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+initToggles();
+loadLibrary();
+restoreSaved();
+
+function restoreSaved(){
+  const panel = document.getElementById('savedPanel');
+  const keys = [];
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(k && k.startsWith('orc_last_') && !k.endsWith('_ts') && k !== 'orc_last_app') keys.push(k);
+  }
+  if(!keys.length){ panel.innerHTML=''; return; }
+  
+  const appNames = {timeline:'🗺️ Timeline',investigation:'🕵️ Investigation',history3d:'🏛️ History 3D',
+    mindpalace:'🧠 Mind Palace',anchor:'⚓ Anchor',books:'📖 Books',unreal:'🎮 Unreal',notebook:'📔 Notebook',personalpage:'🌐 Personal Page'};
+  
+  let html = '<div style="border:1px solid var(--gd);border-radius:3px;padding:12px 16px;background:var(--ml-bg);">';
+  html += '<div style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--go);letter-spacing:2px;margin-bottom:10px;">💾 ΑΠΟΘΗΚΕΥΜΕΝΑ ΑΠΟΤΕΛΕΣΜΑΤΑ</div>';
+  html += '<div style="display:flex;flex-wrap:wrap;gap:8px;">';
+  keys.forEach(k => {
+    const appId = k.replace('orc_last_','');
+    const ts = localStorage.getItem(k+'_ts') || '';
+    const name = appNames[appId] || appId;
+    html += `<button onclick="restoreResult('${appId}')" style="padding:6px 12px;background:var(--sf);border:1px solid var(--gd);border-radius:3px;color:var(--mu);font-family:JetBrains Mono,monospace;font-size:10px;cursor:pointer;" title="${ts}">↩ ${name}</button>`;
+  });
+  html += `<button onclick="clearSaved()" style="padding:6px 12px;background:transparent;border:1px solid var(--gd);border-radius:3px;color:var(--mu);font-family:JetBrains Mono,monospace;font-size:10px;cursor:pointer;">✕ Εκκαθάριση</button>`;
+  html += '</div></div>';
+  panel.innerHTML = html;
+}
+
+function restoreResult(appId){
+  const saved = localStorage.getItem('orc_last_' + appId);
+  const ts = localStorage.getItem('orc_last_' + appId + '_ts') || '';
+  if(!saved){ alert('Δεν υπάρχει αποθηκευμένο αποτέλεσμα για ' + appId); return; }
+  
+  const APPS_MAP = {timeline:{icon:'🗺️',name:'Timeline Explorer',url:''},investigation:{icon:'🕵️',name:'Investigation Board',url:''},
+    history3d:{icon:'🏛️',name:'History Explorer 3D',url:''},mindpalace:{icon:'🧠',name:'Mind Palace',url:''},
+    anchor:{icon:'⚓',name:'Living Anchor',url:''},books:{icon:'📖',name:'Interactive Books',url:''},unreal:{icon:'🎮',name:'Unreal Engine 5',url:''},notebook:{icon:'📔',name:'Notebook Media',url:''},personalpage:{icon:'🌐',name:'Personal Page',url:''}};
+  const a = APPS_MAP[appId] || {icon:'📋',name:appId,url:''};
+  
+  const results = document.getElementById('results');
+  // Remove existing card for this app if any
+  const existing = document.getElementById('res-'+appId);
+  if(existing) existing.remove();
+
+  const card = document.createElement('div');
+  card.id = 'res-'+appId;
+  card.className = 'result-card';
+  card.innerHTML = `
+    <div class="rhead">
+      <div class="rtrow">
+        <span class="ric">${a.icon}</span>
+        <div>
+          <div class="rname">${a.name.toUpperCase()} <span class="badge bok">↩ RESTORED</span></div>
+          <div class="rurl" style="color:var(--go);font-size:9px;">Αποθηκεύτηκε: ${ts}</div>
+        </div>
+      </div>
+      <div class="rbtn-group">
+        <button class="dl-btn" onclick="downloadJSON('${appId}','${appId}')">↓ JSON</button>
+        <button class="copy-btn" onclick="copyJSON('${appId}')">Αντιγραφή</button>
+      </div>
+    </div>
+    <div id="editor-slot-${appId}"></div>`;
+  results.insertBefore(card, results.firstChild);
+  document.getElementById('editor-slot-'+appId).appendChild(makeEditor(appId, saved));
+  card.scrollIntoView({behavior:'smooth'});
+}
+
+function clearSaved(){
+  const keys = [];
+  for(let i=0;i<localStorage.length;i++){
+    const k = localStorage.key(i);
+    if(k && (k.startsWith('orc_last_'))) keys.push(k);
+  }
+  keys.forEach(k => localStorage.removeItem(k));
+  restoreSaved();
+}
+const savedMode = localStorage.getItem('orc-media-mode')||'auto';
+if(savedMode==='pick') setMode('pick');
+</script>
+</body>
+</html>

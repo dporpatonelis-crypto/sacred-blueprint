@@ -1,0 +1,40 @@
+cat > config/routing.json << 'EOF'
+{
+  "_comment": "Routing — Όλες οι εφαρμογές. Σβήνω όσες δε χρειάζομαι.",
+  "_version": "2.0",
+
+  "defaults": {
+    "output_dir": "lessons",
+    "local_model": "qwen3.5:9b-mlx",
+    "auto_approve": false
+  },
+
+  "lesson_types": {
+    "theological_concept": {
+      "description": "Θεολογική έννοια — Πλάτων, Πλωτίνος, κ.λπ.",
+      "apps": [
+        "living_anchor",
+        "investigation_board",
+        "notebook",
+        "mind_palace_debate",
+        "timeline_explorer",
+        "history_explorer_ue",
+        "unreal_scenario",
+        "personal_page"
+      ]
+    }
+  },
+
+  "app_mapping": {
+    "living_anchor": "personal_page",
+    "mind_palace_debate": "mind_palace",
+    "history_explorer_ue": "history3d",
+    "interactive_book": "notebook",
+    "timeline_explorer": "timeline_item",
+    "investigation_board": "investigation_board",
+    "notebook": "notebook",
+    "unreal_scenario": "unreal_scenario",
+    "personal_page": "personal_page"
+  }
+}
+EOF

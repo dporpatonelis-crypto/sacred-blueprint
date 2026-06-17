@@ -1,0 +1,119 @@
+{
+  "_comment": "Unified Master Template για όλες τις εφαρμογές",
+  "_version": "1.0",
+  "title": "Η πλατωνική θεωρία των Ιδεών",
+  "subtitle": "Από τον Πλάτωνα στον νεοπλατωνισμό",
+  "description": "Εξέλιξη της μεταφυσικής σκέψης και η επίδραση στον χριστιανισμό",
+  "date": "2026-06-04",
+  "era": "400-300 π.Χ.",
+  "location": "Αθήνα",
+  "coordinates": { "lat": 37.9838, "lng": 23.7275, "zoom": 7 },
+  
+  "timeline_item": {
+    "year": "399 π.Χ.",
+    "title": "Δίκη και θάνατος Σωκράτη",
+    "desc": "Ο Σωκράτης καταδικάζεται σε θάνατο με κώνειο",
+    "img": "https://example.com/socrates.jpg",
+    "slides": "https://docs.google.com/presentation/d/example"
+  },
+  
+  "investigation_board": {
+    "topic": "Η επίδραση του Σωκράτη στη νεότερη φιλοσοφία",
+    "clues": [
+      { "id": "c1", "title": "Πλατωνικοί διάλογοι", "description": "Απολογία, Φαίδων, Πολιτεία", "type": "evidence" },
+      { "id": "c2", "title": "Σωκρατική μέθοδος", "description": "Έλεγχος, μαιευτική", "type": "argument" },
+      { "id": "c3", "title": "Ηθική αυτονομία", "description": "Γνώθι σαυτόν", "type": "concept" }
+    ],
+    "connections": [
+      { "from": "c1", "to": "c2", "type": "development", "description": "Η μέθοδος καταγράφεται στους διαλόγους" }
+    ]
+  },
+  
+  "history3d": {
+    "characters": [
+      { "id": "char_1", "name": "Σωκράτης", "role": "Φιλόσοφος", "description": "Ιδρυτής δυτικής φιλοσοφίας", "position_x": 0, "position_y": 0, "position_z": 0, "rotation": 0 }
+    ],
+    "dialogs": [
+      { "character_id": "char_1", "trigger": "Πλησίασε τον Σωκράτη", "text": "Τι είναι η αρετή;", "response_options": ["Η σοφία", "Η δικαιοσύνη"] }
+    ],
+    "facts": [
+      { "id": "fact_1", "title": "Ο Σωκράτης δεν άφησε γραπτά", "content": "Οι γνώσεις μας προέρχονται από τον Πλάτωνα και τον Ξενοφώντα", "era": "κλασική αρχαιότητα" }
+    ],
+    "screens": { "title": "Η Αγορά της Αθήνας", "background": "bg-agora.jpg" }
+  },
+  
+  "mind_palace": {
+    "case_id": "socrates-legacy",
+    "method": "comparative",
+    "status": "complete",
+    "figures": [
+      { "name": "Σωκράτης", "work": "Απολογία", "era": "469-399 π.Χ." },
+      { "name": "Πλάτων", "work": "Πολιτεία", "era": "428-348 π.Χ." }
+    ],
+    "concepts": { "core": "Ηθική γνώση και αρετή" },
+    "clues": [
+      { "id": "mp1", "title": "Σωκρατική άγνοια", "content": "Έν οίδα ότι ουδέν οίδα", "source": "Απολογία", "type": "argument", "difficulty": 2 }
+    ],
+    "rooms": [
+      { "id": "r1", "name": "Αίθουσα του Διαλόγου", "theme": "library", "unlock_requirements": ["mp1"], "central_question": "Τι είναι η αρετή;" }
+    ],
+    "dialogues": [
+      { "room_id": "r1", "greeting": "Σωκράτης", "questions": ["Πώς ορίζεις την αρετή;"], "suggested_answers": ["Ως γνώση"], "revelation": "Η αρετή είναι γνώση του καλού" }
+    ]
+  },
+  
+  "unreal_scenario": {
+    "id": "socrates_trial",
+    "version": "1.0",
+    "characters": {
+      "socrates": { "displayName": "Σωκράτης", "shortName": "Soc", "color": "#c4862a" },
+      "meletus": { "displayName": "Μέλητος", "shortName": "Mel", "color": "#8b3a1f" }
+    },
+    "acts": [
+      {
+        "id": "act_trial",
+        "title": "Η Δίκη",
+        "type": "cinematic",
+        "dialogues": [
+          { "id": "d1", "speaker": "meletus", "text": "Κατηγορώ Σωκράτη ότι διαφθείρει τους νέους", "audioUrl": "", "animation": "accuse", "camera": "medium", "subtitle": true }
+        ],
+        "playerChoice": { "prompt": "Πώς θα απαντήσει ο Σωκράτης;", "displayStyle": "radial_menu", "choices": [{ "id": "c1", "label": "Απολογία", "nextAct": "act_verdict" }] }
+      }
+    ]
+  },
+  
+  "notebook": {
+    "title": "Σημειώσεις Φιλοσοφίας",
+    "chapters": [
+      {
+        "index": 1,
+        "title": "Σωκράτης και ηθική αυτογνωσία",
+        "html": "<p><strong>Θέμα:</strong> Η σωκρατική μέθοδος</p><p>Ο Σωκράτης θεωρούσε ότι η αρετή είναι γνώση...</p>",
+        "text": "Η σωκρατική μέθοδος βασίζεται στον έλεγχο και τη μαιευτική.",
+        "stickies": ["Σημαντικό: η άγνοια ως αφετηρία σοφίας"],
+        "media": {
+          "audio": [],
+          "slides": [ { "id": "slide_1", "label": "Σωκράτης εικόνα", "url": "https://example.com/slide.jpg", "notes": "Δείξε την εικόνα" } ],
+          "pdf": [],
+          "text": []
+        }
+      }
+    ]
+  },
+  
+  "personal_page": {
+    "title": "Hub: Φιλοσοφία και Παιδεία",
+    "chapters": [
+      {
+        "index": 1,
+        "title": "Ο Σωκράτης στην Αγορά",
+        "html": "<p>Περιήγηση στην Αρχαία Αγορά, εκεί όπου δίδασκε ο Σωκράτης.</p>",
+        "text": "Η Αγορά ήταν το κέντρο της δημοκρατικής ζωής.",
+        "stickies": ["Χρήση σε ξενάγηση"],
+        "media": {
+          "slides": [ { "id": "pp_slide", "label": "Αγορά 3D", "url": "https://example.com/agora.jpg", "notes": "" } ]
+        }
+      }
+    ]
+  }
+}
