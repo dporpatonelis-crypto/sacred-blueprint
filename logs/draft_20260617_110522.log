@@ -1,8 +1,0 @@
-╔══════════════════════════════════════╗
-║   draft_from_text.sh — Draft        ║
-╚══════════════════════════════════════╝
-Θέμα: Πλωτίνος — Η έννοια του Ενός
-Τύπος μαθήματος: theological_concept
-Έξοδος: /Users/dimitriosporpatonelis/sacred-blueprint/lessons/draft_20260617_110522/master_output.json
-
-📡 Καλώ το Ollama (qwen3.5:9b-mlx)...

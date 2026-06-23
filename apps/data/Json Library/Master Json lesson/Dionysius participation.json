@@ -1,0 +1,1265 @@
+{
+  "project": {
+    "name": "Lesson Orchestrator Ecosystem",
+    "owner": "Educational Project Studio",
+    "driveFolder": "https://drive.google.com/",
+    "githubRawBase": "https://raw.githubusercontent.com/dporpatonelis-crypto/sheetunreal/refs/heads/main/scenarios"
+  },
+  "mediaLibrary": {
+    "meta": {
+      "last_updated": "2026-06-16",
+      "source": "Imported"
+    },
+    "media": [
+      {
+        "media_id": "VID-001",
+        "type": "youtube",
+        "title": "Sixtina — Εικονογραφία Μιχαήλ Άγγελου",
+        "url": "https://youtube.com/...",
+        "source_platform": "YouTube",
+        "app_context": [
+          "Mind Palace",
+          "Explorer"
+        ],
+        "unit_id": "U02",
+        "tags": [
+          "sixtina",
+          "εικονογραφία",
+          "αναγέννηση"
+        ],
+        "language": "el",
+        "notes": "Indiana Jones ref",
+        "date_added": "2026-03-16",
+        "status": "active"
+      },
+      {
+        "media_id": "SLD-001",
+        "type": "google_slides",
+        "title": "Μ. Βασίλειος — Θεολογικές Έννοιες",
+        "url": "https://docs.google.com/...",
+        "source_platform": "Google Drive",
+        "app_context": [
+          "Mind Palace"
+        ],
+        "unit_id": "U01",
+        "tags": [
+          "βασίλειος",
+          "πατερική",
+          "θεολογία"
+        ],
+        "language": "el",
+        "notes": "1ο slide → AppScript",
+        "date_added": "2026-03-16",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-001",
+        "type": "image",
+        "title": "Capella Sistina — Δημιουργία Αδάμ",
+        "url": "https://i.ibb.co/...",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Explorer",
+          "Timeline"
+        ],
+        "unit_id": "U02",
+        "tags": [
+          "sixtina",
+          "αδάμ",
+          "μιχαήλ άγγελος"
+        ],
+        "language": "el",
+        "notes": "",
+        "date_added": "2026-03-16",
+        "status": "active"
+      },
+      {
+        "media_id": "HTML-001",
+        "type": "interactive_book",
+        "title": "Interactive Book — Βασίλειος Ch.1",
+        "url": "https://username.github.io/...",
+        "source_platform": "GitHub Pages",
+        "app_context": [
+          "Mind Palace"
+        ],
+        "unit_id": "U01",
+        "tags": [
+          "βασίλειος",
+          "interactive"
+        ],
+        "language": "el",
+        "notes": "books.json manifest",
+        "date_added": "2026-03-16",
+        "status": "active"
+      },
+      {
+        "media_id": "VID-002",
+        "type": "youtube",
+        "title": "Γρηγόριος Νύσσης — Τριαδολογία, σχέση με Πλάτωνα",
+        "url": "https://youtu.be/Ftr5AbtSxWE",
+        "source_platform": "YouTube",
+        "app_context": [
+          "Explorer History",
+          "Console",
+          "Interactive Book"
+        ],
+        "unit_id": "",
+        "tags": [
+          "Γρηγόριος Νύσσης",
+          "πατέρας εκκλησίας",
+          "4ος αιώνας",
+          "Τριαδολογία",
+          "Νεοπλατωνισμός",
+          "φιλοσοφία",
+          "Καππαδόκες"
+        ],
+        "language": "el",
+        "notes": "UE5 εξαιρέθηκε — γενική καταχώριση",
+        "date_added": "2026-03-19",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-002",
+        "type": "image",
+        "title": "Δελφοί — Χάρτης Κλασικής Ελλάδας",
+        "url": "https://i.ibb.co/h1mwhLDV/Mapping-Classical-Greece-7.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Mind Palace",
+          "Explorer History",
+          "Timeline Map",
+          "Interactive Book"
+        ],
+        "unit_id": "",
+        "tags": [
+          "Δελφοί",
+          "τόπος",
+          "αρχαία Ελλάδα",
+          "8ος–4ος αιώνας π.Χ.",
+          "μαντείο",
+          "θρησκεία αρχαία",
+          "χάρτης"
+        ],
+        "language": "el",
+        "notes": "Από παρουσίαση Mapping Classical Greece",
+        "date_added": "2026-03-19",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-003",
+        "type": "image",
+        "title": "Ολυμπία — Χάρτης Κλασικής Ελλάδας",
+        "url": "https://i.ibb.co/7xQJ0dGf/Mapping-Classical-Greece.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "",
+        "tags": [
+          "Ολυμπία",
+          "τόπος",
+          "αρχαία Ελλάδα",
+          "8ος–4ος αιώνας π.Χ.",
+          "αθλητισμός",
+          "λατρεία Δία",
+          "χάρτης"
+        ],
+        "language": "el",
+        "notes": "Από παρουσίαση Mapping Classical Greece",
+        "date_added": "2026-03-19",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-004",
+        "type": "image",
+        "title": "Παράδοση ιδεών και επιρροές — διάγραμμα",
+        "url": "https://i.ibb.co/k28pSzCJ/Digital-Knowledge-Archaeology-pptx-5.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Mind Palace",
+          "Explorer History",
+          "Timeline Map",
+          "Interactive Book"
+        ],
+        "unit_id": "",
+        "tags": [
+          "ιστορία ιδεών",
+          "επιρροές",
+          "φιλοσοφία",
+          "παράδοση",
+          "διάγραμμα",
+          "διαχρονικό"
+        ],
+        "language": "el",
+        "notes": "Από παρουσίαση Digital Knowledge Archaeology",
+        "date_added": "2026-03-19",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-005",
+        "type": "image",
+        "title": "Ρώμη — Χάρτης Εκκλησιαστικής Ιστορίας",
+        "url": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Console"
+        ],
+        "unit_id": "",
+        "tags": [
+          "Ρώμη",
+          "τόπος",
+          "1ος–5ος αιώνας",
+          "εκκλησιαστική ιστορία",
+          "χάρτης",
+          "Δυτική Εκκλησία"
+        ],
+        "language": "el",
+        "notes": "Από παρουσίαση Two Millennia of Church History — κοινό URL με IMG-006/007",
+        "date_added": "2026-03-17",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-006",
+        "type": "image",
+        "title": "Αλεξάνδρεια — Χάρτης Εκκλησιαστικής Ιστορίας",
+        "url": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Explorer History",
+          "Timeline Map",
+          "Interactive Book"
+        ],
+        "unit_id": "",
+        "tags": [
+          "Αλεξάνδρεια",
+          "τόπος",
+          "1ος–5ος αιώνας",
+          "εκκλησιαστική ιστορία",
+          "χάρτης",
+          "Αλεξανδρινή σχολή",
+          "Αίγυπτος"
+        ],
+        "language": "el",
+        "notes": "Κοινό URL με IMG-005/007 — ίδια διαφάνεια παρουσίασης",
+        "date_added": "2026-03-17",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-007",
+        "type": "image",
+        "title": "Βυζάντιο — Χάρτης Εκκλησιαστικής Ιστορίας",
+        "url": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Mind Palace",
+          "Console",
+          "Interactive Book"
+        ],
+        "unit_id": "",
+        "tags": [
+          "Βυζάντιο",
+          "Κωνσταντινούπολη",
+          "τόπος",
+          "4ος–15ος αιώνας",
+          "εκκλησιαστική ιστορία",
+          "χάρτης",
+          "Ανατολική Εκκλησία"
+        ],
+        "language": "el",
+        "notes": "Κοινό URL με IMG-005/006 — ίδια διαφάνεια παρουσίασης",
+        "date_added": "2026-03-17",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-008",
+        "type": "image",
+        "title": "Αρχαία Αγορά Αθήνα",
+        "url": "https://i.ibb.co/4ZmrLG2J/1775331843223.png",
+        "source_platform": "imgbb",
+        "app_context": [
+          "UE5",
+          "Timeline Map",
+          "Console"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "Αθήνα",
+          "αρχαία αγορά",
+          "Παύλος",
+          "1ος αιώνας",
+          "τόπος"
+        ],
+        "language": "el",
+        "notes": "Παύλος στην Αθήνα",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-009",
+        "type": "image",
+        "title": "Αρχαία Αθήνα — Ακρόπολη, Άγαλμα Αθηνάς",
+        "url": "https://i.ibb.co/KjgH0PWm/Screenshot-2026-05-09-14-13-53-871-com-android-chrome-edit.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "UE5",
+          "Timeline Map",
+          "Console"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "Αθήνα",
+          "ακρόπολη",
+          "Αθηνά",
+          "άγαλμα",
+          "αρχαία Ελλάδα"
+        ],
+        "language": "el",
+        "notes": "Παύλος στην Αθήνα",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-010",
+        "type": "image",
+        "title": "Ραφαήλ — Σχολή Αθηνών",
+        "url": "https://i.ibb.co/cXsZqTDS/Screenshot-2026-05-09-13-31-02-474-com-android-chrome-edit.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "UE5",
+          "Timeline Map",
+          "Mind Palace"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "Ραφαήλ",
+          "Σχολή Αθηνών",
+          "Αναγέννηση",
+          "φιλοσοφία"
+        ],
+        "language": "el",
+        "notes": "Παύλος στην Αθήνα",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-011",
+        "type": "image",
+        "title": "Εισαγωγή — Sacred Blueprint-Μετοχή στο θείο Ων",
+        "url": "https://i.ibb.co/nMwjVrmC/The-Sacred-Blueprint-page-0001.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "μετοχή",
+          "θείο",
+          "φιλοσοφία",
+          "πατερική",
+          "Sacred Blueprint"
+        ],
+        "language": "el",
+        "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-012",
+        "type": "image",
+        "title": "Σταθμός 1 — Πλάτων",
+        "url": "https://i.ibb.co/LDN0sWGp/The-Sacred-Blueprint-page-0002.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "μετοχή",
+          "θείο",
+          "φιλοσοφία",
+          "πατερική",
+          "Sacred Blueprint"
+        ],
+        "language": "el",
+        "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-013",
+        "type": "image",
+        "title": "Σταθμός 2 — Αριστοτέλης",
+        "url": "https://i.ibb.co/n861J2T2/The-Sacred-Blueprint-page-0003.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "μετοχή",
+          "θείο",
+          "φιλοσοφία",
+          "πατερική",
+          "Sacred Blueprint"
+        ],
+        "language": "el",
+        "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-014",
+        "type": "image",
+        "title": "Σταθμός 3 — Στωικισμός",
+        "url": "https://i.ibb.co/DfNrzJDf/The-Sacred-Blueprint-page-0004.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "μετοχή",
+          "θείο",
+          "φιλοσοφία",
+          "πατερική",
+          "Sacred Blueprint"
+        ],
+        "language": "el",
+        "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-015",
+        "type": "image",
+        "title": "Σταθμός 4 — Ιωάννης Θεολόγος",
+        "url": "https://i.ibb.co/q3Ty33Vq/The-Sacred-Blueprint-page-0005.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "μετοχή",
+          "θείο",
+          "φιλοσοφία",
+          "πατερική",
+          "Sacred Blueprint"
+        ],
+        "language": "el",
+        "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-016",
+        "type": "image",
+        "title": "Σταθμός 5 — Ωριγένης",
+        "url": "https://i.ibb.co/nNYp6P4B/The-Sacred-Blueprint-page-0006.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "μετοχή",
+          "θείο",
+          "φιλοσοφία",
+          "πατερική",
+          "Sacred Blueprint"
+        ],
+        "language": "el",
+        "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-017",
+        "type": "image",
+        "title": "Σταθμός 6 — Γρηγόριος Θεολόγος",
+        "url": "https://i.ibb.co/kgF5TZTx/The-Sacred-Blueprint-page-0007.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "μετοχή",
+          "θείο",
+          "φιλοσοφία",
+          "πατερική",
+          "Sacred Blueprint"
+        ],
+        "language": "el",
+        "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-018",
+        "type": "image",
+        "title": "Σταθμός 7 — Γρηγόριος Νύσσης",
+        "url": "https://i.ibb.co/TqcDJYxK/The-Sacred-Blueprint-page-0008.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "μετοχή",
+          "θείο",
+          "φιλοσοφία",
+          "πατερική",
+          "Sacred Blueprint"
+        ],
+        "language": "el",
+        "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-019",
+        "type": "image",
+        "title": "Σταθμός 8 — Διονύσιος Αρεοπαγίτης",
+        "url": "https://i.ibb.co/F49ZXsfF/The-Sacred-Blueprint-page-0009.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "μετοχή",
+          "θείο",
+          "φιλοσοφία",
+          "πατερική",
+          "Sacred Blueprint"
+        ],
+        "language": "el",
+        "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-020",
+        "type": "image",
+        "title": "Σταθμός 9 — Μάξιμος Ομολογητής",
+        "url": "https://i.ibb.co/pvGvV04f/The-Sacred-Blueprint-page-0010.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "μετοχή",
+          "θείο",
+          "φιλοσοφία",
+          "πατερική",
+          "Sacred Blueprint"
+        ],
+        "language": "el",
+        "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-021",
+        "type": "image",
+        "title": "Σταθμός 10 — Συμεών Νέος Θεολόγος",
+        "url": "https://i.ibb.co/twQyyfQP/The-Sacred-Blueprint-page-0011.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "μετοχή",
+          "θείο",
+          "φιλοσοφία",
+          "πατερική",
+          "Sacred Blueprint"
+        ],
+        "language": "el",
+        "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-022",
+        "type": "image",
+        "title": "Σταθμός 11 — Γρηγόριος Παλαμάς",
+        "url": "https://i.ibb.co/V0S43ngy/The-Sacred-Blueprint-page-0012.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "μετοχή",
+          "θείο",
+          "φιλοσοφία",
+          "πατερική",
+          "Sacred Blueprint"
+        ],
+        "language": "el",
+        "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-023",
+        "type": "image",
+        "title": "Sacred Blueprint — page 10",
+        "url": "https://i.ibb.co/6RDfMcx1/The-Sacred-Blueprint-page-0013.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "μετοχή",
+          "θείο",
+          "φιλοσοφία",
+          "πατερική",
+          "Sacred Blueprint"
+        ],
+        "language": "el",
+        "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-024",
+        "type": "image",
+        "title": "Sacred Blueprint — page 07",
+        "url": "https://i.ibb.co/PGmWDBjt/The-Sacred-Blueprint-page-0014.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "μετοχή",
+          "θείο",
+          "φιλοσοφία",
+          "πατερική",
+          "Sacred Blueprint"
+        ],
+        "language": "el",
+        "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "IMG-025",
+        "type": "image",
+        "title": "Sacred Blueprint — page 04",
+        "url": "https://i.ibb.co/8nJp0wwB/The-Sacred-Blueprint-page-0015.jpg",
+        "source_platform": "imgbb",
+        "app_context": [
+          "Timeline Map",
+          "Mind Palace",
+          "Explorer History",
+          "Interactive Book"
+        ],
+        "unit_id": "U03",
+        "tags": [
+          "μετοχή",
+          "θείο",
+          "φιλοσοφία",
+          "πατερική",
+          "Sacred Blueprint"
+        ],
+        "language": "el",
+        "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
+        "date_added": "2026-05-09",
+        "status": "active"
+      },
+      {
+        "media_id": "AUD-001",
+        "type": "notebooklm",
+        "title": "Διονύσιος αρεοπαγίτης audio overview",
+        "url": "https://notebooklm.google.com/notebook/d5cf326f-79f9-4338-b94a-cd532c1c3bde/artifact/51f268f6-b3b1-4d6b-85d7-be8b4d22646d?utm_source=nlm_web_share&utm_medium=google_oo&utm_campaign=art_share_2&utm_content=&utm_smc=nlm_web_share_google_oo_art_share_2_",
+        "source_platform": "notebooklm",
+        "app_context": [],
+        "unit_id": "",
+        "tags": [
+          "διονύσιος",
+          "αρεοπαγίτης",
+          "νεοπλατωνισμός",
+          "ακουστική σύνοψη",
+          "ήχος"
+        ],
+        "language": "el",
+        "notes": "",
+        "date_added": "2026-06-16",
+        "status": "active"
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "scenario-1781620912436",
+      "title": "Νέο scenario",
+      "type": "Custom",
+      "status": "draft",
+      "updatedAt": "2026-06-16",
+      "tags": [],
+      "source": {
+        "kind": "manual",
+        "notes": ""
+      },
+      "links": [],
+      "appOutputs": {
+        "unreal": {
+          "id": "new_scenario",
+          "version": "1.0",
+          "title": "",
+          "subtitle": "",
+          "characters": {
+            "char1": {
+              "displayName": "",
+              "shortName": "",
+              "color": "#1a4a8b"
+            },
+            "char2": {
+              "displayName": "",
+              "shortName": "",
+              "color": "#8b3a1f"
+            }
+          },
+          "acts": [
+            {
+              "id": "act_intro",
+              "title": "",
+              "type": "cinematic",
+              "dialogues": [
+                {
+                  "id": "d_01",
+                  "speaker": "char1",
+                  "text": "",
+                  "audioUrl": "{{audio_char1_01}}",
+                  "animation": "gesture_welcome",
+                  "camera": "medium_char1",
+                  "subtitle": true
+                }
+              ],
+              "playerChoice": {
+                "prompt": "",
+                "displayStyle": "radial_menu",
+                "choices": [
+                  {
+                    "id": "c1",
+                    "label": "",
+                    "nextAct": "act_2"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "timeline": [
+          {
+            "id": 1773388754927,
+            "year": "499-400 π.Χ.",
+            "title": "Χρυσός Αιώνας",
+            "desc": "Ελληνική Αρχαιότητα",
+            "img": "https://i.ibb.co/FLZDgLRW/Mapping-Classical-Greece.jpg",
+            "location": "Αρχαία Ελλάδα",
+            "lat": 38,
+            "lng": 23,
+            "zoom": 6,
+            "slides": "https://docs.google.com/presentation/d/e/2PACX-1vTuyeKR7PFQ_N0h_BrvCS7mu5fmF1PyqXk0f5G1LEC94rlq0FdDbH8LQTB-PvLC-A/pubembed"
+          },
+          {
+            "id": 1773389564920,
+            "year": "499-400 π.Χ",
+            "title": "Αθήνα",
+            "desc": "Άνθηση τεχνών και επιστημών",
+            "img": "https://i.ibb.co/G43jtPHJ/Mapping-Classical-Greece-2.jpg",
+            "location": "Αθήνα",
+            "lat": 38,
+            "lng": 23,
+            "zoom": 9,
+            "slides": ""
+          },
+          {
+            "id": 1773389710064,
+            "year": "499-400 π.Χ",
+            "title": "Σπάρτη",
+            "desc": "Πειθαρχία και αρετή",
+            "img": "https://i.ibb.co/fdXHmsBS/Mapping-Classical-Greece-3.jpg",
+            "location": "Σπάρτη",
+            "lat": 38,
+            "lng": 23,
+            "zoom": 7,
+            "slides": ""
+          },
+          {
+            "id": 1773390610488,
+            "year": "499-400 π.Χ",
+            "title": "Δελφοί",
+            "desc": "Μαντείο",
+            "img": "https://i.ibb.co/h1mwhLDV/Mapping-Classical-Greece-7.jpg",
+            "location": "Δελφοί",
+            "lat": 38,
+            "lng": 23,
+            "zoom": 7,
+            "slides": ""
+          },
+          {
+            "id": 1773390705323,
+            "year": "499-400 π.Χ",
+            "title": "Ολυμπία",
+            "desc": "Ολυμπιακοί αγώνες",
+            "img": "https://i.ibb.co/7xQJ0dGf/Mapping-Classical-Greece.jpg",
+            "location": "Ολυμπία",
+            "lat": 38,
+            "lng": 23,
+            "zoom": 7,
+            "slides": ""
+          },
+          {
+            "id": 1773381969608,
+            "year": "490 π.Χ",
+            "title": "Μάχη του Μαραθώνα",
+            "desc": "Απόκρουση των Περσών",
+            "img": "https://i.ibb.co/N22g3KNZ/Mapping-Classical-Greece-4.jpg",
+            "location": "Αθήνα",
+            "lat": 37.9838,
+            "lng": 23.7275,
+            "zoom": 9,
+            "slides": ""
+          },
+          {
+            "id": 1773390337176,
+            "year": "480 π.Χ",
+            "title": "Σαλαμίνα",
+            "desc": "Β΄ Περσικός Πόλεμος",
+            "img": "https://i.ibb.co/CTkPtxS/Mapping-Classical-Greece-5.jpg",
+            "location": "",
+            "lat": 38,
+            "lng": 23,
+            "zoom": 7,
+            "slides": ""
+          },
+          {
+            "id": 1773390527413,
+            "year": "479 π.Χ",
+            "title": "Πλαταιές",
+            "desc": "Τελική Μάχη",
+            "img": "https://i.ibb.co/0RgNmwP4/Mapping-Classical-Greece-6.jpg",
+            "location": "",
+            "lat": 38,
+            "lng": 23,
+            "zoom": 7,
+            "slides": ""
+          },
+          {
+            "id": 1773390775041,
+            "year": "431-404 π.Χ.",
+            "title": "Πελοποννησιακός Πόλεμος",
+            "desc": "Εμφύλιος",
+            "img": "https://i.ibb.co/N2GC2WV3/Mapping-Classical-Greece-1.jpg",
+            "location": "",
+            "lat": 38,
+            "lng": 23,
+            "zoom": 7,
+            "slides": ""
+          }
+        ],
+        "investigation": {
+          "topic": "Διονύσιος Αρεοπαγίτης: Εργαλείο ή Σκοπός; Φιλοσοφία στην Υπηρεσία της Θεολογίας",
+          "clues": [
+            {
+              "title": "Ύποπτος: Διονύσιος Αρεοπαγίτης",
+              "description": "Κατηγορία: Οικειοποίηση ξένης πνευματικής περιουσίας. Κατηγορείται ότι «βάφτισε» τον νεοπλατωνισμό του Πλωτίνου και του Πρόκλου, μετατρέποντας την «απορροή» σε «εκκλησιαστική ιεραρχία». Ερώτημα-Κλειδί: Είναι φιλόσοφος με χριστιανικό ένδυμα ή θεολόγος που χρησιμοποιεί τη γλώσσα των εχθρών του για να τους κερδίσει;",
+              "type": "suspect",
+              "image": "https://i.ibb.co/n861J2T2/The-Sacred-Blueprint-page-0003.jpg"
+            },
+            {
+              "title": "Στοιχείο «Σκιά» — Πλάτων",
+              "description": "Ο Πλάτων μιλά για αισθητά που είναι σκιές των Ιδεών. Ο Διονύσιος μιλά για ιεραρχίες που αντανακλούν το θείο φως. Σύνδεση: Συμφωνεί ο Διονύσιος με την υποτίμηση του αισθητού κόσμου ή τον χρησιμοποιεί ως σκάλα προς το θείο;",
+              "type": "evidence",
+              "image": "https://i.ibb.co/LDN0sWGp/The-Sacred-Blueprint-page-0002.jpg"
+            },
+            {
+              "title": "Στοιχείο «Μηχανή» — Αριστοτέλης",
+              "description": "Ο Αριστοτέλης βλέπει έναν Θεό που κινεί τα πάντα χωρίς να νοιάζεται (Ακίνητος Κινητής). Ο Διονύσιος περιγράφει μια σταθερή ιεραρχική τάξη. Σύνδεση: Υπάρχει χώρος για προσωπική σχέση σε μια τόσο αυστηρή δομή ή είναι απλώς μια «πνευματική μηχανή»;",
+              "type": "evidence",
+              "image": "https://i.ibb.co/PGmWDBjt/The-Sacred-Blueprint-page-0014.jpg"
+            },
+            {
+              "title": "Στοιχείο «Σάρκα» — Ιωάννης ο Θεολόγος",
+              "description": "Ο Λόγος έγινε Πρόσωπο — ο Χριστός. Σύνδεση: Πού βρίσκεται ο Χριστός μέσα στο δαιδαλώδες σύστημα αγγέλων και βαθμών του Διονυσίου; Είναι το κέντρο της θεολογίας του ή απλώς ένας τίτλος στην ιεραρχική κλίμακα;",
+              "type": "evidence",
+              "image": "https://i.ibb.co/6RDfMcx1/The-Sacred-Blueprint-page-0013.jpg"
+            },
+            {
+              "title": "Στοιχείο «Ατέλειωτο Ταξίδι» — Γρηγόριος Νύσσης & Φως — Γρηγόριος Παλαμάς",
+              "description": "Ο Γρηγόριος Νύσσης: η μετοχή είναι αιώνια κίνηση (Επέκταση) προς άπειρο Θεό. Ο Παλαμάς: ο Θεός απρόσιτος στην ουσία, μεθεκτός στις ενέργειες. Σύνδεση: Αν ο Θεός είναι άπειρος, γιατί χρειάζονται τόσα ενδιάμεσα στάδια; Και είναι ο Διονύσιος αυτός που έδωσε στον Παλαμά το «κλειδί» της μετοχής;",
+              "type": "evidence",
+              "image": "https://i.ibb.co/F49ZXsfF/The-Sacred-Blueprint-page-0009.jpg"
+            },
+            {
+              "title": "Σημείωμα: Συμφωνία & Διαφωνία",
+              "description": "Συμφωνία: Ο Διονύσιος χρησιμοποιεί τον νεοπλατωνισμό για να εξηγήσει πώς το Ένα (Θεός) επικοινωνεί με τα Πολλά (Κτίση). Διαφωνία: Για τους φιλοσόφους η μετοχή είναι κυρίως διανοητική· για τον Διονύσιο περνά μέσα από τα Μυστήρια της Εκκλησίας. Χρησιμοποίησε νήμα πράσινο για Συμφωνία και κόκκινο για Διαφωνία.",
+              "type": "note",
+              "image": "https://i.ibb.co/cXsZqTDS/Screenshot-2026-05-09-13-31-02-474-com-android-chrome-edit.jpg"
+            },
+            {
+              "title": "Σημείωμα: Εξέλιξη του Λόγου",
+              "description": "Ο «Λόγος» των Στωικών ήταν απρόσωπη υλική δύναμη. Ο «Λόγος» του Ιωάννη έγινε Πρόσωπο. Ο «Λόγος» του Διονυσίου μετατράπηκε σε πηγή ιεραρχικού φωτός. Ερώτημα: Αυτή η μετατροπή είναι εξέλιξη, προδοσία ή δημιουργική σύνθεση; Χρησιμοποίησε νήμα μπλε για Εξέλιξη.",
+              "type": "note",
+              "image": "https://i.ibb.co/k28pSzCJ/Digital-Knowledge-Archaeology-pptx-5.jpg"
+            }
+          ]
+        },
+        "mindpalace": {
+          "case_id": "origen-enigma",
+          "title": "Το Αίνιγμα του Ωριγένη",
+          "method": "comparative",
+          "status": "complete",
+          "investigation_board": {
+            "figures": [
+              {
+                "name": "Ωριγένης Αλεξανδρεύς",
+                "work": "Περί Αρχών, Κατά Κέλσου",
+                "era": "185–254 μ.Χ.",
+                "image": "https://i.ibb.co/V0S43ngy/The-Sacred-Blueprint-page-0012.jpg"
+              },
+              {
+                "name": "Ιουστινιανός Α΄",
+                "work": "Κατά Ωριγένους (Ε΄ Οικουμενική)",
+                "era": "483–565 μ.Χ.",
+                "image": "https://i.ibb.co/cXsZqTDS/Screenshot-2026-05-09-13-31-02-474-com-android-chrome-edit.jpg"
+              }
+            ],
+            "concepts": {
+              "core": "προϋπαρξη ψυχών · ιεραρχική υποταγή (subordinationism) · αποκατάσταση πάντων (apokatastasis) · ελευθερία βούλησης",
+              "image": "https://i.ibb.co/k28pSzCJ/Digital-Knowledge-Archaeology-pptx-5.jpg"
+            },
+            "clues": [
+              {
+                "id": "c1",
+                "title": "Προϋπαρξη των ψυχών (νόες)",
+                "content": "Ο Ωριγένης δανείζεται την πλατωνική/πλωτινική ιδέα ότι οι ψυχές προϋπάρχουν αιώνια σε πνευματική κατάσταση πριν πέσουν στον υλικό κόσμο.",
+                "source": "Φάκελος Α, Στοιχείο 1",
+                "type": "argument",
+                "difficulty": 1,
+                "image": "https://i.ibb.co/LDN0sWGp/The-Sacred-Blueprint-page-0002.jpg"
+              },
+              {
+                "id": "c2",
+                "title": "Ιεραρχική αλυσίδα (υποταγή Υιού)",
+                "content": "Υιοθετεί τη νεοπλατωνική αντίληψη ότι ο Υιός είναι υποδεέστερος του Πατρός (υποτακτικός) για να διασφαλιστεί η μοναρχία του Θεού.",
+                "source": "Φάκελος Α, Στοιχείο 2",
+                "type": "contradiction",
+                "difficulty": 2,
+                "image": "https://i.ibb.co/k28pSzCJ/Digital-Knowledge-Archaeology-pptx-5.jpg"
+              },
+              {
+                "id": "c3",
+                "title": "Αποκατάσταση των πάντων (apokatastasis)",
+                "content": "Χρησιμοποιεί το φιλοσοφικό σχήμα προόδου-επιστροφής, υποστηρίζοντας την τελική σωτηρία ακόμα και των δαιμόνων – θέμα που καταδικάστηκε αργότερα.",
+                "source": "Φάκελος Α, Στοιχείο 3",
+                "type": "evidence",
+                "difficulty": 2,
+                "image": "https://i.ibb.co/V0S43ngy/The-Sacred-Blueprint-page-0012.jpg"
+              },
+              {
+                "id": "c4",
+                "title": "Άμυνα κατά των Γνωστικών",
+                "content": "Χρησιμοποίησε τη φιλοσοφία ως όπλο εναντίον Γνωστικών (Βαλεντίνος, Μαρκίων), τονίζοντας την ενότητα Παλαιάς και Καινής Διαθήκης.",
+                "source": "Φάκελος Β, Στοιχείο 1",
+                "type": "argument",
+                "difficulty": 3,
+                "image": "https://i.ibb.co/cXsZqTDS/Screenshot-2026-05-09-13-31-02-474-com-android-chrome-edit.jpg"
+              },
+              {
+                "id": "c5",
+                "title": "Ελευθερία βούλησης κατά ειμαρμένης",
+                "content": "Η θεωρία του για την πτώση των ψυχών δεν είναι υλιστική, αλλά τονίζει την ελευθερία των λογικών όντων απέναντι στη μοίρα.",
+                "source": "Φάκελος Β, Στοιχείο 3",
+                "type": "synthesis",
+                "difficulty": 3,
+                "image": "https://i.ibb.co/8nJp0wwB/The-Sacred-Blueprint-page-0015.jpg"
+              }
+            ],
+            "connections": [
+              {
+                "from": "c1",
+                "to": "c2",
+                "type": "contrast",
+                "description": "Η προϋπαρξη (c1) είναι πλατωνική, αλλά η υποταγή του Υιού (c2) εισάγει διαβάθμιση που αποκλίνει από τον Πλάτωνα."
+              },
+              {
+                "from": "c2",
+                "to": "c3",
+                "type": "development",
+                "description": "Η υποταγή του Υιού (c2) συνδέεται λογικά με την αποκατάσταση (c3), αφού ένας μη ανώτατος Υιός θα μπορούσε να συγχωρήσει τα πάντα."
+              },
+              {
+                "from": "c3",
+                "to": "c4",
+                "type": "contrast",
+                "description": "Η αποκατάσταση (c3) υπερβαίνει την απλή άμυνα κατά Γνωστικών (c4) και οδηγεί σε ακραία οικουμενικότητα."
+              },
+              {
+                "from": "c4",
+                "to": "c5",
+                "type": "agreement",
+                "description": "Η ελευθερία βούλησης (c5) ενισχύει την αντιγνωστική θέση (c4), γιατί αντιτίθεται στην προορισμένη μοίρα."
+              }
+            ]
+          },
+          "mind_palace": {
+            "rooms": [
+              {
+                "id": "r1",
+                "name": "Η Στοά των Φιλοσοφικών Εργαλείων",
+                "theme": "library",
+                "unlock_requirements": [
+                  "c1",
+                  "c2"
+                ],
+                "central_question": "Μπορούν τα πλατωνικά εργαλεία (προϋπαρξη, ιεραρχία) να χρησιμοποιηθούν για να υπηρετήσουν τη χριστιανική αποκάλυψη, ή την αλλοιώνουν ανεπανόρθωτα;",
+                "image": "https://i.ibb.co/LDN0sWGp/The-Sacred-Blueprint-page-0002.jpg"
+              },
+              {
+                "id": "r2",
+                "name": "Το Δικαστήριο της Ε΄ Οικουμενικής",
+                "theme": "temple",
+                "unlock_requirements": [
+                  "c3",
+                  "c4",
+                  "c5"
+                ],
+                "central_question": "Γιατί η Εκκλησία καταδίκασε τον Ωριγένη 300 χρόνια μετά τον θάνατό του; Ήταν οι ιδέες του επικίνδυνες ή οι παρερμηνείες των «Ωριγενιστών»;",
+                "image": "https://i.ibb.co/V0S43ngy/The-Sacred-Blueprint-page-0012.jpg"
+              }
+            ],
+            "dialogues": [
+              {
+                "room_id": "r1",
+                "greeting": "Ιουστινιανός (Κατήγορος)",
+                "questions": [
+                  "Η προϋπαρξη των ψυχών – εργαλείο κατανόησης ή πλατωνική πλάνη που καταργεί την ανάσταση;",
+                  "Αν ο Υιός είναι υποδεέστερος του Πατρός, πώς διαφυλάσσεται η Τριάδα;",
+                  "Μπορεί η σκαλωσιά της φιλοσοφίας να αφαιρεθεί χωρίς να καταρρεύσει το δόγμα;"
+                ],
+                "suggested_answers": [
+                  "Η προϋπαρξη είναι ερμηνευτικό εργαλείο για να εξηγήσει ο Ωριγένης την προέλευση του κακού και την ανθρώπινη ελευθερία — δεν αναιρεί την ανάσταση, αλλά θέτει το ερώτημα τι ακριβώς ανίσταται.",
+                  "Ο Ωριγένης γράφει πριν τη Νίκαια· η «υποταγή» του Υιού αντανακλά μια ανεπεξέργαστη τριαδολογία, όχι αίρεση. Οι Καππαδόκες χρησιμοποίησαν το ίδιο λεξιλόγιο για να ορίσουν αργότερα την ορθοδοξία.",
+                  "Η σκαλωσιά μπορεί να αφαιρεθεί εφόσον το κτήριο του δόγματος έχει ολοκληρωθεί· ο Ωριγένης έδωσε τα υλικά, όχι τον τελικό σχεδιασμό."
+                ],
+                "revelation": "Ο Ωριγένης χρησιμοποιεί τη φιλοσοφία για να απαντήσει σε ερωτήματα που η απλή πίστη δεν είχε ακόμη διατυπώσει. Τα εργαλεία δεν είναι το ίδιο το θεμέλιο.",
+                "image": "https://i.ibb.co/k28pSzCJ/Digital-Knowledge-Archaeology-pptx-5.jpg"
+              },
+              {
+                "room_id": "r2",
+                "greeting": "Καππαδόκης Πατέρας (Υπερασπιστής)",
+                "questions": [
+                  "Η αποκατάσταση των πάντων – ακραία ελπίδα ή λογική κατάληξη της ελευθερίας;",
+                  "Γιατί η Ε΄ Οικουμενική τον καταδίκασε, ενώ οι Καππαδόκες τον αξιοποίησαν;",
+                  "Είναι ο Ωριγένης τραγικός ήρωας ή αιρετικός πρωτοπόρος;"
+                ],
+                "suggested_answers": [
+                  "Αν η ελευθερία βούλησης είναι απόλυτη και ο Θεός άπειρος στην αγάπη, η αποκατάσταση φαίνεται λογική κατάληξη — ο Ωριγένης ακολουθεί τη λογική ως το τέλος της, με κίνδυνο να υπονομεύσει την ευθύνη και την τελική κρίση.",
+                  "Η καταδίκη στόχευσε τους «Ωριγενιστές» του 6ου αιώνα που ωθήσαν τις ιδέες του σε ακραίες μορφές· οι Καππαδόκες ανέλαβαν τα θεολογικά επιτεύγματά του ενώ απέρριψαν τις υπερβολές.",
+                  "Ο Ωριγένης είναι και τα δύο: τραγικός γιατί η επιρροή του παρερμηνεύτηκε, πρωτοπόρος γιατί χάραξε το δρόμο για τη χριστιανική θεολογία. Η καταδίκη του είναι εν μέρει αδικία της ιστορίας."
+                ],
+                "revelation": "Χωρίς τον Ωριγένη, οι Καππαδόκες δεν θα είχαν το λεξιλόγιο για να ορίσουν την Τριάδα. Η καταδίκη του αφορά κυρίως τους ακραίους οπαδούς του, όχι τον ίδιο.",
+                "image": "https://i.ibb.co/8nJp0wwB/The-Sacred-Blueprint-page-0015.jpg"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sacred-blueprint-dionysius",
+      "title": "Sacred Blueprint — Διονύσιος Αρεοπαγίτης",
+      "type": "Comparative Theology",
+      "status": "draft",
+      "updatedAt": "2026-06-16",
+      "tags": [
+        "Mind Palace",
+        "Timeline",
+        "UE5",
+        "Notebook"
+      ],
+      "source": {
+        "kind": "text",
+        "notes": "Σενάριο για ιεραρχία, απορροές και αποφατική θεολογία στον 5ο αιώνα."
+      },
+      "links": [
+        {
+          "label": "Google Drive Folder",
+          "kind": "Drive",
+          "url": "https://drive.google.com/"
+        },
+        {
+          "label": "Interactive Books",
+          "kind": "Web App",
+          "url": "https://dporpatonelis-crypto.github.io/interactive-books/index.html"
+        },
+        {
+          "label": "Timeline Explorer",
+          "kind": "Web App",
+          "url": "https://dporpatonelis-crypto.github.io/Map-Timeline/"
+        }
+      ],
+      "appOutputs": {
+        "unreal": {
+          "id": "new_scenario",
+          "version": "1.0",
+          "title": "",
+          "subtitle": "",
+          "characters": {
+            "char1": {
+              "displayName": "",
+              "shortName": "",
+              "color": "#1a4a8b"
+            },
+            "char2": {
+              "displayName": "",
+              "shortName": "",
+              "color": "#8b3a1f"
+            }
+          },
+          "acts": [
+            {
+              "id": "act_intro",
+              "title": "",
+              "type": "cinematic",
+              "dialogues": [
+                {
+                  "id": "d_01",
+                  "speaker": "char1",
+                  "text": "",
+                  "audioUrl": "{{audio_char1_01}}",
+                  "animation": "gesture_welcome",
+                  "camera": "medium_char1",
+                  "subtitle": true
+                }
+              ],
+              "playerChoice": {
+                "prompt": "",
+                "displayStyle": "radial_menu",
+                "choices": [
+                  {
+                    "id": "c1",
+                    "label": "",
+                    "nextAct": "act_2"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "notebook": {
+          "title": "",
+          "date": "2026-06-16",
+          "chapters": [
+            {
+              "index": 1,
+              "title": "",
+              "html": "<p></p>",
+              "text": "",
+              "stickies": [],
+              "media": {
+                "audio": [
+                  {
+                    "id": "mi_audio_1",
+                    "label": "",
+                    "url": "",
+                    "notes": ""
+                  }
+                ],
+                "slides": [
+                  {
+                    "id": "mi_slides_1",
+                    "label": "",
+                    "url": "",
+                    "notes": ""
+                  }
+                ],
+                "notebooklm": [
+                  {
+                    "id": "mi_nlm_1",
+                    "label": "",
+                    "url": "",
+                    "notes": ""
+                  }
+                ],
+                "pdf": [
+                  {
+                    "id": "mi_pdf_1",
+                    "label": "",
+                    "url": "",
+                    "notes": ""
+                  }
+                ],
+                "text": [
+                  {
+                    "id": "mi_text_1",
+                    "label": "",
+                    "url": "",
+                    "content": "",
+                    "notes": ""
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

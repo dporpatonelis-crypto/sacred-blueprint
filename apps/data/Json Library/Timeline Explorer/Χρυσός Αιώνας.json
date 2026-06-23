@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1773388754927,
+    "year": "499-400 π.Χ.",
+    "title": "Χρυσός Αιώνας",
+    "desc": "Ελληνική Αρχαιότητα",
+    "img": "https://i.ibb.co/FLZDgLRW/Mapping-Classical-Greece.jpg",
+    "location": "Αρχαία Ελλάδα",
+    "lat": 38,
+    "lng": 23,
+    "zoom": 6,
+    "slides": "https://docs.google.com/presentation/d/e/2PACX-1vTuyeKR7PFQ_N0h_BrvCS7mu5fmF1PyqXk0f5G1LEC94rlq0FdDbH8LQTB-PvLC-A/pubembed"
+  },
+  {
+    "id": 1773389564920,
+    "year": "499-400 π.Χ",
+    "title": "Αθήνα",
+    "desc": "Άνθηση τεχνών και επιστημών",
+    "img": "https://i.ibb.co/G43jtPHJ/Mapping-Classical-Greece-2.jpg",
+    "location": "Αθήνα",
+    "lat": 38,
+    "lng": 23,
+    "zoom": 9,
+    "slides": ""
+  },
+  {
+    "id": 1773389710064,
+    "year": "499-400 π.Χ",
+    "title": "Σπάρτη",
+    "desc": "Πειθαρχία και αρετή",
+    "img": "https://i.ibb.co/fdXHmsBS/Mapping-Classical-Greece-3.jpg",
+    "location": "Σπάρτη",
+    "lat": 38,
+    "lng": 23,
+    "zoom": 7,
+    "slides": ""
+  },
+  {
+    "id": 1773390610488,
+    "year": "499-400 π.Χ",
+    "title": "Δελφοί",
+    "desc": "Μαντείο",
+    "img": "https://i.ibb.co/h1mwhLDV/Mapping-Classical-Greece-7.jpg",
+    "location": "Δελφοί",
+    "lat": 38,
+    "lng": 23,
+    "zoom": 7,
+    "slides": ""
+  },
+  {
+    "id": 1773390705323,
+    "year": "499-400 π.Χ",
+    "title": "Ολυμπία",
+    "desc": "Ολυμπιακοί αγώνες",
+    "img": "https://i.ibb.co/7xQJ0dGf/Mapping-Classical-Greece.jpg",
+    "location": "Ολυμπία",
+    "lat": 38,
+    "lng": 23,
+    "zoom": 7,
+    "slides": ""
+  },
+  {
+    "id": 1773381969608,
+    "year": "490 π.Χ",
+    "title": "Μάχη του Μαραθώνα",
+    "desc": "Απόκρουση των Περσών",
+    "img": "https://i.ibb.co/N22g3KNZ/Mapping-Classical-Greece-4.jpg",
+    "location": "Αθήνα",
+    "lat": 37.9838,
+    "lng": 23.7275,
+    "zoom": 9,
+    "slides": ""
+  },
+  {
+    "id": 1773390337176,
+    "year": "480 π.Χ",
+    "title": "Σαλαμίνα",
+    "desc": "Β΄ Περσικός Πόλεμος",
+    "img": "https://i.ibb.co/CTkPtxS/Mapping-Classical-Greece-5.jpg",
+    "location": "",
+    "lat": 38,
+    "lng": 23,
+    "zoom": 7,
+    "slides": ""
+  },
+  {
+    "id": 1773390527413,
+    "year": "479 π.Χ",
+    "title": "Πλαταιές",
+    "desc": "Τελική Μάχη",
+    "img": "https://i.ibb.co/0RgNmwP4/Mapping-Classical-Greece-6.jpg",
+    "location": "",
+    "lat": 38,
+    "lng": 23,
+    "zoom": 7,
+    "slides": ""
+  },
+  {
+    "id": 1773390775041,
+    "year": "431-404 π.Χ.",
+    "title": "Πελοποννησιακός Πόλεμος",
+    "desc": "Εμφύλιος",
+    "img": "https://i.ibb.co/N2GC2WV3/Mapping-Classical-Greece-1.jpg",
+    "location": "",
+    "lat": 38,
+    "lng": 23,
+    "zoom": 7,
+    "slides": ""
+  }
+]

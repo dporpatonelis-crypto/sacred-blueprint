@@ -12,7 +12,6 @@ BASE="$(pwd)"
 MASTER="$LESSON_DIR/master_output.json"
 ROUTING="$BASE/config/routing.json"
 
-# Επιλογές
 SKIP_TRANSFORM=false
 for arg in "${@:2}"; do
   case $arg in
@@ -37,7 +36,7 @@ echo "📁 Φάκελος: $LESSON_DIR"
 echo ""
 
 # ── 2. Validate ──────────────────────────────────────────
-echo "🔍 Βήμα 1/4: Έλεγχος πληρότητας..."
+echo "🔍 Βήμα 1/5: Έλεγχος πληρότητας..."
 REQUIRED_KEYS=("title" "subtitle" "description" "date" "era" "location" "coordinates")
 MISSING=0
 for key in "${REQUIRED_KEYS[@]}"; do
@@ -50,7 +49,7 @@ done
 if [ $MISSING -eq 0 ]; then
   echo "  ✅ Το master_output.json είναι πλήρες."
 else
-  echo "  ⚠ Λείπουν $MISSING πεδία. Συμπλήρωσέ τα."
+  echo "  ⚠ Λείπουν $MISSING πεδία."
   read -p "  Θες να συνεχίσεις; (y/N) " -n 1 -r
   echo
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -60,83 +59,75 @@ else
 fi
 echo ""
 
-# ── 3. Transform (μόνο αν ΔΕΝ έχουμε --skip-transform) ──
+# ── 3. Transform ──────────────────────────────────────────
 if [ "$SKIP_TRANSFORM" = true ]; then
-  echo "⏭️  Βήμα 2/4: Παράλειψη μετασχηματισμού (--skip-transform)"
+  echo "⏭️  Βήμα 2/5: Παράλειψη μετασχηματισμού (--skip-transform)"
 else
-  echo "🤖 Βήμα 2/4: Μετασχηματισμός για τις εφαρμογές..."
-
-  # Διαβάζουμε ποιες apps χρειάζονται
+  echo "🤖 Βήμα 2/5: Μετασχηματισμός για τις εφαρμογές..."
   APPS=$(jq -r '.lesson_types.theological_concept.apps[]' "$ROUTING" 2>/dev/null)
-
   if [ -z "$APPS" ]; then
     echo "  ⚠ Δεν βρέθηκαν εφαρμογές στο routing.json"
     APPS="living_anchor notebook"
   fi
-
   echo "  Εφαρμογές: $(echo $APPS | tr '\n' ' ')"
-
-  # Δημιουργία prompt
   PROMPT="Έχω ένα master_output.json. Θέλω να εξάγεις τα τμήματα για τις εφαρμογές: $APPS.
 
 Master JSON:
 $(cat "$MASTER")
 
-Mapping:
-- living_anchor → personal_page
-- investigation_board → investigation_board
-- notebook → notebook
-- mind_palace_debate → mind_palace
-- timeline_explorer → timeline_item
-- history_explorer_ue → history3d
-- unreal_scenario → unreal_scenario
-- personal_page → personal_page
-
 Απάντησε ΜΟΝΟ με JSON. Τα κλειδιά να είναι τα ονόματα των εφαρμογών."
 
   echo "  📡 Καλώ το Qwen..."
   RESPONSE=$(echo "$PROMPT" | ollama run qwen3.5:9b-mlx 2>&1)
-
-  # Καθαρισμός
   CLEANED=$(echo "$RESPONSE" | sed -n '/^{/,/^}/p' | sed '/^```/d')
 
   if echo "$CLEANED" | jq empty 2>/dev/null; then
     echo "$CLEANED" > "$LESSON_DIR/transformed.json"
-    echo "  ✅ Το Qwen ολοκλήρωσε τον μετασχηματισμό."
-
-    echo "$CLEANED" | jq -r 'keys[]' 2>/dev/null | while read -r app; do
-      echo "$CLEANED" | jq ".\"$app\"" > "$LESSON_DIR/${app}_output.json"
-      echo "    → ${app}_output.json"
-    done
+    echo "  ✅ Μετασχηματισμός ολοκληρώθηκε."
+    # Merge transformed sections back into master για να τα βρει το distribute
+    jq -s '.[0] * .[1]' "$MASTER" "$LESSON_DIR/transformed.json" > /tmp/merged.json
+    mv /tmp/merged.json "$MASTER"
+    echo "  ✅ Sections merged στο master_output.json"
   else
-    echo "  ⚠ Το Qwen δεν επέστρεψε έγκυρο JSON."
+    echo "  ⚠ Το Qwen δεν επέστρεψε έγκυρο JSON — συνεχίζω με --skip-transform λογική."
     echo "$RESPONSE" > "$LESSON_DIR/transform_raw.txt"
-    echo "  → Θα χρησιμοποιήσω το master_output.json απευθείας (τα sections υπάρχουν ήδη)."
   fi
 fi
 echo ""
 
-# ── 4. Distribute ──────────────────────────────────────────
-echo "📤 Βήμα 3/4: Διανομή στις εφαρμογές..."
-bash workflows/distribute.sh "$LESSON_DIR" 2>&1 | tee /tmp/distribute.log
-echo "  ✅ Διανομή ολοκληρώθηκε."
+# ── 4. Distribute → data/current/ ────────────────────────
+# Νέο βήμα: εξάγει sections από master και γεμίζει data/current/
+# Αυτό τροφοδοτεί το GitHub Action που διανέμει στα apps
+echo "📤 Βήμα 3/5: Εξαγωγή → data/current/..."
+bash workflows/distribute.sh "$LESSON_DIR"
 echo ""
 
-# ── 5. Dashboard + GitHub ──────────────────────────────────
-echo "📊 Βήμα 4/4: Dashboard + GitHub..."
+# ── 5. Dashboard ──────────────────────────────────────────
+echo "📊 Βήμα 4/5: Dashboard..."
 bash workflows/generate_dashboard.sh 2>&1 | tee /tmp/dashboard.log
-COMMIT_MSG="lesson: $TOPIC ($(date +%Y-%m-%d))"
-bash workflows/sync_github.sh "$COMMIT_MSG" 2>&1 | tee /tmp/github.log
-echo "  ✅ Ολοκληρώθηκε."
+echo "  ✅ Dashboard ενημερώθηκε."
 echo ""
 
-# ── 6. Τελικό μήνυμα ──────────────────────────────────────
+# ── 6. GitHub push ────────────────────────────────────────
+# Κάνει commit ΚΑΙ τον φάκελο μαθήματος (βιβλιοθήκη)
+# ΚΑΙ το data/current/ (trigger για Actions)
+echo "☁️  Βήμα 5/5: GitHub push..."
+COMMIT_MSG="lesson: $TOPIC ($(date +%Y-%m-%d))"
+git add "$LESSON_DIR/"
+git add data/current/
+git add lessons/index.html 2>/dev/null || true
+git commit -m "$COMMIT_MSG"
+git push
+echo "  ✅ Push ολοκληρώθηκε — GitHub Action ξεκίνησε."
+echo ""
+
+# ── 7. Τελικό μήνυμα ──────────────────────────────────────
 echo "══════════════════════════════════════════════"
 echo "✅ Ολοκληρώθηκε!"
 echo ""
-echo "📖 Δες το dashboard:"
-echo "  open $BASE/lessons/index.html"
+echo "📚 Βιβλιοθήκη:  $LESSON_DIR"
+echo "📡 Ενεργό:      data/current/ (→ apps μέσω GitHub Action)"
 echo ""
-echo "📂 Φάκελος μαθήματος:"
-echo "  $LESSON_DIR"
+echo "📖 Dashboard:"
+echo "   open $BASE/lessons/index.html"
 echo "══════════════════════════════════════════════"

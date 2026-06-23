@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Planner</title>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Playfair+Display:wght@400;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;600&family=DM+Sans:wght@400;600;700&family=Quattrocento:wght@400;700&family=Spectral:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink:        #1a1a2e;
+            --ink-soft:   #4a4a6a;
+            --paper:      #faf8f3;
+            --paper-warm: #f5f0e8;
+            --accent:     #5b7fa6;
+            --accent-mid: #7a9fc0;
+            --accent-pale:#dde8f2;
+            --gold:       #c9a84c;
+            --gold-pale:  #f7efd4;
+            --success:    #4a8c6a;
+            --success-pale:#d4edd8;
+            --warn:       #c08040;
+            --warn-pale:  #fdecd4;
+            --danger:     #a04040;
+            --danger-pale:#fde8e8;
+            --line:       #ddd8cc;
+            --shadow:     rgba(90,80,60,0.10);
+            --shadow-md:  rgba(90,80,60,0.18);
+            --cover-bg:   #5b7fa6;
+            --cover-accent: #c9a84c;
+            --notebook-lines: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 31px,
+                #ddd8cc 31px,
+                #ddd8cc 32px
+            );
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background-color: var(--paper-warm);
+            background-image:
+                radial-gradient(ellipse at 20% 20%, rgba(91,127,166,0.07) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(201,168,76,0.07) 0%, transparent 50%);
+            font-family: 'EB Garamond', Georgia, serif;
+            color: var(--ink);
+            position: relative;
+        }
+
+        /* ===== BACKGROUND IMAGE LAYER ===== */
+        #bgLayer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+        body > *:not(#bgLayer) { position: relative; z-index: 1; }
+
+        /* BG image URL input in skin panel */
+        #bgUrlWrap {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.97);
+            border: 1.5px solid var(--line);
+            border-radius: 20px;
+            padding: 6px 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            flex-wrap: wrap;
+        }
+        #bgUrlWrap.open { display: flex; }
+        #bgUrlInput {
+            font-family: var(--font-body, 'EB Garamond', serif);
+            font-size: 0.8rem;
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 200px;
+            color: var(--ink);
+        }
+        #bgOpacitySlider { width: 70px; cursor: pointer; accent-color: var(--accent); }
+        .bg-clear-btn { font-size: 0.75rem; cursor: pointer; color: var(--danger); background: none; border: none; padding: 0; }
+
+        /* ===== SKIN SWITCHER PANEL ===== */
+        #skinPanel {
+            position: fixed;
+            bottom: 24px; left: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 8px;
+            align-items: flex-start;
+        }
+        /* The icon buttons row */
+        #skinIconRow {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .skin-btn {
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            border: 2.5px solid white;
+            cursor: pointer;
+            box-shadow: 0 2px 8px var(--shadow-md);
+            transition: transform 0.2s;
+        }
+        .skin-btn:hover { transform: scale(1.2); }
+        .skin-btn.active { border-color: var(--ink); transform: scale(1.15); }
+        #skinToggle {
+            background: none; border: none;
+            font-size: 1.2rem; cursor: pointer;
+            padding: 4px;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        #skinToggle:hover { opacity: 1; }
+        #skinSwatches { display: none; align-items: center; gap: 6px; }
+        #skinSwatches.open { display: flex; }
+
+        /* ===== NOTEBOOK COVER HEADER ===== */
+        .notebook-cover {
+            background: var(--cover-bg);
+            position: relative;
+            overflow: hidden;
+            padding: 36px 40px 28px;
+            border-bottom: 4px solid var(--cover-accent);
+        }
+        .notebook-cover::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                repeating-linear-gradient(135deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 20px);
+        }
+        .notebook-cover::after {
+            content: '';
+            position: absolute;
+            left: 52px; top: 0; bottom: 0;
+            width: 2px;
+            background: rgba(255,255,255,0.15);
+        }
+        .cover-inner {
+            position: relative;
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+        }
+        .cover-spine {
+            width: 8px;
+            background: var(--cover-accent);
+            border-radius: 3px;
+            align-self: stretch;
+            min-height: 60px;
+            opacity: 0.8;
+        }
+        .cover-text { flex: 1; }
+        .cover-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .cover-title {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            background: none;
+            border: none;
+            outline: none;
+            padding: 4px 0;
+            width: 100%;
+            max-width: 600px;
+            border-bottom: 1px dashed rgba(255,255,255,0.3);
+            transition: border-color 0.2s;
+        }
+        .cover-title:focus { border-color: var(--cover-accent); }
+        .cover-title::placeholder { color: rgba(255,255,255,0.4); }
+        .cover-subtitle {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.75);
+            background: none;
+            border: none;
+            outline: none;
+            width: 100%;
+            max-width: 500px;
+            border-bottom: 1px dashed transparent;
+            transition: border-color 0.2s;
+            padding: 2px 0;
+        }
+        .cover-subtitle:focus { border-color: rgba(255,255,255,0.4); }
+        .cover-subtitle::placeholder { color: rgba(255,255,255,0.3); }
+        .cover-meta {
+            margin-top: 16px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .cover-badge {
+            background: rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.9);
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== TOOLBAR ===== */
+        .toolbar-wrap {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 16px 40px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            border-bottom: 1px solid var(--line);
+        }
+        .btn {
+            font-family: 'Lato', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 7px 16px;
+            border-radius: 30px;
+            border: 1.5px solid var(--line);
+            background: white;
+            color: var(--ink-soft);
+            cursor: pointer;
+            transition: all 0.18s;
+            letter-spacing: 0.3px;
+        }
+        .btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 2px 8px var(--shadow); }
+        .btn.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+        .btn.primary:hover { background: #4a6e95; }
+        .btn.gold {
+            background: var(--gold-pale);
+            border-color: var(--gold);
+            color: var(--warn);
+        }
+        .btn.danger-btn {
+            background: var(--danger-pale);
+            border-color: #e0b0b0;
+            color: var(--danger);
+        }
+
+        /* ===== TABS ===== */
+        .tabs-wrap {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+        .tabs {
+            display: flex;
+            gap: 4px;
+            border-bottom: 2px solid var(--line);
+            padding-top: 16px;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 9px 22px;
+            border-radius: 12px 12px 0 0;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--ink-soft);
+            background: transparent;
+            border: 1.5px solid transparent;
+            border-bottom: none;
+            transition: all 0.18s;
+            letter-spacing: 0.3px;
+            position: relative;
+            top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tab:hover { background: var(--paper); color: var(--accent); }
+        .tab.active {
+            background: var(--paper);
+            border-color: var(--line);
+            color: var(--accent);
+        }
+        .tab-label-edit {
+            background: none;
+            border: none;
+            outline: none;
+            font: inherit;
+            color: inherit;
+            width: 90px;
+            cursor: text;
+        }
+        .tab.active .tab-label-edit { cursor: text; }
+
+        /* ===== MAIN CONTENT ===== */
+        .main {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 28px 40px 60px;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ===== SECTION CARD (builder) ===== */
+        .section-card {
+            background: white;
+            border-radius: 20px;
+            border: 1.5px solid var(--line);
+            padding: 24px 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px var(--shadow);
+        }
+        .section-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 0 0 18px 0;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ===== ACTIVE PLAN BAR ===== */
+        .active-bar {
+            background: linear-gradient(135deg, var(--cover-bg) 0%, #4a6e95 100%);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: 0 4px 20px rgba(91,127,166,0.25);
+        }
+        .active-bar-info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .active-bar-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; opacity: 0.75; }
+        .active-bar-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 18px;
+            border-radius: 30px;
+        }
+
+        /* ===== FILTER BUTTONS ===== */
+        .filter-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 30px;
+            border: 1.5px solid var(--line);
+            background: var(--paper-warm);
+            color: var(--ink-soft);
+            cursor: pointer;
+            transition: all 0.18s;
+            letter-spacing: 0.3px;
+        }
+        .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .filter-btn.active-filter {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        /* ===== COMPONENT GRID ===== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 14px;
+            margin-bottom: 32px;
+        }
+
+        /* ===== COMPACT COMPONENT CARD (elements tab only) ===== */
+        .comp-card {
+            background: var(--paper);
+            border-radius: 14px;
+            border: 1.5px solid var(--line);
+            padding: 13px 15px;
+            box-shadow: 0 2px 8px var(--shadow);
+            transition: box-shadow 0.2s, border-color 0.2s;
+            position: relative;
+            font-size: 0.88rem;
+        }
+        .comp-card::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 12px; bottom: 12px;
+            width: 3px;
+            border-radius: 0 3px 3px 0;
+            background: var(--line);
+            transition: background 0.2s;
+        }
+        .comp-card.in-active::before { background: var(--accent); }
+        .comp-card.in-active { border-color: var(--accent-pale); background: #f5f9fd; }
+        .comp-card:hover { box-shadow: 0 4px 16px var(--shadow-md); }
+
+        .card-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .comp-name-input {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 1rem;
+            font-weight: 600;
+            flex: 1;
+            border: none;
+            border-bottom: 1px dashed var(--line);
+            background: transparent;
+            outline: none;
+            color: var(--ink);
+            padding: 2px 0;
+            transition: border-color 0.2s;
+        }
+        .comp-name-input:focus { border-color: var(--accent); }
+
+        .maturity-badge {
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 30px;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+        .m0 { background: #f1f1ee; color: #666; }
+        .m1 { background: var(--warn-pale); color: var(--warn); }
+        .m2 { background: #fff0cc; color: #7a5a00; }
+        .m3 { background: var(--success-pale); color: var(--success); }
+
+        .in-plan-chip {
+            font-size: 0.65rem;
+            font-weight: 700;
+            background: var(--accent-pale);
+            color: var(--accent);
+            padding: 3px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+            letter-spacing: 0.4px;
+        }
+
+        .form-row { margin-bottom: 8px; }
+        .form-row label {
+            display: block;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--ink-soft);
+            margin-bottom: 2px;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            font-family: 'Lato', sans-serif;
+        }
+        select, textarea, input[type="text"] {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 0.85rem;
+            width: 100%;
+            padding: 5px 10px;
+            border-radius: 10px;
+            border: 1.5px solid var(--line);
+            background: white;
+            color: var(--ink);
+            outline: none;
+            transition: border-color 0.18s;
+            margin-top: 2px;
+        }
+        select:focus, textarea:focus, input[type="text"]:focus { border-color: var(--accent); }
+
+        /* ===== MATURITY PHASES ===== */
+        .phases-section {
+            background: var(--paper-warm);
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin: 8px 0;
+            border: 1px solid var(--line);
+        }
+        .phases-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 7px;
+        }
+        .phases-title {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--ink-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: none;
+            border: none;
+            outline: none;
+            cursor: text;
+            font-family: 'Lato', sans-serif;
+        }
+        .phases-title:focus { color: var(--accent); }
+        .phase-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 4px 0;
+            padding: 4px 7px;
+            border-radius: 8px;
+            background: white;
+            border: 1px solid var(--line);
+        }
+        .phase-item input[type="checkbox"] {
+            width: 14px; height: 14px;
+            margin: 0;
+            accent-color: var(--accent);
+            flex-shrink: 0;
+        }
+        .phase-text-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 0.82rem;
+            font-family: 'EB Garamond', serif;
+            color: var(--ink);
+            outline: none;
+            padding: 0;
+            margin: 0;
+        }
+        .phase-text-input.done { text-decoration: line-through; color: var(--ink-soft); opacity: 0.6; }
+        .phase-remove { cursor: pointer; color: var(--danger); font-size: 0.7rem; padding: 1px; }
+        .add-phase-row {
+            display: flex;
+            gap: 5px;
+            margin-top: 6px;
+        }
+        .add-phase-row input { flex: 1; font-size: 0.78rem; }
+
+        /* ===== TAGS ===== */
+        .tags-wrap { display: flex; flex-wrap: wrap; gap: 5px; margin: 6px 0; }
+        .tag {
+            background: var(--accent-pale);
+            color: var(--accent);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .tag-x { cursor: pointer; opacity: 0.7; font-size: 0.65rem; }
+        .tag-x:hover { opacity: 1; color: var(--danger); }
+        .add-tag-row { display: flex; gap: 6px; margin-top: 4px; }
+        .add-tag-row input { flex: 1; font-size: 0.78rem; }
+
+        /* ===== TEMPLATE CARDS ===== */
+        .tmpl-card {
+            background: white;
+            border-radius: 20px;
+            border: 1.5px solid var(--line);
+            padding: 20px 24px;
+            margin-bottom: 18px;
+            box-shadow: 0 3px 12px var(--shadow);
+            transition: border-color 0.2s;
+        }
+        .tmpl-card.active-tmpl {
+            border-color: var(--accent);
+            border-width: 2.5px;
+            background: #f5f9fd;
+        }
+        .tmpl-header { display: flex; gap: 16px; flex-wrap: wrap; }
+        .tmpl-info { flex: 2; min-width: 200px; }
+        .tmpl-comps {
+            flex: 3;
+            min-width: 200px;
+            background: var(--paper-warm);
+            padding: 12px 16px;
+            border-radius: 14px;
+        }
+        .tmpl-comps h4 {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--ink-soft);
+            margin: 0 0 10px 0;
+        }
+        .comp-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 8px;
+            border-radius: 10px;
+            background: white;
+            margin: 5px 0;
+            font-size: 0.8rem;
+        }
+        .comp-check input { width: 15px; height: 15px; accent-color: var(--accent); flex-shrink: 0; }
+        .tmpl-metrics { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .metric {
+            background: var(--paper-warm);
+            border: 1px solid var(--line);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--ink-soft);
+        }
+        .tmpl-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+
+        /* ===== SESSION CARDS ===== */
+        .session-card {
+            background: white;
+            border-radius: 20px;
+            border: 1.5px solid var(--line);
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 3px 12px var(--shadow);
+        }
+        .session-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+        .session-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .log-form { margin-top: 12px; }
+        .log-form textarea { font-size: 0.8rem; }
+        .log-form .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+        .log-entry {
+            border-top: 1px dashed var(--line);
+            padding: 8px 0;
+            font-size: 0.78rem;
+            color: var(--ink-soft);
+        }
+        .log-entry strong { color: var(--ink); }
+        .log-history { margin-top: 12px; max-height: 180px; overflow-y: auto; }
+
+        /* ===== GLOBAL NOTES ===== */
+        .global-notes-section { margin-top: 32px; }
+        .global-notes-label {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .global-notes-label input {
+            font-family: inherit;
+            font-size: inherit;
+            font-weight: inherit;
+            border: none;
+            border-bottom: 1.5px dashed var(--line);
+            background: transparent;
+            outline: none;
+            flex: 1;
+        }
+        .global-notes-label input:focus { border-color: var(--accent); }
+        .notes-paper {
+            background: var(--paper);
+            border-radius: 16px;
+            border: 1.5px solid var(--line);
+            padding: 16px 20px;
+            background-image: var(--notebook-lines);
+        }
+        .notes-paper textarea {
+            border: none;
+            background: transparent;
+            line-height: 32px;
+            font-size: 0.88rem;
+            resize: vertical;
+            min-height: 96px;
+            padding: 0;
+            margin: 0;
+            font-family: 'Lato', sans-serif;
+        }
+
+        /* ===== MATURITY LEVEL LABELS ===== */
+        .maturity-labels-editor {
+            background: var(--paper-warm);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            border: 1px solid var(--line);
+        }
+        .maturity-labels-editor h4 {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--ink-soft);
+            margin: 0 0 10px 0;
+        }
+        .maturity-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .maturity-cell { display: flex; flex-direction: column; gap: 4px; }
+        .maturity-cell .m-badge { text-align: center; border-radius: 8px; padding: 3px 0; font-size: 0.7rem; font-weight: 700; }
+        .maturity-cell input {
+            font-size: 0.75rem;
+            padding: 5px 8px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        /* ===== BACKGROUND ACTIVE STATE ===== */
+        body.has-bg {
+            background-color: transparent;
+            background-image: none;
+        }
+        body.has-bg .section-card       { background: rgba(250,248,243,0.82); backdrop-filter: blur(2px); }
+        body.has-bg .comp-card          { background: rgba(250,248,243,0.80); }
+        body.has-bg .comp-card.in-active{ background: rgba(245,249,253,0.85); }
+        body.has-bg .toolbar-wrap       { background: rgba(245,240,232,0.88); backdrop-filter: blur(4px); }
+        body.has-bg .tabs-wrap          { background: rgba(245,240,232,0.80); }
+        body.has-bg .tmpl-card          { background: rgba(255,255,255,0.82); }
+        body.has-bg .session-card       { background: rgba(255,255,255,0.82); }
+        body.has-bg .notes-paper        { background: rgba(250,248,243,0.80); }
+        body.has-bg .active-bar         { background: linear-gradient(135deg,rgba(91,127,166,0.88) 0%,rgba(74,110,149,0.88) 100%); }
+
+        /* ===== FONT SWITCHER ===== */
+        #fontSwatches {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            background: rgba(255,255,255,0.97);
+            border: 1.5px solid var(--line);
+            border-radius: 14px;
+            padding: 8px 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        #fontSwatches.open { display: flex; }
+        .font-btn {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 5px 14px;
+            border-radius: 20px;
+            border: 1.5px solid var(--line);
+            background: white;
+            cursor: pointer;
+            transition: all 0.18s;
+            white-space: nowrap;
+            color: var(--ink);
+            text-align: left;
+        }
+        .font-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .font-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+        #fontToggle { background: none; border: none; font-size: 1.1rem; cursor: pointer; opacity: 0.7; transition: opacity 0.2s; padding: 4px; }
+        #fontToggle:hover { opacity: 1; }
+
+        #skinSwatches {
+            display: none;
+            gap: 6px;
+            background: rgba(255,255,255,0.97);
+            border: 1.5px solid var(--line);
+            border-radius: 14px;
+            padding: 8px 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            flex-wrap: wrap;
+            max-width: 200px;
+        }
+        #skinSwatches.open { display: flex; }
+
+        /* ===== FONT THEMES ===== */
+        body                           { --font-body: 'EB Garamond', Georgia, serif; --font-head: 'EB Garamond', Georgia, serif; }
+        body.font-scholar              { --font-body: 'Crimson Pro', Georgia, serif; --font-head: 'Cormorant Garamond', serif; }
+        body.font-editorial            { --font-body: 'Source Serif 4', Georgia, serif; --font-head: 'Libre Baskerville', serif; }
+        body.font-clean                { --font-body: 'Jost', system-ui, sans-serif; --font-head: 'DM Sans', sans-serif; }
+        body.font-humanist             { --font-body: 'Quattrocento', serif; --font-head: 'Quattrocento', serif; }
+        body.font-modern               { --font-body: 'Spectral', Georgia, serif; --font-head: 'Playfair Display', serif; }
+
+        body, select, textarea, input[type="text"], .phase-text-input, .el-notes {
+            font-family: var(--font-body);
+        }
+        h1, h2, h3, .cover-title, .comp-name-input, .session-name,
+        .active-bar-name, .section-card h3, .global-notes-label { font-family: var(--font-head); }
+
+        /* ===== SKIN THEMES ===== */
+        body.skin-sage {
+            --cover-bg: #4a7060;
+            --cover-accent: #b89060;
+            --accent: #4a7060;
+            --accent-mid: #5a8070;
+            --accent-pale: #d8ece4;
+        }
+        body.skin-terracotta {
+            --cover-bg: #8b4a3a;
+            --cover-accent: #c9a060;
+            --accent: #8b4a3a;
+            --accent-mid: #a06050;
+            --accent-pale: #f0ddd8;
+        }
+        body.skin-indigo {
+            --cover-bg: #3a3a7a;
+            --cover-accent: #c0a040;
+            --accent: #3a3a7a;
+            --accent-mid: #5050a0;
+            --accent-pale: #dcdcf5;
+        }
+        body.skin-slate {
+            --cover-bg: #404050;
+            --cover-accent: #90b090;
+            --accent: #505070;
+            --accent-mid: #606080;
+            --accent-pale: #e0e0ec;
+        }
+        body.skin-rose {
+            --cover-bg: #7a4060;
+            --cover-accent: #c0a080;
+            --accent: #7a4060;
+            --accent-mid: #9a6080;
+            --accent-pale: #f0dce8;
+        }
+
+        hr { border: none; border-top: 1.5px dashed var(--line); margin: 24px 0; }
+        @media (max-width: 600px) {
+            .notebook-cover { padding: 24px 20px 20px; }
+            .toolbar-wrap, .tabs-wrap, .main { padding-left: 16px; padding-right: 16px; }
+            .grid { grid-template-columns: 1fr; }
+            .maturity-row { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* ===== PRINT / PDF ===== */
+        @media print {
+            @page { size: A4; margin: 18mm 16mm; }
+            #skinPanel, .toolbar-wrap, .tabs, #activePlanBar,
+            .filter-row, #addElementBtn, .del-el, .del-plan,
+            .del-run, .add-phase-row, .add-tag-row, .tmpl-actions,
+            .save-log, .log-form, hr { display: none !important; }
+
+            body, body.has-bg { background: white !important; font-size: 10pt; }
+            #bgLayer { display: none !important; }
+            .notebook-cover {
+                background: var(--cover-bg) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                padding: 20px 28px;
+                border-bottom: 3px solid var(--cover-accent);
+            }
+            .main { padding: 12px 0; }
+            .tab-content { display: block !important; }
+            .tab-content + .tab-content { page-break-before: always; }
+            .section-card {
+                background: white !important;
+                border: 1px solid #ccc;
+                box-shadow: none;
+                padding: 14px 18px;
+                margin-bottom: 12px;
+                border-radius: 8px;
+            }
+            .comp-card, .tmpl-card, .session-card {
+                background: white !important;
+                border: 1px solid #ccc;
+                box-shadow: none;
+                border-radius: 8px;
+                break-inside: avoid;
+            }
+            .grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+            .phases-section { background: #f8f8f5 !important; }
+            .phase-item { background: white !important; }
+            .maturity-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .comp-card::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .active-bar { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .tabs-wrap { display: none; }
+            /* Print section headers */
+            .print-section-title {
+                font-family: var(--font-head, 'EB Garamond', serif);
+                font-size: 14pt;
+                font-weight: 700;
+                color: var(--accent);
+                border-bottom: 2px solid var(--line);
+                padding-bottom: 6px;
+                margin: 16px 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- BACKGROUND LAYER -->
+<div id="bgLayer"></div>
+
+<!-- SKIN SWITCHER -->
+<div id="skinPanel">
+    <!-- Popups open upward above the icon row -->
+    <div id="bgUrlWrap">
+        <input id="bgUrlInput" type="text" placeholder="URL εικόνας...">
+        <span style="font-size:0.7rem; color:var(--ink-soft); white-space:nowrap;">opacity</span>
+        <input id="bgOpacitySlider" type="range" min="0" max="60" value="20">
+        <button class="bg-clear-btn" id="bgClearBtn" title="Καθαρισμός">✖</button>
+    </div>
+    <div id="fontSwatches">
+        <div class="font-btn active" data-font="default" style="font-family:'EB Garamond',serif;">EB Garamond</div>
+        <div class="font-btn" data-font="scholar" style="font-family:'Cormorant Garamond',serif;">Cormorant</div>
+        <div class="font-btn" data-font="editorial" style="font-family:'Libre Baskerville',serif;">Baskerville</div>
+        <div class="font-btn" data-font="humanist" style="font-family:'Quattrocento',serif;">Quattrocento</div>
+        <div class="font-btn" data-font="modern" style="font-family:'Spectral',serif;">Spectral</div>
+        <div class="font-btn" data-font="clean" style="font-family:'Jost',sans-serif;">Jost</div>
+    </div>
+    <div id="skinSwatches">
+        <div class="skin-btn active" data-skin="default" style="background:#5b7fa6;" title="Blue"></div>
+        <div class="skin-btn" data-skin="sage" style="background:#4a7060;" title="Sage"></div>
+        <div class="skin-btn" data-skin="terracotta" style="background:#8b4a3a;" title="Terracotta"></div>
+        <div class="skin-btn" data-skin="indigo" style="background:#3a3a7a;" title="Indigo"></div>
+        <div class="skin-btn" data-skin="slate" style="background:#404050;" title="Slate"></div>
+        <div class="skin-btn" data-skin="rose" style="background:#7a4060;" title="Rose"></div>
+    </div>
+    <!-- Icon row always visible at bottom -->
+    <div id="skinIconRow">
+        <button id="bgToggle" title="Background image" style="background:rgba(255,255,255,0.9); border:1.5px solid var(--line); border-radius:50%; width:36px; height:36px; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:all 0.2s;">🖼️</button>
+        <button id="fontToggle" title="Γραμματοσειρά" style="background:rgba(255,255,255,0.9); border:1.5px solid var(--line); border-radius:50%; width:36px; height:36px; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:all 0.2s;">𝔸</button>
+        <button id="skinToggle" title="Αλλαγή χρώματος" style="background:rgba(255,255,255,0.9); border:1.5px solid var(--line); border-radius:50%; width:36px; height:36px; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:all 0.2s;">🎨</button>
+        <button id="pdfExportBtn" title="Εξαγωγή PDF" style="background:rgba(255,255,255,0.9); border:1.5px solid var(--line); border-radius:50%; width:36px; height:36px; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:all 0.2s;">🖨️</button>
+    </div>
+</div>
+
+<!-- NOTEBOOK COVER HEADER -->
+<div class="notebook-cover">
+    <div class="cover-inner">
+        <div class="cover-spine"></div>
+        <div class="cover-text">
+            <div class="cover-title-wrap">
+                <input class="cover-title" id="appTitle" type="text" value="Task Planner" placeholder="Τίτλος project...">
+            </div>
+            <input class="cover-subtitle" id="appSubtitle" type="text" placeholder="Υπότιτλος ή σκοπός..." value="Οργάνωση στόχων και δραστηριοτήτων">
+            <div class="cover-meta">
+                <span class="cover-badge" id="coverStatComponents">0 στοιχεία</span>
+                <span class="cover-badge" id="coverStatTemplates">0 σχέδια</span>
+                <span class="cover-badge" id="coverStatSessions">0 εκτελέσεις</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar-wrap">
+    <button class="btn primary" id="exportBtn">📤 Εξαγωγή JSON</button>
+    <button class="btn" id="importBtn">📥 Εισαγωγή JSON</button>
+    <input type="file" id="importFile" accept=".json" style="display:none;">
+    <button class="btn danger-btn" id="resetBtn">🔄 Επαναφορά</button>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+    <div class="tabs">
+        <div class="tab active" data-tab="elements">
+            <span>🧩</span>
+            <input class="tab-label-edit" id="tab1Label" value="Στοιχεία" maxlength="20">
+        </div>
+        <div class="tab" data-tab="plans">
+            <span>📋</span>
+            <input class="tab-label-edit" id="tab2Label" value="Σχέδια" maxlength="20">
+        </div>
+        <div class="tab" data-tab="runs">
+            <span>▶️</span>
+            <input class="tab-label-edit" id="tab3Label" value="Εκτελέσεις" maxlength="20">
+        </div>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- ACTIVE PLAN BAR -->
+    <div id="activePlanBar" class="active-bar">
+        <div class="active-bar-info">
+            <span class="active-bar-label">🎯 Ενεργό σχέδιο</span>
+            <span id="activePlanName" class="active-bar-name">Κανένα</span>
+        </div>
+        <button class="btn" id="clearActivePlanBtn" style="background:rgba(255,255,255,0.18); color:white; border-color:rgba(255,255,255,0.4);">✖ Απενεργοποίηση</button>
+    </div>
+
+    <!-- TAB 1: ELEMENTS -->
+    <div id="elementsTab" class="tab-content active">
+        <div class="section-card">
+            <h3>🧩 <span id="elementsHeading">Στοιχεία</span></h3>
+
+            <!-- Maturity label editor -->
+            <div class="maturity-labels-editor">
+                <h4>🏷️ Ετικέτες ωριμότητας</h4>
+                <div class="maturity-row">
+                    <div class="maturity-cell">
+                        <div class="m-badge m0">L0</div>
+                        <input type="text" id="ml0" value="Ιδέα / Placeholder">
+                    </div>
+                    <div class="maturity-cell">
+                        <div class="m-badge m1">L1</div>
+                        <input type="text" id="ml1" value="Βασική λειτουργία">
+                    </div>
+                    <div class="maturity-cell">
+                        <div class="m-badge m2">L2</div>
+                        <input type="text" id="ml2" value="Σταθερό / Δοκιμή">
+                    </div>
+                    <div class="maturity-cell">
+                        <div class="m-badge m3">L3</div>
+                        <input type="text" id="ml3" value="Πλήρες / Έτοιμο">
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-row">
+                <button class="filter-btn active-filter" id="filterAllBtn">📋 Όλα τα στοιχεία</button>
+                <button class="filter-btn" id="filterActiveBtn">🎯 Μόνο ενεργού σχεδίου</button>
+            </div>
+            <button class="btn primary" id="addElementBtn" style="margin-bottom:18px;">+ Προσθήκη στοιχείου</button>
+            <div id="elementsGrid" class="grid"></div>
+        </div>
+    </div>
+
+    <!-- TAB 2: PLANS (templates) -->
+    <div id="plansTab" class="tab-content">
+        <div class="section-card">
+            <h3>📋 <span id="plansHeading">Σχέδια</span></h3>
+            <div style="display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap;">
+                <input type="text" id="newPlanName" placeholder="Όνομα νέου σχεδίου" style="flex:1; min-width:160px;">
+                <textarea id="newPlanDesc" placeholder="Περιγραφή" rows="1" style="flex:2; min-width:160px; resize:none;"></textarea>
+                <button class="btn primary" id="addPlanBtn">+ Δημιουργία</button>
+            </div>
+            <div id="plansList"></div>
+        </div>
+    </div>
+
+    <!-- TAB 3: RUNS (sessions) -->
+    <div id="runsTab" class="tab-content">
+        <div class="section-card">
+            <h3>▶️ <span id="runsHeading">Εκτελέσεις</span></h3>
+            <div style="display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap;">
+                <input type="text" id="newRunName" placeholder="Όνομα εκτέλεσης" style="flex:2; min-width:160px;">
+                <select id="runPlanSelect" style="flex:1; min-width:140px;"></select>
+                <button class="btn primary" id="addRunBtn">+ Δημιουργία</button>
+            </div>
+            <div id="runsList"></div>
+        </div>
+        <h3 style="font-family:'Playfair Display',serif; font-size:1.05rem; margin-top:24px;">📓 Ιστορικό</h3>
+        <div id="runsLog" style="background:#1a1a2e; color:#c8d0e0; padding:18px; border-radius:16px; font-family:monospace; font-size:0.78rem; max-height:280px; overflow-y:auto;">Δεν υπάρχουν καταγραφές.</div>
+    </div>
+
+    <!-- GLOBAL NOTES -->
+    <hr>
+    <div class="global-notes-section">
+        <div class="global-notes-label">
+            <span>📓</span>
+            <input type="text" id="globalNotesLabel" value="Γενικές Σημειώσεις">
+        </div>
+        <div class="notes-paper">
+            <textarea id="globalNotes" style="width:100%;" placeholder="Σημειώσεις, workarounds, παρατηρήσεις..."></textarea>
+        </div>
+    </div>
+
+</div><!-- /main -->
+
+<script>
+// ========== DATA ==========
+let elements = [];
+let plans = [];
+let runs = [];
+let globalNotes = "";
+let activePlanId = null;
+let elementFilter = "all";
+let appConfig = {
+    title: "Task Planner",
+    subtitle: "Οργάνωση στόχων και δραστηριοτήτων",
+    tab1: "Στοιχεία",
+    tab2: "Σχέδια",
+    tab3: "Εκτελέσεις",
+    globalNotesLabel: "Γενικές Σημειώσεις",
+    maturityLabels: ["Ιδέα / Placeholder","Βασική λειτουργία","Σταθερό / Δοκιμή","Πλήρες / Έτοιμο"],
+    skin: "default",
+    bgUrl: "",
+    bgOpacity: 20,
+    font: "default"
+};
+
+const STORAGE_KEY = "task_planner_v1";
+
+// Default data
+const defaultElements = [
+    { id: "el_demo1", name: "Παράδειγμα Στοιχείου A", type: "general", maturity: 2, tags: ["demo"], notes: "Περιγραφή στοιχείου.", phases: { title: "Βήματα ωρίμανσης", items: [{ text: "Σχεδιασμός", done: true }, { text: "Υλοποίηση", done: false }], fixed: [] } },
+    { id: "el_demo2", name: "Παράδειγμα Στοιχείου B", type: "general", maturity: 0, tags: ["demo","νέο"], notes: "", phases: { title: "Βήματα ωρίμανσης", items: [], fixed: [] } }
+];
+const defaultPlans = [
+    { id: "plan_demo1", name: "Βασικό Σχέδιο", description: "Αρχικό σχέδιο εργασίας", elements: ["el_demo1"], notes: "" }
+];
+const defaultRuns = [
+    { id: "run_demo1", name: "Πρώτη Εκτέλεση", planId: "plan_demo1", date: new Date().toLocaleString(), logs: [] }
+];
+
+// ========== STORAGE ==========
+function save() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ elements, plans, runs, globalNotes, activePlanId, elementFilter, appConfig }));
+}
+function load() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+        try {
+            const d = JSON.parse(raw);
+            elements = d.elements || defaultElements;
+            plans = d.plans || defaultPlans;
+            runs = d.runs || defaultRuns;
+            globalNotes = d.globalNotes || "";
+            activePlanId = d.activePlanId || null;
+            elementFilter = d.elementFilter || "all";
+            if (d.appConfig) appConfig = { ...appConfig, ...d.appConfig };
+        } catch(e) { resetData(); }
+    } else { resetData(); }
+    applyConfig();
+    renderAll();
+}
+function resetData() {
+    elements = JSON.parse(JSON.stringify(defaultElements));
+    plans = JSON.parse(JSON.stringify(defaultPlans));
+    runs = JSON.parse(JSON.stringify(defaultRuns));
+    globalNotes = ""; activePlanId = null; elementFilter = "all";
+    save();
+}
+
+// ========== CONFIG / UI ==========
+function applyConfig() {
+    document.getElementById("appTitle").value = appConfig.title;
+    document.getElementById("appSubtitle").value = appConfig.subtitle;
+    document.getElementById("tab1Label").value = appConfig.tab1;
+    document.getElementById("tab2Label").value = appConfig.tab2;
+    document.getElementById("tab3Label").value = appConfig.tab3;
+    document.getElementById("globalNotesLabel").value = appConfig.globalNotesLabel;
+    document.getElementById("ml0").value = appConfig.maturityLabels[0];
+    document.getElementById("ml1").value = appConfig.maturityLabels[1];
+    document.getElementById("ml2").value = appConfig.maturityLabels[2];
+    document.getElementById("ml3").value = appConfig.maturityLabels[3];
+    document.title = appConfig.title;
+    // Apply skin + font classes
+    const skinClass = appConfig.skin !== "default" ? `skin-${appConfig.skin}` : "";
+    const fontClass = appConfig.font !== "default" ? `font-${appConfig.font}` : "";
+    const bgClass   = appConfig.bgUrl ? "has-bg" : "";
+    document.body.className = [skinClass, fontClass, bgClass].filter(Boolean).join(" ");
+    document.querySelectorAll(".skin-btn").forEach(b => b.classList.toggle("active", b.dataset.skin === appConfig.skin));
+    document.querySelectorAll(".font-btn").forEach(b => b.classList.toggle("active", b.dataset.font === appConfig.font));
+    // Apply background
+    applyBg();
+}
+function getMaturityLabel(level) { return `L${level} — ${appConfig.maturityLabels[level] || ""}`; }
+function getActivePlan() { return plans.find(p => p.id === activePlanId); }
+function getActiveElements() { return getActivePlan()?.elements || []; }
+
+// ========== RENDER ==========
+function renderAll() {
+    renderElements();
+    renderPlans();
+    renderRuns();
+    renderRunLog();
+    updateActivePlanBar();
+    updateCoverStats();
+    updateRunPlanSelect();
+    const gn = document.getElementById("globalNotes");
+    if (gn) { gn.value = globalNotes; gn.onchange = () => { globalNotes = gn.value; save(); }; }
+}
+function updateActivePlanBar() {
+    const p = getActivePlan();
+    document.getElementById("activePlanName").innerText = p ? p.name : "Κανένα";
+}
+function updateCoverStats() {
+    document.getElementById("coverStatComponents").innerText = `${elements.length} στοιχεία`;
+    document.getElementById("coverStatTemplates").innerText = `${plans.length} σχέδια`;
+    document.getElementById("coverStatSessions").innerText = `${runs.length} εκτελέσεις`;
+}
+function updateRunPlanSelect() {
+    const sel = document.getElementById("runPlanSelect");
+    if (sel) sel.innerHTML = plans.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join("");
+}
+
+function renderElements() {
+    const grid = document.getElementById("elementsGrid");
+    if (!grid) return;
+    let list = [...elements];
+    if (elementFilter === "active" && activePlanId) {
+        const ids = getActiveElements();
+        list = elements.filter(e => ids.includes(e.id));
+    }
+    grid.innerHTML = list.map(el => {
+        const inActive = activePlanId && getActiveElements().includes(el.id);
+        const phases = el.phases || { title: "Βήματα ωρίμανσης", items: [], fixed: [] };
+        const doneCount = phases.items.filter(i => i.done).length;
+        const totalPhases = phases.items.length;
+        return `
+        <div class="comp-card ${inActive ? 'in-active' : ''}">
+            <div class="card-top">
+                <input class="comp-name-input el-name" data-id="${el.id}" value="${esc(el.name)}" placeholder="Όνομα στοιχείου...">
+                <span class="maturity-badge m${el.maturity}">L${el.maturity}</span>
+            </div>
+            ${inActive ? '<div class="in-plan-chip">🎯 Στο ενεργό σχέδιο</div>' : ''}
+
+            <div class="form-row">
+                <label>🎯 Ωριμότητα</label>
+                <select class="el-maturity" data-id="${el.id}">
+                    ${[0,1,2,3].map(v => `<option value="${v}" ${el.maturity===v?"selected":""}>${getMaturityLabel(v)}</option>`).join("")}
+                </select>
+            </div>
+
+            <div class="phases-section">
+                <div class="phases-header">
+                    <input class="phases-title" value="${esc(phases.title||'Βήματα ωρίμανσης')}" data-id="${el.id}" placeholder="Τίτλος φάσεων...">
+                    ${totalPhases > 0 ? `<span style="font-size:0.7rem; color:var(--ink-soft);">${doneCount}/${totalPhases} ✓</span>` : ""}
+                </div>
+                ${phases.items.map((item, idx) => `
+                    <div class="phase-item">
+                        <input type="checkbox" class="phase-check" data-id="${el.id}" data-idx="${idx}" ${item.done?"checked":""}>
+                        <input type="text" class="phase-text-input ${item.done?'done':''}" value="${esc(item.text)}" data-id="${el.id}" data-idx="${idx}">
+                        <span class="phase-remove" data-id="${el.id}" data-idx="${idx}">✖</span>
+                    </div>
+                `).join("")}
+                <div class="add-phase-row">
+                    <input type="text" id="newphase-${el.id}" placeholder="Νέο βήμα...">
+                    <button class="btn add-phase-btn" data-id="${el.id}" style="padding:5px 12px;">+</button>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label>📝 Σημειώσεις</label>
+                <textarea class="el-notes" data-id="${el.id}" rows="1" style="resize:vertical;">${esc(el.notes||"")}</textarea>
+            </div>
+
+            <button class="btn danger-btn del-el" data-id="${el.id}" style="margin-top:6px; font-size:0.72rem; padding:4px 12px;">🗑️ Διαγραφή</button>
+        </div>`;
+    }).join("");
+
+    // Events
+    grid.querySelectorAll(".el-name").forEach(i => i.addEventListener("change", e => updateEl(i.dataset.id, "name", i.value)));
+    grid.querySelectorAll(".el-maturity").forEach(s => s.addEventListener("change", e => updateEl(s.dataset.id, "maturity", parseInt(s.value))));
+    grid.querySelectorAll(".el-notes").forEach(t => t.addEventListener("change", e => updateEl(t.dataset.id, "techNotes", t.value)));
+    grid.querySelectorAll(".phases-title").forEach(i => i.addEventListener("change", e => updatePhaseTitle(i.dataset.id, i.value)));
+    grid.querySelectorAll(".phase-check").forEach(cb => cb.addEventListener("change", () => togglePhase(cb.dataset.id, parseInt(cb.dataset.idx))));
+    grid.querySelectorAll(".phase-text-input").forEach(i => i.addEventListener("change", () => updatePhaseText(i.dataset.id, parseInt(i.dataset.idx), i.value)));
+    grid.querySelectorAll(".phase-remove").forEach(x => x.addEventListener("click", () => removePhase(x.dataset.id, parseInt(x.dataset.idx))));
+    grid.querySelectorAll(".add-phase-btn").forEach(btn => btn.addEventListener("click", () => {
+        const inp = document.getElementById(`newphase-${btn.dataset.id}`);
+        if (inp.value.trim()) addPhase(btn.dataset.id, inp.value.trim());
+        inp.value = "";
+    }));
+    grid.querySelectorAll(".del-el").forEach(btn => btn.addEventListener("click", () => deleteElement(btn.dataset.id)));
+}
+
+function renderPlans() {
+    const container = document.getElementById("plansList");
+    if (!container) return;
+    container.innerHTML = plans.map(p => {
+        const isActive = activePlanId === p.id;
+        const summary = getPlanMaturitySummary(p);
+        return `
+        <div class="tmpl-card ${isActive ? 'active-tmpl' : ''}">
+            <div class="tmpl-header">
+                <div class="tmpl-info">
+                    <input type="text" value="${esc(p.name)}" class="plan-name" data-id="${p.id}" style="font-family:'Playfair Display',serif; font-size:1rem; font-weight:600; margin-bottom:8px;">
+                    <textarea class="plan-desc" data-id="${p.id}" rows="2" placeholder="Περιγραφή...">${esc(p.description||"")}</textarea>
+                    <div class="tmpl-metrics">
+                        <span class="metric">📊 L${summary.min!==null?summary.min:"—"} → L${summary.max!==null?summary.max:"—"}</span>
+                        <span class="metric">📈 Μέσος L${summary.avg!==null?summary.avg:"—"}</span>
+                    </div>
+                </div>
+                <div class="tmpl-comps">
+                    <h4>🧩 Στοιχεία σχεδίου</h4>
+                    ${elements.map(el => `
+                        <div class="comp-check">
+                            <input type="checkbox" class="plan-el-${p.id}" value="${el.id}" ${p.elements.includes(el.id)?"checked":""}>
+                            <label>${esc(el.name)} <span class="maturity-badge m${el.maturity}" style="font-size:0.62rem;">L${el.maturity}</span></label>
+                        </div>
+                    `).join("")}
+                </div>
+            </div>
+            <div style="margin-top:12px;">
+                <textarea class="plan-notes" data-id="${p.id}" rows="2" placeholder="Σημειώσεις σχεδίου...">${esc(p.notes||"")}</textarea>
+            </div>
+            <div class="tmpl-actions">
+                <button class="btn primary set-active-plan" data-id="${p.id}">${isActive ? '✓ Ενεργό' : '🎯 Ορισμός ενεργού'}</button>
+                <button class="btn danger-btn del-plan" data-id="${p.id}">🗑️ Διαγραφή</button>
+            </div>
+        </div>`;
+    }).join("");
+
+    container.querySelectorAll(".plan-name").forEach(i => i.addEventListener("change", () => updatePlan(i.dataset.id, "name", i.value)));
+    container.querySelectorAll(".plan-desc").forEach(t => t.addEventListener("change", () => updatePlan(t.dataset.id, "description", t.value)));
+    container.querySelectorAll(".plan-notes").forEach(t => t.addEventListener("change", () => updatePlan(t.dataset.id, "notes", t.value)));
+    container.querySelectorAll(".set-active-plan").forEach(btn => btn.addEventListener("click", () => setActivePlan(btn.dataset.id)));
+    container.querySelectorAll(".del-plan").forEach(btn => btn.addEventListener("click", () => deletePlan(btn.dataset.id)));
+    plans.forEach(p => {
+        const cbs = container.querySelectorAll(`.plan-el-${p.id}`);
+        cbs.forEach(cb => cb.addEventListener("change", () => {
+            const sel = Array.from(cbs).filter(c => c.checked).map(c => c.value);
+            updatePlanElements(p.id, sel);
+        }));
+    });
+}
+
+function renderRuns() {
+    const container = document.getElementById("runsList");
+    if (!container) return;
+    container.innerHTML = runs.map(r => {
+        const plan = plans.find(p => p.id === r.planId);
+        return `
+        <div class="session-card">
+            <div class="session-top">
+                <div>
+                    <div class="session-name">${esc(r.name)}</div>
+                    <div style="font-size:0.75rem; color:var(--ink-soft); margin-top:4px;">
+                        Σχέδιο: <strong>${plan ? esc(plan.name) : "—"}</strong> &nbsp;|&nbsp; ${r.date}
+                    </div>
+                </div>
+                <button class="btn danger-btn del-run" data-id="${r.id}" style="font-size:0.75rem;">🗑️</button>
+            </div>
+            <details>
+                <summary style="cursor:pointer; font-size:0.78rem; color:var(--accent); font-weight:700;">📝 Καταγραφή + Ιστορικό (${r.logs.length})</summary>
+                <div class="log-form">
+                    <textarea id="lognotes-${r.id}" placeholder="Σημειώσεις εκτέλεσης..." rows="2"></textarea>
+                    <div class="row2">
+                        <textarea id="logworked-${r.id}" placeholder="✅ Τι δούλεψε;" rows="2"></textarea>
+                        <textarea id="logfailed-${r.id}" placeholder="❌ Τι χρειάζεται βελτίωση;" rows="2"></textarea>
+                    </div>
+                    <button class="btn primary save-log" data-id="${r.id}" style="margin-top:8px;">💾 Αποθήκευση</button>
+                </div>
+                <div class="log-history">
+                    ${r.logs.slice(0,8).map(l => `
+                        <div class="log-entry">
+                            <strong>${l.date}</strong><br>
+                            ${l.notes ? `📌 ${esc(l.notes)}<br>` : ""}
+                            ${l.worked ? `✅ ${esc(l.worked)}<br>` : ""}
+                            ${l.failed ? `❌ ${esc(l.failed)}` : ""}
+                        </div>`).join("")}
+                </div>
+            </details>
+        </div>`;
+    }).join("");
+
+    container.querySelectorAll(".del-run").forEach(btn => btn.addEventListener("click", () => deleteRun(btn.dataset.id)));
+    container.querySelectorAll(".save-log").forEach(btn => btn.addEventListener("click", () => {
+        const id = btn.dataset.id;
+        const notes = document.getElementById(`lognotes-${id}`)?.value || "";
+        const worked = document.getElementById(`logworked-${id}`)?.value || "";
+        const failed = document.getElementById(`logfailed-${id}`)?.value || "";
+        addRunLog(id, notes, worked, failed);
+        document.getElementById(`lognotes-${id}`).value = "";
+        document.getElementById(`logworked-${id}`).value = "";
+        document.getElementById(`logfailed-${id}`).value = "";
+    }));
+}
+
+function renderRunLog() {
+    const logDiv = document.getElementById("runsLog");
+    if (!logDiv) return;
+    const all = runs.flatMap(r => r.logs.map(l => ({ ...l, runName: r.name })));
+    logDiv.innerHTML = all.length
+        ? all.slice(0,30).map(l => `<div style="border-bottom:1px solid #2a2a4a; padding:8px 0;"><strong style="color:#90b0d0;">${l.date}</strong> | <span style="color:#c0d0e0;">${esc(l.runName)}</span><br>${l.notes ? `📌 ${esc(l.notes)}<br>` : ""}${l.worked ? `✅ ${esc(l.worked)}<br>` : ""}${l.failed ? `❌ ${esc(l.failed)}` : ""}</div>`).join("")
+        : "Δεν υπάρχουν καταγραφές.";
+}
+
+// ========== ELEMENT CRUD ==========
+function addElement() {
+    elements.push({ id: "el_"+Date.now(), name: "Νέο Στοιχείο", type: "general", maturity: 0, tags: [], notes: "", phases: { title: "Βήματα ωρίμανσης", items: [], fixed: [] } });
+    save(); renderElements(); updateCoverStats();
+}
+function updateEl(id, field, value) {
+    const el = elements.find(e => e.id === id);
+    if (!el) return;
+    if (field === "name") el.name = value;
+    else if (field === "maturity") el.maturity = value;
+    else if (field === "type") el.type = value;
+    else if (field === "techNotes") el.notes = value;
+    save(); renderElements(); renderPlans();
+}
+function deleteElement(id) {
+    if (!confirm("Διαγραφή στοιχείου;")) return;
+    elements = elements.filter(e => e.id !== id);
+    plans.forEach(p => { p.elements = p.elements.filter(eid => eid !== id); });
+    save(); renderAll();
+}
+function addTag(id, tag) {
+    const el = elements.find(e => e.id === id);
+    if (el && !el.tags.includes(tag)) { el.tags.push(tag); save(); renderElements(); }
+}
+function removeTag(id, tag) {
+    const el = elements.find(e => e.id === id);
+    if (el) { el.tags = el.tags.filter(t => t !== tag); save(); renderElements(); }
+}
+function updatePhaseTitle(id, title) {
+    const el = elements.find(e => e.id === id);
+    if (el) { el.phases = el.phases || { title: "", items: [] }; el.phases.title = title; save(); }
+}
+function addPhase(id, text) {
+    const el = elements.find(e => e.id === id);
+    if (el) { el.phases = el.phases || { title: "Βήματα ωρίμανσης", items: [] }; el.phases.items.push({ text, done: false }); save(); renderElements(); }
+}
+function togglePhase(id, idx) {
+    const el = elements.find(e => e.id === id);
+    if (el?.phases?.items?.[idx] !== undefined) { el.phases.items[idx].done = !el.phases.items[idx].done; save(); renderElements(); }
+}
+function updatePhaseText(id, idx, text) {
+    const el = elements.find(e => e.id === id);
+    if (el?.phases?.items?.[idx]) { el.phases.items[idx].text = text; save(); }
+}
+function removePhase(id, idx) {
+    const el = elements.find(e => e.id === id);
+    if (el?.phases?.items) { el.phases.items.splice(idx, 1); save(); renderElements(); }
+}
+
+// ========== PLAN CRUD ==========
+function addPlan(name, desc) {
+    if (!name.trim()) return;
+    plans.push({ id: "plan_"+Date.now(), name, description: desc||"", elements: [], notes: "" });
+    save(); renderPlans(); updateRunPlanSelect(); updateCoverStats();
+}
+function updatePlan(id, field, value) {
+    const p = plans.find(p => p.id === id);
+    if (p) { p[field] = value; save(); }
+}
+function updatePlanElements(id, elIds) {
+    const p = plans.find(p => p.id === id);
+    if (p) { p.elements = elIds; save(); renderPlans(); }
+}
+function setActivePlan(id) { activePlanId = id; save(); updateActivePlanBar(); if (elementFilter === "active") renderElements(); renderPlans(); }
+function deletePlan(id) {
+    if (!confirm("Διαγραφή σχεδίου;")) return;
+    plans = plans.filter(p => p.id !== id);
+    if (activePlanId === id) activePlanId = null;
+    save(); renderAll();
+}
+function getPlanMaturitySummary(plan) {
+    const ms = plan.elements.map(eid => elements.find(e => e.id === eid)?.maturity).filter(m => m !== undefined);
+    if (!ms.length) return { min: null, max: null, avg: null };
+    return { min: Math.min(...ms), max: Math.max(...ms), avg: (ms.reduce((a,b)=>a+b,0)/ms.length).toFixed(1) };
+}
+
+// ========== RUN CRUD ==========
+function addRun(name, planId) {
+    if (!name.trim() || !planId) return;
+    runs.push({ id: "run_"+Date.now(), name, planId, date: new Date().toLocaleString(), logs: [] });
+    save(); renderRuns(); renderRunLog(); updateCoverStats();
+}
+function deleteRun(id) {
+    if (!confirm("Διαγραφή εκτέλεσης;")) return;
+    runs = runs.filter(r => r.id !== id);
+    save(); renderRuns(); renderRunLog();
+}
+function addRunLog(runId, notes, worked, failed) {
+    const r = runs.find(r => r.id === runId);
+    if (r) { r.logs.unshift({ date: new Date().toLocaleString(), notes, worked, failed }); save(); renderRuns(); renderRunLog(); }
+}
+
+// ========== EXPORT / IMPORT ==========
+function exportData() {
+    const data = { elements, plans, runs, globalNotes, activePlanId, elementFilter, appConfig };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `task_planner_${new Date().toISOString().slice(0,10)}.json`;
+    a.click(); URL.revokeObjectURL(a.href);
+}
+function importData(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+        try {
+            const d = JSON.parse(e.target.result);
+            if (d.elements) elements = d.elements;
+            if (d.plans) plans = d.plans;
+            if (d.runs) runs = d.runs;
+            if (d.globalNotes !== undefined) globalNotes = d.globalNotes;
+            if (d.activePlanId !== undefined) activePlanId = d.activePlanId;
+            if (d.elementFilter !== undefined) elementFilter = d.elementFilter;
+            if (d.appConfig) appConfig = { ...appConfig, ...d.appConfig };
+            save(); applyConfig(); renderAll(); alert("Εισαγωγή επιτυχής!");
+        } catch(err) { alert("Λάθος αρχείο JSON"); }
+    };
+    reader.readAsText(file);
+}
+
+// ========== TABS ==========
+function switchTab(tabId) {
+    document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+    document.getElementById(`${tabId}Tab`).classList.add("active");
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add("active");
+    if (tabId === "elements") renderElements();
+    if (tabId === "plans") renderPlans();
+}
+
+// ========== HELPERS ==========
+function esc(str) { if (!str) return ""; return String(str).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[m]); }
+
+// ========== EVENTS ==========
+document.getElementById("exportBtn").addEventListener("click", exportData);
+document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change", e => { if (e.target.files.length) importData(e.target.files[0]); e.target.value = ""; });
+document.getElementById("resetBtn").addEventListener("click", () => { if (confirm("Επαναφορά στα προεπιλεγμένα;")) { resetData(); applyConfig(); renderAll(); } });
+document.getElementById("clearActivePlanBtn").addEventListener("click", () => { activePlanId = null; save(); updateActivePlanBar(); if (elementFilter === "active") renderElements(); renderPlans(); });
+document.getElementById("addElementBtn").addEventListener("click", addElement);
+document.getElementById("addPlanBtn").addEventListener("click", () => { const n = document.getElementById("newPlanName").value; const d = document.getElementById("newPlanDesc").value; addPlan(n, d); document.getElementById("newPlanName").value = ""; document.getElementById("newPlanDesc").value = ""; });
+document.getElementById("addRunBtn").addEventListener("click", () => { const n = document.getElementById("newRunName").value; const pid = document.getElementById("runPlanSelect").value; addRun(n, pid); document.getElementById("newRunName").value = ""; });
+document.getElementById("filterAllBtn").addEventListener("click", () => { elementFilter = "all"; save(); renderElements(); document.getElementById("filterAllBtn").classList.add("active-filter"); document.getElementById("filterActiveBtn").classList.remove("active-filter"); });
+document.getElementById("filterActiveBtn").addEventListener("click", () => { elementFilter = "active"; save(); renderElements(); document.getElementById("filterActiveBtn").classList.add("active-filter"); document.getElementById("filterAllBtn").classList.remove("active-filter"); });
+
+document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", e => {
+        if (e.target.classList.contains("tab-label-edit")) return;
+        switchTab(tab.getAttribute("data-tab"));
+    });
+});
+
+// Tab label editing
+["tab1Label","tab2Label","tab3Label"].forEach((id, i) => {
+    const inp = document.getElementById(id);
+    inp.addEventListener("change", () => {
+        const keys = ["tab1","tab2","tab3"];
+        appConfig[keys[i]] = inp.value;
+        save();
+    });
+    inp.addEventListener("click", e => e.stopPropagation());
+});
+
+// Cover title/subtitle
+document.getElementById("appTitle").addEventListener("change", e => { appConfig.title = e.target.value; document.title = e.target.value; save(); });
+document.getElementById("appSubtitle").addEventListener("change", e => { appConfig.subtitle = e.target.value; save(); });
+document.getElementById("globalNotesLabel").addEventListener("change", e => { appConfig.globalNotesLabel = e.target.value; save(); });
+
+// Maturity labels
+["ml0","ml1","ml2","ml3"].forEach((id, i) => {
+    document.getElementById(id).addEventListener("change", e => {
+        appConfig.maturityLabels[i] = e.target.value;
+        save();
+        renderElements(); renderPlans();
+    });
+});
+
+document.getElementById("skinToggle").addEventListener("click", () => {
+    document.getElementById("skinSwatches").classList.toggle("open");
+    document.getElementById("bgUrlWrap").classList.remove("open");
+    document.getElementById("fontSwatches").classList.remove("open");
+});
+document.querySelectorAll(".skin-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        appConfig.skin = btn.dataset.skin;
+        applyConfig();
+        save();
+    });
+});
+
+// ========== PDF EXPORT ==========
+document.getElementById("pdfExportBtn").addEventListener("click", () => {
+    // Make all tabs visible for print, then restore
+    const tabs = document.querySelectorAll(".tab-content");
+    const hidden = [];
+    tabs.forEach(t => { if (!t.classList.contains("active")) { t.style.display = "block"; hidden.push(t); } });
+    // Add print section titles if not present
+    const titles = [
+        { id: "elementsTab",  label: "Στοιχεία" },
+        { id: "plansTab",     label: "Σχέδια" },
+        { id: "runsTab",      label: "Εκτελέσεις" }
+    ];
+    const injected = [];
+    titles.forEach(({ id, label }) => {
+        const tab = document.getElementById(id);
+        if (tab && !tab.querySelector(".print-section-title")) {
+            const h = document.createElement("div");
+            h.className = "print-section-title";
+            h.textContent = label;
+            tab.insertBefore(h, tab.firstChild);
+            injected.push({ tab, h });
+        }
+    });
+    window.print();
+    // Restore
+    hidden.forEach(t => { t.style.display = "none"; });
+    injected.forEach(({ tab, h }) => tab.removeChild(h));
+});
+document.getElementById("fontToggle").addEventListener("click", () => {
+    document.getElementById("fontSwatches").classList.toggle("open");
+    document.getElementById("skinSwatches").classList.remove("open");
+    document.getElementById("bgUrlWrap").classList.remove("open");
+});
+document.querySelectorAll(".font-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        appConfig.font = btn.dataset.font;
+        applyConfig();
+        save();
+    });
+});
+function applyBg() {
+    const layer = document.getElementById("bgLayer");
+    const inp = document.getElementById("bgUrlInput");
+    const slider = document.getElementById("bgOpacitySlider");
+    if (appConfig.bgUrl) {
+        layer.style.backgroundImage = `url('${appConfig.bgUrl}')`;
+        layer.style.opacity = (appConfig.bgOpacity / 100).toFixed(2);
+        if (inp) inp.value = appConfig.bgUrl;
+        if (slider) slider.value = appConfig.bgOpacity;
+        document.body.classList.add("has-bg");
+    } else {
+        layer.style.backgroundImage = "";
+        layer.style.opacity = "0";
+        if (inp) inp.value = "";
+        document.body.classList.remove("has-bg");
+    }
+}
+document.getElementById("bgToggle").addEventListener("click", () => {
+    document.getElementById("bgUrlWrap").classList.toggle("open");
+    document.getElementById("skinSwatches").classList.remove("open");
+    document.getElementById("fontSwatches").classList.remove("open");
+});
+document.getElementById("bgUrlInput").addEventListener("change", e => {
+    appConfig.bgUrl = e.target.value.trim();
+    save(); applyBg();
+});
+document.getElementById("bgOpacitySlider").addEventListener("input", e => {
+    appConfig.bgOpacity = parseInt(e.target.value);
+    document.getElementById("bgLayer").style.opacity = (appConfig.bgOpacity / 100).toFixed(2);
+});
+document.getElementById("bgOpacitySlider").addEventListener("change", e => {
+    appConfig.bgOpacity = parseInt(e.target.value);
+    save();
+});
+document.getElementById("bgClearBtn").addEventListener("click", () => {
+    appConfig.bgUrl = "";
+    appConfig.bgOpacity = 20;
+    save(); applyBg();
+    document.getElementById("bgUrlInput").value = "";
+    document.getElementById("bgOpacitySlider").value = 20;
+});
+
+// Init
+load();
+</script>
+</body>
+</html>

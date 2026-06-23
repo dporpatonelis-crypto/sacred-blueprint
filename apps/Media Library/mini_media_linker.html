@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Media Linker</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Fraunces:ital,wght@0,300;0,500;1,300;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e0f13;
+  --sf: #16181f;
+  --sf2: #1e2029;
+  --bd: rgba(255,255,255,0.06);
+  --bd2: rgba(255,255,255,0.12);
+  --gold: #d4a96a;
+  --gold2: rgba(212,169,106,0.15);
+  --gold3: rgba(212,169,106,0.07);
+  --tx: #e8e2d6;
+  --mu: #6b6455;
+  --gr: #5a9e7c;
+  --er: #c0392b;
+  --bl: #4a8fa8;
+  --pu: #9b7acc;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--tx);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  min-height: 100vh;
+}
+
+/* GRID TEXTURE */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(rgba(212,169,106,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212,169,106,0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+.app { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 32px 20px 60px; }
+
+/* HEADER */
+header { margin-bottom: 32px; border-bottom: 1px solid var(--bd2); padding-bottom: 20px; }
+.logo { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 300; color: var(--gold); letter-spacing: -0.5px; }
+.logo em { font-style: italic; }
+.sub { font-size: 10px; color: var(--mu); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 4px; }
+
+/* TABS */
+.tabs { display: flex; gap: 0; border: 1px solid var(--bd); border-radius: 2px; overflow: hidden; margin-bottom: 24px; }
+.tab {
+  flex: 1; padding: 10px 16px; font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  cursor: pointer; background: transparent; border: none; color: var(--mu);
+  transition: all 0.15s; text-align: center;
+}
+.tab:not(:last-child) { border-right: 1px solid var(--bd); }
+.tab.active { background: var(--gold2); color: var(--gold); }
+.tab:hover:not(.active) { background: var(--gold3); color: var(--tx); }
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* SECTIONS */
+.section { background: var(--sf); border: 1px solid var(--bd); border-radius: 3px; padding: 20px; margin-bottom: 16px; }
+.sec-title { font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+.sec-title::after { content: ''; flex: 1; height: 1px; background: var(--bd); }
+
+/* FORM */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field.full { grid-column: 1 / -1; }
+label { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mu); }
+label .req { color: var(--gold); margin-left: 3px; }
+input, select, textarea {
+  background: var(--sf2); border: 1px solid var(--bd);
+  border-radius: 2px; color: var(--tx);
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  padding: 8px 10px; outline: none; transition: border-color 0.15s;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--gold); }
+input::placeholder, textarea::placeholder { color: var(--mu); }
+select option { background: var(--sf2); }
+textarea { resize: vertical; min-height: 60px; }
+
+/* PILLS */
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.pill {
+  padding: 4px 10px; border: 1px solid var(--bd); border-radius: 20px;
+  font-size: 10px; cursor: pointer; transition: all 0.15s; user-select: none; color: var(--mu);
+}
+.pill:hover { border-color: var(--bd2); color: var(--tx); }
+.pill.sel-ml { background: rgba(212,169,106,0.2); border-color: var(--gold); color: var(--gold); }
+.pill.sel-book { background: rgba(90,158,124,0.2); border-color: var(--gr); color: var(--gr); }
+.pill.sel-ib { background: rgba(74,143,168,0.2); border-color: var(--bl); color: var(--bl); }
+
+/* BUTTONS */
+.btn-row { display: flex; gap: 8px; margin-top: 18px; }
+.btn {
+  padding: 10px 18px; border-radius: 2px; cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+  letter-spacing: 0.15em; text-transform: uppercase; transition: all 0.15s;
+}
+.btn-primary { background: var(--gold); border: none; color: #0e0f13; font-weight: 500; }
+.btn-primary:hover { background: #e8c080; }
+.btn-ghost { background: transparent; border: 1px solid var(--bd2); color: var(--mu); }
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+.btn-copy {
+  padding: 6px 12px; background: transparent; border: 1px solid var(--gr);
+  border-radius: 2px; color: var(--gr); font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.1em; cursor: pointer; transition: all 0.15s;
+}
+.btn-copy:hover { background: rgba(90,158,124,0.15); }
+.btn-copy.copied { color: var(--gold); border-color: var(--gold); }
+
+/* OUTPUT */
+.output-section { margin-top: 20px; }
+.output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.out-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mu); }
+.out-info { font-size: 10px; color: var(--gr); }
+
+.output-card {
+  background: var(--sf2); border: 1px solid var(--bd);
+  border-radius: 3px; overflow: hidden; margin-bottom: 12px;
+  animation: fadeIn 0.25s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+.out-card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 14px; background: var(--gold2); border-bottom: 1px solid var(--bd);
+}
+.out-card-title { font-size: 10px; color: var(--gold); letter-spacing: 0.1em; }
+.out-card-subtitle { font-size: 9px; color: var(--mu); margin-top: 2px; }
+
+.row-display {
+  padding: 12px 14px; font-size: 11px; color: var(--tx);
+  font-family: 'IBM Plex Mono', monospace; line-height: 1.8;
+  overflow-x: auto; white-space: nowrap;
+}
+.cell { display: inline-block; padding: 0 8px; border-right: 1px solid var(--bd); min-width: 80px; }
+.cell:last-child { border-right: none; }
+.cell-key { font-size: 8px; color: var(--mu); display: block; margin-bottom: 2px; letter-spacing: 0.1em; text-transform: uppercase; }
+.cell-val { color: var(--tx); }
+.cell-val.url { color: var(--bl); }
+.cell-val.id { color: var(--gold); }
+.cell-val.type { color: var(--pu); }
+
+.raw-row {
+  background: #0a0b0e; padding: 10px 14px; font-size: 10.5px;
+  font-family: 'IBM Plex Mono', monospace; color: var(--mu);
+  border-top: 1px solid var(--bd); word-break: break-all; white-space: pre-wrap;
+  line-height: 1.6;
+}
+.raw-row .tab-sep { color: rgba(212,169,106,0.3); }
+
+.no-output { text-align: center; padding: 30px; color: var(--mu); font-size: 11px; font-style: italic; border: 1px dashed var(--bd); border-radius: 3px; }
+
+/* BOOK SECTION */
+.book-hint {
+  background: rgba(74,143,168,0.08); border: 1px solid rgba(74,143,168,0.2);
+  border-radius: 3px; padding: 12px 14px; margin-bottom: 14px;
+  font-size: 10.5px; color: var(--bl); line-height: 1.7;
+}
+.book-hint strong { color: var(--tx); }
+
+/* HISTORY */
+.hist-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; border-bottom: 1px solid var(--bd); cursor: pointer; transition: background 0.1s;
+}
+.hist-item:hover { background: var(--gold3); }
+.hist-item:last-child { border-bottom: none; }
+.hist-left { flex: 1; min-width: 0; }
+.hist-id { font-size: 10px; color: var(--gold); }
+.hist-title { font-size: 11px; color: var(--tx); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hist-date { font-size: 9px; color: var(--mu); margin-top: 2px; }
+.hist-badge { font-size: 9px; padding: 2px 7px; border-radius: 2px; margin-left: 10px; white-space: nowrap; }
+.hb-ml { background: var(--gold2); color: var(--gold); }
+.hb-ib { background: rgba(74,143,168,0.2); color: var(--bl); }
+
+.empty-hist { text-align: center; padding: 24px; color: var(--mu); font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<header>
+  <div class="logo">Mini <em>Media Linker</em></div>
+  <div class="sub">Παραγωγή γραμμών για copy-paste → Google Sheets</div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('ml')" id="tab-ml">📚 Media Library</button>
+  <button class="tab" onclick="switchTab('ib')" id="tab-ib">📖 Interactive Book</button>
+  <button class="tab" onclick="switchTab('hist')" id="tab-hist">📋 Ιστορικό</button>
+</div>
+
+<!-- ═══ TAB: MEDIA LIBRARY ═══ -->
+<div class="panel active" id="panel-ml">
+  <div class="section">
+    <div class="sec-title">Νέα εγγραφή Media Library</div>
+    <div class="grid2">
+      <div class="field">
+        <label>Media ID <span class="req">*</span></label>
+        <input id="ml-id" placeholder="IMG-027" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Τύπος <span class="req">*</span></label>
+        <select id="ml-type">
+          <option value="image">image</option>
+          <option value="youtube">youtube</option>
+          <option value="google_slides">google_slides</option>
+          <option value="interactive_book">interactive_book</option>
+          <option value="audio">audio</option>
+          <option value="pdf">pdf</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label>Τίτλος <span class="req">*</span></label>
+        <input id="ml-title" placeholder="π.χ. Παύλος στην Αθήνα — Άρειος Πάγος">
+      </div>
+      <div class="field full">
+        <label>URL <span class="req">*</span></label>
+        <input id="ml-url" placeholder="https://i.ibb.co/...">
+      </div>
+      <div class="field">
+        <label>Source Platform</label>
+        <select id="ml-source">
+          <option value="imgbb">imgbb</option>
+          <option value="YouTube">YouTube</option>
+          <option value="Google Drive">Google Drive</option>
+          <option value="GitHub Pages">GitHub Pages</option>
+          <option value="Vimeo">Vimeo</option>
+          <option value="Local">Local</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Unit ID</label>
+        <input id="ml-unit" placeholder="U03">
+      </div>
+      <div class="field full">
+        <label>Tags (κόμμα)</label>
+        <input id="ml-tags" placeholder="Παύλος, Αθήνα, 1ος αιώνας, Άρειος Πάγος">
+      </div>
+      <div class="field">
+        <label>Γλώσσα</label>
+        <select id="ml-lang">
+          <option value="el">el</option>
+          <option value="en">en</option>
+          <option value="el/en">el/en</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Notes</label>
+        <input id="ml-notes" placeholder="προαιρετικό">
+      </div>
+    </div>
+
+    <div class="field" style="margin-top:12px;">
+      <label>App Context</label>
+      <div class="pills" id="ml-apps">
+        <div class="pill" data-app="Mind Palace" onclick="togglePill(this,'ml')">Mind Palace</div>
+        <div class="pill" data-app="Explorer History" onclick="togglePill(this,'ml')">Explorer</div>
+        <div class="pill" data-app="Timeline Map" onclick="togglePill(this,'ml')">Timeline</div>
+        <div class="pill" data-app="Interactive Book" onclick="togglePill(this,'ml')">Interactive Book</div>
+        <div class="pill" data-app="Console" onclick="togglePill(this,'ml')">Console</div>
+        <div class="pill" data-app="Living Anchor" onclick="togglePill(this,'ml')">Anchor</div>
+        <div class="pill" data-app="UE5" onclick="togglePill(this,'ml')">UE5</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="generateML()">+ Παραγωγή γραμμής</button>
+      <button class="btn btn-ghost" onclick="clearML()">Καθαρισμός</button>
+    </div>
+  </div>
+
+  <div class="output-section" id="ml-output-wrap">
+    <div class="no-output" id="ml-no-output">Συμπλήρωσε τα παραπάνω και πάτα «Παραγωγή γραμμής»</div>
+    <div id="ml-results"></div>
+  </div>
+
+  <!-- INSTRUCTIONS -->
+  <div class="section" style="margin-top:8px;">
+    <div class="sec-title">Πώς να χρησιμοποιήσεις</div>
+    <div style="font-size:10.5px;color:var(--mu);line-height:2;">
+      1. Συμπλήρωσε τα πεδία → Παραγωγή γραμμής<br>
+      2. <strong style="color:var(--tx)">Αντέγραψε την TAB-separated γραμμή</strong> (κουμπί «Αντιγραφή»)<br>
+      3. Άνοιξε <strong style="color:var(--gold)">media_library</strong> Google Sheet<br>
+      4. Κλικ σε κενή γραμμή → Ctrl+V<br>
+      5. Τρέξε το Apps Script «Sync to GitHub»
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB: INTERACTIVE BOOK ═══ -->
+<div class="panel" id="panel-ib">
+  <div class="book-hint">
+    Στήλες του <strong>Πίνακα αλλαγών interactive lessons</strong>:<br>
+    <code>number | videoId | image | slidesUrl | audioUrl | webUrl | driveUrl | linkUrl | linkName | title</code><br>
+    Ένα tab, μία γραμμή ανά σελίδα βιβλίου. Το <strong>number</strong> = αριθμός σελίδας του βιβλίου.
+  </div>
+
+  <div class="section">
+    <div class="sec-title">Βιβλίο & Σελίδα</div>
+    <div class="grid3">
+      <div class="field">
+        <label>Βιβλίο <span class="req">*</span></label>
+        <select id="ib-book">
+          <option value="A_Lykeiou">Α΄ Λυκείου</option>
+          <option value="B_Lykeiou">Β΄ Λυκείου</option>
+          <option value="G_Lykeiou">Γ΄ Λυκείου</option>
+          <option value="A_Gymnasiou">Α΄ Γυμνασίου</option>
+          <option value="B_Gymnasiou">Β΄ Γυμνασίου</option>
+          <option value="G_Gymnasiou">Γ΄ Γυμνασίου</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Αρ. Σελίδας <span class="req">*</span></label>
+        <input id="ib-number" type="number" placeholder="11" min="1">
+      </div>
+      <div class="field">
+        <label>Τίτλος σελίδας</label>
+        <input id="ib-title" placeholder="π.χ. Εικονομαχία">
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">Περιεχόμενο (συμπλήρωσε ό,τι χρειάζεσαι)</div>
+    <div class="grid2">
+      <div class="field">
+        <label>🖼 Image URL</label>
+        <input id="ib-image" placeholder="https://i.ibb.co/...">
+      </div>
+      <div class="field">
+        <label>▶ YouTube embed URL</label>
+        <input id="ib-video" placeholder="https://www.youtube.com/embed/...">
+      </div>
+      <div class="field">
+        <label>📊 Google Slides embed URL</label>
+        <input id="ib-slides" placeholder="https://docs.google.com/presentation/...">
+      </div>
+      <div class="field">
+        <label>🎵 Audio URL (Drive)</label>
+        <input id="ib-audio" placeholder="https://drive.google.com/uc?export=download&id=...">
+      </div>
+      <div class="field">
+        <label>🌐 Web URL</label>
+        <input id="ib-web" placeholder="https://...">
+      </div>
+      <div class="field">
+        <label>📁 Drive URL</label>
+        <input id="ib-drive" placeholder="https://drive.google.com/file/d/...">
+      </div>
+      <div class="field">
+        <label>🔗 Link URL</label>
+        <input id="ib-linkurl" placeholder="https://...">
+      </div>
+      <div class="field">
+        <label>🔗 Link Name</label>
+        <input id="ib-linkname" placeholder="π.χ. Βίντεο για Εικονομαχία">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="generateIB()">+ Παραγωγή γραμμής</button>
+      <button class="btn btn-ghost" onclick="clearIB()">Καθαρισμός</button>
+    </div>
+  </div>
+
+  <div class="output-section" id="ib-output-wrap">
+    <div class="no-output" id="ib-no-output">Συμπλήρωσε τα παραπάνω και πάτα «Παραγωγή γραμμής»</div>
+    <div id="ib-results"></div>
+  </div>
+
+  <div class="section" style="margin-top:8px;">
+    <div class="sec-title">Πώς να χρησιμοποιήσεις</div>
+    <div style="font-size:10.5px;color:var(--mu);line-height:2;">
+      1. Επίλεξε βιβλίο, αριθμό σελίδας και συμπλήρωσε τα media<br>
+      2. <strong style="color:var(--tx)">Αντέγραψε την γραμμή</strong><br>
+      3. Άνοιξε <strong style="color:var(--gold)">Πίνακας αλλαγών interactive lessons</strong> → tab του βιβλίου<br>
+      4. Επικόλλησε σε κενή γραμμή → Ctrl+V<br>
+      5. Τρέξε το GitHub Action «Smart Sync Media per Book»
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB: HISTORY ═══ -->
+<div class="panel" id="panel-hist">
+  <div class="section">
+    <div class="sec-title">Αποθηκευμένες εγγραφές <span id="hist-count" style="color:var(--mu);font-size:9px;font-weight:normal;letter-spacing:0;">(0)</span></div>
+    <div id="hist-list"><div class="empty-hist">Δεν υπάρχουν εγγραφές ακόμα.</div></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="exportCSV()">↓ Export CSV</button>
+    <button class="btn btn-ghost" onclick="clearHistory()">✕ Εκκαθάριση</button>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ── STATE ─────────────────────────────────────────────
+let mlApps = new Set();
+let history = JSON.parse(localStorage.getItem('mml_history') || '[]');
+
+// ── TABS ─────────────────────────────────────────────
+function switchTab(t) {
+  ['ml','ib','hist'].forEach(id => {
+    document.getElementById('tab-'+id).classList.toggle('active', id===t);
+    document.getElementById('panel-'+id).classList.toggle('active', id===t);
+  });
+  if (t === 'hist') renderHistory();
+}
+
+// ── PILLS ─────────────────────────────────────────────
+function togglePill(el, mode) {
+  const app = el.dataset.app;
+  if (mode === 'ml') {
+    if (mlApps.has(app)) { mlApps.delete(app); el.classList.remove('sel-ml'); }
+    else { mlApps.add(app); el.classList.add('sel-ml'); }
+  }
+}
+
+// ── GENERATE MEDIA LIBRARY ROW ────────────────────────
+function generateML() {
+  const id    = document.getElementById('ml-id').value.trim();
+  const type  = document.getElementById('ml-type').value;
+  const title = document.getElementById('ml-title').value.trim();
+  const url   = document.getElementById('ml-url').value.trim();
+  const src   = document.getElementById('ml-source').value;
+  const unit  = document.getElementById('ml-unit').value.trim();
+  const tags  = document.getElementById('ml-tags').value.trim();
+  const lang  = document.getElementById('ml-lang').value;
+  const notes = document.getElementById('ml-notes').value.trim();
+  const apps  = [...mlApps].join('; ');
+  const date  = new Date().toISOString().slice(0,10);
+  const status = 'active';
+
+  if (!id || !title || !url) {
+    alert('Συμπλήρωσε: ID, Τίτλος, URL');
+    return;
+  }
+
+  // TAB-separated row (exact column order of media_library sheet)
+  const cols = [id, type, title, url, src, apps, unit, tags, lang, notes, date, status];
+  const tabRow = cols.join('\t');
+
+  // Save to history
+  history.unshift({ kind: 'ml', id, type, title, url, apps, date, tabRow });
+  localStorage.setItem('mml_history', JSON.stringify(history.slice(0, 100)));
+
+  // Render
+  const no = document.getElementById('ml-no-output');
+  if (no) no.style.display = 'none';
+  const res = document.getElementById('ml-results');
+  const card = buildMLCard(id, type, title, url, apps, date, tabRow, cols);
+  res.insertBefore(card, res.firstChild);
+}
+
+function buildMLCard(id, type, title, url, apps, date, tabRow, cols) {
+  const card = document.createElement('div');
+  card.className = 'output-card';
+
+  const colNames = ['media_id','type','title','url','source','app_context','unit_id','tags','lang','notes','date','status'];
+  const colorClass = { 0:'id', 1:'type', 3:'url' };
+
+  card.innerHTML = `
+    <div class="out-card-head">
+      <div>
+        <div class="out-card-title">📚 Media Library — ${id}</div>
+        <div class="out-card-subtitle">${title} · ${date}</div>
+      </div>
+      <button class="btn-copy" onclick="copyRow(this,'${btoa(encodeURIComponent(tabRow))}')">Αντιγραφή</button>
+    </div>
+    <div class="row-display">
+      ${colNames.map((n,i) => `<span class="cell"><span class="cell-key">${n}</span><span class="cell-val ${colorClass[i]||''}">${cols[i]||'—'}</span></span>`).join('')}
+    </div>
+    <div class="raw-row">${cols.map((c,i) => `<span style="color:${i===0?'var(--gold)':i===3?'var(--bl)':'var(--tx)'}">${c||''}</span>`).join('<span class="tab-sep"> → </span>')}</div>
+  `;
+  return card;
+}
+
+// ── GENERATE INTERACTIVE BOOK ROW ────────────────────
+function generateIB() {
+  const book   = document.getElementById('ib-book').value;
+  const number = document.getElementById('ib-number').value.trim();
+  const title  = document.getElementById('ib-title').value.trim();
+  const image  = document.getElementById('ib-image').value.trim();
+  const video  = document.getElementById('ib-video').value.trim();
+  const slides = document.getElementById('ib-slides').value.trim();
+  const audio  = document.getElementById('ib-audio').value.trim();
+  const web    = document.getElementById('ib-web').value.trim();
+  const drive  = document.getElementById('ib-drive').value.trim();
+  const linkurl= document.getElementById('ib-linkurl').value.trim();
+  const linkname=document.getElementById('ib-linkname').value.trim();
+
+  if (!number) { alert('Ο αριθμός σελίδας είναι υποχρεωτικός'); return; }
+
+  const cols = [number, video, image, slides, audio, web, drive, linkurl, linkname, title];
+  const tabRow = cols.join('\t');
+  const date = new Date().toISOString().slice(0,10);
+
+  history.unshift({ kind: 'ib', book, number, title, image, video, date, tabRow });
+  localStorage.setItem('mml_history', JSON.stringify(history.slice(0, 100)));
+
+  const no = document.getElementById('ib-no-output');
+  if (no) no.style.display = 'none';
+  const res = document.getElementById('ib-results');
+  const card = buildIBCard(book, number, title, cols, tabRow, date);
+  res.insertBefore(card, res.firstChild);
+}
+
+function buildIBCard(book, number, title, cols, tabRow, date) {
+  const card = document.createElement('div');
+  card.className = 'output-card';
+  const colNames = ['number','videoId','image','slidesUrl','audioUrl','webUrl','driveUrl','linkUrl','linkName','title'];
+  const bookLabel = {
+    'A_Lykeiou':'Α΄ Λυκείου','B_Lykeiou':'Β΄ Λυκείου','G_Lykeiou':'Γ΄ Λυκείου',
+    'A_Gymnasiou':'Α΄ Γυμνασίου','B_Gymnasiou':'Β΄ Γυμνασίου','G_Gymnasiou':'Γ΄ Γυμνασίου'
+  }[book] || book;
+
+  card.innerHTML = `
+    <div class="out-card-head">
+      <div>
+        <div class="out-card-title" style="color:var(--bl)">📖 ${bookLabel} — σελ. ${number}</div>
+        <div class="out-card-subtitle">${title||'χωρίς τίτλο'} · ${date} · tab: ${book}</div>
+      </div>
+      <button class="btn-copy" onclick="copyRow(this,'${btoa(encodeURIComponent(tabRow))}')">Αντιγραφή</button>
+    </div>
+    <div class="row-display">
+      ${colNames.map((n,i) => `<span class="cell"><span class="cell-key">${n}</span><span class="cell-val ${i===0?'id':i===2||i===3?'url':''}">${cols[i]||'—'}</span></span>`).join('')}
+    </div>
+    <div class="raw-row">${cols.map((c,i)=>`<span style="color:${i===0?'var(--gold)':c&&(c.startsWith('http')||c.startsWith('https'))?'var(--bl)':'var(--tx)'}">${c||''}</span>`).join('<span class="tab-sep"> → </span>')}</div>
+  `;
+  return card;
+}
+
+// ── COPY ──────────────────────────────────────────────
+function copyRow(btn, b64) {
+  const raw = decodeURIComponent(atob(b64));
+  navigator.clipboard.writeText(raw).then(() => {
+    btn.textContent = '✓ Αντιγράφηκε!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Αντιγραφή'; btn.classList.remove('copied'); }, 2200);
+  }).catch(() => {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = raw; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✓ Αντιγράφηκε!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Αντιγραφή'; btn.classList.remove('copied'); }, 2200);
+  });
+}
+
+// ── HISTORY ───────────────────────────────────────────
+function renderHistory() {
+  const list = document.getElementById('hist-list');
+  document.getElementById('hist-count').textContent = `(${history.length})`;
+  if (!history.length) {
+    list.innerHTML = '<div class="empty-hist">Δεν υπάρχουν εγγραφές ακόμα.</div>';
+    return;
+  }
+  list.innerHTML = history.map((h, i) => {
+    const badge = h.kind === 'ml'
+      ? `<span class="hist-badge hb-ml">Media Library</span>`
+      : `<span class="hist-badge hb-ib">📖 ${h.book||''}</span>`;
+    return `<div class="hist-item" onclick="restoreFromHistory(${i})">
+      <div class="hist-left">
+        <div class="hist-id">${h.id || 'σελ. '+h.number}</div>
+        <div class="hist-title">${h.title||'—'}</div>
+        <div class="hist-date">${h.date}</div>
+      </div>
+      ${badge}
+    </div>`;
+  }).join('');
+}
+
+function restoreFromHistory(i) {
+  const h = history[i];
+  if (!h) return;
+  if (h.kind === 'ml') {
+    switchTab('ml');
+    // Could pre-fill fields — for now just copy row
+    navigator.clipboard.writeText(h.tabRow).then(() => alert('✓ Η γραμμή αντιγράφηκε!'));
+  } else {
+    switchTab('ib');
+    navigator.clipboard.writeText(h.tabRow).then(() => alert('✓ Η γραμμή αντιγράφηκε!'));
+  }
+}
+
+function clearHistory() {
+  if (confirm('Να διαγραφούν όλες οι εγγραφές;')) {
+    history = []; localStorage.removeItem('mml_history'); renderHistory();
+  }
+}
+
+function exportCSV() {
+  const rows = ['kind,id_or_page,title,date,row'];
+  history.forEach(h => {
+    rows.push([h.kind, h.id||h.number, `"${(h.title||'').replace(/"/g,'""')}"`, h.date, `"${h.tabRow.replace(/"/g,'""')}"`].join(','));
+  });
+  const b64 = btoa(unescape(encodeURIComponent(rows.join('\n'))));
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;base64,' + b64;
+  a.download = 'media_linker_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+}
+
+// ── CLEAR ─────────────────────────────────────────────
+function clearML() {
+  ['ml-id','ml-title','ml-url','ml-unit','ml-tags','ml-notes'].forEach(id => document.getElementById(id).value = '');
+  mlApps.clear();
+  document.querySelectorAll('#ml-apps .pill').forEach(p => p.classList.remove('sel-ml'));
+  document.getElementById('ml-results').innerHTML = '';
+  const no = document.getElementById('ml-no-output');
+  if (no) no.style.display = '';
+}
+
+function clearIB() {
+  ['ib-number','ib-title','ib-image','ib-video','ib-slides','ib-audio','ib-web','ib-drive','ib-linkurl','ib-linkname'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('ib-results').innerHTML = '';
+  const no = document.getElementById('ib-no-output');
+  if (no) no.style.display = '';
+}
+
+// Init
+renderHistory();
+</script>
+</body>
+</html>

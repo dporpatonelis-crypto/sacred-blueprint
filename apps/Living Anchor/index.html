@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Living Anchor - Text Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f0f0f0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --accent-primary: #2563eb;
+            --accent-secondary: #3b82f6;
+            --accent-light: #dbeafe;
+            --border: #e5e5e5;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .mode-indicator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .mode-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .mode-badge.edit {
+            background: var(--accent-light);
+            color: var(--accent-primary);
+        }
+
+        .mode-badge.select {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-secondary);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        /* Main Layout */
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 450px;
+            height: calc(100vh - 65px);
+            overflow: hidden;
+        }
+
+        /* Text Panel - Background at 100% opacity */
+        .text-panel {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            overflow-y: auto;
+            border-right: 1px solid var(--border);
+            position: relative;
+        }
+
+        .text-panel.has-bg {
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Removed the white overlay - background shows at 100% */
+
+        .text-panel > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* EDIT MODE */
+        .edit-mode-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .edit-textarea {
+            width: 100%;
+            flex: 1;
+            min-height: 300px;
+            padding: 1.5rem;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: none;
+            font-family: inherit;
+        }
+
+        .edit-textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .edit-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* SELECT MODE */
+        .select-mode-container {
+            width: 100%;
+            display: none;
+        }
+
+        .select-instructions {
+            background: var(--accent-light);
+            border: 1px solid var(--accent-primary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .select-instructions-text {
+            font-size: 0.875rem;
+            color: var(--accent-primary);
+        }
+
+        .text-display {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            max-width: 65ch;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            cursor: text;
+            user-select: text;
+            -webkit-user-select: text;
+        }
+
+        .text-paragraph {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .anchor-highlight {
+            background: linear-gradient(120deg, var(--accent-light) 0%, var(--accent-light) 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 88%;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 2px;
+            padding: 0 2px;
+        }
+
+        .anchor-highlight:hover {
+            background-size: 100% 100%;
+        }
+
+        .anchor-highlight.active {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        /* Selection Popup */
+        .selection-popup {
+            position: fixed;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            z-index: 1000;
+            gap: 0.25rem;
+        }
+
+        .selection-popup.show {
+            display: flex;
+        }
+
+        .popup-btn {
+            padding: 0.5rem 0.75rem;
+            border: none;
+            background: transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .popup-btn:hover {
+            background: var(--accent-light);
+            color: var(--accent-primary);
+        }
+
+        /* Anchor Panel */
+        .anchor-panel {
+            background: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-tertiary);
+        }
+
+        .panel-header h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .anchor-text-preview {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            border-left: 3px solid var(--accent-primary);
+            padding-left: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-secondary);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 0.875rem 0.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .tab.active {
+            color: var(--accent-primary);
+            border-bottom-color: var(--accent-primary);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            background: var(--bg-secondary);
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        /* Layer System */
+        .layer {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-primary);
+        }
+
+        .layer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .layer-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .layer-toggle {
+            width: 36px;
+            height: 20px;
+            background: var(--border);
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .layer-toggle.active {
+            background: var(--accent-primary);
+        }
+
+        .layer-toggle::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.2s;
+        }
+
+        .layer-toggle.active::after {
+            transform: translateX(16px);
+        }
+
+        .layer-content {
+            display: none;
+        }
+
+        .layer-content.show {
+            display: block;
+        }
+
+        /* App Connections */
+        .app-connections {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .app-card {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem;
+            transition: all 0.2s;
+        }
+
+        .app-card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow);
+        }
+
+        .app-card.active {
+            border-color: var(--accent-primary);
+            background: var(--accent-light);
+        }
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .app-icon {
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .app-info {
+            flex: 1;
+        }
+
+        .app-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .app-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .app-link-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .app-scenario {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .app-scenario-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .app-scenario-text {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .app-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .app-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .app-btn:hover {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        /* Book Image */
+        .book-container {
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 2px dashed var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .book-container:hover {
+            border-color: var(--accent-primary);
+            background: var(--accent-light);
+        }
+
+        .book-container.has-image {
+            border-style: solid;
+            border-color: var(--border);
+            background: var(--bg-secondary);
+        }
+
+        .book-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 4px;
+            box-shadow: var(--shadow);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Edit Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .json-preview {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        /* Background Panel */
+        .bg-panel {
+            display: none;
+            position: fixed;
+            top: 65px;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            z-index: 90;
+            box-shadow: var(--shadow);
+        }
+
+        .bg-panel.show {
+            display: block;
+        }
+
+        .bg-preview {
+            width: 100%;
+            height: 100px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+            border: 1px solid var(--border);
+            display: none;
+        }
+
+        .bg-preview.show {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr auto;
+            }
+            
+            .anchor-panel {
+                max-height: 50vh;
+                border-top: 1px solid var(--border);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>📍 Living Anchor</h1>
+        <div class="mode-indicator">
+            <span>Λειτουργία:</span>
+            <span id="modeBadge" class="mode-badge edit">Επεξεργασία</span>
+        </div>
+        <div class="header-actions">
+            <button class="btn" onclick="toggleBgPanel()">🖼️ Background</button>
+            <button class="btn" onclick="clearAll()">🗑️ Καθαρισμός</button>
+            <button class="btn btn-primary" onclick="openEditModal()">✏️ Επεξεργασία</button>
+        </div>
+    </header>
+
+    <!-- Background Panel -->
+    <div id="bgPanel" class="bg-panel">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div style="display: flex; gap: 1rem; align-items: end;">
+                <div style="flex: 1;">
+                    <label class="form-label">URL Background Image</label>
+                    <input type="text" id="bgUrl" class="form-input" placeholder="https://...">
+                </div>
+                <button class="btn btn-primary" onclick="applyBackground()">Εφαρμογή</button>
+                <button class="btn" onclick="toggleBgPanel()">Κλείσιμο</button>
+            </div>
+            <div id="bgPreview" class="bg-preview"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Text Panel -->
+        <div class="text-panel" id="textPanel">
+            
+            <!-- EDIT MODE -->
+            <div id="editMode" class="edit-mode-container">
+                <div style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
+                    <span style="font-size: 0.875rem; color: var(--text-secondary);">
+                        📋 Επικολλήστε το κείμενό σας εδώ
+                    </span>
+                </div>
+                <textarea 
+                    id="editTextarea" 
+                    class="edit-textarea" 
+                    placeholder="Επικολλήστε εδώ το κείμενο από το βιβλίο σας...&#10;&#10;Μπορείτε να βάλετε ολόκληρη παράγραφο ή κεφάλαιο."
+                ></textarea>
+                <div class="edit-actions">
+                    <button class="btn btn-success" onclick="switchToSelectMode()">
+                        ✓ Ολοκλήρωση Επεξεργασίας
+                    </button>
+                    <button class="btn" onclick="loadSample()">📄 Φόρτωση Δείγματος</button>
+                </div>
+            </div>
+
+            <!-- SELECT MODE -->
+            <div id="selectMode" class="select-mode-container">
+                <div class="select-instructions">
+                    <span class="select-instructions-text">
+                        🖱️ Επιλέξτε κείμενο με το ποντίκι για να δημιουργήσετε anchor
+                    </span>
+                    <button class="btn" onclick="switchToEditMode()">
+                        📝 Επιστροφή στην Επεξεργασία
+                    </button>
+                </div>
+                <div id="textDisplay" class="text-display"></div>
+            </div>
+
+        </div>
+
+        <!-- Selection Popup -->
+        <div class="selection-popup" id="selectionPopup">
+            <button class="popup-btn" onclick="createAnchor()">📍 Δημιουργία Anchor</button>
+        </div>
+
+        <!-- Anchor Panel -->
+        <div class="anchor-panel" id="anchorPanel">
+            <div class="empty-state" id="emptyPanel">
+                <div class="empty-state-icon">📍</div>
+                <p>Επιλέξτε κείμενο για να δημιουργήσετε ένα anchor</p>
+            </div>
+
+            <div id="anchorContent" style="display: none; height: 100%; flex-direction: column;">
+                <div class="panel-header">
+                    <h2>Anchor Point</h2>
+                    <div class="anchor-text-preview" id="anchorPreview"></div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('context')">Context</button>
+                    <button class="tab" onclick="switchTab('analysis')">Analysis</button>
+                    <button class="tab" onclick="switchTab('connect')">Connect</button>
+                    <button class="tab" onclick="switchTab('book')">Book</button>
+                </div>
+
+                <!-- Context Tab -->
+                <div class="tab-content active" id="tab-context">
+                    <div class="form-group">
+                        <label class="form-label">Προηγούμενο Μάθημα / Σύνδεση</label>
+                        <select class="form-select" id="prevLesson">
+                            <option value="">-- Επιλέξτε --</option>
+                            <option value="lesson_1">Μάθημα 1: Εισαγωγή</option>
+                            <option value="lesson_2">Μάθημα 2: Αιτίες</option>
+                            <option value="lesson_3">Μάθημα 3: Πρόσωπα</option>
+                        </select>
+                        <input type="text" class="form-input" id="prevLessonNote" placeholder="Σημείωση σύνδεσης..." style="margin-top: 0.5rem;">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Κεφάλαιο / Ενότητα</label>
+                        <input type="text" class="form-input" id="chapterTitle" placeholder="π.χ. Ηθικά Νικομάχεια, Βιβλίο Α'">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Γενικότερο Θέμα</label>
+                        <input type="text" class="form-input" id="generalTheme" placeholder="π.χ. Δικαιοσύνη, Αρετή, Πόλεμος">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Σημειώσεις Εκπαιδευτικού</label>
+                        <textarea class="form-textarea" id="teacherNotes" placeholder="Προσωπικές σημειώσεις για αυτό το σημείο..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Analysis Tab -->
+                <div class="tab-content" id="tab-analysis">
+                    <div class="layer" style="border-left-color: #10b981;">
+                        <div class="layer-header">
+                            <span class="layer-title">Layer 1: Λεκτική Ανάλυση</span>
+                            <div class="layer-toggle active" onclick="toggleLayer(this, 'layer1')"></div>
+                        </div>
+                        <div class="layer-content show" id="layer1">
+                            <textarea class="form-textarea" placeholder="Τι λέει κυριολεκτικά; Μετάφραση, λεξιλόγιο, γραμματική..." id="layer1Content"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="layer" style="border-left-color: #3b82f6;">
+                        <div class="layer-header">
+                            <span class="layer-title">Layer 2: Δομική Ανάλυση</span>
+                            <div class="layer-toggle" onclick="toggleLayer(this, 'layer2')"></div>
+                        </div>
+                        <div class="layer-content" id="layer2">
+                            <textarea class="form-textarea" placeholder="Πώς το λέει; Ρητορική, επιχειρηματολογία, δομή..." id="layer2Content"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="layer" style="border-left-color: #f59e0b;">
+                        <div class="layer-header">
+                            <span class="layer-title">Layer 3: Κριτική Στάση</span>
+                            <div class="layer-toggle" onclick="toggleLayer(this, 'layer3')"></div>
+                        </div>
+                        <div class="layer-content" id="layer3">
+                            <textarea class="form-textarea" placeholder="Τι υποθέτει; Τι αποσιωπά; Ποια η παγίδα;" id="layer3Content"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 1.5rem;">
+                        <label class="form-label">Ερωτήσεις προς Μαθητές</label>
+                        <textarea class="form-textarea" id="studentQuestions" placeholder="Καταγράψτε ερωτήσεις που προέκυψαν από τη συζήτηση..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Connect Tab -->
+                <div class="tab-content" id="tab-connect">
+                    <div class="app-connections">
+                        
+                        <!-- Timeline & Map -->
+                        <div class="app-card" id="app-timeline">
+                            <div class="app-header">
+                                <div class="app-icon">📅🗺️</div>
+                                <div class="app-info">
+                                    <div class="app-name">Timeline & Map</div>
+                                    <div class="app-desc">Χρονολογική & Γεωγραφική αναπαράσταση</div>
+                                </div>
+                            </div>
+                            <input type="text" class="app-link-input" id="timelineUrl" placeholder="URL εφαρμογής Timeline-Map...">
+                            <div class="app-scenario">
+                                <div class="app-scenario-title">🎬 Εκπαιδευτικό Σενάριο</div>
+                                <div class="app-scenario-text">
+                                    Δημιουργία χρονολογικού γεγονότος με γεωγραφική τοποθέτηση. 
+                                    Εξαγωγή: year, title, desc, img, location, lat, lng, zoom, slides
+                                </div>
+                            </div>
+                            <div class="app-actions">
+                                <button class="app-btn" onclick="testAppConnection('timeline')">🔗 Test</button>
+                                <button class="app-btn" onclick="exportToApp('timeline')">📤 Export</button>
+                            </div>
+                        </div>
+
+                        <!-- 3D Studio -->
+                        <div class="app-card" id="app-studio3d">
+                            <div class="app-header">
+                                <div class="app-icon">🎬</div>
+                                <div class="app-info">
+                                    <div class="app-name">3D Studio</div>
+                                    <div class="app-desc">Τρισδιάστατη αναπαράσταση σκηνών</div>
+                                </div>
+                            </div>
+                            <input type="text" class="app-link-input" id="studio3dUrl" placeholder="URL 3D Studio...">
+                            <div class="app-scenario">
+                                <div class="app-scenario-title">🎬 Εκπαιδευτικό Σενάριο</div>
+                                <div class="app-scenario-text">
+                                    Δημιουργία 3D σκηνής με βάση το anchor. 
+                                    Εξαγωγή: concept, scene_id, context, analysis_depth
+                                </div>
+                            </div>
+                            <div class="app-actions">
+                                <button class="app-btn" onclick="testAppConnection('studio3d')">🔗 Test</button>
+                                <button class="app-btn" onclick="exportToApp('studio3d')">📤 Export</button>
+                            </div>
+                        </div>
+
+                        <!-- Mind Palace -->
+                        <div class="app-card" id="app-mindpalace">
+                            <div class="app-header">
+                                <div class="app-icon">🏛️</div>
+                                <div class="app-info">
+                                    <div class="app-name">Mind Palace</div>
+                                    <div class="app-desc">Φιλοσοφικός χώρος μνήμης</div>
+                                </div>
+                            </div>
+                            <input type="text" class="app-link-input" id="mindpalaceUrl" placeholder="URL Mind Palace...">
+                            <div class="app-scenario">
+                                <div class="app-scenario-title">🎬 Εκπαιδευτικό Σενάριο</div>
+                                <div class="app-scenario-text">
+                                    Δημιουργία δωματίου για την έννοια του anchor. 
+                                    Εξαγωγή: concept, room_id, book_reference, layers
+                                </div>
+                            </div>
+                            <div class="app-actions">
+                                <button class="app-btn" onclick="testAppConnection('mindpalace')">🔗 Test</button>
+                                <button class="app-btn" onclick="exportToApp('mindpalace')">📤 Export</button>
+                            </div>
+                        </div>
+
+                        <!-- History Explorer -->
+                        <div class="app-card" id="app-history">
+                            <div class="app-header">
+                                <div class="app-icon">🔍</div>
+                                <div class="app-info">
+                                    <div class="app-name">History Explorer</div>
+                                    <div class="app-desc">Εξερεύνηση ιστορικών προσώπων & γεγονότων</div>
+                                </div>
+                            </div>
+                            <input type="text" class="app-link-input" id="historyUrl" placeholder="URL History Explorer...">
+                            <div class="app-scenario">
+                                <div class="app-scenario-title">🎬 Εκπαιδευτικό Σενάριο</div>
+                                <div class="app-scenario-text">
+                                    Συνάντηση με ιστορικό πρόσωπο ή εξερεύνηση γεγονότος. 
+                                    Εξαγωγή: text, person_or_event, era, critical_notes
+                                </div>
+                            </div>
+                            <div class="app-actions">
+                                <button class="app-btn" onclick="testAppConnection('history')">🔗 Test</button>
+                                <button class="app-btn" onclick="exportToApp('history')">📤 Export</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Book Tab -->
+                <div class="tab-content" id="tab-book">
+                    <div class="form-group">
+                        <label class="form-label">Εικόνα Σελίδας Βιβλίου</label>
+                        <div class="book-container" id="bookContainer" onclick="document.getElementById('bookImageInput').click()">
+                            <div id="bookPlaceholder">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📷</div>
+                                <p>Κλικ για φόρτωση εικόνας</p>
+                                <p style="font-size: 0.75rem; margin-top: 0.5rem;">ή drag & drop</p>
+                            </div>
+                            <img id="bookImage" class="book-image" style="display: none;">
+                        </div>
+                        <input type="file" id="bookImageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Αριθμός Σελίδας</label>
+                        <input type="text" class="form-input" id="pageNumber" placeholder="π.χ. 45 ή 45-46">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Σημειώσεις στο Περιθώριο</label>
+                        <textarea class="form-textarea" id="marginNotes" placeholder="Σημειώσεις που θα κάνατε στο φυσικό βιβλίο..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>✏️ Επεξεργασία & Export</h3>
+                <button class="btn" onclick="closeEditModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 1rem;">
+                    <button class="btn" onclick="refreshEditPreview()">🔄 Ανανέωση</button>
+                    <span style="font-size: 0.875rem; color: var(--text-secondary); margin-left: 1rem;">
+                        Σύνολο anchors: <strong id="anchorCount">0</strong>
+                    </span>
+                </div>
+                <pre class="json-preview" id="editPreview"></pre>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="copyFromEdit()">📋 Αντιγραφή JSON</button>
+                    <button class="btn" onclick="downloadFromEdit()">💾 Λήψη Αρχείου</button>
+                    <button class="btn" onclick="exportToAllApps()">🚀 Export σε Όλες τις Εφαρμογές</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let currentMode = 'edit';
+        let currentAnchor = null;
+        let anchors = [];
+        let selectedText = '';
+        let selectionRange = null;
+        let backgroundImage = '';
+
+        // App URLs (persistent configuration)
+        const appUrls = {
+            timeline: localStorage.getItem('url_timeline') || '',
+            studio3d: localStorage.getItem('url_studio3d') || '',
+            mindpalace: localStorage.getItem('url_mindpalace') || '',
+            history: localStorage.getItem('url_history') || ''
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAppUrls();
+            loadSavedBackground();
+            setupSelectionHandler();
+        });
+
+        // Mode Switching
+        function switchToSelectMode() {
+            const textarea = document.getElementById('editTextarea');
+            const text = textarea.value.trim();
+            
+            if (!text) {
+                alert('Παρακαλώ εισάγετε κείμενο πρώτα');
+                return;
+            }
+            
+            currentMode = 'select';
+            document.getElementById('modeBadge').textContent = 'Επιλογή';
+            document.getElementById('modeBadge').className = 'mode-badge select';
+            
+            document.getElementById('editMode').style.display = 'none';
+            document.getElementById('selectMode').style.display = 'block';
+            
+            renderTextForSelection(text);
+        }
+
+        function switchToEditMode() {
+            currentMode = 'edit';
+            document.getElementById('modeBadge').textContent = 'Επεξεργασία';
+            document.getElementById('modeBadge').className = 'mode-badge edit';
+            
+            document.getElementById('selectMode').style.display = 'none';
+            document.getElementById('editMode').style.display = 'flex';
+        }
+
+        function renderTextForSelection(text) {
+            const container = document.getElementById('textDisplay');
+            container.innerHTML = '';
+            
+            const paragraphs = text.split(/\\n\\n|\\n/).filter(p => p.trim());
+            paragraphs.forEach((para, idx) => {
+                const p = document.createElement('p');
+                p.className = 'text-paragraph';
+                p.textContent = para;
+                p.dataset.paragraphId = idx;
+                container.appendChild(p);
+            });
+        }
+
+        // Selection Handler
+        function setupSelectionHandler() {
+            document.addEventListener('mouseup', function(e) {
+                if (currentMode !== 'select') return;
+                
+                const textDisplay = document.getElementById('textDisplay');
+                if (!textDisplay.contains(e.target)) {
+                    hidePopup();
+                    return;
+                }
+                
+                const selection = window.getSelection();
+                const text = selection.toString().trim();
+                
+                if (text.length > 0) {
+                    selectedText = text;
+                    try {
+                        selectionRange = selection.getRangeAt(0);
+                        showPopup(selection);
+                    } catch (err) {
+                        console.log('Selection error:', err);
+                    }
+                } else {
+                    hidePopup();
+                }
+            });
+
+            document.addEventListener('mousedown', function(e) {
+                const popup = document.getElementById('selectionPopup');
+                if (!popup.contains(e.target)) {
+                    hidePopup();
+                }
+            });
+        }
+
+        function showPopup(selection) {
+            const popup = document.getElementById('selectionPopup');
+            const range = selection.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            
+            let left = rect.left + (rect.width / 2) - 75;
+            let top = rect.bottom + 10;
+            
+            if (left < 10) left = 10;
+            if (left > window.innerWidth - 200) left = window.innerWidth - 200;
+            if (top > window.innerHeight - 100) top = rect.top - 50;
+            
+            popup.style.left = left + 'px';
+            popup.style.top = top + 'px';
+            popup.classList.add('show');
+        }
+
+        function hidePopup() {
+            document.getElementById('selectionPopup').classList.remove('show');
+        }
+
+        // Create Anchor
+        function createAnchor() {
+            if (!selectedText) {
+                alert('Παρακαλώ επιλέξτε κείμενο πρώτα');
+                return;
+            }
+            
+            const anchor = {
+                id: 'anchor_' + Date.now(),
+                text: selectedText,
+                timestamp: new Date().toISOString(),
+                context: {},
+                analysis: {
+                    layers: {
+                        layer1: { active: true, content: '' },
+                        layer2: { active: false, content: '' },
+                        layer3: { active: false, content: '' }
+                    },
+                    studentQuestions: ''
+                },
+                connections: {
+                    timeline: { enabled: false, data: {} },
+                    studio3d: { enabled: false, data: {} },
+                    mindpalace: { enabled: false, data: {} },
+                    history: { enabled: false, data: {} }
+                },
+                book: {}
+            };
+            
+            anchors.push(anchor);
+            currentAnchor = anchor;
+            
+            try {
+                if (selectionRange) {
+                    highlightText(selectionRange, anchor.id);
+                }
+            } catch (e) {
+                console.log('Could not highlight:', e);
+            }
+            
+            showAnchorPanel(anchor);
+            hidePopup();
+            window.getSelection().removeAllRanges();
+        }
+
+        function highlightText(range, anchorId) {
+            const span = document.createElement('span');
+            span.className = 'anchor-highlight';
+            span.dataset.anchorId = anchorId;
+            span.onclick = function(e) {
+                e.stopPropagation();
+                loadAnchor(anchorId);
+            };
+            
+            try {
+                range.surroundContents(span);
+            } catch (e) {
+                const contents = range.extractContents();
+                span.appendChild(contents);
+                range.insertNode(span);
+            }
+        }
+
+        function loadAnchor(anchorId) {
+            const anchor = anchors.find(a => a.id === anchorId);
+            if (anchor) {
+                currentAnchor = anchor;
+                showAnchorPanel(anchor);
+                document.querySelectorAll('.anchor-highlight').forEach(el => el.classList.remove('active'));
+                document.querySelector(`[data-anchor-id="${anchorId}"]`)?.classList.add('active');
+            }
+        }
+
+        function showAnchorPanel(anchor) {
+            document.getElementById('emptyPanel').style.display = 'none';
+            const content = document.getElementById('anchorContent');
+            content.style.display = 'flex';
+            document.getElementById('anchorPreview').textContent = anchor.text;
+            loadAnchorData(anchor);
+        }
+
+        function loadAnchorData(anchor) {
+            if (anchor.context) {
+                document.getElementById('prevLesson').value = anchor.context.prevLesson || '';
+                document.getElementById('prevLessonNote').value = anchor.context.prevLessonNote || '';
+                document.getElementById('chapterTitle').value = anchor.context.chapterTitle || '';
+                document.getElementById('generalTheme').value = anchor.context.generalTheme || '';
+                document.getElementById('teacherNotes').value = anchor.context.teacherNotes || '';
+            }
+            if (anchor.analysis) {
+                document.getElementById('layer1Content').value = anchor.analysis.layers.layer1?.content || '';
+                document.getElementById('layer2Content').value = anchor.analysis.layers.layer2?.content || '';
+                document.getElementById('layer3Content').value = anchor.analysis.layers.layer3?.content || '';
+                updateLayerToggle('layer1', anchor.analysis.layers.layer1?.active);
+                updateLayerToggle('layer2', anchor.analysis.layers.layer2?.active);
+                updateLayerToggle('layer3', anchor.analysis.layers.layer3?.active);
+                document.getElementById('studentQuestions').value = anchor.analysis.studentQuestions || '';
+            }
+            if (anchor.book) {
+                document.getElementById('pageNumber').value = anchor.book.pageNumber || '';
+                document.getElementById('marginNotes').value = anchor.book.marginNotes || '';
+                if (anchor.book.image) {
+                    document.getElementById('bookImage').src = anchor.book.image;
+                    document.getElementById('bookImage').style.display = 'block';
+                    document.getElementById('bookPlaceholder').style.display = 'none';
+                    document.getElementById('bookContainer').classList.add('has-image');
+                }
+            }
+            updateConnectionCards(anchor.connections);
+        }
+
+        function updateLayerToggle(layerId, isActive) {
+            const content = document.getElementById(layerId);
+            const toggle = content?.previousElementSibling?.querySelector('.layer-toggle');
+            if (toggle && content) {
+                if (isActive) {
+                    toggle.classList.add('active');
+                    content.classList.add('show');
+                } else {
+                    toggle.classList.remove('active');
+                    content.classList.remove('show');
+                }
+            }
+        }
+
+        function updateConnectionCards(connections) {
+            if (!connections) return;
+            Object.keys(connections).forEach(app => {
+                const card = document.getElementById('app-' + app);
+                if (card && connections[app].enabled) {
+                    card.classList.add('active');
+                } else if (card) {
+                    card.classList.remove('active');
+                }
+            });
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            saveCurrentAnchor();
+        }
+
+        function toggleLayer(toggle, layerId) {
+            toggle.classList.toggle('active');
+            document.getElementById(layerId).classList.toggle('show');
+            saveCurrentAnchor();
+        }
+
+        // App connections
+        function loadAppUrls() {
+            document.getElementById('timelineUrl').value = appUrls.timeline;
+            document.getElementById('studio3dUrl').value = appUrls.studio3d;
+            document.getElementById('mindpalaceUrl').value = appUrls.mindpalace;
+            document.getElementById('historyUrl').value = appUrls.history;
+        }
+
+        document.querySelectorAll('.app-link-input').forEach(input => {
+            input.addEventListener('change', function() {
+                const app = this.id.replace('Url', '');
+                appUrls[app] = this.value;
+                localStorage.setItem('url_' + app, this.value);
+            });
+        });
+
+        function testAppConnection(app) {
+            const url = document.getElementById(app + 'Url').value;
+            if (url) {
+                window.open(url, '_blank');
+            } else {
+                alert('Παρακαλώ εισάγετε URL για την εφαρμογή ' + app);
+            }
+        }
+
+        function exportToApp(app) {
+            if (!currentAnchor) return;
+            
+            if (!currentAnchor.connections) {
+                currentAnchor.connections = {};
+            }
+            currentAnchor.connections[app] = {
+                enabled: true,
+                data: generateAppData(app, currentAnchor)
+            };
+            
+            document.getElementById('app-' + app).classList.add('active');
+            
+            const data = currentAnchor.connections[app].data;
+            navigator.clipboard.writeText(JSON.stringify(data, null, 2)).then(() => {
+                alert('✅ Δεδομένα εξήχθησαν για ' + app + '!');
+            });
+        }
+
+        function generateAppData(app, anchor) {
+            switch(app) {
+                case 'timeline':
+                    return {
+                        id: Date.now(),
+                        year: anchor.context?.generalTheme || 'Unknown',
+                        title: anchor.text.substring(0, 50),
+                        desc: anchor.analysis?.layers?.layer1?.content || '',
+                        img: anchor.book?.image || '',
+                        location: extractLocation(anchor),
+                        lat: 38,
+                        lng: 23,
+                        zoom: 6,
+                        slides: ''
+                    };
+                case 'studio3d':
+                    return {
+                        anchor_id: anchor.id,
+                        concept: anchor.text,
+                        scene_id: 'scene_' + anchor.id,
+                        context: anchor.context?.chapterTitle,
+                        analysis_depth: countActiveLayers(anchor)
+                    };
+                case 'mindpalace':
+                    return {
+                        anchor_id: anchor.id,
+                        concept: anchor.text,
+                        room_id: 'room_' + anchor.id,
+                        book_reference: anchor.book?.pageNumber,
+                        layers: anchor.analysis?.layers
+                    };
+                case 'history':
+                    return {
+                        anchor_id: anchor.id,
+                        text: anchor.text,
+                        person_or_event: anchor.context?.generalTheme,
+                        era: anchor.context?.chapterTitle,
+                        critical_notes: anchor.analysis?.layers?.layer3?.content
+                    };
+                default:
+                    return {};
+            }
+        }
+
+        function extractLocation(anchor) {
+            const text = anchor.text.toLowerCase();
+            const locations = ['αθήνα', 'σπάρτη', 'θήβα', 'κόρινθος'];
+            for (let loc of locations) {
+                if (text.includes(loc)) return loc;
+            }
+            return 'Αρχαία Ελλάδα';
+        }
+
+        function countActiveLayers(anchor) {
+            if (!anchor.analysis?.layers) return 0;
+            return Object.values(anchor.analysis.layers).filter(l => l.active).length;
+        }
+
+        // Image handling
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('bookImage').src = e.target.result;
+                    document.getElementById('bookImage').style.display = 'block';
+                    document.getElementById('bookPlaceholder').style.display = 'none';
+                    document.getElementById('bookContainer').classList.add('has-image');
+                    saveCurrentAnchor();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Save anchor
+        document.querySelectorAll('input, textarea, select').forEach(input => {
+            input.addEventListener('change', saveCurrentAnchor);
+            input.addEventListener('blur', saveCurrentAnchor);
+        });
+
+        function saveCurrentAnchor() {
+            if (!currentAnchor) return;
+            currentAnchor.context = {
+                prevLesson: document.getElementById('prevLesson').value,
+                prevLessonNote: document.getElementById('prevLessonNote').value,
+                chapterTitle: document.getElementById('chapterTitle').value,
+                generalTheme: document.getElementById('generalTheme').value,
+                teacherNotes: document.getElementById('teacherNotes').value
+            };
+            currentAnchor.analysis = {
+                layers: {
+                    layer1: { active: document.getElementById('layer1').classList.contains('show'), content: document.getElementById('layer1Content').value },
+                    layer2: { active: document.getElementById('layer2').classList.contains('show'), content: document.getElementById('layer2Content').value },
+                    layer3: { active: document.getElementById('layer3').classList.contains('show'), content: document.getElementById('layer3Content').value }
+                },
+                studentQuestions: document.getElementById('studentQuestions').value
+            };
+            currentAnchor.book = {
+                pageNumber: document.getElementById('pageNumber').value,
+                marginNotes: document.getElementById('marginNotes').value,
+                image: document.getElementById('bookImage').style.display !== 'none' ? document.getElementById('bookImage').src : null
+            };
+        }
+
+        // Background - NOW AT 100% OPACITY (removed white overlay)
+        function toggleBgPanel() {
+            document.getElementById('bgPanel').classList.toggle('show');
+        }
+
+        function applyBackground() {
+            const url = document.getElementById('bgUrl').value;
+            if (url) {
+                backgroundImage = url;
+                document.getElementById('textPanel').classList.add('has-bg');
+                document.getElementById('textPanel').style.backgroundImage = `url(${url})`;
+                document.getElementById('bgPreview').style.backgroundImage = `url(${url})`;
+                document.getElementById('bgPreview').classList.add('show');
+                localStorage.setItem('bg_image', url);
+            }
+        }
+
+        function loadSavedBackground() {
+            const savedBg = localStorage.getItem('bg_image');
+            if (savedBg) {
+                document.getElementById('bgUrl').value = savedBg;
+                applyBackground();
+            }
+        }
+
+        // Clear all
+        function clearAll() {
+            if (confirm('Θέλετε να καθαρίσετε όλα τα anchors και το κείμενο;')) {
+                anchors = [];
+                currentAnchor = null;
+                document.getElementById('editTextarea').value = '';
+                document.getElementById('textDisplay').innerHTML = '';
+                document.getElementById('emptyPanel').style.display = 'block';
+                document.getElementById('anchorContent').style.display = 'none';
+                switchToEditMode();
+            }
+        }
+
+        function loadSample() {
+            const sample = `Θουκυδίδης Ἀθηναῖος ξυνέγραψε τὸν πόλεμον τῶν Πελοποννησίων καὶ Ἀθηναίων, ὡς ἐπολέμησαν πρὸς ἀλλήλους, ἀρξάμενος εὐθὺς καθισταμένου καὶ ἐλπίσας μέγαν τε ἔσεσθαι καὶ ἀξιολογώτατον τῶν προγεγενημένων.
+
+Τὴν γὰρ πίστιν ἐκ τῶν ἐπιφανῶν σημείων ἐποιοῦντο πρὸς τὸ μέλλον ἔσεσθαι, μὴ οἰόμενοι ἂν αὐτὸν καταλυθῆναι, πρὶν ἂν οἱ μὲν ἀκμάζοντες πολέμῳ, οἱ δὲ καὶ παρασκευῇ πάσῃ χρώμενοι ἐπὶ τὸ αὐτὸ ἔλθοιεν.`;
+            document.getElementById('editTextarea').value = sample;
+        }
+
+        // Edit Modal
+        function openEditModal() {
+            saveCurrentAnchor();
+            refreshEditPreview();
+            document.getElementById('editModal').classList.add('show');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('show');
+        }
+
+        function refreshEditPreview() {
+            const exportData = {
+                metadata: {
+                    sessionId: 'session_' + Date.now(),
+                    timestamp: new Date().toISOString(),
+                    totalAnchors: anchors.length
+                },
+                anchors: anchors,
+                standalone: {
+                    timeline: anchors.filter(a => a.connections?.timeline?.enabled).map(a => a.connections.timeline.data),
+                    studio3d: anchors.filter(a => a.connections?.studio3d?.enabled).map(a => a.connections.studio3d.data),
+                    mindpalace: anchors.filter(a => a.connections?.mindpalace?.enabled).map(a => a.connections.mindpalace.data),
+                    history: anchors.filter(a => a.connections?.history?.enabled).map(a => a.connections.history.data)
+                }
+            };
+            document.getElementById('editPreview').textContent = JSON.stringify(exportData, null, 2);
+            document.getElementById('anchorCount').textContent = anchors.length;
+        }
+
+        function copyFromEdit() {
+            const content = document.getElementById('editPreview').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                alert('✅ Το JSON αντιγράφηκε!');
+            });
+        }
+
+        function downloadFromEdit() {
+            const content = document.getElementById('editPreview').textContent;
+            const blob = new Blob([content], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `living_anchor_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportToAllApps() {
+            const apps = ['timeline', 'studio3d', 'mindpalace', 'history'];
+            let count = 0;
+            anchors.forEach(anchor => {
+                apps.forEach(app => {
+                    if (!anchor.connections[app]) {
+                        anchor.connections[app] = { enabled: true, data: generateAppData(app, anchor) };
+                        count++;
+                    }
+                });
+            });
+            refreshEditPreview();
+            alert(`✅ Εξήχθησαν ${count} συνδέσεις!`);
+        }
+
+        // Close modal on overlay click
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) closeEditModal();
+        });
+    </script>
+</body>
+</html>'''
+    
+  </body>
+  
+</html>

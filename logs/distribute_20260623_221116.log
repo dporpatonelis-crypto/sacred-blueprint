@@ -1,0 +1,25 @@
+╔══════════════════════════════════════╗
+║   Sacred Blueprint — Distribute     ║
+╚══════════════════════════════════════╝
+Θέμα:     Ο Απόστολος των Εθνών και το Στόμα της Εκκλησίας
+Φάκελος:  /Users/dimitriosporpatonelis/sacred-blueprint/lessons/20260623_214514_/
+
+Βρέθηκαν κλειδιά:
+  - lesson_type
+  - meta_clues_count
+  - meta_types_breakdown
+  - source_text
+  - timestamp_folder
+
+  ✓ lesson_type_output.json  →  data/current/lesson_type.json
+  ✓ meta_clues_count_output.json  →  data/current/meta_clues_count.json
+  ✓ meta_types_breakdown_output.json  →  data/current/meta_types_breakdown.json
+  ✓ source_text_output.json  →  data/current/source_text.json
+  ✓ timestamp_folder_output.json  →  data/current/timestamp_folder.json
+
+  ✓ active_lesson.json → 20260623_214514_
+
+══════════════════════════════════════════
+✓ Βιβλιοθήκη:  5/5 κλειδιά → /Users/dimitriosporpatonelis/sacred-blueprint/lessons/20260623_214514_/
+✓ Ενεργό:      5/5 αρχεία  → data/current/
+Log: /Users/dimitriosporpatonelis/sacred-blueprint/logs/distribute_20260623_221116.log

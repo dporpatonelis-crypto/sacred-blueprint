@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="el" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orchestrator v6.2 — Ευέλικτη εισαγωγή Excel/JSON</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<style>
+  :root{--tr:background 0.3s,color 0.3s,border-color 0.3s;}
+  [data-theme="dark"]{--bg:#1a1410;--sf:rgba(255,255,255,0.04);--sf2:rgba(0,0,0,0.3);--tx:#f5f0e8;--mu:#6b5d4f;--go:#c4862a;--gd:rgba(196,134,42,0.2);--gm:rgba(196,134,42,0.12);--gh:rgba(196,134,42,0.06);--ru:#8b3a1f;--ru2:#6b2a10;--rsh:rgba(139,58,31,0.4);--cb:#111008;--ct:#d4c5a0;--gr:#4a7c59;--bh:rgba(196,134,42,0.3);--rh:rgba(196,134,42,0.08);--eb:rgba(192,57,43,0.1);--ebr:rgba(192,57,43,0.3);--trk:#3a2e22;--er:#c0392b;--ed-bg:#0d0b07;--ed-ok:rgba(74,124,89,0.2);--ed-err:rgba(192,57,43,0.2);--ml-bg:rgba(196,134,42,0.05);--ml-sel:rgba(196,134,42,0.18);}
+  [data-theme="light"]{--bg:#faf7f2;--sf:rgba(0,0,0,0.03);--sf2:rgba(255,255,255,0.88);--tx:#2a1f14;--mu:#8a7560;--go:#9a6318;--gd:rgba(154,99,24,0.18);--gm:rgba(154,99,24,0.1);--gh:rgba(154,99,24,0.05);--ru:#7a3018;--ru2:#5a2010;--rsh:rgba(122,48,24,0.25);--cb:#ede8dc;--ct:#2a1a08;--gr:#2d6640;--bh:rgba(154,99,24,0.25);--rh:rgba(154,99,24,0.06);--eb:rgba(192,57,43,0.06);--ebr:rgba(192,57,43,0.25);--trk:#d4c5a0;--er:#a02020;--ed-bg:#f5f0e6;--ed-ok:rgba(45,102,64,0.12);--ed-err:rgba(160,32,32,0.1);--ml-bg:rgba(154,99,24,0.04);--ml-sel:rgba(154,99,24,0.14);}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Cormorant Garamond',Georgia,serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;transition:var(--tr);}
+  .app{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:40px 24px;}
+  .theme-btn{position:fixed;top:20px;right:20px;z-index:100;display:flex;align-items:center;gap:8px;background:var(--sf);border:1px solid var(--gd);border-radius:24px;padding:7px 14px 7px 10px;cursor:pointer;}
+  .trk{width:34px;height:18px;background:var(--trk);border-radius:9px;position:relative;}
+  .thm{width:12px;height:12px;background:var(--go);border-radius:50%;position:absolute;top:3px;left:3px;transition:transform 0.3s;}
+  [data-theme="light"] .thm{transform:translateX(16px);}
+  .tlbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);}
+  header{text-align:center;margin-bottom:32px;}
+  h1{font-size:clamp(28px,5vw,48px);font-weight:300;}
+  h1 em{color:var(--go);font-style:italic;}
+  .sub{color:var(--mu);font-style:italic;}
+  .card{background:var(--sf);border:1px solid var(--gd);border-radius:4px;padding:24px;margin-bottom:20px;}
+  .slbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--go);letter-spacing:3px;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+  .slbl::after{content:'';flex:1;height:1px;background:var(--gd);}
+  .file-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;}
+  .file-box{flex:1;min-width:250px;background:var(--ml-bg);border:1px solid var(--gd);border-radius:4px;padding:16px;}
+  .file-box label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--go);display:block;margin-bottom:8px;}
+  input[type="file"]{width:100%;padding:8px;background:var(--sf2);border:1px solid var(--gd);border-radius:3px;color:var(--tx);font-size:12px;cursor:pointer;}
+  textarea{width:100%;background:var(--sf2);border:1px solid var(--gd);border-radius:3px;color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:12px;padding:16px;resize:vertical;min-height:180px;}
+  textarea:focus{outline:none;border-color:var(--go);}
+  .apps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:9px;margin-top:12px;}
+  .app-toggle{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--gd);border-radius:3px;cursor:pointer;background:var(--sf);}
+  .app-toggle.active{border-color:var(--go);background:var(--gm);}
+  .app-toggle.active .tn{color:var(--go);}
+  .ti{font-size:18px;}.tn{font-family:'JetBrains Mono',monospace;font-size:11px;}
+  .media-bar{display:flex;align-items:center;gap:12px;margin-top:20px;padding:12px 16px;background:var(--ml-bg);border:1px solid var(--gd);border-radius:3px;flex-wrap:wrap;}
+  .media-status{font-family:'JetBrains Mono',monospace;font-size:10px;flex:1;}
+  .media-status.ok{color:var(--gr);}
+  .media-status.err{color:var(--er);}
+  .btn-sm{padding:6px 12px;background:transparent;border:1px solid var(--gd);border-radius:3px;color:var(--mu);font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;}
+  .btn-sm:hover{border-color:var(--go);color:var(--go);}
+  .pick-panel{display:none;margin-top:16px;border:1px solid var(--gd);border-radius:3px;overflow:hidden;}
+  .pick-panel.visible{display:block;}
+  .pick-header{padding:10px 16px;background:var(--rh);border-bottom:1px solid var(--gd);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--go);display:flex;justify-content:space-between;}
+  .pick-selall{color:var(--mu);cursor:pointer;}
+  .pick-list{max-height:280px;overflow-y:auto;}
+  .pick-item{display:flex;align-items:center;gap:12px;padding:8px 16px;border-bottom:1px solid var(--gd);cursor:pointer;}
+  .pick-item:hover{background:var(--gh);}
+  .pick-item.selected{background:var(--ml-sel);}
+  .pick-thumb-placeholder{width:32px;height:32px;background:var(--gd);display:flex;align-items:center;justify-content:center;font-size:14px;border-radius:2px;}
+  .pick-info{flex:1;}
+  .pick-title{font-family:'JetBrains Mono',monospace;font-size:10px;}
+  .pick-meta{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--mu);}
+  .gen-btn{width:100%;margin-top:20px;padding:14px;background:linear-gradient(135deg,var(--ru),var(--ru2));border:none;border-radius:3px;color:white;font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;cursor:pointer;}
+  .gen-btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px var(--rsh);}
+  .gen-btn:disabled{opacity:0.5;cursor:not-allowed;}
+  .status{font-family:'JetBrains Mono',monospace;font-size:11px;text-align:center;margin-top:10px;color:var(--mu);}
+  .status.done{color:var(--gr);}.status.error{color:var(--er);}
+  .results{display:flex;flex-direction:column;gap:20px;}
+  .result-card{border:1px solid var(--gd);border-radius:4px;overflow:hidden;}
+  .rhead{display:flex;justify-content:space-between;padding:12px 16px;background:var(--rh);border-bottom:1px solid var(--gd);}
+  .rtrow{display:flex;align-items:center;gap:10px;}
+  .ric{font-size:20px;}
+  .rname{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--go);}
+  .badge{font-size:9px;padding:2px 6px;border-radius:2px;background:rgba(74,124,89,0.2);color:var(--gr);}
+  .rbtn-group{display:flex;gap:8px;}
+  .copy-btn,.dl-btn{padding:5px 10px;background:transparent;border:1px solid var(--gd);border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;}
+  .copy-btn:hover,.dl-btn:hover{background:var(--gm);color:var(--go);}
+  .media-used{padding:6px 16px;background:var(--ml-bg);display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--gd);}
+  .media-chip{font-size:9px;padding:2px 6px;background:var(--gm);color:var(--go);border-radius:2px;}
+  .edit-area{width:100%;min-height:140px;background:var(--ed-bg);border:none;border-top:1px solid var(--gd);color:var(--ct);font-family:'JetBrains Mono',monospace;font-size:11px;padding:14px;resize:vertical;outline:none;}
+  .edit-area.valid{border-top-color:var(--gr);background:var(--ed-ok);}
+  .edit-area.invalid{border-top-color:var(--er);background:var(--ed-err);}
+  .edit-status{padding:5px 16px;font-size:9px;display:flex;align-items:center;gap:6px;}
+  .loading-card{padding:16px;display:flex;align-items:center;gap:10px;}
+  .dot{width:6px;height:6px;background:var(--go);border-radius:50%;animation:pulse 1s infinite;}
+  @keyframes pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
+</style>
+</head>
+<body>
+<div class="app">
+  <button class="theme-btn" onclick="toggleTheme()"><div class="trk"><div class="thm"></div></div><span class="tlbl" id="tlbl">ΣΚΟΤΕΙΝΟ</span></button>
+  <header><h1>Orchestrator <em>v6.2</em></h1><p class="sub">Ευέλικτη εισαγωγή · Αυτόματος εντοπισμός επικεφαλίδων Excel</p></header>
+
+  <div class="card">
+    <div class="slbl">📂 ΕΙΣΑΓΩΓΗ ΔΕΔΟΜΕΝΩΝ</div>
+    <div class="file-row">
+      <div class="file-box">
+        <label>📄 Master JSON (input)</label>
+        <input type="file" id="masterJsonFile" accept=".json" onchange="loadMasterJsonFile(event)">
+        <textarea id="srcJson" placeholder='Επικόλλησε ή φόρτωσε JSON master template εδώ...' style="margin-top:10px;min-height:120px;"></textarea>
+      </div>
+      <div class="file-box">
+        <label>📚 Media Library (Excel, CSV ή JSON)</label>
+        <input type="file" id="mediaFile" accept=".json,.xlsx,.xls,.csv" onchange="loadMediaFile(event)">
+        <div id="mediaStatus" class="media-status" style="margin-top:8px;">⚡ Αναμονή φόρτωσης</div>
+        <div style="margin-top:6px;font-size:9px;color:var(--mu);">📌 Αναγνωρίζει αυτόματα επικεφαλίδες (media_id, type, title, url)</div>
+      </div>
+    </div>
+
+    <div class="slbl">🎯 ΕΦΑΡΜΟΓΕΣ-ΣΤΟΧΟΙ</div>
+    <div class="apps-grid" id="appsGrid"></div>
+
+    <div class="media-bar">
+      <span>🎨 Media (Pick mode)</span>
+      <span id="mlCount" class="media-status"></span>
+      <button class="btn-sm" onclick="togglePickPanel()">☰ Επιλογή media</button>
+    </div>
+    <div class="pick-panel" id="pickPanel">
+      <div class="pick-header"><span>📷 Επίλεξε media για ενσωμάτωση</span><span class="pick-selall" onclick="toggleSelectAll()">Επιλογή όλων</span></div>
+      <div class="pick-list" id="pickList"></div>
+    </div>
+
+    <button class="gen-btn" id="genBtn" onclick="generate()">✦ ΜΕΤΑΣΧΗΜΑΤΙΣΜΟΣ ΓΙΑ ΕΠΙΛΕΓΜΕΝΕΣ ΕΦΑΡΜΟΓΕΣ</button>
+    <div class="status" id="statusBar">Φόρτωσε master JSON και media library</div>
+  </div>
+  <div id="results" class="results"></div>
+  <div id="savedPanel"></div>
+</div>
+
+<script>
+// ---------- ENUMERATED APPS ----------
+const APPS = [
+  {id:'timeline', icon:'🗺️', name:'Timeline Explorer'},
+  {id:'investigation', icon:'🕵️', name:'Investigation Board'},
+  {id:'history3d', icon:'🏛️', name:'History Explorer 3D'},
+  {id:'mindpalace', icon:'🧠', name:'Mind Palace Debate'},
+  {id:'unreal', icon:'🎮', name:'Unreal Engine 5'},
+  {id:'notebook', icon:'📔', name:'Notebook Media'},
+  {id:'personalpage', icon:'🌐', name:'Personal Page'}
+];
+
+let mediaLibrary = [];
+let selectedMedia = new Set();
+
+function initToggles(){
+  const g=document.getElementById('appsGrid');
+  APPS.forEach(a=>{
+    const d=document.createElement('div');
+    d.className='app-toggle active'; d.dataset.id=a.id;
+    d.innerHTML=`<span class="ti">${a.icon}</span><span class="tn">${a.name}</span>`;
+    d.onclick=()=>d.classList.toggle('active');
+    g.appendChild(d);
+  });
+}
+function getSel(){return[...document.querySelectorAll('.app-toggle.active')].map(d=>d.dataset.id);}
+
+// ---------- LOAD MASTER JSON ----------
+function loadMasterJsonFile(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      const json = JSON.parse(e.target.result);
+      document.getElementById('srcJson').value = JSON.stringify(json, null, 2);
+      document.getElementById('statusBar').textContent = '✓ Master JSON φορτώθηκε';
+      document.getElementById('statusBar').className = 'status done';
+    }catch(err){
+      document.getElementById('statusBar').textContent = '✗ Μη έγκυρο JSON: '+err.message;
+      document.getElementById('statusBar').className = 'status error';
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ---------- LOAD MEDIA LIBRARY (Excel with auto-header detection) ----------
+function loadMediaFile(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const ext = file.name.split('.').pop().toLowerCase();
+  if(ext === 'json') loadMediaJson(file);
+  else if(ext === 'xlsx' || ext === 'xls') loadMediaExcel(file);
+  else if(ext === 'csv') loadMediaCSV(file);
+  else alert('Υποστηρίζονται μόνο .json, .xlsx, .xls, .csv');
+}
+
+function loadMediaJson(file){
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      const data = JSON.parse(e.target.result);
+      mediaLibrary = (data.media || data).filter(m => m.status === 'active' || !m.status);
+      updateMediaUI();
+    }catch(err){ showMediaError('Σφάλμα JSON: '+err.message, 'err'); }
+  };
+  reader.readAsText(file);
+}
+
+function loadMediaExcel(file){
+  if(typeof XLSX === 'undefined'){
+    showMediaError('❌ Η βιβλιοθήκη XLSX δεν φόρτωσε. Δοκίμασε CSV.', 'err');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, {type:'array'});
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      
+      // Get ALL rows as raw array (including headers)
+      const rawRows = XLSX.utils.sheet_to_json(sheet, {header:1, defval:''});
+      if(!rawRows.length){ showMediaError('Το Excel είναι άδειο', 'err'); return; }
+      
+      // Find the row that contains actual headers (media_id, type, title, url)
+      let headerRowIndex = -1;
+      let headerRow = null;
+      const headerKeywords = ['media_id', 'type', 'title', 'url'];
+      
+      for(let i = 0; i < Math.min(rawRows.length, 20); i++){
+        const row = rawRows[i];
+        if(!row || !row.length) continue;
+        const rowStr = row.join(' ').toLowerCase();
+        // Check if this row contains at least 3 of the header keywords
+        let matches = 0;
+        headerKeywords.forEach(kw => {
+          if(rowStr.includes(kw.toLowerCase())) matches++;
+        });
+        if(matches >= 2){ // Found header row
+          headerRowIndex = i;
+          headerRow = row;
+          break;
+        }
+      }
+      
+      if(headerRowIndex === -1){
+        showMediaError('Δεν βρέθηκαν επικεφαλίδες (media_id, type, title, url)', 'err');
+        return;
+      }
+      
+      // Build column mapping from header row
+      const colMap = {};
+      headerRow.forEach((cell, idx) => {
+        if(!cell) return;
+        const cellClean = String(cell).trim().toLowerCase();
+        if(cellClean.includes('media') || cellClean === 'id') colMap.media_id = idx;
+        if(cellClean === 'type') colMap.type = idx;
+        if(cellClean === 'title') colMap.title = idx;
+        if(cellClean === 'url') colMap.url = idx;
+        if(cellClean.includes('app') || cellClean === 'app_context') colMap.app_context = idx;
+        if(cellClean.includes('tag')) colMap.tags = idx;
+        if(cellClean === 'language') colMap.language = idx;
+        if(cellClean === 'notes') colMap.notes = idx;
+        if(cellClean === 'status') colMap.status = idx;
+      });
+      
+      // Ensure we have minimum required columns
+      if(colMap.media_id === undefined || colMap.title === undefined){
+        showMediaError('Απαιτούνται στήλες: media_id, title (βρέθηκαν: '+Object.keys(colMap).join(', ')+')', 'err');
+        return;
+      }
+      
+      // Parse data rows (start after header)
+      mediaLibrary = [];
+      for(let i = headerRowIndex + 1; i < rawRows.length; i++){
+        const row = rawRows[i];
+        if(!row || row.length === 0) continue;
+        // Skip empty rows
+        const firstVal = (row[0] || '').toString().trim();
+        if(!firstVal && row.every(cell => !cell || String(cell).trim() === '')) continue;
+        
+        const mediaItem = {
+          media_id: row[colMap.media_id] ? String(row[colMap.media_id]).trim() : '',
+          type: colMap.type !== undefined ? (String(row[colMap.type] || 'image').trim().toLowerCase()) : 'image',
+          title: row[colMap.title] ? String(row[colMap.title]).trim() : 'Untitled',
+          url: colMap.url !== undefined ? (row[colMap.url] || '') : '',
+          app_context: colMap.app_context !== undefined ? parseMultiValue(row[colMap.app_context]) : [],
+          tags: colMap.tags !== undefined ? parseMultiValue(row[colMap.tags]) : [],
+          language: colMap.language !== undefined ? (row[colMap.language] || 'el') : 'el',
+          notes: colMap.notes !== undefined ? (row[colMap.notes] || '') : '',
+          status: colMap.status !== undefined ? (String(row[colMap.status] || 'active').toLowerCase()) : 'active'
+        };
+        
+        if(mediaItem.media_id && mediaItem.status === 'active'){
+          mediaLibrary.push(mediaItem);
+        }
+      }
+      
+      if(!mediaLibrary.length){
+        showMediaError('Δεν βρέθηκαν ενεργά media (χρειάζεται μη-κενό media_id και status=active)', 'err');
+      } else {
+        updateMediaUI();
+      }
+    } catch(err){
+      console.error(err);
+      showMediaError('Σφάλμα ανάγνωσης Excel: '+err.message, 'err');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function loadMediaCSV(file){
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      const text = e.target.result;
+      const lines = text.split(/\r?\n/).filter(l=>l.trim());
+      if(!lines.length){ showMediaError('CSV άδειο','err'); return; }
+      
+      // Find header line (contains media_id, type, title, url)
+      let headerIndex = 0;
+      const headerKeywords = ['media_id', 'type', 'title', 'url'];
+      for(let i = 0; i < Math.min(lines.length, 10); i++){
+        const lineLower = lines[i].toLowerCase();
+        let matches = 0;
+        headerKeywords.forEach(kw => { if(lineLower.includes(kw)) matches++; });
+        if(matches >= 2){ headerIndex = i; break; }
+      }
+      
+      const headers = lines[headerIndex].split(',').map(h=>h.replace(/["']/g,'').trim().toLowerCase());
+      const result = [];
+      for(let i = headerIndex + 1; i < lines.length; i++){
+        if(!lines[i].trim()) continue;
+        const values = lines[i].split(',').map(v=>v.replace(/^["']|["']$/g,'').trim());
+        const row = {};
+        headers.forEach((h,idx)=> row[h] = values[idx] || '');
+        if(!row.media_id && !row.title) continue;
+        
+        const mediaItem = {
+          media_id: row.media_id || '',
+          type: row.type || 'image',
+          title: row.title || 'Untitled',
+          url: row.url || '',
+          app_context: parseMultiValue(row.app_context || row['app context']),
+          tags: parseMultiValue(row.tags),
+          language: row.language || 'el',
+          notes: row.notes || '',
+          status: (row.status || 'active').toLowerCase()
+        };
+        if(mediaItem.media_id && mediaItem.status === 'active') result.push(mediaItem);
+      }
+      mediaLibrary = result;
+      if(!mediaLibrary.length) showMediaError('Δεν βρέθηκαν ενεργά media στο CSV','err');
+      else updateMediaUI();
+    } catch(err){ showMediaError('Σφάλμα CSV: '+err.message,'err'); }
+  };
+  reader.readAsText(file);
+}
+
+function parseMultiValue(val){
+  if(!val) return [];
+  if(Array.isArray(val)) return val;
+  return String(val).split(/[;,|/]/).map(s=>s.trim()).filter(Boolean);
+}
+
+function updateMediaUI(){
+  document.getElementById('mediaStatus').innerHTML = `✓ ${mediaLibrary.length} media loaded`;
+  document.getElementById('mediaStatus').className = 'media-status ok';
+  document.getElementById('mlCount').innerHTML = `📦 ${mediaLibrary.length} στοιχεία`;
+  renderPickList();
+  document.getElementById('pickPanel').classList.add('visible');
+}
+
+function showMediaError(msg, type='err'){
+  document.getElementById('mediaStatus').innerHTML = msg;
+  document.getElementById('mediaStatus').className = 'media-status ' + type;
+}
+
+function renderPickList(){
+  const list = document.getElementById('pickList');
+  if(!mediaLibrary.length){ list.innerHTML='<div class="pick-item">Δεν υπάρχουν media</div>'; return; }
+  list.innerHTML = mediaLibrary.map(m=>{
+    const sel = selectedMedia.has(m.media_id);
+    return `<div class="pick-item ${sel?'selected':''}" onclick="toggleMedia('${escapeHtml(m.media_id)}',this)">
+      <input type="checkbox" ${sel?'checked':''} onclick="event.stopPropagation();toggleMedia('${escapeHtml(m.media_id)}',this.closest('.pick-item'))">
+      <div class="pick-thumb-placeholder">${m.type==='youtube'?'▶️':m.type==='audio'?'🎵':'🖼️'}</div>
+      <div class="pick-info">
+        <div class="pick-title">${escapeHtml(m.title)}</div>
+        <div class="pick-meta">${escapeHtml(m.media_id)} · ${m.type}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function escapeHtml(str){ if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+function toggleMedia(id, el){
+  if(selectedMedia.has(id)) selectedMedia.delete(id);
+  else selectedMedia.add(id);
+  el.classList.toggle('selected', selectedMedia.has(id));
+  const cb = el.querySelector('input');
+  if(cb) cb.checked = selectedMedia.has(id);
+}
+function toggleSelectAll(){
+  const all = mediaLibrary.map(m=>m.media_id);
+  const allSel = all.every(id=>selectedMedia.has(id));
+  if(allSel) all.forEach(id=>selectedMedia.delete(id));
+  else all.forEach(id=>selectedMedia.add(id));
+  renderPickList();
+}
+function togglePickPanel(){
+  document.getElementById('pickPanel').classList.toggle('visible');
+}
+
+// ---------- DETECT & TRANSFORM ----------
+function detectInputType(obj){
+  if(obj.timeline_item) return 'timeline';
+  if(obj.investigation_board) return 'investigation';
+  if(obj.history3d) return 'history3d';
+  if(obj.mind_palace) return 'mindpalace';
+  if(obj.unreal_scenario) return 'unreal';
+  if(obj.notebook) return 'notebook';
+  if(obj.personal_page) return 'personalpage';
+  return 'generic';
+}
+
+function transformForApp(master, appId){
+  if(!master) return null;
+  switch(appId){
+    case 'timeline': return master.timeline_item || master;
+    case 'investigation': return master.investigation_board || master;
+    case 'history3d': return master.history3d || master;
+    case 'mindpalace': return master.mind_palace || master;
+    case 'unreal': return master.unreal_scenario || master;
+    case 'notebook': return master.notebook || master;
+    case 'personalpage': return master.personal_page || master;
+    default: return master;
+  }
+}
+
+function embedMedia(appId, outputJson, selectedMediaObjs){
+  if(!selectedMediaObjs.length || !outputJson) return outputJson;
+  if(appId === 'timeline' && outputJson && outputJson.img === undefined){
+    const imgMedia = selectedMediaObjs.find(m=>m.type==='image');
+    if(imgMedia) outputJson.img = imgMedia.url;
+  }
+  if((appId === 'notebook' || appId === 'personalpage') && outputJson.chapters && outputJson.chapters[0]){
+    const slidesUrls = selectedMediaObjs.filter(m=>m.type==='image'||m.type==='google_slides').map(m=>m.url);
+    if(slidesUrls.length && outputJson.chapters[0].media){
+      outputJson.chapters[0].media.slides = slidesUrls.map((url,i)=>({id:`slide_${i}`, label:`Media ${i+1}`, url, notes:""}));
+    }
+  }
+  return outputJson;
+}
+
+async function generate(){
+  const rawJson = document.getElementById('srcJson').value.trim();
+  if(!rawJson){ setStatus('Επικόλλησε ή φόρτωσε master JSON','error'); return; }
+  let master;
+  try{ master = JSON.parse(rawJson); }
+  catch(e){ setStatus('Μη έγκυρο master JSON','error'); return; }
+  
+  const targets = getSel();
+  if(!targets.length){ setStatus('Επέλεξε τουλάχιστον μία εφαρμογή','error'); return; }
+  const selectedMediaObjs = mediaLibrary.filter(m=>selectedMedia.has(m.media_id));
+  
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.innerHTML = '';
+  setStatus(`Μετασχηματισμός για ${targets.length} εφαρμογές...`,'');
+  
+  for(let appId of targets){
+    const app = APPS.find(a=>a.id===appId);
+    let transformed = transformForApp(master, appId);
+    if(!transformed) transformed = { error: `Δεν βρέθηκε υπο-αντικείμενο για ${appId}` };
+    transformed = embedMedia(appId, transformed, selectedMediaObjs);
+    const pretty = JSON.stringify(transformed, null, 2);
+    
+    const usedIds = selectedMediaObjs.filter(m=>pretty.includes(m.url)).map(m=>m.media_id);
+    const mediaStrip = usedIds.length ? `<div class="media-used">${usedIds.map(id=>`<span class="media-chip">✓ ${id}</span>`).join('')}</div>` : '';
+    
+    const card = document.createElement('div'); card.className='result-card'; card.id=`res-${appId}`;
+    card.innerHTML = `
+      <div class="rhead">
+        <div class="rtrow"><span class="ric">${app.icon}</span><div class="rname">${app.name} <span class="badge">✓ READY</span></div></div>
+        <div class="rbtn-group">
+          <button class="dl-btn" onclick="downloadJSON('${appId}')">↓ JSON</button>
+          <button class="copy-btn" onclick="copyJSON('${appId}')">Αντιγραφή</button>
+        </div>
+      </div>
+      ${mediaStrip}
+      <div id="editor-slot-${appId}"></div>`;
+    resultsDiv.appendChild(card);
+    const editorSlot = document.getElementById(`editor-slot-${appId}`);
+    editorSlot.appendChild(makeEditor(appId, pretty));
+    localStorage.setItem(`orc_last_${appId}`, pretty);
+  }
+  setStatus('✓ Ολοκληρώθηκε','done');
+}
+
+function makeEditor(id, jsonStr){
+  const wrap = document.createElement('div'); wrap.className='edit-wrapper';
+  const ta = document.createElement('textarea'); ta.className='edit-area'; ta.id=`edit-${id}`; ta.value=jsonStr;
+  const bar = document.createElement('div'); bar.className='edit-status'; bar.innerHTML='<span></span><span></span>';
+  function validate(){
+    try{ JSON.parse(ta.value); ta.classList.add('valid'); ta.classList.remove('invalid'); bar.innerHTML='✅ Έγκυρο JSON'; bar.style.color='var(--gr)'; }
+    catch(e){ ta.classList.add('invalid'); ta.classList.remove('valid'); bar.innerHTML='❌ '+e.message.slice(0,60); bar.style.color='var(--er)'; }
+  }
+  ta.addEventListener('input',validate); validate();
+  wrap.appendChild(ta); wrap.appendChild(bar);
+  return wrap;
+}
+
+function downloadJSON(id){
+  const ta = document.getElementById(`edit-${id}`);
+  try{
+    const json = JSON.parse(ta.value);
+    const blob = new Blob([JSON.stringify(json, null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `${id}_${Date.now()}.json`;
+    a.click();
+  }catch(e){ alert('Μη έγκυρο JSON'); }
+}
+function copyJSON(id){
+  const ta = document.getElementById(`edit-${id}`);
+  try{
+    const pretty = JSON.stringify(JSON.parse(ta.value), null, 2);
+    navigator.clipboard.writeText(pretty);
+    alert('Αντιγράφηκε στο πρόχειρο');
+  }catch(e){ alert('Σφάλμα'); }
+}
+function setStatus(msg,type){
+  const sb = document.getElementById('statusBar');
+  sb.textContent = msg;
+  sb.className = 'status ' + (type==='error'?'error':type==='done'?'done':'');
+}
+function toggleTheme(){
+  const h=document.documentElement;
+  const d=h.dataset.theme==='dark';
+  h.dataset.theme=d?'light':'dark';
+  localStorage.setItem('orc-theme',h.dataset.theme);
+  document.getElementById('tlbl').textContent=d?'ΦΩΤΕΙΝΟ':'ΣΚΟΤΕΙΝΟ';
+}
+
+function restoreSaved(){
+  const panel = document.getElementById('savedPanel');
+  if(!panel) return;
+  let keys=[];
+  for(let i=0;i<localStorage.length;i++){ let k=localStorage.key(i); if(k && k.startsWith('orc_last_') && !k.endsWith('_ts')) keys.push(k); }
+  if(!keys.length) return;
+  let html = '<div style="margin-top:16px;border:1px solid var(--gd);border-radius:3px;padding:12px;"><div style="font-size:10px;color:var(--go);">💾 ΑΠΟΘΗΚΕΥΜΕΝΑ</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">';
+  keys.forEach(k=>{ let appId=k.replace('orc_last_',''); html+=`<button class="btn-sm" onclick="restoreResult('${appId}')">↩ ${appId}</button>`; });
+  html+=`<button class="btn-sm" onclick="clearSaved()">✕ Εκκαθάριση</button></div></div>`;
+  panel.innerHTML = html;
+}
+function restoreResult(appId){
+  const saved = localStorage.getItem('orc_last_'+appId);
+  if(!saved) return;
+  const app = APPS.find(a=>a.id===appId);
+  if(!app) return;
+  const card = document.createElement('div'); card.className='result-card'; card.id=`res-${appId}`;
+  card.innerHTML = `<div class="rhead"><div class="rtrow"><span class="ric">${app.icon}</span><div class="rname">${app.name} <span class="badge">↩ ΑΠΟΚΑΤΑΣΤΑΣΗ</span></div></div><div class="rbtn-group"><button class="dl-btn" onclick="downloadJSON('${appId}')">↓ JSON</button><button class="copy-btn" onclick="copyJSON('${appId}')">Αντιγραφή</button></div></div><div id="editor-slot-${appId}"></div>`;
+  document.getElementById('results').prepend(card);
+  document.getElementById(`editor-slot-${appId}`).appendChild(makeEditor(appId, saved));
+}
+function clearSaved(){
+  for(let i=0;i<localStorage.length;i++){ let k=localStorage.key(i); if(k && k.startsWith('orc_last_')) localStorage.removeItem(k); }
+  window.location.reload();
+}
+
+// INIT
+(function(){
+  const theme = localStorage.getItem('orc-theme');
+  if(theme) document.documentElement.dataset.theme = theme;
+  initToggles();
+  restoreSaved();
+  document.getElementById('pickPanel').classList.add('visible');
+})();
+</script>
+</body>
+</html>

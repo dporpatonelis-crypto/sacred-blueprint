@@ -1,0 +1,27 @@
+╔══════════════════════════════════════╗
+║   Sacred Blueprint — Distribute     ║
+╚══════════════════════════════════════╝
+Θέμα:     Ο Απόστολος των Εθνών και το Στόμα της Εκκλησίας
+Φάκελος:  lessons/20260623_180420_/
+
+Βρέθηκαν κλειδιά:
+  - history3d
+  - investigation_board
+  - mind_palace
+  - notebook
+  - timeline_item
+  - unreal_scenario
+
+  ✓ history3d_output.json  →  data/current/history3d.json
+  ✓ investigation_board_output.json  →  data/current/investigation.json
+  ✓ mind_palace_output.json  →  data/current/mindpalace.json
+  ✓ notebook_output.json  →  data/current/notebook.json
+  ✓ timeline_item_output.json  →  data/current/timeline.json
+  ✓ unreal_scenario  →  data/current/ue5/paul_chrysostom_summit/ (3 αρχεία)
+
+  ✓ active_lesson.json → 20260623_180420_
+
+══════════════════════════════════════════
+✓ Βιβλιοθήκη:  6/6 κλειδιά → lessons/20260623_180420_/
+✓ Ενεργό:      6/6 αρχεία  → data/current/
+Log: /Users/dimitriosporpatonelis/sacred-blueprint/logs/distribute_20260623_182042.log

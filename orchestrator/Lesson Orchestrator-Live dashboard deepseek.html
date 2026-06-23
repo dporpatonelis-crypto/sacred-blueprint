@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson Orchestrator – Unified Dashboard v3</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Roboto, sans-serif; background: #f4f6fa; color: #1e293b; padding: 1rem; }
+    button { cursor: pointer; font: inherit; background: none; border: none; }
+    input, select, textarea { font: inherit; border: 1px solid #d1d9e6; border-radius: 8px; padding: 0.4rem 0.7rem; background: white; width: 100%; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+    textarea { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 1.5; resize: vertical; }
+    .eyebrow { text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.04em; color: #64748b; font-weight: 600; }
+    .badge { background: #e2e8f0; padding: 0.1rem 0.6rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; color: #334155; display: inline-block; }
+    .status-pill { padding: 0.2rem 1rem; border-radius: 40px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+    .status-draft { background: #fef9c3; color: #854d0e; }
+    .status-active { background: #dcfce7; color: #166534; }
+    .status-archived { background: #f1f5f9; color: #475569; }
+
+    .topbar { display: flex; justify-content: space-between; align-items: center; background: white; padding: 1rem 1.5rem; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem; }
+    .topbar h1 { font-size: 1.4rem; font-weight: 600; }
+    .topbar-actions { display: flex; gap: 0.5rem; }
+    .icon-button { width: 2.4rem; height: 2.4rem; border-radius: 40px; background: #f1f5f9; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+    .icon-button:hover { background: #e2e8f0; }
+
+    .shell { display: flex; flex-direction: column; gap: 1.5rem; max-width: 1600px; margin: 0 auto; }
+    .workspace { display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; }
+    @media (max-width: 900px) { .workspace { grid-template-columns: 1fr; } }
+
+    .sidebar { background: white; border-radius: 16px; padding: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.04); max-height: 80vh; overflow-y: auto; }
+    .search-row { margin-bottom: 0.75rem; }
+    .stat-strip { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .stat { display: flex; flex-direction: column; background: #f8fafc; padding: 0.3rem 0.8rem; border-radius: 10px; font-size: 0.8rem; }
+    .stat strong { font-size: 1.1rem; }
+    .scenario-list { display: flex; flex-direction: column; gap: 0.3rem; }
+    .scenario-item { text-align: left; padding: 0.6rem 0.8rem; border-radius: 10px; background: transparent; transition: background 0.1s; border: 1px solid transparent; }
+    .scenario-item:hover { background: #f1f5f9; }
+    .scenario-item.active { background: #e0f2fe; border-color: #7dd3fc; }
+    .scenario-item strong { display: block; font-size: 0.9rem; }
+    .scenario-meta { display: flex; gap: 0.5rem; font-size: 0.7rem; color: #64748b; flex-wrap: wrap; margin-top: 0.1rem; }
+
+    .detail-panel { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+    .detail-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem; }
+    .detail-header h2 { font-size: 1.4rem; font-weight: 600; }
+    .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    @media (max-width: 1000px) { .dashboard-grid { grid-template-columns: 1fr; } }
+    .panel { background: #f8fafc; border-radius: 12px; padding: 1rem; border: 1px solid #eef2f6; }
+    .panel-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.3rem; }
+    .panel-heading h3 { font-size: 0.9rem; font-weight: 600; }
+    .app-tabs { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.75rem; }
+    .app-tab { padding: 0.3rem 0.8rem; border-radius: 30px; font-size: 0.75rem; font-weight: 500; background: #eef2f6; transition: all 0.1s; display: flex; align-items: center; gap: 0.3rem; }
+    .app-tab.active { background: #1e293b; color: white; }
+    .app-tab.has-output { border: 2px solid #22c55e; }
+    .schema-card p { font-size: 0.85rem; color: #475569; margin: 0.25rem 0 0.5rem; }
+    .field-list { display: flex; flex-wrap: wrap; gap: 0.2rem; }
+    .field-list code { background: #eef2f6; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.65rem; font-family: monospace; color: #1e293b; }
+    .link-stack { display: flex; flex-direction: column; gap: 0.4rem; }
+    .resource-link { display: flex; justify-content: space-between; padding: 0.3rem 0.5rem; background: white; border-radius: 8px; text-decoration: none; color: #1e293b; font-size: 0.8rem; border: 1px solid #e2e8f0; }
+    .resource-link:hover { background: #f1f5f9; }
+    .resource-link small { color: #64748b; font-size: 0.65rem; }
+    .signal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+    .signal { background: white; padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.75rem; border: 1px solid #e2e8f0; }
+    .signal strong { display: block; font-size: 0.65rem; color: #64748b; font-weight: 500; }
+    .json-state { font-size: 0.7rem; padding: 0.1rem 0.6rem; border-radius: 30px; background: #dcfce7; color: #166534; }
+    #jsonEditor { height: 180px; width: 100%; font-family: monospace; font-size: 0.7rem; background: #0f172a; color: #e2e8f0; border: none; border-radius: 8px; padding: 0.7rem; }
+    .editor-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
+    .editor-actions button { padding: 0.3rem 1rem; border-radius: 30px; font-weight: 500; font-size: 0.75rem; background: #e2e8f0; transition: background 0.1s; }
+    .editor-actions button:hover { background: #cbd5e1; }
+    .derived-files { display: flex; flex-direction: column; gap: 0.4rem; }
+    .derived-file { display: flex; justify-content: space-between; align-items: center; background: white; padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.75rem; border: 1px solid #e2e8f0; }
+    .text-button { color: #3b82f6; font-weight: 500; font-size: 0.7rem; }
+    .text-button:hover { text-decoration: underline; }
+
+    .media-manager { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+    .media-manager-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem; }
+    .media-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+    .media-actions input { width: 260px; }
+    .media-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 1.25rem; }
+    @media (max-width: 1000px) { .media-grid { grid-template-columns: 1fr; } }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .form-grid label { font-size: 0.7rem; font-weight: 500; color: #475569; }
+    .notes-label { display: block; font-size: 0.7rem; font-weight: 500; color: #475569; margin-top: 0.5rem; }
+    .media-preview { margin-top: 0.5rem; border-radius: 8px; overflow: hidden; background: #0f172a; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+    .media-preview img, .media-preview iframe { max-width: 100%; max-height: 200px; border: none; }
+    .media-preview a { color: #60a5fa; padding: 0.5rem; }
+    .media-table-wrap { overflow-x: auto; margin-top: 0.5rem; }
+    .media-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+    .media-table th { text-align: left; padding: 0.3rem 0.4rem; color: #64748b; font-weight: 600; border-bottom: 1px solid #e2e8f0; }
+    .media-table td { padding: 0.3rem 0.4rem; border-bottom: 1px solid #eef2f6; vertical-align: middle; }
+    .media-table td small { display: block; color: #94a3b8; font-size: 0.6rem; }
+    .table-actions button { font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 4px; background: #eef2f6; margin-right: 0.2rem; }
+    .table-actions button:hover { background: #d1d9e6; }
+    .media-status { margin-top: 0.5rem; font-size: 0.8rem; padding: 0.3rem 0.6rem; border-radius: 8px; background: #f1f5f9; }
+    .media-status.error { background: #fee2e2; color: #991b1b; }
+    .media-status.ok { background: #dcfce7; color: #166534; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div>
+    <p class="eyebrow">Lesson Orchestrator</p>
+    <h1>Unified Dashboard v3</h1>
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-button" id="importButton" title="Import JSON">↥</button>
+    <button class="icon-button" id="exportButton" title="Export JSON">↧</button>
+    <button class="icon-button" id="resetButton" title="Reset demo data">↺</button>
+  </div>
+</header>
+
+<main class="shell">
+  <section class="workspace">
+    <aside class="sidebar">
+      <div class="search-row">
+        <input id="searchInput" type="search" placeholder="Αναζήτηση scenario..." />
+      </div>
+      <div class="stat-strip" id="stats"></div>
+      <div class="scenario-list" id="scenarioList"></div>
+    </aside>
+
+    <section class="detail-panel">
+      <div class="detail-header">
+        <div>
+          <p class="eyebrow" id="selectedType">Scenario</p>
+          <h2 id="selectedTitle"></h2>
+        </div>
+        <span class="status-pill" id="selectedStatus"></span>
+      </div>
+
+      <div class="dashboard-grid">
+        <section class="panel overview-panel">
+          <div class="panel-heading">
+            <h3>Modules</h3>
+            <span id="updatedAt"></span>
+          </div>
+          <div class="app-tabs" id="appTabs"></div>
+          <div class="schema-card" id="schemaSummary"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <h3>Σύνδεσμοι</h3>
+            <button class="text-button" id="copyLinksButton" type="button">Copy</button>
+          </div>
+          <div class="link-stack" id="projectLinks"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <h3>Media Library</h3>
+            <span id="riskLevel"></span>
+          </div>
+          <div class="signal-grid" id="learningSignals"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <h3>JSON Editor</h3>
+            <span class="json-state" id="jsonState">Synced</span>
+          </div>
+          <textarea id="jsonEditor" spellcheck="false"></textarea>
+          <div class="editor-actions">
+            <button id="applyJsonButton" type="button">Apply</button>
+            <button id="formatJsonButton" type="button">Format</button>
+          </div>
+        </section>
+
+        <section class="panel derived-panel">
+          <div class="panel-heading">
+            <h3>Generated Files</h3>
+            <span id="derivedState">Output</span>
+          </div>
+          <div class="derived-files" id="derivedFiles"></div>
+        </section>
+      </div>
+    </section>
+  </section>
+
+  <section class="media-manager">
+    <div class="media-manager-header">
+      <div>
+        <p class="eyebrow">Media Library</p>
+        <h2>Πολυμέσα & Tags</h2>
+      </div>
+      <div class="media-actions">
+        <input id="githubUrlInput" type="url" placeholder="GitHub raw media_library.json URL" />
+        <button id="fetchGithubButton" type="button">Fetch</button>
+        <button id="exportMediaButton" type="button">Export JSON</button>
+      </div>
+    </div>
+
+    <div class="media-grid">
+      <section class="panel media-form-panel">
+        <div class="panel-heading">
+          <h3>Media Entry</h3>
+          <span id="mediaEditState">New</span>
+        </div>
+        <div class="form-grid">
+          <label>ID<input id="mediaIdInput" type="text" placeholder="IMG-xxx" /></label>
+          <label>Τίτλος<input id="mediaTitleInput" type="text" placeholder="Όνομα" /></label>
+          <label>URL<input id="mediaUrlInput" type="url" placeholder="https://..." /></label>
+          <label>Τύπος
+            <select id="mediaTypeInput">
+              <option value="auto">Auto</option>
+              <option value="image">Εικόνα</option>
+              <option value="youtube">YouTube</option>
+              <option value="google_slides">Google Slides</option>
+              <option value="google_drive">Google Drive</option>
+              <option value="notebooklm">NotebookLM</option>
+            </select>
+          </label>
+          <label>Source Platform<input id="mediaSourceInput" type="text" placeholder="imgbb / youtube / drive" /></label>
+          <label>App Context<input id="mediaContextInput" type="text" placeholder="Timeline; Mind Palace; UE5" /></label>
+          <label>Unit ID<input id="mediaUnitInput" type="text" placeholder="unit_1" /></label>
+          <label>Tags<input id="mediaTagsInput" type="text" placeholder="ιστορία, φιλοσοφία" /></label>
+          <label>Γλώσσα
+            <select id="mediaLanguageInput">
+              <option value="el">Ελληνικά</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+          <label>Κατάσταση
+            <select id="mediaStatusInput">
+              <option value="active">active</option>
+              <option value="draft">draft</option>
+            </select>
+          </label>
+        </div>
+        <label class="notes-label">Σημειώσεις<textarea id="mediaNotesInput" rows="3" placeholder="οδηγίες χρήσης"></textarea></label>
+        <div class="editor-actions">
+          <button id="saveMediaButton" type="button">Save</button>
+          <button id="clearMediaButton" type="button">Clear</button>
+          <button id="previewMediaButton" type="button">Preview</button>
+        </div>
+        <div class="media-preview" id="mediaPreview"></div>
+      </section>
+
+      <section class="panel media-table-panel">
+        <div class="panel-heading">
+          <h3>Library</h3>
+          <span id="mediaStats">0 media</span>
+        </div>
+        <div class="search-row">
+          <input id="mediaSearchInput" type="search" placeholder="Αναζήτηση media..." />
+        </div>
+        <div class="media-table-wrap">
+          <table class="media-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Τύπος</th>
+                <th>Τίτλος</th>
+                <th>Tags</th>
+                <th>App Context</th>
+                <th>Ενέργειες</th>
+              </tr>
+            </thead>
+            <tbody id="mediaTableBody"></tbody>
+          </table>
+        </div>
+        <div class="media-status" id="mediaStatusMessage">Έτοιμο.</div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<input id="fileInput" type="file" accept=".json" hidden />
+
+<script>
+  (function() {
+    'use strict';
+
+    if (typeof structuredClone !== 'function') {
+      window.structuredClone = function(obj) {
+        return JSON.parse(JSON.stringify(obj));
+      };
+    }
+
+    const storageKey = 'orchestrator-unified-v3';
+
+    const APPS = [
+      { id: 'timeline', icon: 'TM', name: 'Timeline Explorer', url: 'https://dporpatonelis-crypto.github.io/Map-Timeline/' },
+      { id: 'investigation', icon: 'IB', name: 'Investigation Board', url: 'https://idea-weaver-board.vercel.app/' },
+      { id: 'history3d', icon: '3D', name: 'History Explorer 3D', url: 'https://history-explorer-3d.vercel.app/' },
+      { id: 'mindpalace', icon: 'MP', name: 'Mind Palace Debate', url: 'https://dporpatonelis-crypto.github.io/mind-palace-cases/' },
+      { id: 'anchor', icon: 'LA', name: 'Living Anchor', url: '' },
+      { id: 'books', icon: 'BK', name: 'Interactive Books', url: 'https://dporpatonelis-crypto.github.io/interactive-books/index.html' },
+      { id: 'unreal', icon: 'UE', name: 'Unreal Engine 5', url: '' },
+      { id: 'notebook', icon: 'NB', name: 'Notebook Media', url: '' },
+      { id: 'personalpage', icon: 'PP', name: 'Personal Page', url: '' }
+    ];
+
+    const SCHEMAS = {
+      timeline: {
+        root: 'array',
+        summary: 'Timeline Explorer δέχεται array εγγραφών.',
+        fields: ['year', 'title', 'desc', 'location'],
+        template: () => [{ id: Date.now(), year: '', title: '', desc: '', img: '', location: '', lat: 0, lng: 0, zoom: 7, slides: '' }],
+        validate: (json) => Array.isArray(json) && json.every(item => item.year && item.title)
+      },
+      investigation: {
+        root: 'object',
+        summary: 'Investigation Board οργανώνει topic και clues.',
+        fields: ['topic', 'clues[].title', 'clues[].description', 'clues[].type'],
+        template: () => ({ topic: '', clues: [] }),
+        validate: (json) => json && typeof json.topic === 'string' && Array.isArray(json.clues)
+      },
+      history3d: {
+        root: 'object',
+        summary: 'History Explorer 3D χρειάζεται characters, dialogs, facts και screens.',
+        fields: ['characters[]', 'dialogs[]', 'facts[]', 'screens'],
+        template: () => ({ characters: [], dialogs: [], facts: [], screens: { title: '', background: '' } }),
+        validate: (json) => json && Array.isArray(json.characters) && Array.isArray(json.dialogs)
+      },
+      mindpalace: {
+        root: 'object',
+        summary: 'Mind Palace Debate με investigation_board και mind_palace.',
+        fields: ['case_id', 'title', 'investigation_board', 'mind_palace'],
+        template: () => ({ case_id: '', title: '', investigation_board: { figures: [], clues: [] }, mind_palace: { rooms: [], dialogues: [] } }),
+        validate: (json) => json && json.investigation_board
+      },
+      anchor: {
+        root: 'object',
+        summary: 'Living Anchor με metadata και anchors.',
+        fields: ['metadata', 'anchors'],
+        template: () => ({ metadata: { title: '', source: '', date: today() }, anchors: [] }),
+        validate: (json) => json && json.metadata && Array.isArray(json.anchors)
+      },
+      books: {
+        root: 'object',
+        summary: 'Interactive Books με pages.',
+        fields: ['pages'],
+        template: () => ({ pages: [] }),
+        validate: (json) => json && Array.isArray(json.pages)
+      },
+      unreal: {
+        root: 'object',
+        summary: 'Unreal Engine 5 schema.',
+        fields: ['id', 'version', 'title', 'subtitle', 'characters', 'acts'],
+        template: () => ({
+          id: 'new_scenario',
+          version: '1.0',
+          title: '',
+          subtitle: '',
+          characters: {},
+          acts: []
+        }),
+        validate: (json) => json && json.id && json.version && Array.isArray(json.acts)
+      },
+      notebook: {
+        root: 'object',
+        summary: 'Notebook Media με chapters.',
+        fields: ['title', 'chapters'],
+        template: () => ({ title: '', chapters: [] }),
+        validate: (json) => json && typeof json.title === 'string' && Array.isArray(json.chapters)
+      },
+      personalpage: {
+        root: 'object',
+        summary: 'Personal Page με chapters.',
+        fields: ['title', 'chapters'],
+        template: () => ({ title: '', chapters: [] }),
+        validate: (json) => json && typeof json.title === 'string' && Array.isArray(json.chapters)
+      }
+    };
+
+    function today() { return new Date().toISOString().slice(0, 10); }
+
+    function isObject(v) { return v && typeof v === 'object' && !Array.isArray(v); }
+
+    function toArray(v) {
+      if (Array.isArray(v)) return v;
+      if (v === undefined || v === null) return [];
+      return [v];
+    }
+
+    function escapeHtml(s) {
+      return String(s ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+    }
+
+    function escapeAttribute(s) { return escapeHtml(s).replaceAll('`', '&#096;'); }
+
+    // --- Master converter (specific to your JSON) ---
+    function convertMasterToScenarios(master) {
+      console.log('🔄 Converting master JSON:', master);
+
+      const scenario = {
+        id: master.id || `scenario-${Date.now()}`,
+        title: master.title || 'Θεολογικό Σενάριο',
+        type: master.type || 'Theology',
+        status: master.status || 'draft',
+        updatedAt: master.updatedAt || today(),
+        tags: master.tags || [],
+        source: { kind: 'manual', notes: master.description || '' },
+        links: master.links || [],
+        appOutputs: {}
+      };
+
+      // --- timeline_item (array or object) ---
+      if (master.timeline_item) {
+        const items = toArray(master.timeline_item);
+        scenario.appOutputs.timeline = items.map((item, idx) => ({
+          id: item.id || Date.now() + idx,
+          year: item.year || '',
+          title: item.title || '',
+          desc: item.desc || item.description || '',
+          img: item.img || item.image || '',
+          location: item.location || '',
+          lat: item.lat || 0,
+          lng: item.lng || 0,
+          zoom: item.zoom || 6,
+          slides: item.slides || ''
+        }));
+      } else {
+        scenario.appOutputs.timeline = [];
+      }
+
+      // --- investigation_board ---
+      if (master.investigation_board) {
+        const ib = master.investigation_board;
+        scenario.appOutputs.investigation = {
+          topic: ib.topic || '',
+          clues: (ib.clues || []).map(c => ({
+            title: c.title || '',
+            description: c.description || c.content || '',
+            type: c.type || 'evidence',
+            image: c.image || c.img || ''
+          }))
+        };
+      } else {
+        scenario.appOutputs.investigation = { topic: '', clues: [] };
+      }
+
+      // --- history3d ---
+      if (master.history3d) {
+        scenario.appOutputs.history3d = {
+          characters: (master.history3d.characters || []).map(c => ({
+            id: c.id || `char_${Date.now()}`,
+            name: c.name || '',
+            role: c.role || '',
+            description: c.description || '',
+            era: c.era || '',
+            position_x: c.position_x || 0,
+            position_y: c.position_y || 0,
+            position_z: c.position_z || 0,
+            rotation: c.rotation || 0
+          })),
+          dialogs: (master.history3d.dialogs || []).map(d => ({
+            character_id: d.character_id || d.speaker || '',
+            trigger: d.trigger || '',
+            text: d.text || '',
+            response_options: d.response_options || []
+          })),
+          facts: (master.history3d.facts || []).map(f => ({
+            id: f.id || `fact_${Date.now()}`,
+            title: f.title || '',
+            content: f.content || '',
+            era: f.era || ''
+          })),
+          screens: master.history3d.screens || { title: '', background: '' }
+        };
+      } else {
+        scenario.appOutputs.history3d = { characters: [], dialogs: [], facts: [], screens: { title: '', background: '' } };
+      }
+
+      // --- unreal_scenario ---
+      if (master.unreal_scenario) {
+        const u = master.unreal_scenario;
+        scenario.appOutputs.unreal = {
+          id: u.id || `unreal_${Date.now()}`,
+          version: u.version || '1.0',
+          title: u.title || '',
+          subtitle: u.subtitle || '',
+          characters: u.characters || {},
+          acts: (u.acts || []).map(act => ({
+            id: act.id || `act_${Date.now()}`,
+            title: act.title || '',
+            type: act.type || 'cinematic',
+            dialogues: (act.dialogues || []).map(d => ({
+              id: d.id || `d_${Date.now()}`,
+              speaker: d.speaker || 'char1',
+              text: d.text || '',
+              audioUrl: d.audioUrl || '',
+              animation: d.animation || '',
+              camera: d.camera || '',
+              subtitle: d.subtitle !== undefined ? d.subtitle : true
+            })),
+            playerChoice: act.playerChoice || { prompt: '', displayStyle: 'radial_menu', choices: [] }
+          }))
+        };
+      } else {
+        scenario.appOutputs.unreal = SCHEMAS.unreal.template();
+      }
+
+      // --- notebook ---
+      if (master.notebook) {
+        const nb = master.notebook;
+        scenario.appOutputs.notebook = {
+          title: nb.title || '',
+          date: nb.date || today(),
+          chapters: (nb.chapters || []).map(ch => ({
+            index: ch.index || 1,
+            title: ch.title || '',
+            html: ch.html || '',
+            text: ch.text || '',
+            stickies: ch.stickies || [],
+            media: ch.media || { audio: [], slides: [], notebooklm: [], pdf: [], text: [] }
+          }))
+        };
+      } else {
+        scenario.appOutputs.notebook = { title: '', date: today(), chapters: [] };
+      }
+
+      // --- personal_page (if present) ---
+      if (master.personal_page) {
+        const pp = master.personal_page;
+        scenario.appOutputs.personalpage = {
+          title: pp.title || '',
+          date: pp.date || today(),
+          chapters: (pp.chapters || []).map(ch => ({
+            index: ch.index || 1,
+            title: ch.title || '',
+            html: ch.html || '',
+            text: ch.text || '',
+            stickies: ch.stickies || [],
+            media: ch.media || { audio: [], slides: [], notebooklm: [], pdf: [], text: [] }
+          }))
+        };
+      }
+
+      console.log('✅ Converted scenario:', scenario);
+      return { project: { name: 'Lesson Orchestrator', owner: 'Educational Studio' }, scenarios: [scenario] };
+    }
+
+    // --- Normalize ---
+    function normalizeData(raw) {
+      if (!raw) return structuredClone(fallbackData);
+
+      // Already in Dionysius format?
+      if (Array.isArray(raw?.scenarios) && raw.scenarios.some(s => s.appOutputs)) {
+        return {
+          ...raw,
+          mediaLibrary: normalizeMediaLibrary(raw.mediaLibrary || fallbackData.mediaLibrary)
+        };
+      }
+
+      // Master format detected?
+      const masterKeys = ['timeline_item', 'investigation_board', 'history3d', 'unreal_scenario', 'notebook'];
+      const isMaster = masterKeys.some(k => Object.hasOwn(raw, k));
+      if (isMaster) {
+        const converted = convertMasterToScenarios(raw);
+        return {
+          ...converted,
+          mediaLibrary: normalizeMediaLibrary(raw.mediaLibrary || raw.media || fallbackData.mediaLibrary)
+        };
+      }
+
+      // Array of scenarios?
+      if (Array.isArray(raw)) {
+        return { ...fallbackData, scenarios: raw };
+      }
+
+      // Single object?
+      if (isObject(raw) && (raw.title || raw.id)) {
+        const converted = convertMasterToScenarios(raw);
+        return converted;
+      }
+
+      return structuredClone(fallbackData);
+    }
+
+    function normalizeMediaLibrary(library) {
+      const source = Array.isArray(library) ? { meta: {}, media: library } : library;
+      const media = (source?.media || []).map(item => ({
+        media_id: String(item.media_id || item.id || '').trim(),
+        type: item.type || 'image',
+        title: String(item.title || item.label || '').trim(),
+        url: String(item.url || '').trim(),
+        source_platform: item.source_platform || '',
+        app_context: Array.isArray(item.app_context) ? item.app_context : [],
+        unit_id: item.unit_id || '',
+        tags: Array.isArray(item.tags) ? item.tags : [],
+        language: item.language || 'el',
+        notes: item.notes || '',
+        date_added: String(item.date_added || today()).slice(0, 10),
+        status: item.status || 'active'
+      })).filter(item => item.media_id && item.url);
+      return {
+        meta: {
+          last_updated: source?.meta?.last_updated || today(),
+          source: source?.meta?.source || 'Media Library'
+        },
+        media
+      };
+    }
+
+    // --- Fallback Data ---
+    const fallbackData = {
+      project: { name: 'Lesson Orchestrator', owner: 'Educational Studio' },
+      mediaLibrary: { meta: { last_updated: today(), source: 'Default' }, media: [] },
+      scenarios: [{
+        id: 'demo',
+        title: 'Δοκιμαστικό Σενάριο',
+        type: 'Demo',
+        status: 'draft',
+        updatedAt: today(),
+        tags: [],
+        source: { kind: 'manual', notes: '' },
+        links: [],
+        appOutputs: {}
+      }]
+    };
+
+    // --- State ---
+    let data = normalizeData(loadData());
+    let selectedId = data.scenarios[0]?.id;
+    let selectedApp = 'unreal';
+    let editingMediaId = null;
+
+    function loadData() {
+      try {
+        const saved = localStorage.getItem(storageKey);
+        if (!saved) return null;
+        return JSON.parse(saved);
+      } catch { return null; }
+    }
+
+    function saveData() {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(data));
+      } catch (e) { console.warn('Save failed:', e); }
+    }
+
+    function getSelectedScenario() {
+      return data.scenarios.find(s => s.id === selectedId) || data.scenarios[0];
+    }
+
+    function getSelectedOutput() {
+      const scenario = getSelectedScenario();
+      if (!scenario) return null;
+      if (!scenario.appOutputs) scenario.appOutputs = {};
+      if (!scenario.appOutputs[selectedApp]) {
+        const template = SCHEMAS[selectedApp]?.template();
+        scenario.appOutputs[selectedApp] = template || {};
+      }
+      return scenario.appOutputs[selectedApp];
+    }
+
+    function getMediaById(id) {
+      return (data.mediaLibrary?.media || []).find(item => item.media_id === id);
+    }
+
+    // --- DOM refs ---
+    const elements = {};
+    function initElements() {
+      const ids = [
+        'searchInput', 'stats', 'scenarioList',
+        'selectedType', 'selectedTitle', 'selectedStatus', 'updatedAt',
+        'appTabs', 'schemaSummary', 'projectLinks', 'learningSignals', 'riskLevel',
+        'jsonEditor', 'jsonState', 'applyJsonButton', 'formatJsonButton',
+        'importButton', 'exportButton', 'resetButton', 'fileInput', 'copyLinksButton',
+        'derivedFiles', 'derivedState',
+        'githubUrlInput', 'fetchGithubButton', 'exportMediaButton',
+        'mediaIdInput', 'mediaTitleInput', 'mediaUrlInput', 'mediaTypeInput',
+        'mediaSourceInput', 'mediaContextInput', 'mediaUnitInput', 'mediaTagsInput',
+        'mediaLanguageInput', 'mediaStatusInput', 'mediaNotesInput',
+        'mediaEditState', 'saveMediaButton', 'clearMediaButton', 'previewMediaButton',
+        'mediaPreview', 'mediaSearchInput', 'mediaStats', 'mediaTableBody', 'mediaStatusMessage'
+      ];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) console.warn(`Element not found: #${id}`);
+        elements[id] = el;
+      });
+    }
+
+    // --- Render ---
+    function render() {
+      try {
+        renderStats();
+        renderScenarioList();
+        renderDetail();
+        renderMediaManager();
+      } catch (e) {
+        console.error('Render error:', e);
+      }
+    }
+
+    function renderStats() {
+      const outputs = data.scenarios.reduce((total, s) => total + Object.keys(s.appOutputs || {}).length, 0);
+      const mediaCount = (data.mediaLibrary?.media || []).filter(item => item.status === 'active').length;
+      if (elements.stats) {
+        elements.stats.innerHTML = `
+          <div class="stat"><strong>${data.scenarios.length}</strong><span>Scenarios</span></div>
+          <div class="stat"><strong>${outputs}</strong><span>Modules</span></div>
+          <div class="stat"><strong>${mediaCount}</strong><span>Media</span></div>
+        `;
+      }
+    }
+
+    function renderScenarioList() {
+      const query = elements.searchInput ? elements.searchInput.value.trim().toLowerCase() : '';
+      const scenarios = data.scenarios.filter(s => {
+        const searchable = [s.title, s.type, s.status, ...(s.tags || [])].join(' ').toLowerCase();
+        return searchable.includes(query);
+      });
+      if (elements.scenarioList) {
+        elements.scenarioList.innerHTML = scenarios.map(s => `
+          <button class="scenario-item ${s.id === selectedId ? 'active' : ''}" data-id="${escapeAttribute(s.id)}" type="button">
+            <strong>${escapeHtml(s.title)}</strong>
+            <div class="scenario-meta">
+              <span>${escapeHtml(s.status)}</span>
+              <span>${Object.keys(s.appOutputs || {}).length} modules</span>
+              <span>${(s.tags || []).slice(0, 2).join(', ')}</span>
+            </div>
+          </button>
+        `).join('');
+      }
+    }
+
+    function renderDetail() {
+      const scenario = getSelectedScenario();
+      if (!scenario) return;
+      if (!SCHEMAS[selectedApp]) selectedApp = 'unreal';
+      getSelectedOutput();
+
+      if (elements.selectedType) elements.selectedType.textContent = scenario.type;
+      if (elements.selectedTitle) elements.selectedTitle.textContent = scenario.title;
+      if (elements.selectedStatus) {
+        elements.selectedStatus.textContent = scenario.status;
+        elements.selectedStatus.className = `status-pill status-${scenario.status}`;
+      }
+      if (elements.updatedAt) elements.updatedAt.textContent = `Updated ${scenario.updatedAt}`;
+
+      renderAppTabs(scenario);
+      renderSchemaSummary();
+      renderLinks(scenario);
+      renderMediaSummary(scenario);
+      renderJsonEditor();
+      renderDerivedFiles();
+    }
+
+    function renderAppTabs(scenario) {
+      const outputs = new Set(Object.keys(scenario.appOutputs || {}));
+      if (elements.appTabs) {
+        elements.appTabs.innerHTML = APPS.map(app => `
+          <button class="app-tab ${app.id === selectedApp ? 'active' : ''} ${outputs.has(app.id) ? 'has-output' : ''}" data-app="${app.id}" type="button">
+            <span>${app.icon}</span> ${app.name}
+          </button>
+        `).join('');
+      }
+    }
+
+    function renderSchemaSummary() {
+      const app = APPS.find(a => a.id === selectedApp);
+      const schema = SCHEMAS[selectedApp];
+      if (elements.schemaSummary && app && schema) {
+        elements.schemaSummary.innerHTML = `
+          <div class="schema-title"><strong>${escapeHtml(app.name)}</strong> <span>${escapeHtml(schema.root)}</span></div>
+          <p>${escapeHtml(schema.summary)}</p>
+          <div class="field-list">${schema.fields.map(f => `<code>${escapeHtml(f)}</code>`).join('')}</div>
+        `;
+      }
+    }
+
+    function renderLinks(scenario) {
+      const app = APPS.find(a => a.id === selectedApp);
+      const links = [...(scenario.links || [])];
+      if (app?.url) links.unshift({ label: app.name, kind: 'App', url: app.url });
+      if (elements.projectLinks) {
+        elements.projectLinks.innerHTML = links.map(link => `
+          <a class="resource-link" href="${escapeAttribute(link.url)}" target="_blank" rel="noreferrer">
+            <span>${escapeHtml(link.label)}</span>
+            <small>${escapeHtml(link.kind)}</small>
+          </a>
+        `).join('');
+      }
+    }
+
+    function renderMediaSummary(scenario) {
+      const media = data.mediaLibrary?.media || [];
+      const active = media.filter(item => item.status === 'active');
+      if (elements.riskLevel) elements.riskLevel.textContent = `${active.length} active`;
+      if (elements.learningSignals) {
+        elements.learningSignals.innerHTML = `
+          <div class="signal"><strong>Media library</strong><span>${active.length} active</span></div>
+          <div class="signal"><strong>Source</strong><span>${escapeHtml(data.mediaLibrary?.meta?.source || 'Local')}</span></div>
+          <div class="signal"><strong>Updated</strong><span>${escapeHtml(data.mediaLibrary?.meta?.last_updated || '')}</span></div>
+        `;
+      }
+    }
+
+    function renderJsonEditor() {
+      const output = getSelectedOutput();
+      if (elements.jsonEditor) {
+        elements.jsonEditor.value = JSON.stringify(output, null, 2);
+        validateCurrentEditor();
+      }
+    }
+
+    function renderDerivedFiles() {
+      const output = getSelectedOutput();
+      const files = selectedApp === 'unreal' ?
+        [
+          { name: `scenario_${output.id || 'unreal'}.json`, content: output },
+          { name: `assets_${output.id || 'unreal'}.json`, content: buildAssetsFromScenario(output) },
+          { name: `manifest_${output.id || 'unreal'}.json`, content: buildManifestEntry(output) }
+        ] :
+        [{ name: `${selectedApp}_${Date.now()}.json`, content: output }];
+
+      if (elements.derivedState) elements.derivedState.textContent = selectedApp === 'unreal' ? '3 files' : '1 file';
+      if (elements.derivedFiles) {
+        elements.derivedFiles.innerHTML = files.map(file => `
+          <div class="derived-file">
+            <div><strong>${escapeHtml(file.name)}</strong> <span>${Array.isArray(file.content) ? 'array' : 'object'}</span></div>
+            <button class="text-button" data-copy-file="${escapeAttribute(file.name)}" type="button">Copy</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function renderMediaManager() {
+      const media = data.mediaLibrary?.media || [];
+      const query = elements.mediaSearchInput ? elements.mediaSearchInput.value.trim().toLowerCase() : '';
+      const filtered = query ? media.filter(item => {
+        const searchable = [item.media_id, item.type, item.title, item.url, ...(item.tags || []), ...(item.app_context || [])].join(' ').toLowerCase();
+        return searchable.includes(query);
+      }) : media;
+
+      if (elements.mediaStats) elements.mediaStats.textContent = `${media.length} media`;
+      if (elements.mediaTableBody) {
+        elements.mediaTableBody.innerHTML = filtered.length ?
+          filtered.map(item => `
+            <tr>
+              <td><code>${escapeHtml(item.media_id)}</code></td>
+              <td><span class="badge">${escapeHtml(item.type)}</span></td>
+              <td><strong>${escapeHtml(item.title)}</strong> <small>${escapeHtml(item.date_added)} · ${escapeHtml(item.status)}</small></td>
+              <td>${(item.tags || []).map(t => `<span class="badge">${escapeHtml(t)}</span>`).join('')}</td>
+              <td>${(item.app_context || []).map(a => `<span class="badge">${escapeHtml(a)}</span>`).join('')}</td>
+              <td class="table-actions">
+                <button data-media-action="edit" data-media-id="${escapeAttribute(item.media_id)}" type="button">Edit</button>
+                <button data-media-action="copy" data-media-id="${escapeAttribute(item.media_id)}" type="button">URL</button>
+                <button data-media-action="delete" data-media-id="${escapeAttribute(item.media_id)}" type="button">Del</button>
+              </td>
+            </tr>
+          `).join('') :
+          `<tr><td colspan="6">Δεν βρέθηκαν media</td></tr>`;
+      }
+    }
+
+    // --- Validation ---
+    function validateCurrentEditor() {
+      try {
+        const parsed = JSON.parse(elements.jsonEditor.value);
+        const valid = SCHEMAS[selectedApp]?.validate(parsed) || false;
+        setJsonState(valid ? 'Valid' : 'Valid JSON, schema mismatch', valid ? 'ok' : 'dirty');
+        return { parsed, valid };
+      } catch (e) {
+        setJsonState(e.message, 'error');
+        return { parsed: null, valid: false };
+      }
+    }
+
+    function setJsonState(message, mode) {
+      if (elements.jsonState) {
+        elements.jsonState.textContent = message;
+        elements.jsonState.style.background = mode === 'error' ? '#fca5a5' : mode === 'dirty' ? '#fcd34d' : '#86efac';
+      }
+    }
+
+    function updateSelectedOutput(updatedOutput) {
+      const scenario = getSelectedScenario();
+      scenario.appOutputs[selectedApp] = updatedOutput;
+      scenario.updatedAt = today();
+      saveData();
+      render();
+    }
+
+    // --- Builders ---
+    function buildAssetsFromScenario(scenario) {
+      const assets = { _comment: `Assets for ${scenario.id}`, assets: {} };
+      (scenario.acts || []).forEach(act => {
+        (act.dialogues || []).forEach(d => {
+          const match = (d.audioUrl || '').match(/\{\{(\w+)\}\}/);
+          if (match) {
+            assets.assets[match[1]] = { type: 'audio', label: `${d.speaker} — ${act.title}`, url: '', speaker: d.speaker, dialogueId: d.id };
+          }
+        });
+      });
+      return assets;
+    }
+
+    function buildManifestEntry(scenario) {
+      return {
+        id: scenario.id,
+        title: scenario.title,
+        subtitle: scenario.subtitle || '',
+        description: scenario.subtitle || '',
+        scenarioFile: `scenarios/${scenario.id}/scenario.json`,
+        characters: Object.keys(scenario.characters || {}),
+        status: 'draft'
+      };
+    }
+
+    // --- Media CRUD ---
+    function formToMediaItem() {
+      const rawType = elements.mediaTypeInput ? elements.mediaTypeInput.value : 'auto';
+      const rawUrl = elements.mediaUrlInput ? elements.mediaUrlInput.value.trim() : '';
+      return {
+        media_id: elements.mediaIdInput ? elements.mediaIdInput.value.trim() : '',
+        type: rawType === 'auto' ? 'image' : rawType,
+        title: elements.mediaTitleInput ? elements.mediaTitleInput.value.trim() : '',
+        url: rawUrl,
+        source_platform: elements.mediaSourceInput ? elements.mediaSourceInput.value.trim() : '',
+        app_context: elements.mediaContextInput ? elements.mediaContextInput.value.split(';').map(s => s.trim()).filter(Boolean) : [],
+        unit_id: elements.mediaUnitInput ? elements.mediaUnitInput.value.trim() : '',
+        tags: elements.mediaTagsInput ? elements.mediaTagsInput.value.split(',').map(s => s.trim()).filter(Boolean) : [],
+        language: elements.mediaLanguageInput ? elements.mediaLanguageInput.value : 'el',
+        notes: elements.mediaNotesInput ? elements.mediaNotesInput.value : '',
+        date_added: editingMediaId ? getMediaById(editingMediaId)?.date_added : today(),
+        status: elements.mediaStatusInput ? elements.mediaStatusInput.value : 'active'
+      };
+    }
+
+    function saveMediaFromForm() {
+      const item = formToMediaItem();
+      if (!item.media_id || !item.title || !item.url) {
+        setMediaStatus('Συμπλήρωσε ID, τίτλο και URL.', 'error');
+        return;
+      }
+      const media = data.mediaLibrary.media;
+      const existing = media.findIndex(entry => entry.media_id === item.media_id);
+      if (existing >= 0 && editingMediaId !== item.media_id) {
+        setMediaStatus(`Το ID ${item.media_id} υπάρχει ήδη.`, 'error');
+        return;
+      }
+      if (existing >= 0) media[existing] = item;
+      else media.push(item);
+      data.mediaLibrary.meta.last_updated = today();
+      saveData();
+      clearMediaForm();
+      render();
+      setMediaStatus(`${existing >= 0 ? 'Ενημερώθηκε' : 'Προστέθηκε'} το ${item.media_id}.`, 'ok');
+    }
+
+    function editMedia(id) {
+      const item = getMediaById(id);
+      if (!item) return;
+      editingMediaId = id;
+      if (elements.mediaEditState) elements.mediaEditState.textContent = `Editing ${id}`;
+      if (elements.mediaIdInput) elements.mediaIdInput.value = item.media_id;
+      if (elements.mediaTitleInput) elements.mediaTitleInput.value = item.title;
+      if (elements.mediaUrlInput) elements.mediaUrlInput.value = item.url;
+      if (elements.mediaTypeInput) elements.mediaTypeInput.value = item.type;
+      if (elements.mediaSourceInput) elements.mediaSourceInput.value = item.source_platform || '';
+      if (elements.mediaContextInput) elements.mediaContextInput.value = (item.app_context || []).join('; ');
+      if (elements.mediaUnitInput) elements.mediaUnitInput.value = item.unit_id || '';
+      if (elements.mediaTagsInput) elements.mediaTagsInput.value = (item.tags || []).join(', ');
+      if (elements.mediaLanguageInput) elements.mediaLanguageInput.value = item.language || 'el';
+      if (elements.mediaStatusInput) elements.mediaStatusInput.value = item.status || 'active';
+      if (elements.mediaNotesInput) elements.mediaNotesInput.value = item.notes || '';
+      if (elements.saveMediaButton) elements.saveMediaButton.textContent = 'Update';
+      if (elements.mediaPreview) elements.mediaPreview.innerHTML = '';
+    }
+
+    function clearMediaForm() {
+      editingMediaId = null;
+      if (elements.mediaEditState) elements.mediaEditState.textContent = 'New';
+      if (elements.mediaIdInput) elements.mediaIdInput.value = '';
+      if (elements.mediaTitleInput) elements.mediaTitleInput.value = '';
+      if (elements.mediaUrlInput) elements.mediaUrlInput.value = '';
+      if (elements.mediaTypeInput) elements.mediaTypeInput.value = 'auto';
+      if (elements.mediaSourceInput) elements.mediaSourceInput.value = '';
+      if (elements.mediaContextInput) elements.mediaContextInput.value = '';
+      if (elements.mediaUnitInput) elements.mediaUnitInput.value = '';
+      if (elements.mediaTagsInput) elements.mediaTagsInput.value = '';
+      if (elements.mediaLanguageInput) elements.mediaLanguageInput.value = 'el';
+      if (elements.mediaStatusInput) elements.mediaStatusInput.value = 'active';
+      if (elements.mediaNotesInput) elements.mediaNotesInput.value = '';
+      if (elements.saveMediaButton) elements.saveMediaButton.textContent = 'Save';
+      if (elements.mediaPreview) elements.mediaPreview.innerHTML = '';
+    }
+
+    function deleteMedia(id) {
+      data.mediaLibrary.media = data.mediaLibrary.media.filter(item => item.media_id !== id);
+      data.mediaLibrary.meta.last_updated = today();
+      if (editingMediaId === id) clearMediaForm();
+      saveData();
+      render();
+      setMediaStatus(`Διαγράφηκε το ${id}.`, 'ok');
+    }
+
+    function previewMedia() {
+      const item = formToMediaItem();
+      if (!item.url) { setMediaStatus('Δώσε URL για preview.', 'error'); return; }
+      let html = `<a href="${escapeAttribute(item.url)}" target="_blank">Άνοιγμα URL</a>`;
+      if (item.type === 'image') html = `<img src="${escapeAttribute(item.url)}" alt="${escapeAttribute(item.title)}" />`;
+      else if (['youtube', 'google_slides', 'google_drive'].includes(item.type)) {
+        html = `<iframe src="${escapeAttribute(item.url)}" title="${escapeAttribute(item.title)}"></iframe>`;
+      }
+      if (elements.mediaPreview) elements.mediaPreview.innerHTML = html;
+    }
+
+    function exportMediaLibrary() {
+      const payload = {
+        meta: { exported: new Date().toISOString(), count: data.mediaLibrary.media.length, source: data.mediaLibrary.meta.source },
+        media: data.mediaLibrary.media
+      };
+      downloadJson(`media_library_${today()}.json`, payload);
+      setMediaStatus('Έγινε export της media library.', 'ok');
+    }
+
+    async function fetchMediaFromGithub() {
+      const url = elements.githubUrlInput ? elements.githubUrlInput.value.trim() : '';
+      if (!url) { setMediaStatus('Βάλε GitHub raw JSON URL.', 'error'); return; }
+      if (!/^https:\/\/raw\.githubusercontent\.com\/|^https:\/\/gist\.githubusercontent\.com\//.test(url)) {
+        setMediaStatus('Χρησιμοποίησε raw.githubusercontent.com ή gist.githubusercontent.com URL.', 'error');
+        return;
+      }
+      if (elements.fetchGithubButton) elements.fetchGithubButton.disabled = true;
+      setMediaStatus('Φόρτωση από GitHub...', 'ok');
+      try {
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const payload = JSON.parse(await response.text());
+        data.mediaLibrary = normalizeMediaLibrary(payload);
+        data.mediaLibrary.meta.source = url;
+        data.mediaLibrary.meta.last_updated = today();
+        saveData();
+        render();
+        setMediaStatus(`Φορτώθηκαν ${data.mediaLibrary.media.length} media.`, 'ok');
+      } catch (e) {
+        setMediaStatus(`Fetch απέτυχε: ${e.message}`, 'error');
+      } finally {
+        if (elements.fetchGithubButton) elements.fetchGithubButton.disabled = false;
+      }
+    }
+
+    function setMediaStatus(message, mode = 'ok') {
+      if (elements.mediaStatusMessage) {
+        elements.mediaStatusMessage.textContent = message;
+        elements.mediaStatusMessage.className = `media-status ${mode === 'error' ? 'error' : 'ok'}`;
+      }
+    }
+
+    function downloadJson(filename, payload) {
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // --- Import / Export / Reset ---
+    function importPayload(imported) {
+      return normalizeData(imported);
+    }
+
+    // --- Events ---
+    function bindEvents() {
+      if (elements.scenarioList) {
+        elements.scenarioList.addEventListener('click', (e) => {
+          const item = e.target.closest('.scenario-item');
+          if (!item) return;
+          selectedId = item.dataset.id;
+          render();
+        });
+      }
+
+      if (elements.appTabs) {
+        elements.appTabs.addEventListener('click', (e) => {
+          const tab = e.target.closest('.app-tab');
+          if (!tab) return;
+          selectedApp = tab.dataset.app;
+          renderDetail();
+        });
+      }
+
+      if (elements.searchInput) {
+        elements.searchInput.addEventListener('input', renderScenarioList);
+      }
+
+      if (elements.jsonEditor) {
+        elements.jsonEditor.addEventListener('input', validateCurrentEditor);
+      }
+      if (elements.applyJsonButton) {
+        elements.applyJsonButton.addEventListener('click', () => {
+          const { parsed } = validateCurrentEditor();
+          if (parsed) updateSelectedOutput(parsed);
+        });
+      }
+      if (elements.formatJsonButton) {
+        elements.formatJsonButton.addEventListener('click', () => {
+          const { parsed } = validateCurrentEditor();
+          if (!parsed) return;
+          elements.jsonEditor.value = JSON.stringify(parsed, null, 2);
+          validateCurrentEditor();
+        });
+      }
+
+      if (elements.importButton) {
+        elements.importButton.addEventListener('click', () => {
+          if (elements.fileInput) elements.fileInput.click();
+        });
+      }
+      if (elements.fileInput) {
+        elements.fileInput.addEventListener('change', async () => {
+          const [file] = elements.fileInput.files;
+          if (!file) return;
+          try {
+            const text = await file.text();
+            data = importPayload(JSON.parse(text));
+            selectedId = data.scenarios[0]?.id;
+            saveData();
+            render();
+          } catch (e) {
+            setJsonState(`Import failed: ${e.message}`, 'error');
+          } finally {
+            elements.fileInput.value = '';
+          }
+        });
+      }
+      if (elements.exportButton) {
+        elements.exportButton.addEventListener('click', () => downloadJson('orchestrator-data.json', data));
+      }
+      if (elements.resetButton) {
+        elements.resetButton.addEventListener('click', () => {
+          data = structuredClone(fallbackData);
+          selectedId = data.scenarios[0]?.id;
+          selectedApp = 'unreal';
+          saveData();
+          render();
+        });
+      }
+
+      if (elements.copyLinksButton) {
+        elements.copyLinksButton.addEventListener('click', async () => {
+          const scenario = getSelectedScenario();
+          const links = (scenario.links || []).map(l => `${l.label}: ${l.url}`).join('\n');
+          await navigator.clipboard.writeText(links);
+          elements.copyLinksButton.textContent = 'Copied';
+          setTimeout(() => { elements.copyLinksButton.textContent = 'Copy'; }, 1000);
+        });
+      }
+
+      if (elements.derivedFiles) {
+        elements.derivedFiles.addEventListener('click', async (e) => {
+          const btn = e.target.closest('[data-copy-file]');
+          if (!btn) return;
+          const output = getSelectedOutput();
+          const name = btn.dataset.copyFile;
+          let content = output;
+          if (name.startsWith('assets_')) content = buildAssetsFromScenario(output);
+          else if (name.startsWith('manifest_')) content = buildManifestEntry(output);
+          await navigator.clipboard.writeText(JSON.stringify(content, null, 2));
+          btn.textContent = 'Copied';
+          setTimeout(() => { btn.textContent = 'Copy'; }, 1000);
+        });
+      }
+
+      if (elements.saveMediaButton) elements.saveMediaButton.addEventListener('click', saveMediaFromForm);
+      if (elements.clearMediaButton) elements.clearMediaButton.addEventListener('click', clearMediaForm);
+      if (elements.previewMediaButton) elements.previewMediaButton.addEventListener('click', previewMedia);
+      if (elements.exportMediaButton) elements.exportMediaButton.addEventListener('click', exportMediaLibrary);
+      if (elements.fetchGithubButton) elements.fetchGithubButton.addEventListener('click', fetchMediaFromGithub);
+      if (elements.mediaSearchInput) elements.mediaSearchInput.addEventListener('input', renderMediaManager);
+
+      if (elements.mediaTableBody) {
+        elements.mediaTableBody.addEventListener('click', async (e) => {
+          const btn = e.target.closest('[data-media-action]');
+          if (!btn) return;
+          const id = btn.dataset.mediaId;
+          const action = btn.dataset.mediaAction;
+          if (action === 'edit') editMedia(id);
+          if (action === 'delete') deleteMedia(id);
+          if (action === 'copy') {
+            const item = getMediaById(id);
+            if (!item) return;
+            await navigator.clipboard.writeText(item.url);
+            setMediaStatus(`URL του ${id} αντιγράφηκε.`, 'ok');
+          }
+        });
+      }
+    }
+
+    // --- Boot ---
+    function boot() {
+      console.log('🚀 Dashboard v3 booting...');
+      initElements();
+      bindEvents();
+      saveData();
+      render();
+      console.log('✅ Dashboard ready.');
+    }
+
+    document.addEventListener('DOMContentLoaded', boot);
+  })();
+</script>
+</body>
+</html>

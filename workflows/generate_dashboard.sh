@@ -1,45 +1,973 @@
 #!/bin/bash
+# ============================================================
+# generate_dashboard.sh — Γεννά το πλήρες Orchestrator Dashboard
+#
+# Διαβάζει:
+#   - lessons/*/meta.json          → βιβλιοθήκη μαθημάτων (sidebar)
+#   - lessons/*/master_output.json → περιεχόμενο κάθε μαθήματος
+#   - data/current/active_lesson.json → ποιο είναι ενεργό
+#   - data/current/*.json          → app outputs του ενεργού μαθήματος
+#
+# Γράφει:
+#   - lessons/index.html           → το πλήρες dashboard
+# ============================================================
+
+set -e
 BASE="$(pwd)"
 OUT="$BASE/lessons/index.html"
+
 if ! command -v jq &>/dev/null; then echo "✗ jq — brew install jq" && exit 1; fi
-LESSONS_JSON="["
+
+echo "📊 Generating dashboard..."
+
+# ── 1. Συλλογή βιβλιοθήκης μαθημάτων ────────────────────
+SCENARIOS_JSON="["
 FIRST=true
+
+# Λίστα γνωστών app IDs (αντιστοιχούν στα ονόματα που χρησιμοποιούνται στο dashboard)
+KNOWN_APPS=("timeline" "investigation" "history3d" "mindpalace" "anchor" "books" "unreal" "notebook" "personalpage")
+
 for meta in "$BASE/lessons"/*/meta.json; do
   [ -f "$meta" ] || continue
-  ENTRY=$(jq -c --arg dir "$(dirname "$meta")" '. + {dir: $dir}' "$meta" 2>/dev/null)
-  [ -z "$ENTRY" ] && continue
-  if [ "$FIRST" = true ]; then LESSONS_JSON="$LESSONS_JSON$ENTRY"; FIRST=false; else LESSONS_JSON="$LESSONS_JSON,$ENTRY"; fi
+  LESSON_DIR="$(dirname "$meta")"
+  LESSON_ID="$(basename "$LESSON_DIR")"
+  MASTER="$LESSON_DIR/master_output.json"
+
+  # Διαβάζουμε τα βασικά meta με jq
+  META_DATA=$(jq -c '. + {"lesson_dir": "'"$LESSON_DIR"'", "lesson_id": "'"$LESSON_ID"'"}' "$meta" 2>/dev/null) || continue
+
+  # Εξαγωγή app outputs (μόνο αν υπάρχει master_output.json)
+  APP_OUTPUTS="{}"
+  if [ -f "$MASTER" ]; then
+    # Χρησιμοποιούμε Python με environment variables για ασφαλή μεταφορά
+    export MASTER_PATH="$MASTER"
+    export KNOWN_APPS_JSON=$(printf '%s\n' "${KNOWN_APPS[@]}" | jq -R . | jq -s .)
+    APP_OUTPUTS=$(python3 -c '
+import json, os, sys
+
+master_path = os.environ["MASTER_PATH"]
+known_apps = json.loads(os.environ["KNOWN_APPS_JSON"])
+
+try:
+    with open(master_path, "r", encoding="utf-8") as f:
+        master = json.load(f)
+except Exception:
+    print("{}")
+    sys.exit(0)
+
+# Εξάγουμε όλα τα κλειδιά που βρίσκονται στη λίστα γνωστών apps
+out = {}
+for app in known_apps:
+    if app in master:
+        out[app] = master[app]
+
+# Επιπλέον, αν υπάρχουν άλλα κλειδιά που μοιάζουν με app (π.χ. timeline_item), τα προσθέτουμε με το κανονικό τους όνομα;
+# Αλλά για απλότητα, κρατάμε μόνο τα γνωστά.
+# Μπορούμε να προσθέσουμε και συγκεκριμένους μετασχηματισμούς αν χρειαστεί.
+
+print(json.dumps(out, ensure_ascii=False))
+' 2>/dev/null)
+  fi
+
+  # Φτιάχνουμε το αντικείμενο του σεναρίου
+  export META_DATA="$META_DATA"
+  export APP_OUTPUTS="$APP_OUTPUTS"
+  SCENARIO=$(python3 -c '
+import json, os, sys
+
+meta = json.loads(os.environ["META_DATA"])
+app_outputs = json.loads(os.environ["APP_OUTPUTS"])
+
+scenario = {
+    "id":         meta.get("lesson_id", "unknown"),
+    "title":      meta.get("topic", meta.get("title", "Μάθημα")),
+    "type":       meta.get("lesson_type", "Theology"),
+    "status":     meta.get("status", "draft"),
+    "updatedAt":  meta.get("created", "")[:10] if meta.get("created") else "",
+    "tags":       meta.get("tags", []),
+    "source":     {"kind": "file", "notes": meta.get("description", "")},
+    "links":      meta.get("links", []),
+    "lesson_dir": meta.get("lesson_dir", ""),
+    "appOutputs": app_outputs
+}
+print(json.dumps(scenario, ensure_ascii=False))
+' 2>/dev/null) || continue
+
+  if [ "$FIRST" = true ]; then
+    SCENARIOS_JSON="$SCENARIOS_JSON$SCENARIO"
+    FIRST=false
+  else
+    SCENARIOS_JSON="$SCENARIOS_JSON,$SCENARIO"
+  fi
 done
-LESSONS_JSON="$LESSONS_JSON]"
+SCENARIOS_JSON="$SCENARIOS_JSON]"
+
+# Ταξινόμηση: νεότερα πρώτα
+SCENARIOS_JSON=$(echo "$SCENARIOS_JSON" | python3 -c "
+import json, sys
+scenarios = json.load(sys.stdin)
+scenarios.sort(key=lambda s: s.get('updatedAt',''), reverse=True)
+print(json.dumps(scenarios, ensure_ascii=False))
+" 2>/dev/null || echo "$SCENARIOS_JSON")
+
+# ── 2. Ενεργό μάθημα ─────────────────────────────────────
+ACTIVE_ID=""
+ACTIVE_TITLE="—"
+ACTIVE_DATE="—"
+
+if [ -f "$BASE/data/current/active_lesson.json" ]; then
+  ACTIVE_ID=$(jq -r '.lesson_id // ""' "$BASE/data/current/active_lesson.json" 2>/dev/null)
+  ACTIVE_TITLE=$(jq -r '.title // "—"' "$BASE/data/current/active_lesson.json" 2>/dev/null)
+  ACTIVE_DATE=$(jq -r '.activated // "—"' "$BASE/data/current/active_lesson.json" 2>/dev/null)
+fi
+
+TOTAL=$(echo "$SCENARIOS_JSON" | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d))" 2>/dev/null || echo "0")
+
+echo "  ✅ Βρέθηκαν $TOTAL μαθήματα"
+echo "  ✅ Ενεργό: $ACTIVE_TITLE"
+
+# ── 3. Γέννηση HTML ──────────────────────────────────────
+# Ασφαλής ενσωμάτωση του JSON ως string (escaping)
+SCENARIOS_STR=$(echo "$SCENARIOS_JSON" | python3 -c 'import sys, json; print(json.dumps(sys.stdin.read()))')
+
+# Ετοιμάζουμε τις μεταβλητές για το HTML
+ACTIVE_ID_STR=$(echo -n "$ACTIVE_ID" | python3 -c 'import sys, json; print(json.dumps(sys.stdin.read()))')
+ACTIVE_TITLE_STR=$(echo -n "$ACTIVE_TITLE" | python3 -c 'import sys, json; print(json.dumps(sys.stdin.read()))')
+ACTIVE_DATE_STR=$(echo -n "$ACTIVE_DATE" | python3 -c 'import sys, json; print(json.dumps(sys.stdin.read()))')
+
 cat > "$OUT" << HTMLEOF
-<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>Sacred Blueprint — Dashboard</title><style>
-body{background:#f5f0e8;color:#2c2416;font-family:Georgia,serif;padding:2rem;}
-h1{font-size:1.8rem;border-bottom:1px solid #d4c9a8;padding-bottom:0.5rem;}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;margin-top:1.5rem;}
-.card{background:#fffdf7;border:1px solid #d4c9a8;border-radius:8px;padding:1rem;}
-.card .topic{font-weight:bold;font-size:1.1rem;}
-.card .type{font-size:0.8rem;color:#7a6e58;text-transform:uppercase;letter-spacing:0.05em;}
-.card .status{font-size:0.75rem;padding:0.2rem 0.6rem;border-radius:12px;background:#e8e0cc;}
-.status.distributed{background:#d4e8d4;color:#2d6640;}
-</style></head>
-<body><h1>Sacred Blueprint — Lessons</h1><div class="grid" id="grid"></div>
-<script>
-const lessons = $LESSONS_JSON;
-const grid = document.getElementById('grid');
-if (!lessons.length) grid.innerHTML = '<p>Δεν βρέθηκαν μαθήματα.</p>';
-else {
-  grid.innerHTML = lessons.map(l => \`
-    <div class="card">
-      <div class="type">\${l.lesson_type || ''}</div>
-      <div class="topic">\${l.topic || '—'}</div>
-      <div style="margin-top:0.5rem;display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:0.75rem;color:#7a6e58;">\${l.created ? new Date(l.created).toLocaleDateString('el') : ''}</span>
-        <span class="status \${l.status || 'draft'}">\${l.status || 'draft'}</span>
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lesson Orchestrator – Dashboard</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Roboto, sans-serif; background: #f4f6fa; color: #1e293b; padding: 1rem; }
+    button { cursor: pointer; font: inherit; background: none; border: none; }
+    input, select, textarea { font: inherit; border: 1px solid #d1d9e6; border-radius: 8px; padding: 0.4rem 0.7rem; background: white; width: 100%; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+    textarea { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 1.5; resize: vertical; }
+    .eyebrow { text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.04em; color: #64748b; font-weight: 600; }
+    .badge { background: #e2e8f0; padding: 0.1rem 0.6rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; color: #334155; display: inline-block; }
+    .status-pill { padding: 0.2rem 1rem; border-radius: 40px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+    .status-draft    { background: #fef9c3; color: #854d0e; }
+    .status-active   { background: #dcfce7; color: #166534; }
+    .status-archived { background: #f1f5f9; color: #475569; }
+
+    /* ── Topbar ── */
+    .topbar { display: flex; justify-content: space-between; align-items: center; background: white; padding: 1rem 1.5rem; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem; }
+    .topbar h1 { font-size: 1.4rem; font-weight: 600; }
+    .topbar-meta { font-size: 0.75rem; color: #64748b; margin-top: 0.15rem; }
+    .topbar-actions { display: flex; gap: 0.5rem; }
+    .icon-button { width: 2.4rem; height: 2.4rem; border-radius: 40px; background: #f1f5f9; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+    .icon-button:hover { background: #e2e8f0; }
+
+    /* ── Active banner ── */
+    .active-banner { background: #dcfce7; border: 1px solid #86efac; border-radius: 12px; padding: 0.6rem 1.2rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; font-size: 0.82rem; }
+    .active-banner strong { color: #166534; }
+    .active-banner .ab-label { color: #166534; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .active-banner .ab-date  { color: #4ade80; font-size: 0.7rem; }
+    .active-banner .activate-btn { margin-left: auto; padding: 0.25rem 0.9rem; background: #166534; color: white; border-radius: 30px; font-size: 0.72rem; font-weight: 600; cursor: pointer; border: none; }
+    .active-banner .activate-btn:hover { background: #14532d; }
+
+    /* ── Layout ── */
+    .shell { display: flex; flex-direction: column; gap: 1.5rem; max-width: 1600px; margin: 0 auto; }
+    .workspace { display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; }
+    @media (max-width: 900px) { .workspace { grid-template-columns: 1fr; } }
+
+    /* ── Sidebar ── */
+    .sidebar { background: white; border-radius: 16px; padding: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.04); max-height: 80vh; overflow-y: auto; }
+    .search-row { margin-bottom: 0.75rem; }
+    .stat-strip { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .stat { display: flex; flex-direction: column; background: #f8fafc; padding: 0.3rem 0.8rem; border-radius: 10px; font-size: 0.8rem; }
+    .stat strong { font-size: 1.1rem; }
+    .scenario-list { display: flex; flex-direction: column; gap: 0.3rem; }
+    .scenario-item { text-align: left; padding: 0.6rem 0.8rem; border-radius: 10px; background: transparent; transition: background 0.1s; border: 1px solid transparent; width: 100%; }
+    .scenario-item:hover { background: #f1f5f9; }
+    .scenario-item.selected { background: #e0f2fe; border-color: #7dd3fc; }
+    .scenario-item.is-active-lesson { border-left: 3px solid #22c55e; }
+    .scenario-item strong { display: block; font-size: 0.9rem; }
+    .scenario-meta { display: flex; gap: 0.5rem; font-size: 0.7rem; color: #64748b; flex-wrap: wrap; margin-top: 0.1rem; }
+    .active-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #22c55e; margin-right: 3px; vertical-align: middle; }
+
+    /* ── Detail panel ── */
+    .detail-panel { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+    .detail-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem; }
+    .detail-header h2 { font-size: 1.4rem; font-weight: 600; }
+    .detail-header-meta { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+    .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    @media (max-width: 1000px) { .dashboard-grid { grid-template-columns: 1fr; } }
+    .panel { background: #f8fafc; border-radius: 12px; padding: 1rem; border: 1px solid #eef2f6; }
+    .panel-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.3rem; }
+    .panel-heading h3 { font-size: 0.9rem; font-weight: 600; }
+
+    /* ── App tabs ── */
+    .app-tabs { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.75rem; }
+    .app-tab { padding: 0.3rem 0.8rem; border-radius: 30px; font-size: 0.75rem; font-weight: 500; background: #eef2f6; transition: all 0.1s; display: flex; align-items: center; gap: 0.3rem; border: 2px solid transparent; }
+    .app-tab:hover { background: #e2e8f0; }
+    .app-tab.active { background: #1e293b; color: white; }
+    .app-tab.has-output { border-color: #22c55e; }
+
+    /* ── Schema / fields ── */
+    .schema-card p { font-size: 0.85rem; color: #475569; margin: 0.25rem 0 0.5rem; }
+    .field-list { display: flex; flex-wrap: wrap; gap: 0.2rem; }
+    .field-list code { background: #eef2f6; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.65rem; font-family: monospace; color: #1e293b; }
+
+    /* ── Links ── */
+    .link-stack { display: flex; flex-direction: column; gap: 0.4rem; }
+    .resource-link { display: flex; justify-content: space-between; padding: 0.3rem 0.5rem; background: white; border-radius: 8px; text-decoration: none; color: #1e293b; font-size: 0.8rem; border: 1px solid #e2e8f0; }
+    .resource-link:hover { background: #f1f5f9; }
+    .resource-link small { color: #64748b; font-size: 0.65rem; }
+
+    /* ── Signals ── */
+    .signal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+    .signal { background: white; padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.75rem; border: 1px solid #e2e8f0; }
+    .signal strong { display: block; font-size: 0.65rem; color: #64748b; font-weight: 500; }
+
+    /* ── JSON editor ── */
+    .json-state { font-size: 0.7rem; padding: 0.1rem 0.6rem; border-radius: 30px; background: #dcfce7; color: #166534; }
+    #jsonEditor { height: 180px; width: 100%; font-family: monospace; font-size: 0.7rem; background: #0f172a; color: #e2e8f0; border: none; border-radius: 8px; padding: 0.7rem; }
+    .editor-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
+    .editor-actions button { padding: 0.3rem 1rem; border-radius: 30px; font-weight: 500; font-size: 0.75rem; background: #e2e8f0; transition: background 0.1s; }
+    .editor-actions button:hover { background: #cbd5e1; }
+
+    /* ── Derived files ── */
+    .derived-files { display: flex; flex-direction: column; gap: 0.4rem; }
+    .derived-file { display: flex; justify-content: space-between; align-items: center; background: white; padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.75rem; border: 1px solid #e2e8f0; }
+    .text-button { color: #3b82f6; font-weight: 500; font-size: 0.7rem; background: none; border: none; cursor: pointer; }
+    .text-button:hover { text-decoration: underline; }
+
+    /* ── Media manager ── */
+    .media-manager { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+    .media-manager-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem; }
+    .media-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+    .media-actions input { width: 260px; }
+    .media-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 1.25rem; }
+    @media (max-width: 1000px) { .media-grid { grid-template-columns: 1fr; } }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .form-grid label { font-size: 0.7rem; font-weight: 500; color: #475569; }
+    .notes-label { display: block; font-size: 0.7rem; font-weight: 500; color: #475569; margin-top: 0.5rem; }
+    .media-preview { margin-top: 0.5rem; border-radius: 8px; overflow: hidden; background: #0f172a; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+    .media-preview img, .media-preview iframe { max-width: 100%; max-height: 200px; border: none; }
+    .media-preview a { color: #60a5fa; padding: 0.5rem; }
+    .media-table-wrap { overflow-x: auto; margin-top: 0.5rem; }
+    .media-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+    .media-table th { text-align: left; padding: 0.3rem 0.4rem; color: #64748b; font-weight: 600; border-bottom: 1px solid #e2e8f0; }
+    .media-table td { padding: 0.3rem 0.4rem; border-bottom: 1px solid #eef2f6; vertical-align: middle; }
+    .media-table td small { display: block; color: #94a3b8; font-size: 0.6rem; }
+    .table-actions button { font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 4px; background: #eef2f6; margin-right: 0.2rem; cursor: pointer; }
+    .table-actions button:hover { background: #d1d9e6; }
+    .media-status { margin-top: 0.5rem; font-size: 0.8rem; padding: 0.3rem 0.6rem; border-radius: 8px; background: #f1f5f9; }
+    .media-status.error { background: #fee2e2; color: #991b1b; }
+    .media-status.ok { background: #dcfce7; color: #166534; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div>
+    <p class="eyebrow">Sacred Blueprint</p>
+    <h1>Lesson Orchestrator</h1>
+    <p class="topbar-meta">Δημιουργήθηκε: $(date '+%Y-%m-%d %H:%M') · $TOTAL μαθήματα</p>
+  </div>
+  <div class="topbar-actions">
+    <button class="icon-button" id="importButton" title="Import JSON">↥</button>
+    <button class="icon-button" id="exportButton" title="Export JSON">↧</button>
+    <button class="icon-button" id="refreshButton" title="Refresh page" onclick="location.reload()">↺</button>
+  </div>
+</header>
+
+<div id="activeBanner" class="active-banner" style="display:none">
+  <div>
+    <span class="ab-label">Ενεργό μάθημα</span>
+    <strong id="activeBannerTitle">—</strong>
+    <span class="ab-date" id="activeBannerDate"></span>
+  </div>
+  <button class="activate-btn" id="activateSelectedBtn" type="button">Ενεργοποίηση επιλεγμένου</button>
+</div>
+
+<main class="shell">
+  <section class="workspace">
+    <aside class="sidebar">
+      <div class="search-row">
+        <input id="searchInput" type="search" placeholder="Αναζήτηση μαθήματος..." />
+      </div>
+      <div class="stat-strip" id="stats"></div>
+      <div class="scenario-list" id="scenarioList"></div>
+    </aside>
+
+    <section class="detail-panel">
+      <div class="detail-header">
+        <div>
+          <p class="eyebrow" id="selectedType">Scenario</p>
+          <h2 id="selectedTitle">Επίλεξε μάθημα</h2>
+        </div>
+        <div class="detail-header-meta">
+          <span class="status-pill" id="selectedStatus"></span>
+          <span id="updatedAt" style="font-size:0.72rem;color:#64748b;"></span>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <section class="panel">
+          <div class="panel-heading">
+            <h3>Modules</h3>
+          </div>
+          <div class="app-tabs" id="appTabs"></div>
+          <div class="schema-card" id="schemaSummary"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <h3>Σύνδεσμοι Apps</h3>
+            <button class="text-button" id="copyLinksButton" type="button">Copy</button>
+          </div>
+          <div class="link-stack" id="projectLinks"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <h3>Media Library</h3>
+            <span id="riskLevel"></span>
+          </div>
+          <div class="signal-grid" id="learningSignals"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <h3>JSON Editor</h3>
+            <span class="json-state" id="jsonState">—</span>
+          </div>
+          <textarea id="jsonEditor" spellcheck="false"></textarea>
+          <div class="editor-actions">
+            <button id="applyJsonButton" type="button">Apply</button>
+            <button id="formatJsonButton" type="button">Format</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <h3>Generated Files</h3>
+            <span id="derivedState">—</span>
+          </div>
+          <div class="derived-files" id="derivedFiles"></div>
+        </section>
+      </div>
+    </section>
+  </section>
+
+  <!-- Media Manager -->
+  <section class="media-manager">
+    <div class="media-manager-header">
+      <div>
+        <p class="eyebrow">Media Library</p>
+        <h2>Πολυμέσα & Tags</h2>
+      </div>
+      <div class="media-actions">
+        <input id="githubUrlInput" type="url" placeholder="GitHub raw media_library.json URL" />
+        <button id="fetchGithubButton" type="button">Fetch</button>
+        <button id="exportMediaButton" type="button">Export JSON</button>
       </div>
     </div>
-  \`).join('');
-}
-</script></body></html>
+    <div class="media-grid">
+      <section class="panel">
+        <div class="panel-heading">
+          <h3>Media Entry</h3>
+          <span id="mediaEditState">New</span>
+        </div>
+        <div class="form-grid">
+          <label>ID<input id="mediaIdInput" type="text" placeholder="IMG-xxx" /></label>
+          <label>Τίτλος<input id="mediaTitleInput" type="text" placeholder="Όνομα" /></label>
+          <label>URL<input id="mediaUrlInput" type="url" placeholder="https://..." /></label>
+          <label>Τύπος
+            <select id="mediaTypeInput">
+              <option value="auto">Auto</option>
+              <option value="image">Εικόνα</option>
+              <option value="youtube">YouTube</option>
+              <option value="google_slides">Google Slides</option>
+              <option value="google_drive">Google Drive</option>
+              <option value="notebooklm">NotebookLM</option>
+            </select>
+          </label>
+          <label>Source<input id="mediaSourceInput" type="text" placeholder="imgbb / youtube" /></label>
+          <label>App Context<input id="mediaContextInput" type="text" placeholder="Timeline; UE5" /></label>
+          <label>Unit ID<input id="mediaUnitInput" type="text" placeholder="unit_1" /></label>
+          <label>Tags<input id="mediaTagsInput" type="text" placeholder="ιστορία, φιλοσοφία" /></label>
+          <label>Γλώσσα
+            <select id="mediaLanguageInput">
+              <option value="el">Ελληνικά</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+          <label>Κατάσταση
+            <select id="mediaStatusInput">
+              <option value="active">active</option>
+              <option value="draft">draft</option>
+            </select>
+          </label>
+        </div>
+        <label class="notes-label">Σημειώσεις<textarea id="mediaNotesInput" rows="3" placeholder="οδηγίες χρήσης"></textarea></label>
+        <div class="editor-actions">
+          <button id="saveMediaButton" type="button">Save</button>
+          <button id="clearMediaButton" type="button">Clear</button>
+          <button id="previewMediaButton" type="button">Preview</button>
+        </div>
+        <div class="media-preview" id="mediaPreview"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-heading">
+          <h3>Library</h3>
+          <span id="mediaStats">0 media</span>
+        </div>
+        <div class="search-row">
+          <input id="mediaSearchInput" type="search" placeholder="Αναζήτηση media..." />
+        </div>
+        <div class="media-table-wrap">
+          <table class="media-table">
+            <thead><tr><th>ID</th><th>Τύπος</th><th>Τίτλος</th><th>Tags</th><th>App Context</th><th>Ενέργειες</th></tr></thead>
+            <tbody id="mediaTableBody"></tbody>
+          </table>
+        </div>
+        <div class="media-status" id="mediaStatusMessage">Έτοιμο.</div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<input id="fileInput" type="file" accept=".json" hidden />
+
+<script>
+(function() {
+  'use strict';
+
+  // ── Bootstrap data από bash (ασφαλής φόρτωση) ─────
+  const BOOTSTRAP_SCENARIOS = JSON.parse($SCENARIOS_STR);
+  const BOOTSTRAP_ACTIVE_ID = JSON.parse($ACTIVE_ID_STR);
+  const BOOTSTRAP_ACTIVE_TITLE = JSON.parse($ACTIVE_TITLE_STR);
+  const BOOTSTRAP_ACTIVE_DATE  = JSON.parse($ACTIVE_DATE_STR);
+  const GENERATED_AT = "$(date -u +%Y-%m-%dT%H:%M:%SZ)";
+
+  const storageKey = 'sb-orchestrator-v4';
+
+  const APPS = [
+    { id: 'timeline',      icon: 'TM', name: 'Timeline Explorer',   url: 'https://dporpatonelis-crypto.github.io/Map-Timeline/' },
+    { id: 'investigation', icon: 'IB', name: 'Investigation Board', url: 'https://idea-weaver-board.vercel.app/' },
+    { id: 'history3d',     icon: '3D', name: 'History Explorer 3D', url: 'https://history-explorer-3d.vercel.app/' },
+    { id: 'mindpalace',    icon: 'MP', name: 'Mind Palace Debate',  url: 'https://dporpatonelis-crypto.github.io/mind-palace-cases/' },
+    { id: 'anchor',        icon: 'LA', name: 'Living Anchor',       url: '' },
+    { id: 'books',         icon: 'BK', name: 'Interactive Books',   url: 'https://dporpatonelis-crypto.github.io/interactive-books/index.html' },
+    { id: 'unreal',        icon: 'UE', name: 'Unreal Engine 5',     url: '' },
+    { id: 'notebook',      icon: 'NB', name: 'Notebook Media',      url: '' },
+    { id: 'personalpage',  icon: 'PP', name: 'Personal Page',       url: '' }
+  ];
+
+  const SCHEMAS = {
+    timeline:      { root:'array',  summary:'Array χρονολογικών εγγραφών.',        fields:['year','title','desc','location','lat','lng'] },
+    investigation: { root:'object', summary:'Topic + clues (evidence/suspect/note).', fields:['topic','clues[].title','clues[].type'] },
+    history3d:     { root:'object', summary:'Characters, dialogs, facts, screens.',  fields:['characters[]','dialogs[]','facts[]','screens'] },
+    mindpalace:    { root:'object', summary:'Investigation Board + Mind Palace.',    fields:['case_id','investigation_board','mind_palace'] },
+    anchor:        { root:'object', summary:'Metadata + anchors με 3 layers.',       fields:['metadata','anchors[].phrase','anchors[].layers'] },
+    books:         { root:'object', summary:'Σελίδες βιβλίου.',                      fields:['pages[].number','pages[].type','pages[].title'] },
+    unreal:        { root:'object', summary:'UE5 scenario (3 αρχεία).',              fields:['id','version','characters','acts[].dialogues'] },
+    notebook:      { root:'object', summary:'Notebook chapters με media skeleton.', fields:['title','chapters[].html','chapters[].media'] },
+    personalpage:  { root:'object', summary:'Hub chapters με παιδαγωγικά notes.',   fields:['title','chapters[].html','chapters[].stickies'] }
+  };
+
+  // ── State ────────────────────────────────────────────
+  function loadSavedMedia() {
+    try { return JSON.parse(localStorage.getItem(storageKey + '-media') || 'null'); } catch { return null; }
+  }
+  function saveMedia(library) {
+    try { localStorage.setItem(storageKey + '-media', JSON.stringify(library)); } catch {}
+  }
+
+  const data = {
+    scenarios: BOOTSTRAP_SCENARIOS,
+    mediaLibrary: loadSavedMedia() || { meta: { last_updated: today(), source: 'Local' }, media: [] }
+  };
+
+  let selectedId  = BOOTSTRAP_ACTIVE_ID || (data.scenarios[0]?.id);
+  let selectedApp = 'unreal';
+  let editingMediaId = null;
+
+  // ── DOM ──────────────────────────────────────────────
+  const el = id => document.getElementById(id);
+
+  // ── Utils ────────────────────────────────────────────
+  function today() { return new Date().toISOString().slice(0, 10); }
+  function esc(s)  { return String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;'); }
+  function escA(s) { return esc(s).replaceAll('\`','&#096;'); }
+
+  function getScenario()   { return data.scenarios.find(s => s.id === selectedId) || data.scenarios[0]; }
+  function getOutput()     {
+    const s = getScenario();
+    if (!s) return null;
+    return (s.appOutputs || {})[selectedApp] || null;
+  }
+  function getMediaById(id){ return (data.mediaLibrary?.media || []).find(i => i.media_id === id); }
+
+  // ── Active banner ────────────────────────────────────
+  function renderActiveBanner() {
+    const banner = el('activeBanner');
+    if (!banner) return;
+    if (BOOTSTRAP_ACTIVE_ID) {
+      banner.style.display = 'flex';
+      const t = el('activeBannerTitle');
+      const d = el('activeBannerDate');
+      if (t) t.textContent = BOOTSTRAP_ACTIVE_TITLE;
+      if (d) d.textContent = BOOTSTRAP_ACTIVE_DATE ? '· ' + BOOTSTRAP_ACTIVE_DATE.slice(0,10) : '';
+    }
+  }
+
+  // ── Stats ────────────────────────────────────────────
+  function renderStats() {
+    const outputs = data.scenarios.reduce((n, s) => n + Object.keys(s.appOutputs || {}).length, 0);
+    const media   = (data.mediaLibrary?.media || []).filter(i => i.status === 'active').length;
+    const statsEl = el('stats');
+    if (statsEl) statsEl.innerHTML = \`
+      <div class="stat"><strong>\${data.scenarios.length}</strong><span>Μαθήματα</span></div>
+      <div class="stat"><strong>\${outputs}</strong><span>Modules</span></div>
+      <div class="stat"><strong>\${media}</strong><span>Media</span></div>
+    \`;
+  }
+
+  // ── Scenario list ─────────────────────────────────────
+  function renderScenarioList() {
+    const q = (el('searchInput')?.value || '').toLowerCase();
+    const list = el('scenarioList');
+    if (!list) return;
+    const filtered = data.scenarios.filter(s =>
+      [s.title, s.type, s.status, ...(s.tags||[])].join(' ').toLowerCase().includes(q)
+    );
+    list.innerHTML = filtered.map(s => \`
+      <button class="scenario-item \${s.id === selectedId ? 'selected' : ''} \${s.id === BOOTSTRAP_ACTIVE_ID ? 'is-active-lesson' : ''}"
+              data-id="\${escA(s.id)}" type="button">
+        <strong>\${s.id === BOOTSTRAP_ACTIVE_ID ? '<span class="active-dot"></span>' : ''}\${esc(s.title)}</strong>
+        <div class="scenario-meta">
+          <span class="badge">\${esc(s.status)}</span>
+          <span>\${Object.keys(s.appOutputs||{}).length} modules</span>
+          <span>\${esc(s.updatedAt||'')}</span>
+        </div>
+      </button>
+    \`).join('');
+  }
+
+  // ── Detail ────────────────────────────────────────────
+  function renderDetail() {
+    const s = getScenario();
+    if (!s) return;
+    if (!SCHEMAS[selectedApp]) selectedApp = 'unreal';
+
+    if (el('selectedType'))   el('selectedType').textContent   = s.type || 'Theology';
+    if (el('selectedTitle'))  el('selectedTitle').textContent  = s.title;
+    if (el('selectedStatus')) {
+      el('selectedStatus').textContent = s.status;
+      el('selectedStatus').className   = \`status-pill status-\${s.status}\`;
+    }
+    if (el('updatedAt')) el('updatedAt').textContent = s.updatedAt ? \`Updated \${s.updatedAt}\` : '';
+
+    renderAppTabs(s);
+    renderSchemaSummary();
+    renderLinks(s);
+    renderMediaSummary();
+    renderJsonEditor();
+    renderDerivedFiles();
+  }
+
+  function renderAppTabs(s) {
+    const outputs = new Set(Object.keys(s.appOutputs || {}));
+    const tabs = el('appTabs');
+    if (!tabs) return;
+    tabs.innerHTML = APPS.map(a => \`
+      <button class="app-tab \${a.id === selectedApp ? 'active' : ''} \${outputs.has(a.id) ? 'has-output' : ''}"
+              data-app="\${a.id}" type="button">
+        <span>\${a.icon}</span> \${a.name}
+      </button>
+    \`).join('');
+  }
+
+  function renderSchemaSummary() {
+    const app    = APPS.find(a => a.id === selectedApp);
+    const schema = SCHEMAS[selectedApp];
+    const card   = el('schemaSummary');
+    if (!card || !app || !schema) return;
+    card.innerHTML = \`
+      <div><strong>\${esc(app.name)}</strong> <span class="badge">\${schema.root}</span></div>
+      <p>\${esc(schema.summary)}</p>
+      <div class="field-list">\${schema.fields.map(f => \`<code>\${esc(f)}</code>\`).join('')}</div>
+    \`;
+  }
+
+  function renderLinks(s) {
+    const app   = APPS.find(a => a.id === selectedApp);
+    const links = [...(s.links || [])];
+    if (app?.url) links.unshift({ label: app.name, kind: 'App', url: app.url });
+    const stack = el('projectLinks');
+    if (!stack) return;
+    stack.innerHTML = links.length
+      ? links.map(l => \`<a class="resource-link" href="\${escA(l.url)}" target="_blank" rel="noreferrer"><span>\${esc(l.label)}</span><small>\${esc(l.kind||'')}</small></a>\`).join('')
+      : '<p style="font-size:0.8rem;color:#94a3b8;">Δεν υπάρχουν σύνδεσμοι.</p>';
+  }
+
+  function renderMediaSummary() {
+    const active = (data.mediaLibrary?.media || []).filter(i => i.status === 'active').length;
+    if (el('riskLevel')) el('riskLevel').textContent = \`\${active} active\`;
+    const signals = el('learningSignals');
+    if (signals) signals.innerHTML = \`
+      <div class="signal"><strong>Active media</strong><span>\${active}</span></div>
+      <div class="signal"><strong>Source</strong><span>\${esc(data.mediaLibrary?.meta?.source || 'Local')}</span></div>
+      <div class="signal"><strong>Updated</strong><span>\${esc(data.mediaLibrary?.meta?.last_updated || '')}</span></div>
+      <div class="signal"><strong>Dashboard</strong><span>\${GENERATED_AT.slice(0,10)}</span></div>
+    \`;
+  }
+
+  function renderJsonEditor() {
+    const output = getOutput();
+    const editor = el('jsonEditor');
+    if (!editor) return;
+    editor.value = output ? JSON.stringify(output, null, 2) : '// Δεν υπάρχει output για αυτό το module.';
+    validateEditor();
+  }
+
+  function renderDerivedFiles() {
+    const output = getOutput();
+    const filesEl = el('derivedFiles');
+    const stateEl = el('derivedState');
+    if (!filesEl) return;
+    if (!output) { filesEl.innerHTML = '<p style="font-size:0.8rem;color:#94a3b8">Χωρίς output.</p>'; return; }
+
+    const files = selectedApp === 'unreal'
+      ? [
+          { name: \`scenario_\${output.id||'unreal'}.json\`,  content: output },
+          { name: \`assets_\${output.id||'unreal'}.json\`,    content: buildAssets(output) },
+          { name: \`manifest_\${output.id||'unreal'}.json\`,  content: buildManifest(output) }
+        ]
+      : [{ name: \`\${selectedApp}_\${today()}.json\`, content: output }];
+
+    if (stateEl) stateEl.textContent = \`\${files.length} file\${files.length > 1 ? 's' : ''}\`;
+    filesEl.innerHTML = files.map(f => \`
+      <div class="derived-file">
+        <div><strong>\${esc(f.name)}</strong> <span class="badge">\${Array.isArray(f.content)?'array':'object'}</span></div>
+        <button class="text-button" data-copy-file="\${escA(f.name)}" type="button">Copy</button>
+      </div>
+    \`).join('');
+  }
+
+  // ── Builders ─────────────────────────────────────────
+  function buildAssets(scenario) {
+    const assets = { _comment: \`Assets for \${scenario.id}\`, assets: {} };
+    (scenario.acts || []).forEach(act => {
+      (act.dialogues || []).forEach(d => {
+        const m = (d.audioUrl||'').match(/\{\{(\w+)\}\}/);
+        if (m) assets.assets[m[1]] = { type:'audio', label:\`\${d.speaker} — \${act.title}\`, url:'', speaker:d.speaker, dialogueId:d.id };
+      });
+    });
+    return assets;
+  }
+
+  function buildManifest(scenario) {
+    return { id:scenario.id, title:scenario.title, subtitle:scenario.subtitle||'', description:scenario.subtitle||'', scenarioFile:\`scenarios/\${scenario.id}/scenario.json\`, characters:Object.keys(scenario.characters||{}), status:'draft' };
+  }
+
+  // ── Validation ────────────────────────────────────────
+  function validateEditor() {
+    const editorEl = el('jsonEditor');
+    const stateEl  = el('jsonState');
+    if (!editorEl || !stateEl) return { parsed: null };
+    try {
+      const parsed = JSON.parse(editorEl.value);
+      stateEl.textContent = 'Valid';
+      stateEl.style.background = '#86efac';
+      return { parsed };
+    } catch(e) {
+      stateEl.textContent = e.message.slice(0, 40);
+      stateEl.style.background = '#fca5a5';
+      return { parsed: null };
+    }
+  }
+
+  // ── Media ─────────────────────────────────────────────
+  function renderMediaTable() {
+    const q = (el('mediaSearchInput')?.value || '').toLowerCase();
+    const media = (data.mediaLibrary?.media || []);
+    const filtered = q ? media.filter(i => [i.media_id,i.type,i.title,...(i.tags||[]),...(i.app_context||[])].join(' ').toLowerCase().includes(q)) : media;
+    if (el('mediaStats')) el('mediaStats').textContent = \`\${media.length} media\`;
+    const tbody = el('mediaTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = filtered.length
+      ? filtered.map(i => \`
+          <tr>
+            <td><code>\${esc(i.media_id)}</code></td>
+            <td><span class="badge">\${esc(i.type)}</span></td>
+            <td><strong>\${esc(i.title)}</strong><small>\${esc(i.date_added)} · \${esc(i.status)}</small></td>
+            <td>\${(i.tags||[]).map(t=>\`<span class="badge">\${esc(t)}</span>\`).join('')}</td>
+            <td>\${(i.app_context||[]).map(a=>\`<span class="badge">\${esc(a)}</span>\`).join('')}</td>
+            <td class="table-actions">
+              <button data-media-action="edit"   data-media-id="\${escA(i.media_id)}" type="button">Edit</button>
+              <button data-media-action="copy"   data-media-id="\${escA(i.media_id)}" type="button">URL</button>
+              <button data-media-action="delete" data-media-id="\${escA(i.media_id)}" type="button">Del</button>
+            </td>
+          </tr>\`).join('')
+      : \`<tr><td colspan="6">Δεν βρέθηκαν media</td></tr>\`;
+  }
+
+  function formToMediaItem() {
+    return {
+      media_id:        el('mediaIdInput')?.value.trim()      || '',
+      type:            el('mediaTypeInput')?.value           || 'image',
+      title:           el('mediaTitleInput')?.value.trim()   || '',
+      url:             el('mediaUrlInput')?.value.trim()     || '',
+      source_platform: el('mediaSourceInput')?.value.trim() || '',
+      app_context:    (el('mediaContextInput')?.value||'').split(';').map(s=>s.trim()).filter(Boolean),
+      unit_id:         el('mediaUnitInput')?.value.trim()    || '',
+      tags:           (el('mediaTagsInput')?.value||'').split(',').map(s=>s.trim()).filter(Boolean),
+      language:        el('mediaLanguageInput')?.value       || 'el',
+      notes:           el('mediaNotesInput')?.value          || '',
+      date_added:      editingMediaId ? (getMediaById(editingMediaId)?.date_added || today()) : today(),
+      status:          el('mediaStatusInput')?.value         || 'active'
+    };
+  }
+
+  function saveMediaFromForm() {
+    const item = formToMediaItem();
+    if (!item.media_id || !item.title || !item.url) { setMediaStatus('Συμπλήρωσε ID, τίτλο και URL.','error'); return; }
+    const media = data.mediaLibrary.media;
+    const idx   = media.findIndex(e => e.media_id === item.media_id);
+    if (idx >= 0 && editingMediaId !== item.media_id) { setMediaStatus(\`ID \${item.media_id} υπάρχει.\`,'error'); return; }
+    if (idx >= 0) media[idx] = item; else media.push(item);
+    data.mediaLibrary.meta.last_updated = today();
+    saveMedia(data.mediaLibrary);
+    clearMediaForm();
+    renderMediaTable();
+    renderStats();
+    setMediaStatus(\`\${idx>=0?'Ενημερώθηκε':'Προστέθηκε'}: \${item.media_id}\`,'ok');
+  }
+
+  function editMedia(id) {
+    const i = getMediaById(id);
+    if (!i) return;
+    editingMediaId = id;
+    if (el('mediaEditState'))    el('mediaEditState').textContent = \`Editing \${id}\`;
+    if (el('mediaIdInput'))      el('mediaIdInput').value      = i.media_id;
+    if (el('mediaTitleInput'))   el('mediaTitleInput').value   = i.title;
+    if (el('mediaUrlInput'))     el('mediaUrlInput').value     = i.url;
+    if (el('mediaTypeInput'))    el('mediaTypeInput').value    = i.type;
+    if (el('mediaSourceInput'))  el('mediaSourceInput').value  = i.source_platform||'';
+    if (el('mediaContextInput')) el('mediaContextInput').value = (i.app_context||[]).join('; ');
+    if (el('mediaUnitInput'))    el('mediaUnitInput').value    = i.unit_id||'';
+    if (el('mediaTagsInput'))    el('mediaTagsInput').value    = (i.tags||[]).join(', ');
+    if (el('mediaLanguageInput'))el('mediaLanguageInput').value= i.language||'el';
+    if (el('mediaStatusInput'))  el('mediaStatusInput').value  = i.status||'active';
+    if (el('mediaNotesInput'))   el('mediaNotesInput').value   = i.notes||'';
+    if (el('saveMediaButton'))   el('saveMediaButton').textContent = 'Update';
+  }
+
+  function clearMediaForm() {
+    editingMediaId = null;
+    ['mediaIdInput','mediaTitleInput','mediaUrlInput','mediaSourceInput','mediaContextInput','mediaUnitInput','mediaTagsInput','mediaNotesInput'].forEach(id => { if(el(id)) el(id).value=''; });
+    if(el('mediaTypeInput'))    el('mediaTypeInput').value='auto';
+    if(el('mediaLanguageInput'))el('mediaLanguageInput').value='el';
+    if(el('mediaStatusInput'))  el('mediaStatusInput').value='active';
+    if(el('mediaEditState'))    el('mediaEditState').textContent='New';
+    if(el('saveMediaButton'))   el('saveMediaButton').textContent='Save';
+    if(el('mediaPreview'))      el('mediaPreview').innerHTML='';
+  }
+
+  function deleteMedia(id) {
+    data.mediaLibrary.media = data.mediaLibrary.media.filter(i => i.media_id !== id);
+    data.mediaLibrary.meta.last_updated = today();
+    if (editingMediaId === id) clearMediaForm();
+    saveMedia(data.mediaLibrary);
+    renderMediaTable();
+    renderStats();
+    setMediaStatus(\`Διαγράφηκε: \${id}\`,'ok');
+  }
+
+  function previewMedia() {
+    const item = formToMediaItem();
+    if (!item.url) { setMediaStatus('Δώσε URL.','error'); return; }
+    let html = \`<a href="\${escA(item.url)}" target="_blank">Άνοιγμα URL</a>\`;
+    if (item.type === 'image') html = \`<img src="\${escA(item.url)}" alt="\${escA(item.title)}" />\`;
+    else if (['youtube','google_slides','google_drive'].includes(item.type)) html = \`<iframe src="\${escA(item.url)}" title="\${escA(item.title)}"></iframe>\`;
+    if (el('mediaPreview')) el('mediaPreview').innerHTML = html;
+  }
+
+  function exportMediaLibrary() {
+    const blob = new Blob([JSON.stringify({ meta: data.mediaLibrary.meta, media: data.mediaLibrary.media }, null, 2)], { type:'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = \`media_library_\${today()}.json\`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    setMediaStatus('Export ολοκληρώθηκε.','ok');
+  }
+
+  async function fetchMediaFromGithub() {
+    const url = el('githubUrlInput')?.value.trim();
+    if (!url) { setMediaStatus('Βάλε GitHub raw URL.','error'); return; }
+    if (!/^https:\/\/(raw\.githubusercontent\.com|gist\.githubusercontent\.com)\//.test(url)) {
+      setMediaStatus('Χρησιμοποίησε raw.githubusercontent.com URL.','error'); return;
+    }
+    setMediaStatus('Φόρτωση...','ok');
+    try {
+      const res = await fetch(url, { cache:'no-store' });
+      if (!res.ok) throw new Error(\`HTTP \${res.status}\`);
+      const payload = JSON.parse(await res.text());
+      const source  = Array.isArray(payload) ? { media: payload } : payload;
+      data.mediaLibrary = { meta: { last_updated: today(), source: url }, media: (source.media || []) };
+      saveMedia(data.mediaLibrary);
+      renderMediaTable();
+      renderStats();
+      renderMediaSummary();
+      setMediaStatus(\`Φορτώθηκαν \${data.mediaLibrary.media.length} media.\`,'ok');
+    } catch(e) { setMediaStatus(\`Αποτυχία: \${e.message}\`,'error'); }
+  }
+
+  function setMediaStatus(msg, mode='ok') {
+    const el2 = el('mediaStatusMessage');
+    if (el2) { el2.textContent = msg; el2.className = \`media-status \${mode}\`; }
+  }
+
+  // ── Import / Export ───────────────────────────────────
+  function downloadJson(filename, payload) {
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  // ── Events ────────────────────────────────────────────
+  function bindEvents() {
+    el('scenarioList')?.addEventListener('click', e => {
+      const item = e.target.closest('.scenario-item');
+      if (!item) return;
+      selectedId = item.dataset.id;
+      renderScenarioList();
+      renderDetail();
+    });
+
+    el('appTabs')?.addEventListener('click', e => {
+      const tab = e.target.closest('.app-tab');
+      if (!tab) return;
+      selectedApp = tab.dataset.app;
+      renderDetail();
+    });
+
+    el('searchInput')?.addEventListener('input', renderScenarioList);
+
+    el('jsonEditor')?.addEventListener('input', validateEditor);
+
+    el('applyJsonButton')?.addEventListener('click', () => {
+      const { parsed } = validateEditor();
+      if (!parsed) return;
+      const s = getScenario();
+      if (!s) return;
+      if (!s.appOutputs) s.appOutputs = {};
+      s.appOutputs[selectedApp] = parsed;
+      renderDerivedFiles();
+    });
+
+    el('formatJsonButton')?.addEventListener('click', () => {
+      const { parsed } = validateEditor();
+      if (parsed && el('jsonEditor')) el('jsonEditor').value = JSON.stringify(parsed, null, 2);
+    });
+
+    el('importButton')?.addEventListener('click', () => el('fileInput')?.click());
+    el('fileInput')?.addEventListener('change', async () => {
+      const [file] = el('fileInput').files;
+      if (!file) return;
+      try {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        // Αν έχει scenarios key, merge
+        if (Array.isArray(parsed.scenarios)) {
+          parsed.scenarios.forEach(s => {
+            const idx = data.scenarios.findIndex(existing => existing.id === s.id);
+            if (idx >= 0) data.scenarios[idx] = s; else data.scenarios.push(s);
+          });
+        }
+        if (parsed.mediaLibrary) {
+          data.mediaLibrary = parsed.mediaLibrary;
+          saveMedia(data.mediaLibrary);
+        }
+        render();
+      } catch(e) { alert('Import failed: ' + e.message); }
+      finally { el('fileInput').value = ''; }
+    });
+
+    el('exportButton')?.addEventListener('click', () => {
+      downloadJson('orchestrator-export.json', { scenarios: data.scenarios, mediaLibrary: data.mediaLibrary });
+    });
+
+    el('copyLinksButton')?.addEventListener('click', async () => {
+      const s = getScenario();
+      const text = (s?.links || []).map(l => \`\${l.label}: \${l.url}\`).join('\\n');
+      await navigator.clipboard.writeText(text);
+      el('copyLinksButton').textContent = 'Copied';
+      setTimeout(() => { el('copyLinksButton').textContent = 'Copy'; }, 1000);
+    });
+
+    el('derivedFiles')?.addEventListener('click', async e => {
+      const btn = e.target.closest('[data-copy-file]');
+      if (!btn) return;
+      const output = getOutput();
+      const name = btn.dataset.copyFile;
+      let content = output;
+      if (name.startsWith('assets_'))   content = buildAssets(output);
+      if (name.startsWith('manifest_')) content = buildManifest(output);
+      await navigator.clipboard.writeText(JSON.stringify(content, null, 2));
+      btn.textContent = 'Copied';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 1000);
+    });
+
+    el('activateSelectedBtn')?.addEventListener('click', () => {
+      const s = getScenario();
+      if (!s) return;
+      alert(\`Για να ενεργοποιήσεις το "\${s.title}":\\n\\nbash workflows/activate_lesson.sh \${s.lesson_dir || 'lessons/' + s.id}\`);
+    });
+
+    el('saveMediaButton')?.addEventListener('click', saveMediaFromForm);
+    el('clearMediaButton')?.addEventListener('click', clearMediaForm);
+    el('previewMediaButton')?.addEventListener('click', previewMedia);
+    el('exportMediaButton')?.addEventListener('click', exportMediaLibrary);
+    el('fetchGithubButton')?.addEventListener('click', fetchMediaFromGithub);
+    el('mediaSearchInput')?.addEventListener('input', renderMediaTable);
+
+    el('mediaTableBody')?.addEventListener('click', async e => {
+      const btn = e.target.closest('[data-media-action]');
+      if (!btn) return;
+      const id = btn.dataset.mediaId;
+      if (btn.dataset.mediaAction === 'edit')   editMedia(id);
+      if (btn.dataset.mediaAction === 'delete') deleteMedia(id);
+      if (btn.dataset.mediaAction === 'copy') {
+        const i = getMediaById(id);
+        if (i) { await navigator.clipboard.writeText(i.url); setMediaStatus(\`URL copied: \${id}\`,'ok'); }
+      }
+    });
+  }
+
+  // ── Render all ────────────────────────────────────────
+  function render() {
+    renderActiveBanner();
+    renderStats();
+    renderScenarioList();
+    renderDetail();
+    renderMediaTable();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    bindEvents();
+    render();
+  });
+})();
+</script>
+</body>
+</html>
 HTMLEOF
-echo "✓ Dashboard: $OUT"
+
+echo "✓ Dashboard: $OUT ($TOTAL μαθήματα)"

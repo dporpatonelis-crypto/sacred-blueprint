@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lego Educational Scenarios | Unreal Maturity & Full Component Editor</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+            color: #0f172a;
+        }
+        .sub {
+            color: #475569;
+            margin-bottom: 2rem;
+            border-left: 4px solid #3b82f6;
+            padding-left: 1rem;
+        }
+        .active-template-bar {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 60px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .active-template-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .active-template-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 16px;
+            border-radius: 40px;
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            background: #f1f5f9;
+            transition: all 0.2s;
+        }
+        .tab.active {
+            background: #3b82f6;
+            color: white;
+        }
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        button {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        button.primary {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+        button.primary:hover {
+            background: #2563eb;
+        }
+        button.danger {
+            background: #fee2e2;
+            border-color: #fecaca;
+            color: #991b1b;
+        }
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            background: #e2e8f0;
+        }
+        .filter-btn.active-filter {
+            background: #3b82f6;
+            color: white;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 4px 6px -2px rgba(0,0,0,0.05);
+            padding: 1.2rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        .card.active-component {
+            border: 2px solid #3b82f6;
+            background: #f0f9ff;
+        }
+        .card h3 {
+            margin: 0 0 12px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .card h3 input {
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 6px 10px;
+            flex: 1;
+        }
+        .badge {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 30px;
+            white-space: nowrap;
+        }
+        .maturity-0 { background: #f1f5f9; color: #334155; }
+        .maturity-1 { background: #fef9c3; color: #854d0e; }
+        .maturity-2 { background: #fed7aa; color: #9a3412; }
+        .maturity-3 { background: #bbf7d0; color: #166534; }
+        select, textarea, input {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 16px;
+            border: 1px solid #cbd5e1;
+            margin-top: 6px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
+        .form-row {
+            margin-bottom: 12px;
+        }
+        .form-row label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #475569;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .tag {
+            background: #e2e8f0;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tag-remove {
+            cursor: pointer;
+            font-weight: bold;
+            color: #ef4444;
+        }
+        .add-tag {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .add-tag input {
+            flex: 1;
+            margin: 0;
+        }
+        .unreal-checklist {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+        .unreal-checklist h4 {
+            margin: 0 0 10px 0;
+            font-size: 0.85rem;
+            color: #1e40af;
+        }
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0;
+            font-size: 0.8rem;
+        }
+        .checklist-item input {
+            width: 18px;
+            margin: 0;
+        }
+        .checklist-item label {
+            flex: 1;
+            cursor: pointer;
+        }
+        .custom-checklist {
+            margin-top: 10px;
+        }
+        .custom-checklist-item {
+            display: flex;
+            gap: 6px;
+            margin: 6px 0;
+            align-items: center;
+        }
+        .custom-checklist-item input {
+            flex: 1;
+            margin: 0;
+        }
+        .template-card {
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .template-card.active-template-card {
+            border: 3px solid #3b82f6;
+            background: #f0f9ff;
+        }
+        .template-header {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        @media (min-width: 768px) {
+            .template-header {
+                flex-direction: row;
+            }
+            .template-info { flex: 2; }
+            .template-components { flex: 3; }
+        }
+        .template-components {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 16px;
+        }
+        .component-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            padding: 6px;
+            border-radius: 12px;
+            background: white;
+        }
+        .template-metrics {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .metric {
+            background: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+        .session-log {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 20px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            border-bottom: 1px solid #334155;
+            padding: 8px 0;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        hr { margin: 24px 0; }
+        .status-badge {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 10px;
+            margin-right: 6px;
+        }
+        .component-in-template {
+            background: #dbeafe;
+            color: #1e40af;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        .tech-notes {
+            background: #fef9c3;
+            padding: 12px;
+            border-radius: 20px;
+            margin: 20px 0;
+        }
+        .session-builder {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+        .small-note {
+            font-size: 0.7rem;
+            color: #64748b;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🧩 Lego Educational Scenarios</h1>
+    <div class="sub">Πλήρης επεξεργασία | Unreal Maturity Tracking | Δυναμικά Components</div>
+
+    <div id="activeTemplateBar" class="active-template-bar">
+        <div class="active-template-info">
+            <span>🎯 ΕΝΕΡΓΟ ΣΕΝΑΡΙΟ:</span>
+            <span id="activeTemplateName" class="active-template-name">Κανένα</span>
+        </div>
+        <div>
+            <button id="clearActiveTemplateBtn" class="clear-active-btn" style="background:rgba(255,255,255,0.2); color:white; border:1px solid rgba(255,255,255,0.5);">✖️ Απενεργοποίηση</button>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active" data-tab="components">🧩 Components</div>
+        <div class="tab" data-tab="templates">📋 Templates</div>
+        <div class="tab" data-tab="sessions">🏫 Τάξεις & Συνεδρίες</div>
+    </div>
+
+    <div class="toolbar">
+        <button id="exportBtn" class="primary">📤 Εξαγωγή JSON</button>
+        <button id="importBtn">📥 Εισαγωγή JSON</button>
+        <button id="resetBtn">🔄 Επαναφορά</button>
+        <input type="file" id="importFile" accept=".json" style="display: none;">
+    </div>
+
+    <!-- TAB 1: COMPONENTS -->
+    <div id="componentsTab" class="tab-content">
+        <div class="session-builder">
+            <h3>📦 Components</h3>
+            <div class="filter-buttons">
+                <button id="showAllComponentsBtn" class="filter-btn active-filter">📋 Όλα τα components</button>
+                <button id="showActiveTemplateComponentsBtn" class="filter-btn">🎯 Μόνο ενεργού σεναρίου</button>
+            </div>
+            <button id="addComponentBtn" class="primary" style="margin-bottom: 16px;">+ Προσθήκη νέου component</button>
+            <div id="componentsGrid" class="grid"></div>
+        </div>
+    </div>
+
+    <!-- TAB 2: TEMPLATES -->
+    <div id="templatesTab" class="tab-content" style="display: none;">
+        <div class="session-builder">
+            <h3>📜 Σενάρια (Templates)</h3>
+            <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+                <input type="text" id="newTemplateName" placeholder="Όνομα νέου σεναρίου" style="flex:1">
+                <textarea id="newTemplateDesc" placeholder="Περιγραφή" rows="1" style="flex:2"></textarea>
+                <button id="addTemplateBtn" class="primary">+ Δημιουργία</button>
+            </div>
+            <div id="templatesList"></div>
+        </div>
+    </div>
+
+    <!-- TAB 3: SESSIONS -->
+    <div id="sessionsTab" class="tab-content" style="display: none;">
+        <div class="session-builder">
+            <h3>🏫 Συνεδρίες ανά τάξη</h3>
+            <div style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+                <input type="text" id="newSessionName" placeholder="Όνομα τάξης" style="flex:2">
+                <select id="sessionTemplateSelect" style="flex:1"></select>
+                <button id="addSessionBtn" class="primary">+ Δημιουργία</button>
+            </div>
+            <div id="sessionsList"></div>
+        </div>
+        <h3>📋 Ιστορικό εκτέλεσης</h3>
+        <div id="sessionLog" class="session-log">Δεν υπάρχουν καταγραφές.</div>
+    </div>
+
+    <hr>
+    <h2>📓 Γενικές Τεχνικές Σημειώσεις</h2>
+    <div class="tech-notes">
+        <textarea id="globalTechNotes" rows="3" style="width:100%; font-family:monospace;" placeholder="Unreal conflicts, blueprints, workarounds, MetaHuman notes..."></textarea>
+    </div>
+</div>
+
+<script>
+    // ------------------- DATA MODEL -------------------
+    let components = [];
+    let templates = [];
+    let sessions = [];
+    let globalTechNotes = "";
+    let activeTemplateId = null;
+    let componentFilter = "all";
+
+    // Default Components με Unreal-specific fields
+    const defaultComponents = [
+        { id: "web_book", name: "Ψηφιακό Βιβλίο (Πράξεις)", type: "web", maturity: 3, tags: ["βιβλίο", "παύλος"], techNotes: "React flipbook", unrealSteps: {} },
+        { id: "web_debate_plato", name: "Debate με Πλάτωνα", type: "web", maturity: 3, tags: ["debate", "πλάτωνας"], techNotes: "Interactive branching dialogue", unrealSteps: {} },
+        { id: "web_debate_athanasius", name: "Debate με Αθανάσιο", type: "web", maturity: 2, tags: ["debate", "αθανάσιος"], techNotes: "Σε ανάπτυξη", unrealSteps: {} },
+        { id: "web_puzzle_matching", name: "Puzzle Αντιστοίχισης", type: "web", maturity: 3, tags: ["puzzle"], techNotes: "Drag & drop", unrealSteps: {} },
+        { id: "discovery_odyssey_athens", name: "Discovery Tour - Άρειος Πάγος", type: "discovery", maturity: 2, tags: ["odyssey", "αθήνα"], techNotes: "Ακριβής τοποθεσία", unrealSteps: {} },
+        { id: "unreal_vatican_basic", name: "Unreal - Βατικανό", type: "unreal", maturity: 1, tags: ["unreal", "βατικανό"], techNotes: "Από Fab Medieval Village", unrealSteps: { levelStreaming: false, levelSequence: false, triggers: false, metaHuman: false, customSteps: [] } },
+        { id: "unreal_areopagus_basic", name: "Unreal - Άρειος Πάγος", type: "unreal", maturity: 0, tags: ["unreal", "αθήνα"], techNotes: "Assets αγορασμένα", unrealSteps: { levelStreaming: false, levelSequence: false, triggers: false, metaHuman: false, customSteps: [] } }
+    ];
+
+    const defaultTemplates = [
+        { id: "template_paul_athens", name: "Παύλος στην Αθήνα", description: "Πράξεις 17, συνάντηση με Πλάτωνα", components: ["web_book", "web_debate_plato", "discovery_odyssey_athens"], notes: "" },
+        { id: "template_athanasius_alex", name: "Αθανάσιος στην Αλεξάνδρεια", description: "Θεολογία, Σύνοδος Νικαίας", components: ["web_debate_athanasius"], notes: "" },
+        { id: "template_interfaith", name: "Διαθρησκειακός Διάλογος", description: "Σύγκριση Πλάτωνα, Παύλου, Αθανασίου", components: ["web_debate_plato", "web_debate_athanasius", "web_puzzle_matching"], notes: "" }
+    ];
+
+    const defaultSessions = [
+        { id: "session_gymnasiou_a", name: "Γυμνάσιο Α - Θρησκευτικά", templateId: "template_paul_athens", date: new Date().toLocaleString(), logs: [] }
+    ];
+
+    function loadFromStorage() {
+        const stored = localStorage.getItem("lego_scenario_tracker_v4");
+        if (stored) {
+            try {
+                const data = JSON.parse(stored);
+                components = data.components || defaultComponents;
+                templates = data.templates || defaultTemplates;
+                sessions = data.sessions || defaultSessions;
+                globalTechNotes = data.globalTechNotes || "";
+                activeTemplateId = data.activeTemplateId || null;
+                componentFilter = data.componentFilter || "all";
+            } catch(e) { resetToDefault(); }
+        } else {
+            resetToDefault();
+        }
+        renderAll();
+    }
+
+    function resetToDefault() {
+        components = JSON.parse(JSON.stringify(defaultComponents));
+        templates = JSON.parse(JSON.stringify(defaultTemplates));
+        sessions = JSON.parse(JSON.stringify(defaultSessions));
+        globalTechNotes = "";
+        activeTemplateId = null;
+        componentFilter = "all";
+        saveToStorage();
+    }
+
+    function saveToStorage() {
+        const data = { components, templates, sessions, globalTechNotes, activeTemplateId, componentFilter };
+        localStorage.setItem("lego_scenario_tracker_v4", JSON.stringify(data));
+    }
+
+    function getActiveTemplate() { return templates.find(t => t.id === activeTemplateId); }
+    function getComponentsInActiveTemplate() {
+        const active = getActiveTemplate();
+        return active ? active.components : [];
+    }
+    function setActiveTemplate(id) { activeTemplateId = id; saveToStorage(); updateActiveTemplateBar(); if (componentFilter === "active_template") renderComponents(); renderTemplates(); }
+    function clearActiveTemplate() { activeTemplateId = null; saveToStorage(); updateActiveTemplateBar(); if (componentFilter === "active_template") renderComponents(); renderTemplates(); }
+    function updateActiveTemplateBar() {
+        const active = getActiveTemplate();
+        document.getElementById("activeTemplateName").innerText = active ? active.name : "Κανένα";
+    }
+
+    // Component CRUD
+    function addComponent() {
+        const newId = "comp_" + Date.now();
+        components.push({
+            id: newId, name: "Νέο Component", type: "web", maturity: 0, tags: [], techNotes: "",
+            unrealSteps: { levelStreaming: false, levelSequence: false, triggers: false, metaHuman: false, customSteps: [] }
+        });
+        saveToStorage();
+        renderComponents(); // εμφανίζεται πάντα γιατί το φίλτρο εφαρμόζεται μετά
+    }
+
+    function updateComponent(compId, field, value) {
+        const comp = components.find(c => c.id === compId);
+        if (comp) {
+            if (field === "tags" && Array.isArray(value)) comp.tags = value;
+            else if (field === "type") comp.type = value;
+            else if (field === "maturity") comp.maturity = parseInt(value);
+            else if (field === "name") comp.name = value;
+            else if (field === "techNotes") comp.techNotes = value;
+            else if (field.startsWith("unreal_")) {
+                const step = field.replace("unreal_", "");
+                comp.unrealSteps[step] = value;
+            }
+            saveToStorage();
+        }
+        renderComponents();
+        renderTemplates();
+    }
+
+    function addCustomStep(compId, stepText) {
+        const comp = components.find(c => c.id === compId);
+        if (comp && stepText.trim()) {
+            if (!comp.unrealSteps.customSteps) comp.unrealSteps.customSteps = [];
+            comp.unrealSteps.customSteps.push({ text: stepText, completed: false });
+            saveToStorage();
+            renderComponents();
+        }
+    }
+
+    function toggleCustomStep(compId, index) {
+        const comp = components.find(c => c.id === compId);
+        if (comp && comp.unrealSteps.customSteps) {
+            comp.unrealSteps.customSteps[index].completed = !comp.unrealSteps.customSteps[index].completed;
+            saveToStorage();
+            renderComponents();
+        }
+    }
+
+    function removeCustomStep(compId, index) {
+        const comp = components.find(c => c.id === compId);
+        if (comp && comp.unrealSteps.customSteps) {
+            comp.unrealSteps.customSteps.splice(index, 1);
+            saveToStorage();
+            renderComponents();
+        }
+    }
+
+    function deleteComponent(compId) {
+        if (!confirm("Διαγραφή component;")) return;
+        components = components.filter(c => c.id !== compId);
+        templates.forEach(t => { t.components = t.components.filter(cid => cid !== compId); });
+        saveToStorage();
+        renderAll();
+    }
+
+    function addTag(compId, tag) {
+        if (!tag.trim()) return;
+        const comp = components.find(c => c.id === compId);
+        if (comp && !comp.tags.includes(tag.trim())) {
+            comp.tags.push(tag.trim());
+            saveToStorage();
+            renderComponents();
+        }
+    }
+
+    function removeTag(compId, tag) {
+        const comp = components.find(c => c.id === compId);
+        if (comp) {
+            comp.tags = comp.tags.filter(t => t !== tag);
+            saveToStorage();
+            renderComponents();
+        }
+    }
+
+    // Template CRUD
+    function addTemplate(name, description) {
+        if (!name) return;
+        templates.push({ id: "template_" + Date.now(), name, description: description || "", components: [], notes: "" });
+        saveToStorage();
+        renderTemplates();
+        updateSessionSelect();
+    }
+
+    function updateTemplate(templateId, field, value) {
+        const t = templates.find(t => t.id === templateId);
+        if (t) { t[field] = value; saveToStorage(); renderTemplates(); if (activeTemplateId === templateId) updateActiveTemplateBar(); }
+    }
+
+    function updateTemplateComponents(templateId, componentIds) {
+        const t = templates.find(t => t.id === templateId);
+        if (t) { t.components = componentIds; saveToStorage(); renderTemplates(); if (activeTemplateId === templateId && componentFilter === "active_template") renderComponents(); }
+    }
+
+    function deleteTemplate(templateId) {
+        if (!confirm("Διαγραφή template;")) return;
+        templates = templates.filter(t => t.id !== templateId);
+        if (activeTemplateId === templateId) clearActiveTemplate();
+        saveToStorage();
+        renderTemplates();
+        renderSessions();
+        updateSessionSelect();
+    }
+
+    // Session CRUD
+    function addSession(name, templateId) {
+        if (!name || !templateId) return;
+        sessions.push({ id: "session_" + Date.now(), name, templateId, date: new Date().toLocaleString(), logs: [] });
+        saveToStorage();
+        renderSessions();
+        renderSessionLogs();
+    }
+
+    function addSessionLog(sessionId, notes, worked, failed) {
+        const session = sessions.find(s => s.id === sessionId);
+        if (session) { session.logs.unshift({ date: new Date().toLocaleString(), notes, worked, failed }); saveToStorage(); renderSessions(); renderSessionLogs(); }
+    }
+
+    function deleteSession(sessionId) {
+        if (!confirm("Διαγραφή συνεδρίας;")) return;
+        sessions = sessions.filter(s => s.id !== sessionId);
+        saveToStorage();
+        renderSessions();
+        renderSessionLogs();
+    }
+
+    function updateSessionSelect() {
+        const select = document.getElementById("sessionTemplateSelect");
+        if (select) select.innerHTML = templates.map(t => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join("");
+    }
+
+    function getTemplateMaturitySummary(template) {
+        const maturities = template.components.map(cid => components.find(c => c.id === cid)?.maturity).filter(m => m !== undefined);
+        if (!maturities.length) return { min: null, max: null, avg: null };
+        return { min: Math.min(...maturities), max: Math.max(...maturities), avg: (maturities.reduce((a,b)=>a+b,0)/maturities.length).toFixed(1) };
+    }
+
+    // RENDER COMPONENTS
+    function renderComponents() {
+        const grid = document.getElementById("componentsGrid");
+        if (!grid) return;
+        let filtered = [...components];
+        if (componentFilter === "active_template" && activeTemplateId) {
+            const activeIds = getComponentsInActiveTemplate();
+            filtered = components.filter(c => activeIds.includes(c.id));
+        }
+        grid.innerHTML = filtered.map(comp => {
+            const isInActive = activeTemplateId && getComponentsInActiveTemplate().includes(comp.id);
+            const isUnreal = comp.type === "unreal";
+            return `
+                <div class="card ${isInActive ? 'active-component' : ''}">
+                    <h3>
+                        <input type="text" value="${escapeHtml(comp.name)}" class="comp-name" data-id="${comp.id}">
+                        <span class="badge maturity-${comp.maturity}">L${comp.maturity}</span>
+                    </h3>
+                    ${isInActive ? '<div class="component-in-template">🎯 Στο ενεργό σενάριο</div>' : ''}
+                    
+                    <div class="form-row">
+                        <label>📱 Τύπος</label>
+                        <select class="comp-type" data-id="${comp.id}">
+                            <option value="web" ${comp.type === "web" ? "selected" : ""}>🌐 Web App</option>
+                            <option value="discovery" ${comp.type === "discovery" ? "selected" : ""}>🏛️ Discovery Tour</option>
+                            <option value="unreal" ${comp.type === "unreal" ? "selected" : ""}>🎮 Unreal Engine</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label>🎯 Επίπεδο ωριμότητας</label>
+                        <select class="comp-maturity" data-id="${comp.id}">
+                            <option value="0" ${comp.maturity === 0 ? "selected" : ""}>L0 - Δοκιμαστικό / Placeholder</option>
+                            <option value="1" ${comp.maturity === 1 ? "selected" : ""}>L1 - Βασική λειτουργία</option>
+                            <option value="2" ${comp.maturity === 2 ? "selected" : ""}>L2 - Σταθερό με περιορισμούς</option>
+                            <option value="3" ${comp.maturity === 3 ? "selected" : ""}>L3 - Πλήρες / Έτοιμο</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label>🏷️ Tags</label>
+                        <div class="tags-container" id="tags-${comp.id}">
+                            ${comp.tags.map(t => `<span class="tag">${escapeHtml(t)} <span class="tag-remove" data-comp="${comp.id}" data-tag="${escapeHtml(t)}">✖</span></span>`).join("")}
+                        </div>
+                        <div class="add-tag">
+                            <input type="text" id="newtag-${comp.id}" placeholder="Νέο tag">
+                            <button class="add-tag-btn" data-id="${comp.id}">+</button>
+                        </div>
+                    </div>
+                    
+                    ${isUnreal ? `
+                    <div class="unreal-checklist">
+                        <h4>🎮 Unreal Engine - Διαδικασία Ωρίμανσης</h4>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="unreal-step" data-id="${comp.id}" data-step="levelStreaming" ${comp.unrealSteps?.levelStreaming ? "checked" : ""}>
+                            <label>📦 Level Streaming (Sublevels) - Διαχωρισμός σκηνών</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="unreal-step" data-id="${comp.id}" data-step="levelSequence" ${comp.unrealSteps?.levelSequence ? "checked" : ""}>
+                            <label>🎬 Level Sequence - Cinematic stations / triggers</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="unreal-step" data-id="${comp.id}" data-step="triggers" ${comp.unrealSteps?.triggers ? "checked" : ""}>
+                            <label>📍 Trigger Volumes - Ενεργοποίηση events</label>
+                        </div>
+                        <div class="checklist-item">
+                            <input type="checkbox" class="unreal-step" data-id="${comp.id}" data-step="metaHuman" ${comp.unrealSteps?.metaHuman ? "checked" : ""}>
+                            <label>🧑 MetaHuman - Χαρακτήρες με διάλογο</label>
+                        </div>
+                        <div class="custom-checklist">
+                            <label>📝 Προσαρμοσμένα βήματα</label>
+                            ${(comp.unrealSteps?.customSteps || []).map((step, idx) => `
+                                <div class="custom-checklist-item">
+                                    <input type="checkbox" class="custom-step-check" data-id="${comp.id}" data-index="${idx}" ${step.completed ? "checked" : ""}>
+                                    <input type="text" value="${escapeHtml(step.text)}" class="custom-step-text" data-id="${comp.id}" data-index="${idx}" style="flex:1">
+                                    <button class="remove-custom-step" data-id="${comp.id}" data-index="${idx}">✖</button>
+                                </div>
+                            `).join("")}
+                            <div class="add-custom-step" style="display:flex; gap:6px; margin-top:8px;">
+                                <input type="text" id="customStepInput-${comp.id}" placeholder="Νέο βήμα (π.χ. Blueprint Diff Tool)">
+                                <button class="add-custom-step-btn" data-id="${comp.id}">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    ` : ""}
+                    
+                    <div class="form-row">
+                        <label>📝 Τεχνικές σημειώσεις</label>
+                        <textarea class="comp-notes" data-id="${comp.id}" rows="2">${escapeHtml(comp.techNotes || "")}</textarea>
+                    </div>
+                    
+                    <button class="delete-comp" data-id="${comp.id}" style="margin-top:8px; background:#fee2e2;">🗑️ Διαγραφή component</button>
+                </div>
+            `;
+        }).join("");
+
+        // Events
+        document.querySelectorAll(".comp-name").forEach(inp => inp.addEventListener("change", e => updateComponent(inp.dataset.id, "name", inp.value)));
+        document.querySelectorAll(".comp-type").forEach(sel => sel.addEventListener("change", e => updateComponent(sel.dataset.id, "type", sel.value)));
+        document.querySelectorAll(".comp-maturity").forEach(sel => sel.addEventListener("change", e => updateComponent(sel.dataset.id, "maturity", sel.value)));
+        document.querySelectorAll(".comp-notes").forEach(ta => ta.addEventListener("change", e => updateComponent(ta.dataset.id, "techNotes", ta.value)));
+        document.querySelectorAll(".unreal-step").forEach(cb => cb.addEventListener("change", e => updateComponent(cb.dataset.id, "unreal_" + cb.dataset.step, cb.checked)));
+        document.querySelectorAll(".add-tag-btn").forEach(btn => {
+            btn.addEventListener("click", e => {
+                const id = btn.dataset.id;
+                const input = document.getElementById(`newtag-${id}`);
+                if (input.value.trim()) addTag(id, input.value.trim());
+                input.value = "";
+            });
+        });
+        document.querySelectorAll(".tag-remove").forEach(el => {
+            el.addEventListener("click", e => { e.stopPropagation(); removeTag(el.dataset.comp, el.dataset.tag); });
+        });
+        document.querySelectorAll(".add-custom-step-btn").forEach(btn => {
+            btn.addEventListener("click", e => {
+                const id = btn.dataset.id;
+                const input = document.getElementById(`customStepInput-${id}`);
+                if (input.value.trim()) addCustomStep(id, input.value.trim());
+                input.value = "";
+            });
+        });
+        document.querySelectorAll(".custom-step-check").forEach(cb => {
+            cb.addEventListener("change", e => toggleCustomStep(cb.dataset.id, parseInt(cb.dataset.index)));
+        });
+        document.querySelectorAll(".remove-custom-step").forEach(btn => {
+            btn.addEventListener("click", e => removeCustomStep(btn.dataset.id, parseInt(btn.dataset.index)));
+        });
+        document.querySelectorAll(".custom-step-text").forEach(inp => {
+            inp.addEventListener("change", e => {
+                const comp = components.find(c => c.id === inp.dataset.id);
+                if (comp?.unrealSteps?.customSteps) {
+                    comp.unrealSteps.customSteps[parseInt(inp.dataset.index)].text = inp.value;
+                    saveToStorage();
+                }
+            });
+        });
+        document.querySelectorAll(".delete-comp").forEach(btn => btn.addEventListener("click", e => deleteComponent(btn.dataset.id)));
+    }
+
+    function renderTemplates() {
+        const container = document.getElementById("templatesList");
+        if (!container) return;
+        container.innerHTML = templates.map(t => {
+            const summary = getTemplateMaturitySummary(t);
+            const isActive = activeTemplateId === t.id;
+            return `
+                <div class="card template-card ${isActive ? 'active-template-card' : ''}" data-id="${t.id}">
+                    <div class="template-header">
+                        <div class="template-info">
+                            <input type="text" value="${escapeHtml(t.name)}" class="template-name" data-id="${t.id}" style="font-size:1.1rem; font-weight:600;">
+                            <textarea class="template-desc" data-id="${t.id}" rows="2">${escapeHtml(t.description || "")}</textarea>
+                            <div class="template-metrics">
+                                <span class="metric">📊 L${summary.min !== null ? summary.min : "—"} → L${summary.max !== null ? summary.max : "—"}</span>
+                                <span class="metric">📈 Μέσος L${summary.avg !== null ? summary.avg : "—"}</span>
+                            </div>
+                        </div>
+                        <div class="template-components">
+                            <h4>🧩 Components</h4>
+                            ${components.map(comp => `
+                                <div class="component-check">
+                                    <input type="checkbox" class="template-comp-${t.id}" value="${comp.id}" ${t.components.includes(comp.id) ? "checked" : ""}>
+                                    <label>${escapeHtml(comp.name)} <span class="badge maturity-${comp.maturity}" style="font-size:0.65rem;">L${comp.maturity}</span></label>
+                                </div>
+                            `).join("")}
+                        </div>
+                    </div>
+                    <div><textarea class="template-notes" data-id="${t.id}" rows="2" placeholder="Σημειώσεις σεναρίου">${escapeHtml(t.notes || "")}</textarea></div>
+                    <div style="margin-top:12px; display:flex; gap:8px;">
+                        <button class="set-active" data-id="${t.id}" style="background:#3b82f6; color:white;">${isActive ? '✓ Ενεργό' : '🎯 Ορισμός ως ενεργό'}</button>
+                        <button class="delete-template" data-id="${t.id}" style="background:#fee2e2;">🗑️ Διαγραφή</button>
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+        document.querySelectorAll(".template-name").forEach(inp => inp.addEventListener("change", e => updateTemplate(inp.dataset.id, "name", inp.value)));
+        document.querySelectorAll(".template-desc").forEach(ta => ta.addEventListener("change", e => updateTemplate(ta.dataset.id, "description", ta.value)));
+        document.querySelectorAll(".template-notes").forEach(ta => ta.addEventListener("change", e => updateTemplate(ta.dataset.id, "notes", ta.value)));
+        document.querySelectorAll(".set-active").forEach(btn => btn.addEventListener("click", e => setActiveTemplate(btn.dataset.id)));
+        document.querySelectorAll(".delete-template").forEach(btn => btn.addEventListener("click", e => deleteTemplate(btn.dataset.id)));
+        templates.forEach(t => {
+            const checkboxes = document.querySelectorAll(`.template-comp-${t.id}`);
+            checkboxes.forEach(cb => cb.addEventListener("change", () => {
+                const selected = Array.from(checkboxes).filter(ch => ch.checked).map(ch => ch.value);
+                updateTemplateComponents(t.id, selected);
+            }));
+        });
+    }
+
+    function renderSessions() {
+        const container = document.getElementById("sessionsList");
+        if (!container) return;
+        container.innerHTML = sessions.map(s => {
+            const template = templates.find(t => t.id === s.templateId);
+            return `
+                <div class="card">
+                    <div class="flex-between"><h3>🏫 ${escapeHtml(s.name)}</h3><button class="delete-session" data-id="${s.id}" style="background:#fee2e2;">🗑️</button></div>
+                    <div>Template: <strong>${template ? template.name : "Αγνωστο"}</strong></div>
+                    <div>Δημιουργία: ${s.date}</div>
+                    <button class="log-session" data-id="${s.id}" data-name="${s.name}" style="margin-top:12px;">📝 Καταγραφή συνεδρίας</button>
+                    <details><summary>📋 Ιστορικό (${s.logs.length})</summary>
+                        ${s.logs.slice(0,5).map(l => `<div><small>${l.date}</small><br>📌 ${escapeHtml(l.notes || "")}<br>✅ ${escapeHtml(l.worked || "-")}<br>❌ ${escapeHtml(l.failed || "-")}</div>`).join("")}
+                    </details>
+                </div>
+            `;
+        }).join("");
+        document.querySelectorAll(".log-session").forEach(btn => btn.addEventListener("click", e => {
+            const id = btn.dataset.id, name = btn.dataset.name;
+            const notes = prompt(`Σημειώσεις για "${name}":`), worked = prompt("Τι δούλεψε;"), failed = prompt("Τι απέτυχε;");
+            if (notes !== null) addSessionLog(id, notes, worked, failed);
+        }));
+        document.querySelectorAll(".delete-session").forEach(btn => btn.addEventListener("click", e => deleteSession(btn.dataset.id)));
+    }
+
+    function renderSessionLogs() {
+        const logDiv = document.getElementById("sessionLog");
+        if (!logDiv) return;
+        const allLogs = sessions.flatMap(s => s.logs.map(l => ({ ...l, sessionName: s.name })));
+        logDiv.innerHTML = allLogs.length ? allLogs.slice(0,30).map(l => `<div class="log-entry"><strong>${l.date}</strong> | ${escapeHtml(l.sessionName)}<br>📌 ${escapeHtml(l.notes || "")}<br>✅ ${escapeHtml(l.worked || "-")}<br>❌ ${escapeHtml(l.failed || "-")}</div>`).join("") : "Δεν υπάρχουν καταγραφές.";
+    }
+
+    function renderAll() {
+        renderComponents();
+        renderTemplates();
+        renderSessions();
+        renderSessionLogs();
+        updateActiveTemplateBar();
+        const globalTA = document.getElementById("globalTechNotes");
+        if (globalTA) { globalTA.value = globalTechNotes; globalTA.onchange = () => { globalTechNotes = globalTA.value; saveToStorage(); }; }
+        updateSessionSelect();
+    }
+
+    function escapeHtml(str) { if (!str) return ""; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+    function switchTab(tabId) {
+        document.querySelectorAll(".tab-content").forEach(t => t.style.display = "none");
+        document.getElementById(`${tabId}Tab`).style.display = "block";
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add("active");
+        if (tabId === "components") renderComponents();
+        if (tabId === "templates") renderTemplates();
+    }
+    function exportData() {
+        const data = { components, templates, sessions, globalTechNotes, activeTemplateId, componentFilter };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `lego_${new Date().toISOString().slice(0,19)}.json`; a.click(); URL.revokeObjectURL(a.href);
+    }
+    function importData(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (data.components) components = data.components;
+                if (data.templates) templates = data.templates;
+                if (data.sessions) sessions = data.sessions;
+                if (data.globalTechNotes !== undefined) globalTechNotes = data.globalTechNotes;
+                if (data.activeTemplateId !== undefined) activeTemplateId = data.activeTemplateId;
+                if (data.componentFilter !== undefined) componentFilter = data.componentFilter;
+                saveToStorage(); renderAll(); alert("Εισαγωγή επιτυχής!");
+            } catch(err) { alert("Λάθος αρχείο"); }
+        };
+        reader.readAsText(file);
+    }
+
+    document.getElementById("exportBtn")?.addEventListener("click", exportData);
+    document.getElementById("importBtn")?.addEventListener("click", () => document.getElementById("importFile")?.click());
+    document.getElementById("resetBtn")?.addEventListener("click", () => { if(confirm("Επαναφορά;")) resetToDefault(); });
+    document.getElementById("importFile")?.addEventListener("change", e => { if(e.target.files.length) importData(e.target.files[0]); e.target.value=""; });
+    document.getElementById("addTemplateBtn")?.addEventListener("click", () => { const n = document.getElementById("newTemplateName")?.value; const d = document.getElementById("newTemplateDesc")?.value; if(n) addTemplate(n, d); });
+    document.getElementById("addComponentBtn")?.addEventListener("click", () => addComponent());
+    document.getElementById("addSessionBtn")?.addEventListener("click", () => { const n = document.getElementById("newSessionName")?.value; const tid = document.getElementById("sessionTemplateSelect")?.value; if(n && tid) addSession(n, tid); });
+    document.getElementById("clearActiveTemplateBtn")?.addEventListener("click", () => clearActiveTemplate());
+    document.getElementById("showAllComponentsBtn")?.addEventListener("click", () => { componentFilter = "all"; saveToStorage(); renderComponents(); document.getElementById("showAllComponentsBtn").classList.add("active-filter"); document.getElementById("showActiveTemplateComponentsBtn").classList.remove("active-filter"); });
+    document.getElementById("showActiveTemplateComponentsBtn")?.addEventListener("click", () => { componentFilter = "active_template"; saveToStorage(); renderComponents(); document.getElementById("showActiveTemplateComponentsBtn").classList.add("active-filter"); document.getElementById("showAllComponentsBtn").classList.remove("active-filter"); });
+    document.querySelectorAll(".tab").forEach(tab => tab.addEventListener("click", () => switchTab(tab.getAttribute("data-tab"))));
+    loadFromStorage();
+</script>
+</body>
+</html>

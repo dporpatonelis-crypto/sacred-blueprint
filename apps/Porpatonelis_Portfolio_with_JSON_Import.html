@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dimitrios Porpatonelis | Aristotle University of Thessaloniki</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Work+Sans:wght@400;600;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "on-error": "#ffffff", "primary-container": "#1a2e44", "secondary-container": "#fed488",
+                    "surface-dim": "#dddad1", "on-background": "#1c1c17", "surface-container": "#f1eee5",
+                    "on-secondary": "#ffffff", "surface-container-lowest": "#ffffff", "surface-container-high": "#ebe8df",
+                    "secondary": "#775a19", "on-primary-fixed": "#061d32", "surface-bright": "#fcf9f0",
+                    "on-error-container": "#93000a", "inverse-on-surface": "#f4f1e8", "surface-container-highest": "#e5e2da",
+                    "inverse-primary": "#b4c8e4", "on-surface-variant": "#43474d", "outline-variant": "#c4c6cd",
+                    "on-primary-container": "#8296b0", "outline": "#74777d", "on-primary": "#ffffff",
+                    "tertiary-container": "#352b22", "secondary-fixed-dim": "#e9c176", "primary-fixed-dim": "#b4c8e4",
+                    "primary-fixed": "#d1e4ff", "primary": "#03192e", "on-tertiary": "#ffffff",
+                    "surface-variant": "#e5e2da", "surface-tint": "#4c6078", "surface-container-low": "#f6f3ea",
+                    "surface": "#fcf9f0", "tertiary": "#1f170e", "on-secondary-container": "#785a1a",
+                    "on-surface": "#1c1c17", "inverse-surface": "#31312b", "error-container": "#ffdad6",
+                    "background": "#fcf9f0"
+                },
+                fontFamily: { "headline": ["Newsreader", "serif"], "body": ["Noto Serif", "serif"], "label": ["Work Sans", "sans-serif"] },
+                borderRadius: { "DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px" },
+            },
+        },
+    }
+</script>
+<style>
+    .parchment-texture {
+        background-color: #fcf9f0;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='0.04'/%3E%3C/svg%3E");
+    }
+    .dark .parchment-texture { background-color: #0f172a; background-image: none; }
+    .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24 }
+    .grain-overlay {
+        position: fixed; top:0; left:0; width:100%; height:100%;
+        pointer-events:none; z-index:9999; opacity:0.03;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .photo-edit-overlay { opacity:0; transition: opacity 0.2s ease; }
+    .photo-wrapper:hover .photo-edit-overlay { opacity:1; }
+    .app-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .app-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(3,25,46,0.12); }
+    .lang-btn.active { background:#03192e; color:#fff; }
+    .lang-btn { transition: background 0.15s, color 0.15s; }
+    .screenshot-bg { background: linear-gradient(135deg, #e5e2da 0%, #f1eee5 50%, #e5e2da 100%); }
+    .interest-tag { display:inline-block; border:1px solid #c4c6cd; padding:2px 10px; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; font-family:'Work Sans',sans-serif; margin:2px; color:#43474d; }
+    .dark .interest-tag { border-color:#334155; color:#94a3b8; }
+    .side-nav-link { transition: all 0.15s; }
+    .side-nav-link.active { border-left:4px solid #775a19; padding-left:1rem; font-weight:700; color:#03192e !important; }
+    .dark .side-nav-link.active { color:#f8fafc !important; }
+    .media-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .media-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(3,25,46,0.15); }
+    .media-type-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; font-family:'Work Sans',sans-serif; }
+    .media-tab-btn { transition: all 0.2s; position:relative; }
+    .media-tab-btn.active { background:#03192e; color:#fff; }
+    .media-tab-btn.active::after { content:''; position:absolute; bottom:-8px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:6px solid #03192e; }
+    .audio-waveform { background: linear-gradient(90deg, #775a19 0%, #fed488 50%, #775a19 100%); height:3px; border-radius:2px; }
+    .pdf-embed-container { background:#f6f3ea; border:1px solid #c4c6cd; }
+    .dark .pdf-embed-container { background:#1e293b; border-color:#334155; }
+    .lesson-folder {
+        border: 1px solid #c4c6cd;
+        transition: all 0.3s ease;
+    }
+    .dark .lesson-folder { border-color: #334155; }
+    .lesson-folder:hover {
+        border-color: #775a19;
+        box-shadow: 0 8px 24px rgba(3,25,46,0.08);
+    }
+    .lesson-header {
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+    .lesson-header:hover { background: #f6f3ea; }
+    .dark .lesson-header:hover { background: #1e293b; }
+    .lesson-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease, opacity 0.3s ease;
+        opacity: 0;
+    }
+    .lesson-content.open {
+        max-height: 5000px;
+        opacity: 1;
+    }
+    .lesson-tab-btn {
+        transition: all 0.2s;
+        border-bottom: 2px solid transparent;
+    }
+    .lesson-tab-btn.active {
+        border-bottom-color: #775a19;
+        color: #03192e;
+        font-weight: 600;
+    }
+    .dark .lesson-tab-btn.active {
+        color: #f8fafc;
+        border-bottom-color: #fed488;
+    }
+    .lesson-tab-btn:hover { background: #f1eee5; }
+    .dark .lesson-tab-btn:hover { background: #334155; }
+    .lesson-media-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    .nlm-embed {
+        border: 1px solid #c4c6cd;
+        background: #f6f3ea;
+    }
+    .dark .nlm-embed {
+        border-color: #334155;
+        background: #1e293b;
+    }
+</style>
+</head>
+<body class="parchment-texture text-on-background selection:bg-secondary-container selection:text-on-secondary-container">
+<div class="grain-overlay"></div>
+
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 py-4 bg-[#fcf9f0]/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-t-4 border-[#03192e] dark:border-slate-700">
+    <div class="text-xl font-bold tracking-tighter text-[#03192e] dark:text-slate-50 font-headline italic" data-i18n="site_title">The Scholarly Manuscript</div>
+    <nav class="hidden md:flex space-x-8 items-center">
+        <a data-nav="about" class="nav-top-link text-[#775a19] dark:text-amber-400 font-semibold underline decoration-2 underline-offset-4 font-headline italic text-lg cursor-pointer" data-i18n="nav_about">About</a>
+        <a data-nav="academic" class="nav-top-link text-[#03192e] dark:text-slate-300 opacity-80 hover:opacity-100 hover:text-[#775a19] transition-colors duration-300 font-headline italic text-lg cursor-pointer" data-i18n="nav_academic">Academic Work</a>
+        <a data-nav="educational" class="nav-top-link text-[#03192e] dark:text-slate-300 opacity-80 hover:opacity-100 hover:text-[#775a19] transition-colors duration-300 font-headline italic text-lg cursor-pointer" data-i18n="nav_educational">Educational Apps</a>
+        <a data-nav="media" class="nav-top-link text-[#03192e] dark:text-slate-300 opacity-80 hover:opacity-100 hover:text-[#775a19] transition-colors duration-300 font-headline italic text-lg cursor-pointer" data-i18n="nav_media">Media</a>
+    </nav>
+    <div class="flex items-center space-x-3">
+        <div class="flex border border-[#03192e]/20 dark:border-slate-600 overflow-hidden">
+            <button id="langEN" class="lang-btn active px-3 py-1 font-label text-[10px] uppercase tracking-widest text-[#03192e] dark:text-slate-200 hover:bg-[#03192e]/10">EN</button>
+            <button id="langGR" class="lang-btn px-3 py-1 font-label text-[10px] uppercase tracking-widest text-[#03192e] dark:text-slate-200 hover:bg-[#03192e]/10">ΕΛ</button>
+        </div>
+        <button id="themeToggleBtn" class="p-1 text-[#03192e] dark:text-slate-200 hover:text-secondary transition-colors" title="Toggle theme">
+            <span class="material-symbols-outlined text-xl" id="themeIcon">light_mode</span>
+        </button>
+        <span id="mobileMenuBtn" class="material-symbols-outlined text-[#03192e] dark:text-slate-200 cursor-pointer lg:hidden">menu</span>
+    </div>
+</header>
+
+<aside class="hidden lg:flex flex-col h-screen py-10 px-0 fixed left-0 bg-[#f6f3ea] dark:bg-slate-900 w-64 z-40 border-r border-outline-variant/20">
+    <div class="px-8 mb-12 mt-16">
+        <h2 class="text-xl font-black text-[#03192e] dark:text-slate-50 uppercase tracking-widest font-label" data-i18n="archive_title">The Archive</h2>
+        <p class="text-xs font-label opacity-60 uppercase tracking-tighter" data-i18n="archive_sub">Educator's Portfolio</p>
+    </div>
+    <nav class="flex-1 space-y-1">
+        <a data-side-nav="about" class="side-nav-link active flex items-center py-3 text-[#03192e] dark:text-slate-50 cursor-pointer">
+            <span class="material-symbols-outlined mr-4 ml-4">person</span>
+            <span class="font-label text-sm uppercase tracking-wide" data-i18n="nav_about">About</span>
+        </a>
+        <a data-side-nav="academic" class="side-nav-link flex items-center py-3 pl-5 text-[#03192e]/60 dark:text-slate-400 hover:bg-[#e5e2da] dark:hover:bg-slate-800 hover:text-[#03192e] cursor-pointer">
+            <span class="material-symbols-outlined mr-4">history_edu</span>
+            <span class="font-label text-sm uppercase tracking-wide" data-i18n="nav_academic">Academic Work</span>
+        </a>
+        <a data-side-nav="educational" class="side-nav-link flex items-center py-3 pl-5 text-[#03192e]/60 dark:text-slate-400 hover:bg-[#e5e2da] dark:hover:bg-slate-800 hover:text-[#03192e] cursor-pointer">
+            <span class="material-symbols-outlined mr-4">devices</span>
+            <span class="font-label text-sm uppercase tracking-wide" data-i18n="nav_educational">Educational Apps</span>
+        </a>
+        <a data-side-nav="media" class="side-nav-link flex items-center py-3 pl-5 text-[#03192e]/60 dark:text-slate-400 hover:bg-[#e5e2da] dark:hover:bg-slate-800 hover:text-[#03192e] cursor-pointer">
+            <span class="material-symbols-outlined mr-4">perm_media</span>
+            <span class="font-label text-sm uppercase tracking-wide" data-i18n="nav_media">Media</span>
+        </a>
+    </nav>
+    <div class="px-6 mt-auto space-y-3">
+        <a href="https://auth.academia.edu/DimitriosPorpatonelis" target="_blank"
+           class="w-full flex items-center justify-center gap-2 bg-primary text-on-primary py-3 font-label text-xs uppercase tracking-widest hover:bg-primary-container transition-colors">
+            <span class="material-symbols-outlined text-sm">open_in_new</span>
+            <span data-i18n="academia_link">Academia.edu</span>
+        </a>
+        <div id="settingsTrigger" class="flex items-center justify-center text-[#03192e]/40 dark:text-slate-400 cursor-pointer hover:text-secondary transition-colors py-1">
+            <span class="material-symbols-outlined text-sm">dark_mode</span>
+            <span class="ml-2 font-label text-[10px] uppercase tracking-widest" data-i18n="settings">Theme</span>
+        </div>
+    </div>
+</aside>
+
+<div id="mobileDrawer" class="fixed inset-0 z-50 lg:hidden pointer-events-none" style="visibility:hidden;">
+    <div id="drawerBackdrop" class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300"></div>
+    <div id="drawerPanel" class="absolute top-0 left-0 h-full w-72 bg-[#f6f3ea] dark:bg-slate-900 shadow-2xl transform -translate-x-full transition-transform duration-300 ease-out flex flex-col">
+        <div class="p-6 border-b border-outline-variant/20 flex justify-between items-center">
+            <h2 class="font-headline text-xl italic text-primary">Navigation</h2>
+            <span id="closeDrawer" class="material-symbols-outlined cursor-pointer text-primary">close</span>
+        </div>
+        <nav class="flex-1 py-8 px-4 space-y-4">
+            <a data-mobile-nav="about" class="block py-2 text-primary font-bold border-l-4 border-secondary pl-3 font-headline text-lg cursor-pointer" data-i18n="nav_about">About</a>
+            <a data-mobile-nav="academic" class="block py-2 text-on-surface-variant/70 hover:text-primary pl-3 font-headline text-lg cursor-pointer" data-i18n="nav_academic">Academic Work</a>
+            <a data-mobile-nav="educational" class="block py-2 text-on-surface-variant/70 hover:text-primary pl-3 font-headline text-lg cursor-pointer" data-i18n="nav_educational">Educational Apps</a>
+            <a data-mobile-nav="media" class="block py-2 text-on-surface-variant/70 hover:text-primary pl-3 font-headline text-lg cursor-pointer" data-i18n="nav_media">Media</a>
+        </nav>
+        <div class="p-6">
+            <a href="https://auth.academia.edu/DimitriosPorpatonelis" target="_blank" class="block w-full text-center bg-primary text-on-primary py-3 font-label text-xs uppercase tracking-widest">Academia.edu</a>
+        </div>
+    </div>
+</div>
+
+<main id="appMain" class="lg:ml-64 pt-24 pb-12 px-6 md:px-12 lg:px-20 min-h-screen transition-all"></main>
+
+<footer class="lg:ml-64 flex flex-col items-center justify-center space-y-4 px-6 text-center bg-[#fcf9f0] dark:bg-slate-950 py-12 border-t border-outline-variant/20">
+    <div class="flex flex-wrap justify-center gap-6 mb-4">
+        <a href="https://auth.academia.edu/DimitriosPorpatonelis" target="_blank" class="text-[#03192e]/40 dark:text-slate-500 font-sans text-xs tracking-widest uppercase hover:text-[#775a19] underline decoration-dotted transition-all">Academia.edu</a>
+        <a href="https://www.amazon.com/s?k=Porpatonelis" target="_blank" class="text-[#03192e]/40 dark:text-slate-500 font-sans text-xs tracking-widest uppercase hover:text-[#775a19] underline decoration-dotted transition-all">Amazon</a>
+        <a href="#" class="text-[#03192e]/40 dark:text-slate-500 font-sans text-xs tracking-widest uppercase hover:text-[#775a19] underline decoration-dotted transition-all" data-i18n="footer_contact">Contact</a>
+    </div>
+    <div class="h-px w-16 bg-outline-variant/30 mb-2"></div>
+    <p class="text-[#03192e]/40 dark:text-slate-500 font-sans text-[10px] tracking-widest uppercase">© MMXXVI Dimitrios Porpatonelis · Aristotle University of Thessaloniki</p>
+</footer>
+
+<div id="globalModal" class="fixed inset-0 z-[60] flex items-center justify-center px-4 pointer-events-none opacity-0 transition-opacity duration-200" style="visibility:hidden;">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+    <div class="relative bg-surface-container-lowest dark:bg-slate-800 max-w-lg w-full p-8 shadow-2xl border-t-4 border-secondary">
+        <h3 id="modalTitle" class="font-headline text-2xl italic text-primary dark:text-slate-100 mb-4">Title</h3>
+        <div id="modalBody" class="font-body text-on-surface-variant dark:text-slate-300 mb-6"></div>
+        <button id="closeModalBtn" class="bg-primary text-on-primary px-6 py-2 font-label text-xs uppercase tracking-widest">Close</button>
+    </div>
+</div>
+
+<div id="photoModal" class="fixed inset-0 z-[70] flex items-center justify-center px-4 pointer-events-none opacity-0 transition-opacity duration-200" style="visibility:hidden;">
+    <div id="photoModalBg" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    <div class="relative bg-surface-container-lowest dark:bg-slate-800 max-w-md w-full p-8 shadow-2xl border-t-4 border-secondary">
+        <h3 class="font-headline text-2xl italic text-primary dark:text-slate-100 mb-6" data-i18n="photo_edit_title">Edit Profile Photo</h3>
+        <div class="space-y-5">
+            <div>
+                <label class="font-label text-xs uppercase tracking-widest text-on-surface-variant dark:text-slate-400 block mb-2" data-i18n="photo_url_label">Photo URL</label>
+                <input id="photoUrlInput" type="text" placeholder="https://..." class="w-full border border-outline-variant bg-surface-container-low dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 px-4 py-2 font-body text-sm focus:outline-none focus:border-secondary">
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="h-px flex-1 bg-outline-variant/40"></div>
+                <span class="font-label text-xs uppercase tracking-widest opacity-50" data-i18n="or">or</span>
+                <div class="h-px flex-1 bg-outline-variant/40"></div>
+            </div>
+            <div>
+                <label class="font-label text-xs uppercase tracking-widest text-on-surface-variant dark:text-slate-400 block mb-2" data-i18n="photo_file_label">Upload File</label>
+                <input id="photoFileInput" type="file" accept="image/*" class="w-full font-body text-sm text-on-surface-variant dark:text-slate-300 file:mr-4 file:py-2 file:px-4 file:border-0 file:font-label file:text-xs file:uppercase file:tracking-widest file:bg-primary file:text-on-primary cursor-pointer">
+            </div>
+        </div>
+        <div class="flex gap-3 mt-8">
+            <button id="applyPhotoBtn" class="flex-1 bg-primary text-on-primary py-3 font-label text-xs uppercase tracking-widest hover:bg-primary-container transition-colors" data-i18n="apply">Apply</button>
+            <button id="closePhotoModal" class="flex-1 border border-primary/30 py-3 font-label text-xs uppercase tracking-widest hover:bg-surface-dim transition-colors dark:text-slate-300" data-i18n="cancel">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+const i18n = {
+    en: {
+        site_title:"The Scholarly Manuscript", nav_about:"About", nav_academic:"Academic Work",
+        nav_educational:"Educational Apps", nav_media:"Media", archive_title:"The Archive", archive_sub:"Educator's Portfolio",
+        academia_link:"Academia.edu", settings:"Theme", footer_contact:"Contact",
+        photo_edit_title:"Edit Profile Photo", photo_url_label:"Photo URL", photo_file_label:"Upload File",
+        or:"or", apply:"Apply", cancel:"Cancel", close:"Close",
+        about_status:"Post-Doctoral Researcher · Aristotle University of Thessaloniki",
+        about_teaching_label:"Teaching & Research Institution",
+        about_teaching:"School of Theology, Aristotle University of Thessaloniki",
+        about_interests_label:"Research Interests",
+        about_bio:"Theologian and researcher in Patristics and Byzantine History, specializing in the political theology of the Great Fathers of the 4th and 5th centuries. Author of works on John Chrysostom, Cyril of Alexandria, and Gregory the Theologian, with a parallel dedication to developing innovative digital tools for the educational classroom.",
+        about_links_label:"Online Presence",
+        about_stats_label:"Academia.edu",
+        about_followers:"Followers", about_following:"Following", about_views:"Public Views",
+        ledger_i:"I. Patristics & Church Fathers",
+        ledger_i_text:"Political theology of the Great Fathers of the 4th–5th centuries. Church–State relations in the Byzantine era.",
+        ledger_ii:"II. Political Philosophy & Theology",
+        ledger_ii_text:"Sanctity and imperial authority in ecclesiastical writings spanning the Seven Ecumenical Councils.",
+        ledger_iii:"III. Digital Pedagogy",
+        ledger_iii_text:"Development of six interconnected web applications for Theology, History, and Patristic Literature.",
+        recent_title:"Recent Publications", view_all:"View All on Academia.edu →",
+        academic_title:"Academic Work & Publications",
+        p1m:"Doctoral Dissertation · AUTH", p1t:"Sanctity and Imperial Authority",
+        p1b:"The intersection of political power and holiness in early Church writings, spanning the period of the Seven Ecumenical Councils.",
+        p1l:"View on Academia.edu →",
+        p2m:"Book · Series: Theology in Public", p2t:"God and the Existence of Evil",
+        p2b:"John Chrysostom \"On the Devil\". Available free on Apple Books, Kobo, and as PDF. Nearly 5,000 views on Academia.edu.",
+        p2l:"Download Free →",
+        p3m:"Book · Kindle / Apple Books", p3t:"God and Man in Christ",
+        p3b:"Cyril of Alexandria \"Christ is One\". Examines the Christological synthesis of Cyril of Alexandria as a cornerstone of Orthodox theology.",
+        p3l:"View on Amazon →",
+        p4m:"Book · Kindle Edition", p4t:"The Attitude of the Great Fathers toward Emperor and Political Authorities",
+        p4b:"A study of how Basil the Great, John Chrysostom, and Gregory the Theologian engaged with imperial power. Available in standard, Kindle, and iPad editions.",
+        p4l:"Download →",
+        p5m:"Apple Books (Free) · Series: Theology in Public", p5t:"Ο Επιτάφιος του Μ. Βασιλείου",
+        p5b:"Gregory the Theologian's funeral oration on Basil the Great. Free on Apple Books.",
+        p5l:"View on Apple Books →",
+        edu_title:"Educational Applications",
+        edu_sub:"A suite of six interconnected web-based tools for teaching Theology, Byzantine History, and Patristic Literature. Hosted on GitHub Pages, designed for classroom preparation and student engagement.",
+        a1n:"Mind Palace", a1s:"Η Υπόθεση του Φιλοσόφου",
+        a1d:"A Greek-language philosophical detective game. Students investigate doctrinal and historical questions through clue-based narrative exploration. Backend: Google Apps Script + Gemini AI.",
+        a1t:"Investigation · Game · AI",
+        a2n:"History Explorer 3D", a2s:"NPC Dialogue System",
+        a2d:"3D scenario rooms with interactive historical figures (Basil the Great, Aristotle). Students engage in Socratic dialogue to explore key theological and philosophical themes.",
+        a2t:"3D · NPC · Dialogue",
+        a3n:"Timeline Map", a3s:"Geospatial History",
+        a3d:"Interactive Leaflet.js map with chronological timeline. Supports MP4 video, YouTube embeds, and Google Slides. Designed for visualizing Byzantine history across time and space.",
+        a3t:"Leaflet.js · Multimedia",
+        a4n:"Living Anchor", a4s:"Text Analysis Hub",
+        a4d:"Annotation and analysis workspace for patristic and theological texts. Firebase-backed storage, collaborative annotation, and deep-linking to source passages.",
+        a4t:"Annotation · Firebase",
+        a5n:"Interactive Books", a5s:"Digital Library",
+        a5d:"Catalog-driven digital library of theological texts. Each book loaded from a central books.json manifest and rendered as an interactive, paginated HTML reader.",
+        a5t:"Library · JSON · HTML5",
+        a6n:"Central Console", a6s:"Dashboard & Orchestrator",
+        a6d:"Firebase-connected React Three Fiber dashboard coordinating all six applications. Includes a 3D museum scene and serves as the central hub for lesson orchestration.",
+        a6t:"Firebase · React",
+        launch:"Launch App", github:"GitHub",
+        media_title:"Media & Resources",
+        media_sub:"Curated multimedia content organized by lesson — audio overviews, lecture slides, primary texts, and scholarly PDFs.",
+        media_tab_audio:"Audio", media_tab_slides:"Slides", media_tab_pdf:"PDF", media_tab_text:"Text",
+        lesson_1_title:"Lesson I: Paul and Dionysius the Areopagite",
+        lesson_1_desc:"Exploring the encounter between the Apostle Paul and Dionysius the Areopagite in Athens (Acts 17). Audio overview, primary texts, and scholarly commentary.",
+        lesson_2_title:"Lesson II: Chrysostom on Political Authority",
+        lesson_2_desc:"John Chrysostom's engagement with imperial power. Lecture audio, slide presentation, and comparative study materials.",
+        lesson_3_title:"Lesson III: The Seven Ecumenical Councils",
+        lesson_3_desc:"Comprehensive overview of all Seven Ecumenical Councils. Interactive slides, dissertation excerpts, and patristic sources.",
+        lesson_4_title:"Lesson IV: Byzantine Church-State Relations",
+        lesson_4_desc:"The symphonic relationship between Emperor and Patriarch from Constantine to Justinian. Slides, PDF studies, and primary source texts.",
+        m1_title:"Paul and Dionysius the Areopagite",
+        m1_sub:"A NotebookLM Audio Overview exploring the encounter between the Apostle Paul and Dionysius the Areopagite in Athens (Acts 17).",
+        m1_type:"NotebookLM Audio Overview",
+        m1_desc:"Generated via Google NotebookLM. This AI-generated podcast examines the theological significance of Paul's Areopagus speech and the tradition of Dionysius as the first bishop of Athens. Primary sources: Acts 17, Patristic commentaries.",
+        m1_date:"May 2026",
+        m2_title:"Chrysostom on Political Authority",
+        m2_sub:"Audio lecture series on John Chrysostom's engagement with imperial power.",
+        m2_type:"Lecture Audio",
+        m2_desc:"Recorded lecture exploring Chrysostom's homilies on the relationship between Church and State in 4th-century Constantinople.",
+        m2_date:"March 2026",
+        s1_title:"The Seven Ecumenical Councils",
+        s1_sub:"Interactive Google Slides presentation for classroom use.",
+        s1_type:"Google Slides",
+        s1_desc:"Comprehensive slide deck covering all Seven Ecumenical Councils with maps, timelines, and key theological decisions. Designed for undergraduate theology courses.",
+        s1_date:"April 2026",
+        s2_title:"Byzantine Church-State Relations",
+        s2_sub:"Lecture slides on the symphonic relationship between Emperor and Patriarch.",
+        s2_type:"Google Slides",
+        s2_desc:"Examines the concept of symphonia from Constantine to Justinian, with primary source excerpts from Eusebius, Theodoret, and Justinian's Novellae.",
+        s2_date:"February 2026",
+        d1_title:"Sanctity and Imperial Authority (Dissertation)",
+        d1_sub:"Full doctoral dissertation — PDF.",
+        d1_type:"PDF · 2.4 MB",
+        d1_desc:"Complete doctoral thesis examining the intersection of political power and holiness in early Church writings during the period of the Seven Ecumenical Councils.",
+        d1_date:"2023",
+        d2_title:"God and the Existence of Evil",
+        d2_sub:"John Chrysostom \"On the Devil\" — Free PDF.",
+        d2_type:"PDF · 1.8 MB",
+        d2_desc:"Published work in the Theology in Public series. Available free on Apple Books, Kobo, and as direct PDF download.",
+        d2_date:"2024",
+        d3_title:"The Attitude of the Great Fathers",
+        d3_sub:"Study on Basil, Chrysostom, and Gregory the Theologian.",
+        d3_type:"PDF · 3.1 MB",
+        d3_desc:"Comparative study of how the Cappadocian Fathers and Chrysostom navigated imperial authority. Includes extensive primary source appendices.",
+        d3_date:"2025",
+        tx1_title:"The Areopagus Speech — Greek Text",
+        tx1_sub:"Acts 17:16–34 with patristic commentary excerpts.",
+        tx1_type:"Primary Text · Greek/English",
+        tx1_desc:"Bilingual presentation of Paul's Areopagus speech with selections from John Chrysostom's Homilies on Acts and later Byzantine commentators. Includes vocabulary notes for students.",
+        tx1_date:"May 2026",
+        tx2_title:"Dionysius the Areopagite — Tradition and Sources",
+        tx2_sub:"Historical overview of the Dionysian corpus and its reception.",
+        tx2_type:"Scholarly Article",
+        tx2_desc:"Critical examination of the Pseudo-Dionysian corpus and its influence on Byzantine mystical theology. Traces the development from the historical Dionysius to the Neoplatonic synthesis of the 5th–6th centuries.",
+        tx2_date:"April 2026",
+        view_pdf:"View PDF", download:"Download", listen:"Listen", view_slides:"View Slides", read:"Read",
+        expand_lesson:"Expand Lesson", collapse_lesson:"Collapse Lesson",
+        lesson_audio:"Audio", lesson_slides:"Slides", lesson_pdf:"PDF", lesson_text:"Text",
+        nlm_open:"Open in NotebookLM",
+        nlm_desc:"AI-generated podcast from Google NotebookLM. Click to listen in a new tab.",
+        import_json_title:"Import Lessons from JSON",
+        import_json_desc:"Load your lessons from a .json file. No code editing required.",
+        import_json_btn:"Import JSON",
+        import_json_drop:"Drop JSON file here or click to browse",
+        reset_demo:"Reset to Demo",
+        imported_success:"lessons loaded from JSON",
+        import_error:"Error loading JSON",
+        no_content:"No content for this lesson",
+    },
+    gr: {
+        site_title:"Το Επιστημονικό Χειρόγραφο", nav_about:"Προφίλ", nav_academic:"Ακαδημαϊκό Έργο",
+        nav_educational:"Εκπαιδευτικές Εφαρμογές", nav_media:"Πολυμέσα", archive_title:"Το Αρχείο", archive_sub:"Χαρτοφυλάκιο Εκπαιδευτικού",
+        academia_link:"Academia.edu", settings:"Θέμα", footer_contact:"Επικοινωνία",
+        photo_edit_title:"Επεξεργασία Φωτογραφίας", photo_url_label:"URL Φωτογραφίας", photo_file_label:"Μεταφόρτωση Αρχείου",
+        or:"ή", apply:"Εφαρμογή", cancel:"Ακύρωση", close:"Κλείσιμο",
+        about_status:"Μεταδιδακτορικός Ερευνητής · Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης",
+        about_teaching_label:"Ίδρυμα Διδασκαλίας & Έρευνας",
+        about_teaching:"Θεολογική Σχολή, Αριστοτέλειο Πανεπιστήμιο Θεσσαλονίκης",
+        about_interests_label:"Ερευνητικά Ενδιαφέροντα",
+        about_bio:"Θεολόγος και ερευνητής στην Πατρολογία και τη Βυζαντινή Ιστορία, με εξειδίκευση στην πολιτική θεολογία των Μεγάλων Πατέρων του 4ου και 5ου αιώνα. Συγγραφέας έργων για τον Ιωάννη Χρυσόστομο, τον Κύριλλο Αλεξανδρείας και τον Γρηγόριο Θεολόγο, με παράλληλη αφοσίωση στην ανάπτυξη καινοτόμων ψηφιακών εργαλείων για την εκπαιδευτική τάξη.",
+        about_links_label:"Διαδικτυακή Παρουσία",
+        about_stats_label:"Academia.edu",
+        about_followers:"Ακόλουθοι", about_following:"Ακολουθεί", about_views:"Δημόσιες Προβολές",
+        ledger_i:"Ι. Πατρολογία & Εκκλησιαστικοί Πατέρες",
+        ledger_i_text:"Πολιτική θεολογία των Μεγάλων Πατέρων 4ου–5ου αιώνα. Σχέσεις Εκκλησίας–Κράτους στη Βυζαντινή εποχή.",
+        ledger_ii:"ΙΙ. Πολιτική Φιλοσοφία & Θεολογία",
+        ledger_ii_text:"Αγιότητα και αυτοκρατορική εξουσία στην εκκλησιαστική γραμματεία κατά την περίοδο των Επτά Οικουμενικών Συνόδων.",
+        ledger_iii:"ΙΙΙ. Ψηφιακή Παιδαγωγική",
+        ledger_iii_text:"Ανάπτυξη έξι διασυνδεδεμένων διαδικτυακών εφαρμογών για τη Θεολογία, την Ιστορία και την Πατρολογία.",
+        recent_title:"Πρόσφατες Δημοσιεύσεις", view_all:"Όλα στο Academia.edu →",
+        academic_title:"Ακαδημαϊκό Έργο & Δημοσιεύσεις",
+        p1m:"Διδακτορική Διατριβή · ΑΠΘ", p1t:"Αγιότητα και Αυτοκρατορική Εξουσία",
+        p1b:"Η συνάντηση της πολιτικής εξουσίας και της αγιότητας στην εκκλησιαστική γραμματεία κατά την περίοδο των Επτά Οικουμενικών Συνόδων.",
+        p1l:"Προβολή στο Academia.edu →",
+        p2m:"Βιβλίο · Σειρά: Theology in Public", p2t:"Θεός και ύπαρξη του κακού",
+        p2b:"Ιωάννης Χρυσόστομος «Περί Διαβόλου». Διαθέσιμο δωρεάν σε Apple Books, Kobo και PDF. Σχεδόν 5.000 προβολές.",
+        p2l:"Δωρεάν Λήψη →",
+        p3m:"Βιβλίο · Kindle / Apple Books", p3t:"Θεός και Άνθρωπος στον Χριστό",
+        p3b:"Κύριλλος Αλεξανδρείας «Ο Χριστός είναι Ένας». Εξετάζει τη χριστολογική σύνθεση του Κυρίλλου ως θεμέλιο της Ορθόδοξης θεολογίας.",
+        p3l:"Προβολή στο Amazon →",
+        p4m:"Βιβλίο · Kindle Edition", p4t:"Η στάση των Μεγάλων Πατέρων απέναντι στον Αυτοκράτορα",
+        p4b:"Μελέτη για τον τρόπο που ο Μέγας Βασίλειος, ο Ιωάννης Χρυσόστομος και ο Γρηγόριος Θεολόγος αντιμετώπισαν την αυτοκρατορική εξουσία.",
+        p4l:"Λήψη →",
+        p5m:"Apple Books (Δωρεάν) · Σειρά: Theology in Public", p5t:"Ο Επιτάφιος του Μ. Βασιλείου",
+        p5b:"Ο επιτάφιος λόγος του Γρηγορίου Θεολόγου για τον Μέγα Βασίλειο.",
+        p5l:"Προβολή στο Apple Books →",
+        edu_title:"Εκπαιδευτικές Εφαρμογές",
+        edu_sub:"Σουίτα έξι διασυνδεδεμένων διαδικτυακών εργαλείων για τη διδασκαλία Θεολογίας, Βυζαντινής Ιστορίας και Πατρολογίας. Φιλοξενούνται στο GitHub Pages.",
+        a1n:"Mind Palace", a1s:"Η Υπόθεση του Φιλοσόφου",
+        a1d:"Φιλοσοφικό παιχνίδι ντετέκτιβ στα ελληνικά. Οι μαθητές ερευνούν δογματικά και ιστορικά ερωτήματα μέσα από αφηγηματική εξερεύνηση. Backend: Google Apps Script + Gemini AI.",
+        a1t:"Έρευνα · Παιχνίδι · AI",
+        a2n:"History Explorer 3D", a2s:"Σύστημα Διαλόγου NPC",
+        a2d:"Τρισδιάστατα σενάρια με διαδραστικούς ιστορικούς χαρακτήρες (Μέγας Βασίλειος, Αριστοτέλης). Σωκρατικός διάλογος για θεολογικά και φιλοσοφικά θέματα.",
+        a2t:"3D · NPC · Διάλογος",
+        a3n:"Timeline Map", a3s:"Γεωχωρική Ιστορία",
+        a3d:"Διαδραστικός χάρτης Leaflet.js με χρονολογική γραμμή. Υποστηρίζει βίντεο MP4, YouTube και Google Slides.",
+        a3t:"Leaflet.js · Πολυμέσα",
+        a4n:"Living Anchor", a4s:"Κέντρο Ανάλυσης Κειμένου",
+        a4d:"Εργαλείο σχολιασμού και ανάλυσης πατερικών κειμένων. Firebase, συλλογικός σχολιασμός και βαθιές παραπομπές.",
+        a4t:"Σχολιασμός · Firebase",
+        a5n:"Interactive Books", a5s:"Ψηφιακή Βιβλιοθήκη",
+        a5d:"Ψηφιακή βιβλιοθήκη θεολογικών κειμένων βασισμένη σε books.json. Διαδραστικός HTML αναγνώστης.",
+        a5t:"Βιβλιοθήκη · JSON · HTML5",
+        a6n:"Central Console", a6s:"Dashboard & Orchestrator",
+        a6d:"Dashboard Firebase + React Three Fiber που συντονίζει τις έξι εφαρμογές. Τρισδιάστατη σκηνή μουσείου και κεντρική διαχείριση περιεχομένου.",
+        a6t:"Firebase · React",
+        launch:"Εκκίνηση", github:"GitHub",
+        media_title:"Πολυμέσα & Υλικό",
+        media_sub:"Επιμελημένο πολυμεσικό περιεχόμενο οργανωμένο ανά μάθημα — audio overviews, διαλέξεις, πρωτογενή κείμενα και ακαδημαϊκά PDF.",
+        media_tab_audio:"Ήχος", media_tab_slides:"Διαφάνειες", media_tab_pdf:"PDF", media_tab_text:"Κείμενο",
+        lesson_1_title:"Μάθημα Ι: Παύλος και Διονύσιος ο Αρεοπαγίτης",
+        lesson_1_desc:"Εξερεύνηση της συνάντησης του Αποστόλου Παύλου και του Διονυσίου του Αρεοπαγίτη στην Αθήνα (Πράξ. 17). Audio overview, πρωτογενή κείμενα και πατερικά σχόλια.",
+        lesson_2_title:"Μάθημα ΙΙ: Χρυσόστομος και Πολιτική Εξουσία",
+        lesson_2_desc:"Η αντιμετώπιση της αυτοκρατορικής εξουσίας από τον Ιωάννη Χρυσόστομο. Ηχογράφηση διάλεξης, διαφάνειες και συγκριτικό υλικό.",
+        lesson_3_title:"Μάθημα ΙΙΙ: Οι Επτά Οικουμενικές Σύνοδοι",
+        lesson_3_desc:"Πλήρης επισκόπηση των Επτά Οικουμενικών Συνόδων. Διαδραστικές διαφάνειες, αποσπάσματα διατριβής και πατερικές πηγές.",
+        lesson_4_title:"Μάθημα ΙV: Βυζαντινές Σχέσεις Εκκλησίας–Κράτους",
+        lesson_4_desc:"Η συμφωνική σχέση Αυτοκράτορα και Πατριάρχη από τον Κωνσταντίνο μέχρι τον Ιουστινιανό. Διαφάνειες, PDF μελέτες και πρωτογενή κείμενα.",
+        m1_title:"Παύλος και Διονύσιος ο Αρεοπαγίτης",
+        m1_sub:"NotebookLM Audio Overview για τη συνάντηση του Αποστόλου Παύλου και του Διονυσίου του Αρεοπαγίτη στην Αθήνα (Πράξ. 17).",
+        m1_type:"NotebookLM Audio Overview",
+        m1_desc:"Δημιουργήθηκε μέσω Google NotebookLM. Αυτό το AI podcast εξετάζει τη θεολογική σημασία του λόγου του Παύλου στον Άρειο Πάγο και την παράδοση του Διονυσίου ως πρώτου επισκόπου Αθηνών. Πρωτογενείς πηγές: Πράξ. 17, Πατερικά σχόλια.",
+        m1_date:"Μάιος 2026",
+        m2_title:"Χρυσόστομος και Πολιτική Εξουσία",
+        m2_sub:"Σειρά διαλέξεων για την αντιμετώπιση της αυτοκρατορικής εξουσίας από τον Ιωάννη Χρυσόστομο.",
+        m2_type:"Ηχογράφηση Διάλεξης",
+        m2_desc:"Ηχογραφημένη διάλεξη που εξερευνά τις ομιλίες του Χρυσοστόμου για τη σχέση Εκκλησίας και Κράτους στην Κωνσταντινούπολη του 4ου αιώνα.",
+        m2_date:"Μάρτιος 2026",
+        s1_title:"Οι Επτά Οικουμενικές Σύνοδοι",
+        s1_sub:"Διαδραστική παρουσίαση Google Slides για αίθουσα διδασκαλίας.",
+        s1_type:"Google Slides",
+        s1_desc:"Πλήρες σετ διαφανειών που καλύπτει και τις Επτά Οικουμενικές Συνόδους με χάρτες, χρονολόγια και βασικές θεολογικές αποφάσεις. Σχεδιασμένο για προπτυχιακά μαθήματα θεολογίας.",
+        s1_date:"Απρίλιος 2026",
+        s2_title:"Βυζαντινές Σχέσεις Εκκλησίας–Κράτους",
+        s2_sub:"Διαφάνειες διαλέξεων για τη συμφωνική σχέση Αυτοκράτορα και Πατριάρχη.",
+        s2_type:"Google Slides",
+        s2_desc:"Εξετάζει την έννοια της συμφωνίας από τον Κωνσταντίνο μέχρι τον Ιουστινιανό, με αποσπάσματα πρωτογενών πηγών από τον Ευσέβιο, τον Θεοδώρητο και τα Νεαρά του Ιουστινιανού.",
+        s2_date:"Φεβρουάριος 2026",
+        d1_title:"Αγιότητα και Αυτοκρατορική Εξουσία (Διατριβή)",
+        d1_sub:"Πλήρης διδακτορική διατριβή — PDF.",
+        d1_type:"PDF · 2,4 MB",
+        d1_desc:"Πλήρης διδακτορική διατριβή που εξετάζει τη συνάντηση πολιτικής εξουσίας και αγιότητας στην εκκλησιαστική γραμματεία κατά την περίοδο των Επτά Οικουμενικών Συνόδων.",
+        d1_date:"2023",
+        d2_title:"Θεός και ύπαρξη του κακού",
+        d2_sub:"Ιωάννης Χρυσόστομος «Περί Διαβόλου» — Δωρεάν PDF.",
+        d2_type:"PDF · 1,8 MB",
+        d2_desc:"Δημοσιευμένο έργο της σειράς Theology in Public. Διαθέσιμο δωρεάν σε Apple Books, Kobo και ως άμεση λήψη PDF.",
+        d2_date:"2024",
+        d3_title:"Η στάση των Μεγάλων Πατέρων",
+        d3_sub:"Μελέτη για τον Μέγα Βασίλειο, τον Χρυσόστομο και τον Γρηγόριο Θεολόγο.",
+        d3_type:"PDF · 3,1 MB",
+        d3_desc:"Συγκριτική μελέτη του τρόπου με τον οποίο οι Καππαδόκες Πατέρες και ο Χρυσόστομος διαχειρίστηκαν την αυτοκρατορική εξουσία. Περιλαμβάνει εκτενή παραρτήματα πρωτογενών πηγών.",
+        d3_date:"2025",
+        tx1_title:"Ο Λόγος στον Άρειο Πάγο — Ελληνικό Κείμενο",
+        tx1_sub:"Πράξ. 17:16–34 με αποσπάσματα πατερικών σχολίων.",
+        tx1_type:"Πρωτογενές Κείμενο · Ελληνικά/Αγγλικά",
+        tx1_desc:"Δίγλωσση παρουσίαση του λόγου του Παύλου στον Άρειο Πάγο με επιλογές από τις Ομιλίες του Ιωάννη Χρυσοστόμου στις Πράξεις και μεταγενέστερους Βυζαντινούς σχολιαστές. Περιλαμβάνει λεξιλογικές σημειώσεις για φοιτητές.",
+        tx1_date:"Μάιος 2026",
+        tx2_title:"Διονύσιος ο Αρεοπαγίτης — Παράδοση και Πηγές",
+        tx2_sub:"Ιστορική επισκόπηση του Διονυσιακού corpus και της αποδοχής του.",
+        tx2_type:"Επιστημονικό Άρθρο",
+        tx2_desc:"Κριτική εξέταση του corpus του Ψευδο-Διονυσίου και της επιρροής του στη Βυζαντινή μυστική θεολογία. Παρακολουθεί την εξέλιξη από τον ιστορικό Διονύσιο μέχρι τη νεοπλατωνική σύνθεση του 5ου–6ου αιώνα.",
+        tx2_date:"Απρίλιος 2026",
+        view_pdf:"Προβολή PDF", download:"Λήψη", listen:"Ακρόαση", view_slides:"Προβολή Διαφανειών", read:"Ανάγνωση",
+        expand_lesson:"Ανάπτυξη Μαθήματος", collapse_lesson:"Σύμπτυξη Μαθήματος",
+        lesson_audio:"Ήχος", lesson_slides:"Διαφάνειες", lesson_pdf:"PDF", lesson_text:"Κείμενο",
+        nlm_open:"Άνοιγμα στο NotebookLM",
+        nlm_desc:"AI podcast από Google NotebookLM. Κάντε κλικ για ακρόαση σε νέα καρτέλα.",
+        import_json_title:"Import Μαθημάτων από JSON",
+        import_json_desc:"Φόρτωσε τα μαθήματά σου από ένα .json αρχείο. Δεν χρειάζεται να επεξεργαστείς τον κώδικα.",
+        import_json_btn:"Import JSON",
+        import_json_drop:"Αφήστε το JSON αρχείο εδώ ή κάντε κλικ για περιήγηση",
+        reset_demo:"Επαναφορά Demo",
+        imported_success:"μαθήματα φορτώθηκαν από JSON",
+        import_error:"Σφάλμα φόρτωσης JSON",
+        no_content:"Δεν υπάρχει περιεχόμενο για αυτό το μάθημα",
+    }
+};
+
+let currentLang = 'en';
+let currentView = 'about';
+let savedPhotoSrc = null;
+
+function t(k){ return (i18n[currentLang]||{})[k] || (i18n.en||{})[k] || k; }
+
+function applyTranslations(){
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+        el.textContent = t(el.getAttribute('data-i18n'));
+    });
+    document.getElementById('langEN').classList.toggle('active', currentLang==='en');
+    document.getElementById('langGR').classList.toggle('active', currentLang==='gr');
+    document.documentElement.lang = currentLang==='gr' ? 'el' : 'en';
+    renderView(currentView);
+}
+
+const gModal = document.getElementById('globalModal');
+function showModal(title, html){
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalBody').innerHTML = html;
+    document.getElementById('closeModalBtn').textContent = t('close');
+    gModal.style.visibility='visible'; gModal.style.pointerEvents='auto';
+    gModal.classList.remove('opacity-0'); gModal.classList.add('opacity-100');
+}
+function hideModal(){
+    gModal.classList.remove('opacity-100'); gModal.classList.add('opacity-0');
+    setTimeout(()=>{ gModal.style.visibility='hidden'; gModal.style.pointerEvents='none'; },200);
+}
+document.getElementById('closeModalBtn').addEventListener('click', hideModal);
+gModal.addEventListener('click', e=>{ if(e.target===gModal||e.target.tagName==='DIV'&&e.target.classList.contains('absolute')) hideModal(); });
+
+const pModal = document.getElementById('photoModal');
+function openPhotoModal(){
+    pModal.style.visibility='visible'; pModal.style.pointerEvents='auto';
+    pModal.classList.remove('opacity-0'); pModal.classList.add('opacity-100');
+}
+function closePhotoModalFn(){
+    pModal.classList.remove('opacity-100'); pModal.classList.add('opacity-0');
+    setTimeout(()=>{ pModal.style.visibility='hidden'; pModal.style.pointerEvents='none'; },200);
+}
+document.getElementById('closePhotoModal').addEventListener('click', closePhotoModalFn);
+document.getElementById('photoModalBg').addEventListener('click', closePhotoModalFn);
+document.getElementById('applyPhotoBtn').addEventListener('click', ()=>{
+    const url = document.getElementById('photoUrlInput').value.trim();
+    const fi = document.getElementById('photoFileInput');
+    if(fi.files && fi.files[0]){
+        const r = new FileReader();
+        r.onload = e=>{ savedPhotoSrc=e.target.result; updatePhoto(); closePhotoModalFn(); };
+        r.readAsDataURL(fi.files[0]);
+    } else if(url){ savedPhotoSrc=url; updatePhoto(); closePhotoModalFn(); }
+});
+function updatePhoto(){
+    document.querySelectorAll('.profile-photo').forEach(img=>{
+        img.src=savedPhotoSrc; img.classList.remove('grayscale','opacity-70','mix-blend-multiply');
+    });
+}
+
+const PLACEHOLDER_PHOTO = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='320' viewBox='0 0 256 320'%3E%3Crect width='256' height='320' fill='%23e5e2da'/%3E%3Ccircle cx='128' cy='120' r='60' fill='%23c4c6cd'/%3E%3Cellipse cx='128' cy='290' rx='90' ry='70' fill='%23c4c6cd'/%3E%3Ctext x='128' y='260' text-anchor='middle' fill='%2374777d' font-family='serif' font-size='11'%3EClick to add photo%3C/text%3E%3C/svg%3E";
+
+const screenshots = {
+    a1:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='240'%3E%3Crect width='480' height='240' fill='%2303192e'/%3E%3Ccircle cx='240' cy='100' r='55' fill='%23775a19' opacity='0.25'/%3E%3Ccircle cx='240' cy='100' r='30' fill='%23775a19' opacity='0.4'/%3E%3Ccircle cx='155' cy='155' r='12' fill='%23fed488' opacity='0.4'/%3E%3Ccircle cx='325' cy='145' r='10' fill='%23fed488' opacity='0.4'/%3E%3Cline x1='240' y1='100' x2='155' y2='155' stroke='%23fed488' stroke-width='1' opacity='0.2'/%3E%3Cline x1='240' y1='100' x2='325' y2='145' stroke='%23fed488' stroke-width='1' opacity='0.2'/%3E%3Ctext x='240' y='215' text-anchor='middle' fill='%23fed488' font-family='Georgia,serif' font-size='16' font-style='italic'%3EMind Palace%3C/text%3E%3C/svg%3E",
+    a2:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='240'%3E%3Crect width='480' height='240' fill='%231a2e44'/%3E%3Cellipse cx='240' cy='160' rx='200' ry='35' fill='%23334155' opacity='0.6'/%3E%3Crect x='200' y='60' width='80' height='100' fill='%2343474d' opacity='0.5' rx='2'/%3E%3Ccircle cx='240' cy='60' r='25' fill='%2343474d' opacity='0.6'/%3E%3Ctext x='240' y='215' text-anchor='middle' fill='%23b4c8e4' font-family='Georgia,serif' font-size='16' font-style='italic'%3EHistory Explorer 3D%3C/text%3E%3C/svg%3E",
+    a3:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='240'%3E%3Crect width='480' height='240' fill='%23f6f3ea'/%3E%3Cellipse cx='240' cy='120' rx='210' ry='95' fill='%23dde8c0' opacity='0.5'/%3E%3Ccircle cx='180' cy='95' r='7' fill='%23775a19'/%3E%3Ccircle cx='305' cy='135' r='7' fill='%23775a19'/%3E%3Ccircle cx='140' cy='155' r='7' fill='%23775a19'/%3E%3Ccircle cx='350' cy='80' r='7' fill='%23775a19'/%3E%3Cline x1='180' y1='95' x2='305' y2='135' stroke='%23775a19' stroke-width='1.5' opacity='0.4'/%3E%3Cline x1='140' y1='155' x2='180' y2='95' stroke='%23775a19' stroke-width='1.5' opacity='0.4'/%3E%3Ctext x='240' y='215' text-anchor='middle' fill='%2303192e' font-family='Georgia,serif' font-size='16' font-style='italic'%3ETimeline Map%3C/text%3E%3C/svg%3E",
+    a4:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='240'%3E%3Crect width='480' height='240' fill='%23352b22'/%3E%3Crect x='55' y='50' width='370' height='9' rx='2' fill='%23775a19' opacity='0.6'/%3E%3Crect x='55' y='75' width='280' height='6' rx='2' fill='%23fed488' opacity='0.25'/%3E%3Crect x='55' y='93' width='330' height='6' rx='2' fill='%23fed488' opacity='0.25'/%3E%3Crect x='55' y='111' width='200' height='6' rx='2' fill='%23fed488' opacity='0.25'/%3E%3Crect x='55' y='138' width='310' height='6' rx='2' fill='%23fed488' opacity='0.18'/%3E%3Crect x='55' y='156' width='250' height='6' rx='2' fill='%23fed488' opacity='0.18'/%3E%3Crect x='55' y='174' width='280' height='6' rx='2' fill='%23775a19' opacity='0.35'/%3E%3Ctext x='240' y='215' text-anchor='middle' fill='%23fed488' font-family='Georgia,serif' font-size='16' font-style='italic'%3ELiving Anchor%3C/text%3E%3C/svg%3E",
+    a5:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='240'%3E%3Crect width='480' height='240' fill='%23775a19'/%3E%3Crect x='150' y='30' width='180' height='150' fill='%23fed488' opacity='0.15' rx='2'/%3E%3Crect x='165' y='50' width='150' height='9' fill='%23fed488' opacity='0.5'/%3E%3Crect x='165' y='72' width='110' height='5' fill='%23fed488' opacity='0.3'/%3E%3Crect x='165' y='86' width='130' height='5' fill='%23fed488' opacity='0.3'/%3E%3Crect x='165' y='100' width='90' height='5' fill='%23fed488' opacity='0.3'/%3E%3Ctext x='240' y='215' text-anchor='middle' fill='%23fff' font-family='Georgia,serif' font-size='16' font-style='italic'%3EInteractive Books%3C/text%3E%3C/svg%3E",
+    a6:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='240'%3E%3Crect width='480' height='240' fill='%230f172a'/%3E%3Crect x='35' y='35' width='190' height='75' fill='%231e293b' rx='2'/%3E%3Crect x='255' y='35' width='190' height='75' fill='%231e293b' rx='2'/%3E%3Crect x='35' y='128' width='410' height='75' fill='%231e293b' rx='2'/%3E%3Ccircle cx='130' cy='72' r='18' fill='%234c6078' opacity='0.5'/%3E%3Ccircle cx='350' cy='72' r='18' fill='%234c6078' opacity='0.5'/%3E%3Ctext x='240' y='215' text-anchor='middle' fill='%23b4c8e4' font-family='Georgia,serif' font-size='16' font-style='italic'%3ECentral Console%3C/text%3E%3C/svg%3E"
+};
+
+function aboutTemplate(){
+    const ps = savedPhotoSrc || PLACEHOLDER_PHOTO;
+    const gc = savedPhotoSrc ? '' : 'grayscale opacity-70 mix-blend-multiply';
+    return `<div class="max-w-6xl mx-auto">
+    <section class="grid grid-cols-1 lg:grid-cols-2 bg-surface-container-low dark:bg-slate-800 shadow-2xl relative overflow-hidden mb-20">
+      <div class="p-8 lg:p-14 border-r-0 lg:border-r border-outline-variant/20 flex flex-col justify-center items-center lg:items-start text-center lg:text-left">
+        <div class="photo-wrapper relative w-56 h-72 mb-8 bg-surface-container-highest overflow-hidden cursor-pointer" onclick="openPhotoModal()">
+          <img alt="Dimitrios Porpatonelis" class="profile-photo w-full h-full object-cover ${gc}" src="${ps}">
+          <div class="photo-edit-overlay absolute inset-0 bg-primary/60 flex flex-col items-center justify-center">
+            <span class="material-symbols-outlined text-on-primary text-3xl">photo_camera</span>
+            <span class="font-label text-[9px] uppercase tracking-widest text-on-primary mt-1">Edit Photo</span>
+          </div>
+        </div>
+        <h1 class="font-headline text-5xl text-primary dark:text-slate-100 leading-tight mb-2 italic">Dimitrios Porpatonelis</h1>
+        <p class="font-label text-xs uppercase tracking-[0.18em] text-secondary mb-6">${t('about_status')}</p>
+        <div class="mb-5 w-full">
+          <p class="font-label text-[9px] uppercase tracking-[0.25em] text-on-surface-variant/60 mb-1">${t('about_teaching_label')}</p>
+          <p class="font-body text-sm text-on-surface-variant dark:text-slate-400 italic">${t('about_teaching')}</p>
+        </div>
+        <div class="mb-6 w-full">
+          <p class="font-label text-[9px] uppercase tracking-[0.25em] text-on-surface-variant/60 mb-2">${t('about_interests_label')}</p>
+          <div>
+            ${['Patristics','Theology','Political Philosophy','Church & State','Early Church','Byzantine History','Digital Pedagogy','Comparative Religion'].map(i=>`<span class="interest-tag">${i}</span>`).join('')}
+          </div>
+        </div>
+        <div class="h-px w-20 bg-secondary mb-6"></div>
+        <div class="w-full">
+          <p class="font-label text-[9px] uppercase tracking-[0.25em] text-on-surface-variant/60 mb-3">${t('about_links_label')}</p>
+          <div class="space-y-2">
+            <a href="https://auth.academia.edu/DimitriosPorpatonelis" target="_blank" class="flex items-center gap-2 text-secondary hover:text-primary w-fit group">
+              <span class="material-symbols-outlined text-sm">school</span>
+              <span class="font-label text-xs uppercase tracking-wider border-b border-transparent group-hover:border-secondary transition-colors">Academia.edu</span>
+            </a>
+            <a href="https://www.amazon.com/s?k=Porpatonelis" target="_blank" class="flex items-center gap-2 text-secondary hover:text-primary w-fit group">
+              <span class="material-symbols-outlined text-sm">auto_stories</span>
+              <span class="font-label text-xs uppercase tracking-wider border-b border-transparent group-hover:border-secondary transition-colors">Amazon Author Page</span>
+            </a>
+            <a href="https://books.apple.com" target="_blank" class="flex items-center gap-2 text-secondary hover:text-primary w-fit group">
+              <span class="material-symbols-outlined text-sm">menu_book</span>
+              <span class="font-label text-xs uppercase tracking-wider border-b border-transparent group-hover:border-secondary transition-colors">Apple Books</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="p-8 lg:p-14 bg-surface-container dark:bg-slate-900/60">
+        <p class="font-body text-base text-on-surface-variant dark:text-slate-300 mb-10 leading-relaxed italic border-l-4 border-secondary pl-5">${t('about_bio')}</p>
+        <h2 class="font-label text-[10px] uppercase tracking-[0.3em] text-secondary mb-8">The Intellectual Ledger</h2>
+        <div class="space-y-9">
+          <div class="group cursor-pointer" data-ledger="patristics">
+            <div class="flex justify-between items-end mb-2"><h3 class="font-headline text-xl italic text-primary dark:text-slate-100 group-hover:text-secondary transition-colors">${t('ledger_i')}</h3><span class="font-label text-xs text-on-surface-variant/40">I</span></div>
+            <div class="h-px w-full bg-outline-variant/30 relative"><div class="absolute inset-0 bg-secondary w-0 group-hover:w-full transition-all duration-500"></div></div>
+            <p class="font-body text-sm mt-3 text-on-surface-variant dark:text-slate-400">${t('ledger_i_text')}</p>
+          </div>
+          <div class="group cursor-pointer" data-ledger="political">
+            <div class="flex justify-between items-end mb-2"><h3 class="font-headline text-xl italic text-primary dark:text-slate-100 group-hover:text-secondary transition-colors">${t('ledger_ii')}</h3><span class="font-label text-xs text-on-surface-variant/40">II</span></div>
+            <div class="h-px w-full bg-outline-variant/30 relative"><div class="absolute inset-0 bg-secondary w-0 group-hover:w-full transition-all duration-500"></div></div>
+            <p class="font-body text-sm mt-3 text-on-surface-variant dark:text-slate-400">${t('ledger_ii_text')}</p>
+          </div>
+          <div class="group cursor-pointer" data-ledger="digital">
+            <div class="flex justify-between items-end mb-2"><h3 class="font-headline text-xl italic text-primary dark:text-slate-100 group-hover:text-secondary transition-colors">${t('ledger_iii')}</h3><span class="font-label text-xs text-on-surface-variant/40">III</span></div>
+            <div class="h-px w-full bg-outline-variant/30 relative"><div class="absolute inset-0 bg-secondary w-0 group-hover:w-full transition-all duration-500"></div></div>
+            <p class="font-body text-sm mt-3 text-on-surface-variant dark:text-slate-400">${t('ledger_iii_text')}</p>
+          </div>
+        </div>
+        <div class="mt-10 border-t border-outline-variant/20 pt-8">
+          <h4 class="font-label text-[9px] uppercase tracking-[0.3em] text-secondary mb-5">${t('about_stats_label')}</h4>
+          <div class="grid grid-cols-3 gap-4">
+            <div class="text-center"><p class="font-headline text-3xl italic text-secondary">302</p><p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/60 mt-1">${t('about_followers')}</p></div>
+            <div class="text-center border-x border-outline-variant/20"><p class="font-headline text-3xl italic text-secondary">6,979</p><p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/60 mt-1">${t('about_views')}</p></div>
+            <div class="text-center"><p class="font-headline text-3xl italic text-secondary">79</p><p class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/60 mt-1">${t('about_following')}</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="mb-20">
+      <div class="flex flex-col md:flex-row justify-between items-baseline mb-10 border-b border-outline-variant/10 pb-4">
+        <h2 class="font-headline text-4xl italic text-primary dark:text-slate-100">${t('recent_title')}</h2>
+        <a href="https://auth.academia.edu/DimitriosPorpatonelis" target="_blank" class="font-label text-[10px] uppercase tracking-widest text-secondary hover:underline underline-offset-8">${t('view_all')}</a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-surface-container-low dark:bg-slate-800 p-8"><span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/50 block mb-3">Θεολογία · Free</span><h3 class="font-headline text-xl italic text-primary dark:text-slate-100 mb-3">God and the Existence of Evil</h3><p class="font-body text-sm text-on-surface-variant dark:text-slate-400">John Chrysostom «On the Devil». 4,929 views · 309 bookmarks</p></div>
+        <div class="bg-surface-container-low dark:bg-slate-800 p-8"><span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/50 block mb-3">Χριστολογία · Kindle</span><h3 class="font-headline text-xl italic text-primary dark:text-slate-100 mb-3">God and Man in Christ</h3><p class="font-body text-sm text-on-surface-variant dark:text-slate-400">Cyril of Alexandria «Christ is One». 453 views · 61 bookmarks</p></div>
+        <div class="bg-primary text-on-primary p-8 flex flex-col justify-between"><div><span class="material-symbols-outlined text-3xl text-secondary mb-4">history_edu</span><h3 class="font-headline text-xl italic mb-3">Attitude of the Great Fathers</h3><p class="font-body text-sm text-surface-container/70">Church–State relations. 4th–5th c. Patristics. 281 views.</p></div><a href="https://auth.academia.edu/DimitriosPorpatonelis" target="_blank" class="font-label text-[9px] uppercase tracking-widest text-secondary mt-4 inline-block">View on Academia →</a></div>
+      </div>
+    </section>
+    </div>`;
+}
+
+function academicTemplate(){
+    const pubs = [
+        { m:t('p1m'), ti:t('p1t'), b:t('p1b'), l:'https://auth.academia.edu/DimitriosPorpatonelis', ll:t('p1l'), v:'4 views', icon:'article' },
+        { m:t('p2m'), ti:t('p2t'), b:t('p2b'), l:'https://auth.academia.edu/DimitriosPorpatonelis', ll:t('p2l'), v:'4,929 views', icon:'auto_stories' },
+        { m:t('p3m'), ti:t('p3t'), b:t('p3b'), l:'https://www.amazon.com/dp/B00C8AUIZW', ll:t('p3l'), v:'453 views', icon:'menu_book' },
+        { m:t('p4m'), ti:t('p4t'), b:t('p4b'), l:'https://auth.academia.edu/DimitriosPorpatonelis', ll:t('p4l'), v:'281 views', icon:'library_books' },
+        { m:t('p5m'), ti:t('p5t'), b:t('p5b'), l:'#', ll:t('p5l'), v:'37 views', icon:'church' },
+    ];
+    return `<div class="max-w-5xl mx-auto">
+    <h1 class="font-headline text-5xl italic text-primary dark:text-slate-100 border-l-8 border-secondary pl-6 mb-12">${t('academic_title')}</h1>
+    <div class="space-y-8">
+    ${pubs.map(p=>`<div class="bg-surface-container-low dark:bg-slate-800 p-8 group hover:shadow-lg transition-shadow">
+      <div class="flex items-start gap-4">
+        <span class="material-symbols-outlined text-3xl text-secondary shrink-0 mt-1">${p.icon}</span>
+        <div class="flex-1">
+          <div class="flex flex-wrap items-center gap-3 mb-2">
+            <span class="font-label text-[9px] uppercase tracking-widest text-secondary border border-secondary/30 px-2 py-0.5">${p.m}</span>
+            <span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/40">${p.v}</span>
+          </div>
+          <h3 class="font-headline text-2xl italic text-primary dark:text-slate-100 mb-3 group-hover:text-secondary transition-colors">${p.ti}</h3>
+          <p class="font-body text-sm text-on-surface-variant dark:text-slate-400 mb-4 leading-relaxed">${p.b}</p>
+          <a href="${p.l}" target="_blank" class="font-label text-xs uppercase tracking-wider text-secondary border-b border-secondary/50 hover:border-secondary pb-0.5">${p.ll}</a>
+        </div>
+      </div>
+    </div>`).join('')}
+    </div></div>`;
+}
+
+function educationalTemplate(){
+    const apps = [
+        { k:'a1', icon:'psychology_alt', bg:'bg-[#03192e]', tc:'text-amber-200', url:'https://dporpatonelis-crypto.github.io/mind-palace-cases/', github:'https://github.com/dporpatonelis-crypto/mind-palace-cases' },
+        { k:'a2', icon:'videogame_asset', bg:'bg-[#1a2e44]', tc:'text-blue-200', url:'https://history-explorer-3d.vercel.app/', github:'#' },
+        { k:'a3', icon:'map', bg:'bg-[#2d4a1e]', tc:'text-green-200', url:'https://dporpatonelis-crypto.github.io/Map-Timeline/', github:'https://github.com/dporpatonelis-crypto/Map-Timeline' },
+        { k:'a4', icon:'text_snippet', bg:'bg-[#352b22]', tc:'text-amber-200', url:'https://idea-weaver-board.vercel.app/', github:'#' },
+        { k:'a5', icon:'auto_stories', bg:'bg-[#775a19]', tc:'text-yellow-100', url:'https://dporpatonelis-crypto.github.io/interactive-books/index.html', github:'https://github.com/dporpatonelis-crypto/interactive-books' },
+        { k:'a6', icon:'dashboard', bg:'bg-[#0f172a]', tc:'text-blue-200', url:'#', github:'#' },
+    ];
+    return `<div class="max-w-6xl mx-auto">
+    <h1 class="font-headline text-5xl italic text-primary dark:text-slate-100 border-l-8 border-secondary pl-6 mb-6">${t('edu_title')}</h1>
+    <p class="font-body text-base text-on-surface-variant dark:text-slate-400 mb-14 max-w-3xl leading-relaxed">${t('edu_sub')}</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+    ${apps.map(a=>`
+    <div class="app-card bg-surface-container-low dark:bg-slate-800 overflow-hidden border border-outline-variant/20 dark:border-slate-700 flex flex-col">
+      <div class="relative h-40 overflow-hidden">
+        <img src="${screenshots[a.k]}" alt="${t(a.k+'n')} preview" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent pointer-events-none"></div>
+        <span class="absolute top-2 right-2 ${a.bg} ${a.tc} px-2 py-1 font-label text-[8px] uppercase tracking-wider">${t(a.k+'t')}</span>
+      </div>
+      <div class="p-6 flex flex-col flex-1">
+        <div class="flex items-start gap-3 mb-3">
+          <span class="material-symbols-outlined text-2xl text-secondary shrink-0 mt-0.5">${a.icon}</span>
+          <div>
+            <h2 class="font-headline text-xl italic text-primary dark:text-slate-100">${t(a.k+'n')}</h2>
+            <p class="font-label text-[9px] uppercase tracking-widest text-secondary">${t(a.k+'s')}</p>
+          </div>
+        </div>
+        <p class="font-body text-sm text-on-surface-variant dark:text-slate-400 leading-relaxed flex-1 mb-5">${t(a.k+'d')}</p>
+        <div class="flex gap-3 mt-auto pt-4 border-t border-outline-variant/20">
+          <a href="${a.url}" target="_blank" class="flex-1 text-center bg-primary text-on-primary py-2 font-label text-[10px] uppercase tracking-widest hover:bg-primary-container transition-colors">${t('launch')}</a>
+          <a href="${a.github}" target="_blank" class="flex items-center gap-1 border border-primary/30 px-4 py-2 font-label text-[10px] uppercase tracking-widest hover:bg-surface-dim transition-colors text-primary dark:text-slate-300">
+            <span class="material-symbols-outlined text-sm">code</span>${t('github')}
+          </a>
+        </div>
+      </div>
+    </div>`).join('')}
+    </div>
+
+    <section class="mt-20 mb-4">
+      <div class="flex items-center gap-4 mb-8 border-b border-outline-variant/20 pb-4">
+        <span class="material-symbols-outlined text-3xl text-secondary">play_circle</span>
+        <h2 class="font-headline text-3xl italic text-primary dark:text-slate-100">Demo Video</h2>
+      </div>
+      <div class="bg-surface-container-low dark:bg-slate-800 p-6 border border-outline-variant/20 dark:border-slate-700">
+        <div class="relative w-full" style="padding-top: 56.25%;">
+          <iframe class="absolute inset-0 w-full h-full" src="https://www.youtube.com/embed/Ftr5AbtSxWE?si=KR_zivqiwIqMX6Ij" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+    </div>`;
+}
+
+// ── MEDIA JSON IMPORT SYSTEM ───────────────────────────
+let importedLessons = null;
+let useImportedData = false;
+
+function handleJsonImport(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (!data.lessons || !Array.isArray(data.lessons)) {
+                alert('Το αρχείο δεν έχει σωστή μορφή. Χρειάζεται "lessons" array.');
+                return;
+            }
+            importedLessons = data.lessons;
+            useImportedData = true;
+
+            window.lessonStates = {};
+            importedLessons.forEach((l, i) => {
+                window.lessonStates[l.id || ('lesson' + i)] = { 
+                    expanded: i === 0, 
+                    activeTab: 'audio' 
+                };
+            });
+
+            renderView('media');
+
+        } catch (err) {
+            alert('Σφάλμα ανάγνωσης JSON: ' + err.message);
+        }
+    };
+    reader.readAsText(file);
+}
+
+function resetToDemo() {
+    useImportedData = false;
+    importedLessons = null;
+    window.lessonStates = null;
+    renderView('media');
+}
+
+function getDemoLessons() {
+    return [
+        {
+            id: 'lesson1',
+            title: 'Μάθημα Ι: Παύλος και Διονύσιος ο Αρεοπαγίτης',
+            description: 'Εξερεύνηση της συνάντησης του Αποστόλου Παύλου και του Διονυσίου του Αρεοπαγίτη στην Αθήνα (Πράξ. 17).',
+            color: '#03192e',
+            accent: '#fed488',
+            media: {
+                audio: [
+                    {
+                        title: 'Παύλος και Διονύσιος ο Αρεοπαγίτης',
+                        subtitle: 'NotebookLM Audio Overview',
+                        type: 'NotebookLM AI',
+                        description: 'AI podcast για τη συνάντηση του Αποστόλου Παύλου και του Διονυσίου στην Αθήνα.',
+                        date: 'Μάιος 2026',
+                        icon: 'headphones',
+                        isNLM: true,
+                        nlmUrl: 'https://notebooklm.google.com/notebook/03a7f421-addd-4494-b879-cd380a4d4316/artifact/3d66a6d4-db1d-445d-af33-6eae970aa938'
+                    }
+                ],
+                slides: [],
+                pdf: [
+                    {
+                        title: 'Θεός και ύπαρξη του κακού',
+                        subtitle: 'John Chrysostom "On the Devil"',
+                        type: 'PDF · 1.8 MB',
+                        description: 'Δωρεάν PDF από τη σειρά Theology in Public.',
+                        date: '2024',
+                        icon: 'description',
+                        pdfUrl: 'https://auth.academia.edu/download/placeholder2.pdf',
+                        viewerUrl: 'https://docs.google.com/viewer?url=https://auth.academia.edu/download/placeholder2.pdf&embedded=true'
+                    }
+                ],
+                text: [
+                    {
+                        title: 'Ο Λόγος στον Άρειο Πάγο',
+                        subtitle: 'Πράξ. 17:16–34 με πατερικά σχόλια',
+                        type: 'Πρωτογενές Κείμενο',
+                        description: 'Δίγλωσση παρουσίαση με επιλογές από Χρυσόστομο.',
+                        date: 'Μάιος 2026',
+                        icon: 'article',
+                        content: '<div class="font-body text-sm"><p class="italic border-l-4 border-secondary pl-4">«Ἐν δὲ ταῖς Ἀθήναις...»</p><p>(Πράξ. 17:16)</p></div>'
+                    }
+                ]
+            }
+        },
+        {
+            id: 'lesson2',
+            title: 'Μάθημα ΙΙ: Χρυσόστομος και Πολιτική Εξουσία',
+            description: 'Η αντιμετώπιση της αυτοκρατορικής εξουσίας από τον Ιωάννη Χρυσόστομο.',
+            color: '#1a2e44',
+            accent: '#b4c8e4',
+            media: {
+                audio: [
+                    {
+                        title: 'Χρυσόστομος και Πολιτική Εξουσία',
+                        subtitle: 'Ηχογράφηση Διάλεξης',
+                        type: 'Lecture Audio',
+                        description: 'Ηχογραφημένη διάλεξη για τη σχέση Εκκλησίας και Κράτους.',
+                        date: 'Μάρτιος 2026',
+                        icon: 'mic',
+                        audioUrl: '#',
+                        isNLM: false
+                    }
+                ],
+                slides: [],
+                pdf: [
+                    {
+                        title: 'Η στάση των Μεγάλων Πατέρων',
+                        subtitle: 'Μελέτη για Βασίλειο, Χρυσόστομο, Γρηγόριο',
+                        type: 'PDF · 3.1 MB',
+                        description: 'Συγκριτική μελέτη αυτοκρατορικής εξουσίας.',
+                        date: '2025',
+                        icon: 'description',
+                        pdfUrl: 'https://auth.academia.edu/download/placeholder3.pdf',
+                        viewerUrl: 'https://docs.google.com/viewer?url=https://auth.academia.edu/download/placeholder3.pdf&embedded=true'
+                    }
+                ],
+                text: []
+            }
+        },
+        {
+            id: 'lesson3',
+            title: 'Μάθημα ΙΙΙ: Οι Επτά Οικουμενικές Σύνοδοι',
+            description: 'Πλήρης επισκόπηση των Επτά Οικουμενικών Συνόδων.',
+            color: '#2d4a1e',
+            accent: '#a3c585',
+            media: {
+                audio: [],
+                slides: [
+                    {
+                        title: 'Οι Επτά Οικουμενικές Σύνοδοι',
+                        subtitle: 'Διαδραστική παρουσίαση',
+                        type: 'Google Slides',
+                        description: 'Πλήρες σετ διαφανειών με χάρτες και χρονολόγια.',
+                        date: 'Απρίλιος 2026',
+                        icon: 'slideshow',
+                        embedUrl: 'https://docs.google.com/presentation/d/placeholder/embed',
+                        directUrl: '#'
+                    }
+                ],
+                pdf: [
+                    {
+                        title: 'Αγιότητα και Αυτοκρατορική Εξουσία',
+                        subtitle: 'Διδακτορική Διατριβή',
+                        type: 'PDF · 2.4 MB',
+                        description: 'Πλήρης διατριβή για πολιτική εξουσία και αγιότητα.',
+                        date: '2023',
+                        icon: 'description',
+                        pdfUrl: 'https://auth.academia.edu/download/placeholder1.pdf',
+                        viewerUrl: 'https://docs.google.com/viewer?url=https://auth.academia.edu/download/placeholder1.pdf&embedded=true'
+                    }
+                ],
+                text: []
+            }
+        },
+        {
+            id: 'lesson4',
+            title: 'Μάθημα ΙV: Βυζαντινές Σχέσεις Εκκλησίας–Κράτους',
+            description: 'Η συμφωνική σχέση Αυτοκράτορα και Πατριάρχη.',
+            color: '#775a19',
+            accent: '#fed488',
+            media: {
+                audio: [],
+                slides: [
+                    {
+                        title: 'Βυζαντινές Σχέσεις Εκκλησίας–Κράτους',
+                        subtitle: 'Διαφάνειες διαλέξεων',
+                        type: 'Google Slides',
+                        description: 'Έννοια της συμφωνίας από Κωνσταντίνο σε Ιουστινιανό.',
+                        date: 'Φεβρουάριος 2026',
+                        icon: 'slideshow',
+                        embedUrl: 'https://docs.google.com/presentation/d/placeholder2/embed',
+                        directUrl: '#'
+                    }
+                ],
+                pdf: [],
+                text: []
+            }
+        }
+    ];
+}
+
+function mediaTemplate(){
+    const lessons = useImportedData && importedLessons ? importedLessons : getDemoLessons();
+
+    if (!window.lessonStates) {
+        window.lessonStates = {};
+        lessons.forEach((l, i) => {
+            const id = l.id || ('lesson' + i);
+            window.lessonStates[id] = { expanded: i === 0, activeTab: 'audio' };
+        });
+    }
+
+    function getItemCount(lesson, type) {
+        return (lesson.media && lesson.media[type] && lesson.media[type].length) || 0;
+    }
+
+    function renderLessonMedia(lesson, tab) {
+        const items = (lesson.media && lesson.media[tab]) || [];
+        const lessonId = lesson.id || 'lesson';
+
+        if (items.length === 0) {
+            return `<div class="p-8 text-center">
+                <span class="material-symbols-outlined text-4xl text-on-surface-variant/30 mb-3">folder_off</span>
+                <p class="font-label text-xs uppercase tracking-widest text-on-surface-variant/50">${t('no_content')}</p>
+            </div>`;
+        }
+
+        return `<div class="lesson-media-grid p-6">
+            ${items.map((item, idx) => {
+                if (tab === 'audio') {
+                    if (item.isNLM && item.nlmUrl) {
+                        return `<div class="media-card bg-surface-container-low dark:bg-slate-800 overflow-hidden border border-outline-variant/20 dark:border-slate-700">
+                            <div class="relative h-40 overflow-hidden bg-[#03192e] flex items-center justify-center">
+                                <span class="material-symbols-outlined text-6xl text-amber-200 opacity-40">${item.icon || 'headphones'}</span>
+                                <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+                                    <span class="media-type-badge bg-[#03192e] text-amber-200">
+                                        <span class="material-symbols-outlined text-[10px]">smart_toy</span>
+                                        NotebookLM AI
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/50 block mb-2">${item.date || ''}</span>
+                                <h3 class="font-headline text-xl italic text-primary dark:text-slate-100 mb-2">${item.title || ''}</h3>
+                                <p class="font-label text-[10px] uppercase tracking-widest text-secondary mb-3">${item.subtitle || ''}</p>
+                                <p class="font-body text-sm text-on-surface-variant dark:text-slate-400 leading-relaxed mb-5">${item.description || ''}</p>
+                                <div class="nlm-embed p-4 mb-4">
+                                    <div class="flex items-center gap-3 mb-3">
+                                        <span class="material-symbols-outlined text-2xl text-secondary">podcasts</span>
+                                        <div>
+                                            <p class="font-label text-xs uppercase tracking-widest text-primary dark:text-slate-100">AI Audio Overview</p>
+                                            <p class="font-label text-[9px] text-on-surface-variant/60">${t('nlm_desc')}</p>
+                                        </div>
+                                    </div>
+                                    <div class="audio-waveform mb-3"></div>
+                                    <a href="${item.nlmUrl}" target="_blank" class="flex items-center justify-center gap-2 bg-primary text-on-primary py-3 font-label text-xs uppercase tracking-widest hover:bg-primary-container transition-colors w-full">
+                                        <span class="material-symbols-outlined text-sm">open_in_new</span>
+                                        ${t('nlm_open')}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>`;
+                    } else {
+                        return `<div class="media-card bg-surface-container-low dark:bg-slate-800 overflow-hidden border border-outline-variant/20 dark:border-slate-700">
+                            <div class="relative h-40 overflow-hidden bg-[#1a2e44] flex items-center justify-center">
+                                <span class="material-symbols-outlined text-6xl text-blue-200 opacity-40">${item.icon || 'mic'}</span>
+                                <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+                                    <span class="media-type-badge bg-[#1a2e44] text-blue-200">
+                                        <span class="material-symbols-outlined text-[10px]">${item.icon || 'mic'}</span>
+                                        ${item.type || 'Audio'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/50 block mb-2">${item.date || ''}</span>
+                                <h3 class="font-headline text-xl italic text-primary dark:text-slate-100 mb-2">${item.title || ''}</h3>
+                                <p class="font-label text-[10px] uppercase tracking-widest text-secondary mb-3">${item.subtitle || ''}</p>
+                                <p class="font-body text-sm text-on-surface-variant dark:text-slate-400 leading-relaxed mb-5">${item.description || ''}</p>
+                                ${item.audioUrl ? `
+                                <div class="bg-surface-container dark:bg-slate-900 p-4 mb-4 border border-outline-variant/20 dark:border-slate-700">
+                                    <audio controls class="w-full" style="height:40px;">
+                                        <source src="${item.audioUrl}" type="audio/mpeg">
+                                    </audio>
+                                </div>` : ''}
+                            </div>
+                        </div>`;
+                    }
+                }
+
+                if (tab === 'slides') {
+                    return `<div class="media-card bg-surface-container-low dark:bg-slate-800 overflow-hidden border border-outline-variant/20 dark:border-slate-700">
+                        <div class="relative h-48 overflow-hidden bg-[#2d4a1e] flex items-center justify-center">
+                            <span class="material-symbols-outlined text-6xl text-green-200 opacity-40">${item.icon || 'slideshow'}</span>
+                            <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+                                <span class="media-type-badge bg-[#2d4a1e] text-green-200">
+                                    <span class="material-symbols-outlined text-[10px]">${item.icon || 'slideshow'}</span>
+                                    ${item.type || 'Slides'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/50 block mb-2">${item.date || ''}</span>
+                            <h3 class="font-headline text-xl italic text-primary dark:text-slate-100 mb-2">${item.title || ''}</h3>
+                            <p class="font-label text-[10px] uppercase tracking-widest text-secondary mb-3">${item.subtitle || ''}</p>
+                            <p class="font-body text-sm text-on-surface-variant dark:text-slate-400 leading-relaxed mb-5">${item.description || ''}</p>
+                            ${item.embedUrl ? `
+                            <div class="pdf-embed-container mb-4 relative" style="height:200px;">
+                                <iframe src="${item.embedUrl}" frameborder="0" width="100%" height="100%" allowfullscreen></iframe>
+                            </div>` : ''}
+                            ${item.directUrl ? `
+                            <a href="${item.directUrl}" target="_blank" class="block text-center bg-primary text-on-primary py-2 font-label text-xs uppercase tracking-widest hover:bg-primary-container transition-colors">
+                                ${t('view_slides')}
+                            </a>` : ''}
+                        </div>
+                    </div>`;
+                }
+
+                if (tab === 'pdf') {
+                    return `<div class="media-card bg-surface-container-low dark:bg-slate-800 overflow-hidden border border-outline-variant/20 dark:border-slate-700">
+                        <div class="relative h-48 overflow-hidden bg-[#352b22] flex items-center justify-center">
+                            <span class="material-symbols-outlined text-6xl text-amber-200 opacity-40">${item.icon || 'description'}</span>
+                            <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+                                <span class="media-type-badge bg-[#352b22] text-amber-200">
+                                    <span class="material-symbols-outlined text-[10px]">${item.icon || 'description'}</span>
+                                    ${item.type || 'PDF'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/50 block mb-2">${item.date || ''}</span>
+                            <h3 class="font-headline text-xl italic text-primary dark:text-slate-100 mb-2">${item.title || ''}</h3>
+                            <p class="font-label text-[10px] uppercase tracking-widest text-secondary mb-3">${item.subtitle || ''}</p>
+                            <p class="font-body text-sm text-on-surface-variant dark:text-slate-400 leading-relaxed mb-5">${item.description || ''}</p>
+                            ${item.viewerUrl ? `
+                            <div class="pdf-embed-container mb-4 relative" style="height:280px;">
+                                <iframe src="${item.viewerUrl}" frameborder="0" width="100%" height="100%"></iframe>
+                            </div>` : ''}
+                            <div class="flex gap-2">
+                                ${item.pdfUrl ? `
+                                <a href="${item.pdfUrl}" target="_blank" class="flex-1 text-center bg-primary text-on-primary py-2 font-label text-xs uppercase tracking-widest hover:bg-primary-container transition-colors">
+                                    ${t('view_pdf')}
+                                </a>
+                                <a href="${item.pdfUrl}" download class="flex-1 text-center border border-primary/30 py-2 font-label text-xs uppercase tracking-widest hover:bg-surface-dim transition-colors text-primary dark:text-slate-300">
+                                    ${t('download')}
+                                </a>` : ''}
+                            </div>
+                        </div>
+                    </div>`;
+                }
+
+                if (tab === 'text') {
+                    return `<div class="media-card bg-surface-container-low dark:bg-slate-800 overflow-hidden border border-outline-variant/20 dark:border-slate-700">
+                        <div class="relative h-48 overflow-hidden bg-[#775a19] flex items-center justify-center">
+                            <span class="material-symbols-outlined text-6xl text-yellow-100 opacity-40">${item.icon || 'article'}</span>
+                            <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
+                                <span class="media-type-badge bg-[#775a19] text-yellow-100">
+                                    <span class="material-symbols-outlined text-[10px]">${item.icon || 'article'}</span>
+                                    ${item.type || 'Text'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <span class="font-label text-[9px] uppercase tracking-widest text-on-surface-variant/50 block mb-2">${item.date || ''}</span>
+                            <h3 class="font-headline text-xl italic text-primary dark:text-slate-100 mb-2">${item.title || ''}</h3>
+                            <p class="font-label text-[10px] uppercase tracking-widest text-secondary mb-3">${item.subtitle || ''}</p>
+                            <p class="font-body text-sm text-on-surface-variant dark:text-slate-400 leading-relaxed mb-5">${item.description || ''}</p>
+                            ${item.content ? `
+                            <div class="bg-surface-container dark:bg-slate-900 p-4 mb-4 border border-outline-variant/20 dark:border-slate-700 max-h-64 overflow-y-auto">
+                                ${item.content}
+                            </div>` : ''}
+                            <div class="flex gap-2">
+                                ${item.content ? `
+                                <button onclick="showModal('${(item.title || '').replace(/'/g, "\'")}', '${(item.content || '').replace(/'/g, "\'")}')" class="flex-1 bg-primary text-on-primary py-2 font-label text-xs uppercase tracking-widest hover:bg-primary-container transition-colors">
+                                    ${t('read')}
+                                </button>` : ''}
+                            </div>
+                        </div>
+                    </div>`;
+                }
+                return '';
+            }).join('')}
+        </div>`;
+    }
+
+    function renderLessonTabs(lesson) {
+        const lessonId = lesson.id || 'lesson';
+        const state = window.lessonStates[lessonId];
+        const tabs = [
+            { id: 'audio', label: t('lesson_audio'), icon: 'headphones', count: getItemCount(lesson, 'audio') },
+            { id: 'slides', label: t('lesson_slides'), icon: 'slideshow', count: getItemCount(lesson, 'slides') },
+            { id: 'pdf', label: t('lesson_pdf'), icon: 'description', count: getItemCount(lesson, 'pdf') },
+            { id: 'text', label: t('lesson_text'), icon: 'article', count: getItemCount(lesson, 'text') }
+        ].filter(tab => tab.count > 0);
+
+        if (tabs.length === 0) return '';
+
+        if (!tabs.find(t => t.id === state.activeTab)) {
+            state.activeTab = tabs[0].id;
+        }
+
+        return `<div class="flex gap-1 mb-4 border-b border-outline-variant/20 pb-1">
+            ${tabs.map(tab => `
+                <button onclick="switchLessonTab('${lessonId}', '${tab.id}')" 
+                    class="lesson-tab-btn ${tab.id === state.activeTab ? 'active' : 'text-on-surface-variant/60 dark:text-slate-400'} px-4 py-2 font-label text-xs uppercase tracking-widest flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">${tab.icon}</span>
+                    ${tab.label}
+                    <span class="text-[10px] opacity-60">(${tab.count})</span>
+                </button>
+            `).join('')}
+        </div>
+        ${renderLessonMedia(lesson, state.activeTab)}`;
+    }
+
+    const importBanner = `
+        <div class="mb-8 p-6 bg-surface-container dark:bg-slate-800 border border-outline-variant/20 dark:border-slate-700">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h3 class="font-headline text-lg italic text-primary dark:text-slate-100 mb-1">${t('import_json_title')}</h3>
+                    <p class="font-body text-sm text-on-surface-variant dark:text-slate-400">${t('import_json_desc')}</p>
+                </div>
+                <div class="flex gap-3">
+                    <label class="cursor-pointer bg-primary text-on-primary px-6 py-3 font-label text-xs uppercase tracking-widest hover:bg-primary-container transition-colors flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">upload_file</span>
+                        ${t('import_json_btn')}
+                        <input type="file" accept=".json" onchange="handleJsonImport(event)" class="hidden">
+                    </label>
+                    ${useImportedData ? `
+                    <button onclick="resetToDemo()" class="border border-primary/30 px-6 py-3 font-label text-xs uppercase tracking-widest hover:bg-surface-dim transition-colors text-primary dark:text-slate-300 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">refresh</span>
+                        ${t('reset_demo')}
+                    </button>` : ''}
+                </div>
+            </div>
+            ${useImportedData ? `
+            <div class="mt-4 p-3 bg-secondary-container/30 border border-secondary/20">
+                <p class="font-label text-[10px] uppercase tracking-widest text-secondary flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">check_circle</span>
+                    ${lessons.length} ${t('imported_success')}
+                </p>
+            </div>` : ''}
+        </div>
+    `;
+
+    return `<div class="max-w-6xl mx-auto">
+    <h1 class="font-headline text-5xl italic text-primary dark:text-slate-100 border-l-8 border-secondary pl-6 mb-6">${t('media_title')}</h1>
+    <p class="font-body text-base text-on-surface-variant dark:text-slate-400 mb-10 max-w-3xl leading-relaxed">${t('media_sub')}</p>
+
+    ${importBanner}
+
+    <div class="space-y-6">
+        ${lessons.map((lesson, idx) => {
+            const lessonId = lesson.id || ('lesson' + idx);
+            const state = window.lessonStates[lessonId];
+            const isExpanded = state.expanded;
+            const hasContent = getItemCount(lesson, 'audio') + getItemCount(lesson, 'slides') + getItemCount(lesson, 'pdf') + getItemCount(lesson, 'text');
+
+            return `<div class="lesson-folder bg-surface-container-low dark:bg-slate-800" id="folder-${lessonId}">
+                <div class="lesson-header flex items-center justify-between p-6 ${isExpanded ? 'border-b border-outline-variant/20 dark:border-slate-700' : ''}" onclick="toggleLesson('${lessonId}')">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 flex items-center justify-center" style="background:${lesson.color || '#03192e'}">
+                            <span class="material-symbols-outlined text-2xl" style="color:${lesson.accent || '#fed488'}">folder</span>
+                        </div>
+                        <div>
+                            <h3 class="font-headline text-xl italic text-primary dark:text-slate-100">${lesson.title || 'Μάθημα ' + (idx + 1)}</h3>
+                            <p class="font-body text-sm text-on-surface-variant dark:text-slate-400 mt-1 max-w-2xl">${lesson.description || ''}</p>
+                            <div class="flex gap-3 mt-2">
+                                ${getItemCount(lesson, 'audio') ? `<span class="font-label text-[9px] uppercase tracking-widest text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">headphones</span>${getItemCount(lesson, 'audio')} ${t('lesson_audio')}</span>` : ''}
+                                ${getItemCount(lesson, 'slides') ? `<span class="font-label text-[9px] uppercase tracking-widest text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">slideshow</span>${getItemCount(lesson, 'slides')} ${t('lesson_slides')}</span>` : ''}
+                                ${getItemCount(lesson, 'pdf') ? `<span class="font-label text-[9px] uppercase tracking-widest text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">description</span>${getItemCount(lesson, 'pdf')} PDF</span>` : ''}
+                                ${getItemCount(lesson, 'text') ? `<span class="font-label text-[9px] uppercase tracking-widest text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">article</span>${getItemCount(lesson, 'text')} ${t('lesson_text')}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant/40">${hasContent} items</span>
+                        <span class="material-symbols-outlined text-primary dark:text-slate-300 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}">expand_more</span>
+                    </div>
+                </div>
+                <div class="lesson-content ${isExpanded ? 'open' : ''}" id="content-${lessonId}">
+                    ${renderLessonTabs(lesson)}
+                </div>
+            </div>`;
+        }).join('')}
+    </div>
+    </div>`;
+}
+
+function toggleLesson(lessonId) {
+    if (!window.lessonStates) return;
+    window.lessonStates[lessonId].expanded = !window.lessonStates[lessonId].expanded;
+    renderView('media');
+}
+
+function switchLessonTab(lessonId, tabId) {
+    if (!window.lessonStates) return;
+    window.lessonStates[lessonId].activeTab = tabId;
+    renderView('media');
+}
+
+const mainContainer = document.getElementById('appMain');
+
+function setActiveNav(view){
+    document.querySelectorAll('.nav-top-link').forEach(el=>{
+        const v=el.getAttribute('data-nav');
+        el.classList.toggle('text-[#775a19]', v===view);
+        el.classList.toggle('dark:text-amber-400', v===view);
+        el.classList.toggle('underline', v===view);
+        el.classList.toggle('decoration-2', v===view);
+        el.classList.toggle('underline-offset-4', v===view);
+        el.classList.toggle('opacity-80', v!==view);
+    });
+    document.querySelectorAll('[data-side-nav]').forEach(el=>{
+        const v=el.getAttribute('data-side-nav');
+        if(v===view){
+            el.classList.add('active');
+            el.classList.remove('pl-5','text-[#03192e]/60','dark:text-slate-400');
+        } else {
+            el.classList.remove('active');
+            el.classList.add('pl-5','text-[#03192e]/60','dark:text-slate-400');
+        }
+    });
+}
+
+function attachEvents(){
+    document.querySelectorAll('[data-ledger]').forEach(el=>{
+        el.addEventListener('click',()=>{
+            const l=el.getAttribute('data-ledger');
+            if(l==='patristics') showModal('Patristics & Church Fathers','<p class="font-body text-sm leading-relaxed">Research focuses on the political theology of Basil the Great, John Chrysostom, and Gregory the Theologian. Key question: how did the Great Fathers of the 4th–5th centuries navigate the intersection of Christian authority and imperial power?</p>');
+            else if(l==='political') showModal('Political Philosophy & Theology','<p class="font-body text-sm leading-relaxed">The relationship between sanctity and imperial authority across the patristic period, examined through the Seven Ecumenical Councils and the ecclesiastical literature of saints.</p>');
+            else if(l==='digital') showModal('Digital Pedagogy','<p class="font-body text-sm leading-relaxed">Developer of six interconnected educational web applications — Mind Palace, History Explorer 3D, Timeline Map, Living Anchor, Interactive Books, and Central Console — for active learning in theology and Byzantine history.</p>');
+        });
+    });
+}
+
+async function renderView(view){
+    if(view==='about') mainContainer.innerHTML = aboutTemplate();
+    else if(view==='academic') mainContainer.innerHTML = academicTemplate();
+    else if(view==='educational') mainContainer.innerHTML = educationalTemplate();
+    else if(view==='media') mainContainer.innerHTML = await mediaTemplate();
+    setActiveNav(view);
+    currentView=view;
+    attachEvents();
+}
+function navigateTo(view){ renderView(view); if(drawerOpen) toggleDrawer(); }
+
+document.querySelectorAll('[data-nav]').forEach(el=>el.addEventListener('click',e=>{e.preventDefault();navigateTo(el.getAttribute('data-nav'));}));
+document.querySelectorAll('[data-side-nav]').forEach(el=>el.addEventListener('click',()=>navigateTo(el.getAttribute('data-side-nav'))));
+document.querySelectorAll('[data-mobile-nav]').forEach(el=>el.addEventListener('click',()=>navigateTo(el.getAttribute('data-mobile-nav'))));
+
+document.getElementById('langEN').addEventListener('click',()=>{currentLang='en';applyTranslations();});
+document.getElementById('langGR').addEventListener('click',()=>{currentLang='gr';applyTranslations();});
+
+function updateThemeIcon(){
+    document.getElementById('themeIcon').textContent = document.documentElement.classList.contains('dark') ? 'dark_mode' : 'light_mode';
+}
+document.getElementById('themeToggleBtn').addEventListener('click',()=>{
+    document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', document.documentElement.classList.contains('dark')?'dark':'light');
+    updateThemeIcon();
+});
+document.getElementById('settingsTrigger').addEventListener('click',()=>{ document.getElementById('themeToggleBtn').click(); });
+if(localStorage.getItem('theme')==='dark') document.documentElement.classList.add('dark');
+updateThemeIcon();
+
+let drawerOpen=false;
+const drawer=document.getElementById('mobileDrawer'), drawerPanel=document.getElementById('drawerPanel'), drawerBackdrop=document.getElementById('drawerBackdrop');
+function toggleDrawer(){
+    drawerOpen=!drawerOpen;
+    if(drawerOpen){ drawer.style.visibility='visible'; drawer.style.pointerEvents='auto'; drawerBackdrop.classList.add('opacity-100'); drawerBackdrop.classList.remove('opacity-0'); drawerPanel.classList.remove('-translate-x-full'); }
+    else { drawerBackdrop.classList.remove('opacity-100'); drawerBackdrop.classList.add('opacity-0'); drawerPanel.classList.add('-translate-x-full'); setTimeout(()=>{drawer.style.visibility='hidden';drawer.style.pointerEvents='none';},300); }
+}
+document.getElementById('mobileMenuBtn').addEventListener('click',toggleDrawer);
+document.getElementById('closeDrawer').addEventListener('click',toggleDrawer);
+drawerBackdrop.addEventListener('click',toggleDrawer);
+
+renderView('about');
+</script>
+</body>
+</html>

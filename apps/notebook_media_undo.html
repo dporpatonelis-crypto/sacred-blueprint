@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>My Notebook</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Kalam:wght@300;400;700&family=Patrick+Hand&family=Architects+Daughter&family=Indie+Flower&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f5f0e8;
+  --paper-dark: #ede8d8;
+  --ink: #2c2416;
+  --ink-light: #5a4e3a;
+  --accent: #7a9e7e;
+  --tab-bg: #e8dfc8;
+  --line: rgba(44,36,22,0.12);
+  --sticky: #d4c5a9;
+  --ring: #b8a898;
+  --body-font: 'Kalam', cursive;
+  --note-size: 16px;
+}
+* { box-sizing: border-box; margin:0; padding:0; }
+
+body {
+  background: #3a3028;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, #4a3f35 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, #2d2520 0%, transparent 50%);
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  font-family: 'Patrick Hand', cursive;
+  padding: 20px 10px 80px;
+  touch-action: manipulation;
+}
+
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 820px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 4px;
+}
+.topbar-title {
+  font-family: 'Caveat', cursive;
+  font-size: 18px;
+  color: rgba(245,240,232,0.5);
+  letter-spacing: 1px;
+}
+.settings-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 10px; padding: 8px 16px;
+  color: rgba(245,240,232,0.9);
+  font-family: 'Patrick Hand', cursive; font-size: 14px;
+  cursor: pointer; transition: background .2s; touch-action: manipulation;
+}
+.settings-btn:hover { background: rgba(255,255,255,0.18); }
+
+.notebook {
+  display: flex;
+  width: 100%;
+  position: relative;
+  filter: drop-shadow(0 20px 50px rgba(0,0,0,0.5));
+}
+
+.rings {
+  position: absolute; left:-16px; top:20px; bottom:20px;
+  width: 32px;
+  display: flex; flex-direction: column; justify-content: space-around;
+  z-index: 10; pointer-events: none;
+}
+.ring {
+  width:26px; height:26px;
+  border: 4px solid var(--ring); border-radius: 50%;
+  background: #3a3028;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.pages-area {
+  flex: 1; position: relative;
+  border-radius: 4px 0 0 4px; overflow: hidden;
+}
+.pages-area::before {
+  content:''; position:absolute;
+  top:4px; left:4px; right:-4px; bottom:-4px;
+  background:var(--paper-dark); border-radius:4px; z-index:0; filter:brightness(.92);
+}
+.pages-area::after {
+  content:''; position:absolute;
+  top:8px; left:8px; right:-8px; bottom:-8px;
+  background:var(--paper-dark); border-radius:4px; z-index:-1; filter:brightness(.85);
+}
+
+.page {
+  position: relative; z-index: 2;
+  background: var(--paper);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(transparent, transparent 31px, var(--line) 31px, var(--line) 32px);
+  background-size: 300px 300px, 100% 32px;
+  background-position: 0 0, 0 48px;
+  min-height: 720px;
+  border-radius: 4px 0 0 4px;
+}
+
+.page::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: var(--bg-img, none);
+  background-size: var(--bg-size, cover);
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: var(--bg-opacity, 1);
+  border-radius: 4px 0 0 4px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.page-margin {
+  position: absolute; left:58px; top:0; bottom:0;
+  width:2px; background:rgba(200,80,80,0.3); z-index:1;
+}
+
+.page-header {
+  padding: 14px 16px 10px 68px;
+  border-bottom: 2px solid var(--line);
+  display: flex; align-items: baseline; gap: 10px;
+  position: relative; z-index: 2;
+}
+.nb-title-input {
+  font-family:'Caveat',cursive; font-size:26px; font-weight:700;
+  color:var(--ink); flex:1;
+  outline:none; border:none; background:transparent;
+}
+.date-field {
+  font-family:'Patrick Hand',cursive; font-size:13px;
+  color:var(--ink-light); opacity:.7;
+  border:none; background:transparent; outline:none;
+  text-align:right; min-width:90px;
+}
+
+.page-content { padding: 18px 20px 30px 68px; position:relative; z-index:2; }
+
+.chapter-panel { display:none; }
+.chapter-panel.active { display:block; animation: pgIn .22s ease; }
+@keyframes pgIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+.chapter-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.chapter-num {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:32px; height:32px; border-radius:50%;
+  background:var(--accent); color:white;
+  font-size:14px; font-family:'Caveat',cursive; font-weight:700;
+  flex-shrink:0; transition:background .3s;
+}
+.ch-title-edit {
+  font-family:'Caveat',cursive; font-size:22px; font-weight:700;
+  color:var(--accent); flex:1;
+  outline:none; border:none; background:transparent;
+}
+
+.note-area {
+  font-family: var(--body-font);
+  font-size: var(--note-size);
+  color:var(--ink); line-height:2.0; margin-bottom:20px;
+  outline:none; min-height:90px; touch-action:auto;
+}
+.note-area:empty::before {
+  content:attr(data-placeholder);
+  color:rgba(44,36,22,0.3); font-style:italic; pointer-events:none;
+}
+.note-area h1 { font-family:'Caveat',cursive; font-size:28px; font-weight:700; color:var(--accent); margin:10px 0 4px; }
+.note-area h2 { font-family:'Kalam',cursive; font-size:20px; font-weight:700; color:var(--ink); border-bottom:1.5px solid var(--line); margin:8px 0 4px; padding-bottom:2px; }
+.note-area h3 { font-size:17px; font-weight:600; color:var(--ink-light); margin:6px 0 2px; text-decoration:underline dotted rgba(44,36,22,0.35); text-underline-offset:3px; }
+.note-area ul { padding-left:18px; margin:4px 0 8px; }
+.note-area strong { font-weight:700; }
+.note-area em { font-style:italic; }
+
+.sticky {
+  display:inline-block; min-width:110px; min-height:90px;
+  background:var(--sticky); padding:12px;
+  margin:10px 12px 4px 0;
+  font-family:'Caveat',cursive; font-size:15px; color:var(--ink); line-height:1.6;
+  box-shadow:3px 4px 10px rgba(0,0,0,0.15), inset 0 -3px 6px rgba(0,0,0,0.07);
+  transform:rotate(1.5deg); vertical-align:top; outline:none;
+}
+.sticky::before { content:''; display:block; height:4px; background:rgba(0,0,0,0.08); margin:-12px -12px 8px; }
+
+.add-bar { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; padding-top:12px; border-top:1px dashed var(--line); }
+.add-btn {
+  font-family:'Patrick Hand',cursive; font-size:13px; color:var(--ink-light);
+  background:rgba(44,36,22,0.06); border:1.5px dashed rgba(44,36,22,0.2);
+  border-radius:20px; padding:4px 14px;
+  cursor:pointer; transition:all .2s; touch-action:manipulation;
+}
+.add-btn:hover { background:rgba(44,36,22,0.12); border-color:var(--accent); color:var(--accent); }
+
+/* ═══════════════════════════════════════════
+   MEDIA PANEL
+═══════════════════════════════════════════ */
+.media-panel {
+  margin-top: 20px;
+  border: 1.5px solid rgba(44,36,22,0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.5);
+  backdrop-filter: blur(4px);
+}
+
+.media-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(44,36,22,0.06);
+  border-bottom: 1px solid rgba(44,36,22,0.1);
+  cursor: pointer;
+  user-select: none;
+}
+.media-panel-title {
+  font-family: 'Caveat', cursive;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.media-panel-toggle {
+  font-size: 12px;
+  color: var(--ink-light);
+  transition: transform .25s;
+}
+.media-panel.collapsed .media-panel-toggle { transform: rotate(-90deg); }
+.media-panel.collapsed .media-panel-body { display: none; }
+
+.media-panel-body { padding: 0; }
+
+/* Media type tabs */
+.media-type-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(44,36,22,0.1);
+  background: rgba(44,36,22,0.03);
+  overflow-x: auto;
+  gap: 0;
+}
+.media-type-tab {
+  padding: 8px 16px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 13px;
+  color: var(--ink-light);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  touch-action: manipulation;
+}
+.media-type-tab:hover { color: var(--accent); background: rgba(122,158,126,0.08); }
+.media-type-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  background: rgba(122,158,126,0.1);
+  font-weight: 700;
+}
+
+.media-type-pane { display: none; padding: 14px; }
+.media-type-pane.active { display: block; animation: pgIn .18s ease; }
+
+/* Media items list */
+.media-items-list { display: flex; flex-direction: column; gap: 10px; }
+
+.media-item {
+  border: 1.5px solid rgba(44,36,22,0.12);
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.7);
+}
+.media-item-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(44,36,22,0.04);
+  border-bottom: 1px solid rgba(44,36,22,0.08);
+}
+.media-item-icon { font-size: 18px; flex-shrink: 0; }
+.media-item-label {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 14px;
+  color: var(--ink);
+  flex: 1;
+  outline: none;
+  border: none;
+  background: transparent;
+}
+.media-item-label:focus { color: var(--accent); }
+.media-item-del {
+  width: 26px; height: 26px;
+  border: none; border-radius: 50%;
+  background: rgba(192,68,68,0.1);
+  color: #c04444;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  touch-action: manipulation;
+}
+.media-item-del:hover { background: rgba(192,68,68,0.22); }
+.media-item-body { padding: 10px 12px; }
+
+/* URL input row */
+.media-url-row {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.media-url-input {
+  flex: 1;
+  padding: 7px 10px;
+  border: 1.5px solid rgba(44,36,22,0.18);
+  border-radius: 8px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 13px;
+  color: var(--ink);
+  background: white;
+  outline: none;
+  min-width: 0;
+}
+.media-url-input:focus { border-color: var(--accent); }
+.media-url-input::placeholder { color: rgba(44,36,22,0.3); }
+.media-load-btn {
+  padding: 7px 13px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+.media-load-btn:hover { opacity: .85; }
+
+/* Embed preview area */
+.media-embed {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(44,36,22,0.04);
+  border: 1px solid rgba(44,36,22,0.1);
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.media-embed.empty {
+  color: rgba(44,36,22,0.3);
+  font-family: 'Patrick Hand', cursive;
+  font-size: 13px;
+  font-style: italic;
+}
+.media-embed iframe {
+  width: 100%;
+  height: 340px;
+  border: none;
+  display: block;
+}
+.media-embed audio {
+  width: 100%;
+  padding: 12px;
+  background: rgba(122,158,126,0.08);
+}
+.media-embed .text-block {
+  width: 100%;
+  padding: 14px;
+  font-family: var(--body-font);
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.8;
+  outline: none;
+  min-height: 120px;
+  background: transparent;
+}
+.media-embed .notebooklm-link {
+  width: 100%;
+  padding: 14px;
+  text-align: center;
+}
+.media-embed .notebooklm-link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--accent);
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 14px;
+  font-weight: 700;
+  transition: opacity .2s;
+}
+.media-embed .notebooklm-link a:hover { opacity: .85; }
+
+/* Add item buttons */
+.media-add-row {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(44,36,22,0.12);
+}
+.media-add-btn {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 12px;
+  color: var(--ink-light);
+  background: rgba(44,36,22,0.05);
+  border: 1.5px dashed rgba(44,36,22,0.18);
+  border-radius: 18px;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: all .2s;
+  touch-action: manipulation;
+}
+.media-add-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(122,158,126,0.1); }
+
+/* Notes textarea in media */
+.media-notes {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1.5px solid rgba(44,36,22,0.15);
+  border-radius: 8px;
+  font-family: var(--body-font);
+  font-size: 13px;
+  color: var(--ink);
+  background: white;
+  outline: none;
+  resize: vertical;
+  min-height: 60px;
+  line-height: 1.6;
+}
+.media-notes::placeholder { color: rgba(44,36,22,0.3); font-style: italic; }
+.media-notes:focus { border-color: var(--accent); }
+
+.media-label-small {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 11px;
+  color: rgba(44,36,22,0.45);
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  margin-bottom: 5px;
+}
+
+/* ═══════════════════════════════════════════
+   SIDE TABS
+═══════════════════════════════════════════ */
+.side-tabs-wrapper { position:relative; display:flex; align-items:flex-start; }
+
+.side-tabs { display:flex; flex-direction:column; gap:0; flex-shrink:0; position:relative; z-index:5; }
+.tab {
+  width:42px; min-height:54px; background:var(--tab-bg);
+  border-radius:0 8px 8px 0; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  position:relative; transition:width .2s, background .2s;
+  border-left:3px solid var(--accent);
+  box-shadow:3px 0 8px rgba(0,0,0,0.12); touch-action:manipulation;
+}
+.tab:hover { width:50px; }
+.tab.active { width:54px; z-index:2; box-shadow:4px 0 14px rgba(0,0,0,0.22); }
+.tab-label {
+  writing-mode:vertical-rl; text-orientation:mixed; transform:rotate(180deg);
+  font-family:'Caveat',cursive; font-size:12px; font-weight:700; color:var(--ink);
+  white-space:nowrap; padding:8px 0; max-height:110px; overflow:hidden;
+  text-overflow:ellipsis; letter-spacing:.5px;
+}
+.tab-num { position:absolute; top:5px; right:4px; font-family:'Caveat',cursive; font-size:10px; color:rgba(44,36,22,0.45); font-weight:700; }
+.tab-pencil {
+  width:42px; height:40px; background:rgba(122,158,126,0.15);
+  border-radius:0 8px 8px 0; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px;
+  border:2px dashed rgba(122,158,126,0.4); border-left:none;
+  transition:background .2s; margin-top:6px; touch-action:manipulation;
+}
+.tab-pencil:hover { background:rgba(122,158,126,0.28); }
+
+/* ═══════════════════════════════════════════
+   SIDE FORMAT PANEL
+═══════════════════════════════════════════ */
+#fmtPanel {
+  position:absolute; right:42px; top:0;
+  width:210px;
+  background:#1e1a14;
+  border-radius:12px 0 0 12px;
+  border:1px solid rgba(255,255,255,0.1); border-right:none;
+  box-shadow:-6px 0 20px rgba(0,0,0,0.35);
+  z-index:20; display:none; flex-direction:column; overflow:hidden;
+}
+#fmtPanel.open { display:flex; }
+
+.fmtp-sec { padding:10px 12px 8px; border-bottom:1px solid rgba(255,255,255,0.07); }
+.fmtp-sec:last-child { border-bottom:none; }
+.fmtp-title { font-family:'Patrick Hand',cursive; font-size:11px; color:rgba(245,240,232,0.4); text-transform:uppercase; letter-spacing:1px; margin-bottom:7px; }
+.fmtp-row { display:flex; gap:5px; flex-wrap:wrap; align-items:center; }
+
+.fmtp-btn {
+  height:34px; min-width:34px; padding:0 8px;
+  border:none; border-radius:7px;
+  background:rgba(255,255,255,0.08); color:rgba(245,240,232,0.9);
+  font-size:13px; font-weight:700; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-family:serif; touch-action:manipulation; transition:background .15s;
+}
+.fmtp-btn:hover, .fmtp-btn:active { background:rgba(255,255,255,0.2); }
+.fmtp-h { font-family:'Caveat',cursive; font-size:13px; }
+.fmtp-color { width:26px; height:26px; min-width:26px; border-radius:50%; border:3px solid rgba(255,255,255,0.2); padding:0; }
+.fmtp-color:hover { border-color:white; transform:scale(1.12); }
+.fmtp-hl { border-radius:6px; font-size:11px; font-family:'Patrick Hand',cursive; font-weight:700; padding:0 7px; height:28px; }
+.fmtp-size-row { display:flex; align-items:center; gap:6px; }
+.fmtp-size-btn { width:30px; height:30px; border:none; border-radius:7px; background:rgba(255,255,255,0.08); color:rgba(245,240,232,.9); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; touch-action:manipulation; }
+.fmtp-size-btn:active { background:rgba(255,255,255,.2); }
+.fmtp-size-val { font-family:'Patrick Hand',cursive; font-size:13px; color:rgba(245,240,232,.8); min-width:32px; text-align:center; }
+.fmtp-close { width:100%; justify-content:center; font-family:'Patrick Hand',cursive !important; font-size:12px !important; color:rgba(245,200,200,.8) !important; background:rgba(192,68,68,.15) !important; font-weight:400 !important; }
+
+/* ═══════════════════════════════════════════
+   FORMAT BAR (fixed bottom)
+═══════════════════════════════════════════ */
+#formatBar {
+  position:fixed; bottom:0; left:0; right:0;
+  display:none; align-items:center; justify-content:center;
+  flex-wrap:wrap; gap:3px;
+  background:#1e1a14;
+  border-top:1px solid rgba(255,255,255,0.12);
+  padding:7px 10px calc(10px + env(safe-area-inset-bottom));
+  box-shadow:0 -4px 20px rgba(0,0,0,0.45);
+  z-index:9000; pointer-events:all;
+}
+#formatBar.show { display:flex; }
+
+.fmt-btn {
+  height:38px; min-width:38px; padding:0 9px;
+  border:none; border-radius:7px;
+  background:rgba(255,255,255,0.08); color:rgba(245,240,232,0.9);
+  font-size:14px; font-weight:700; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-family:serif; touch-action:manipulation; transition:background .15s;
+}
+.fmt-btn:hover, .fmt-btn:active { background:rgba(255,255,255,0.2); }
+.fmt-h { font-family:'Caveat',cursive; font-size:13px; }
+.fmt-sep { width:1px; height:26px; background:rgba(255,255,255,0.15); margin:0 2px; }
+.fmt-color { width:26px; height:26px; min-width:26px; border-radius:50%; border:3px solid rgba(255,255,255,0.25); padding:0; }
+.fmt-color:hover { border-color:white; transform:scale(1.12); }
+.fmt-hl { border-radius:6px; font-size:11px; font-family:'Patrick Hand',cursive; font-weight:700; padding:0 8px; height:30px; }
+.fmt-size-lbl { font-family:'Patrick Hand',cursive; font-size:12px; color:rgba(245,240,232,0.6); min-width:24px; text-align:center; }
+.fmt-close { margin-left:4px; background:rgba(192,68,68,0.25) !important; font-family:sans-serif !important; font-size:15px !important; font-weight:300 !important; color:rgba(245,200,200,0.9) !important; }
+
+/* ═══════════════════════════════════════════
+   SETTINGS MODAL
+═══════════════════════════════════════════ */
+.modal-overlay {
+  position:fixed; inset:0;
+  background:rgba(20,16,12,0.72); backdrop-filter:blur(5px);
+  z-index:10000; display:none; align-items:center; justify-content:center; padding:16px;
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  background:#faf6ee; border-radius:20px;
+  width:100%; max-width:540px; max-height:90vh;
+  overflow-y:auto;
+  box-shadow:0 30px 80px rgba(0,0,0,0.55);
+  font-family:'Patrick Hand',cursive;
+}
+.modal-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 22px 14px; border-bottom:2px solid rgba(44,36,22,0.1);
+  position:sticky; top:0; background:#faf6ee; z-index:2; border-radius:20px 20px 0 0;
+}
+.modal-header h2 { font-family:'Caveat',cursive; font-size:22px; font-weight:700; color:#2c2416; }
+.modal-close { width:32px; height:32px; border:none; background:rgba(44,36,22,0.08); border-radius:50%; font-size:18px; cursor:pointer; color:#2c2416; display:flex; align-items:center; justify-content:center; transition:background .2s; touch-action:manipulation; }
+.modal-close:hover { background:rgba(44,36,22,0.16); }
+.modal-body { padding:20px 22px 28px; }
+.modal-section { margin-bottom:26px; }
+.modal-section-title { font-family:'Caveat',cursive; font-size:17px; font-weight:700; color:#2c2416; margin-bottom:12px; padding-bottom:4px; border-bottom:1.5px dashed rgba(44,36,22,0.15); }
+
+.swatch-grid { display:flex; flex-wrap:wrap; gap:10px; }
+.m-swatch { width:36px; height:36px; border-radius:50%; border:3px solid transparent; cursor:pointer; transition:transform .2s, border-color .2s; touch-action:manipulation; }
+.m-swatch:hover { transform:scale(1.12); }
+.m-swatch.active { border-color:#2c2416; transform:scale(1.18); }
+
+.font-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.font-btn { padding:10px 14px; border:2px solid rgba(44,36,22,0.15); border-radius:10px; background:white; cursor:pointer; font-size:15px; color:#2c2416; text-align:left; transition:all .2s; line-height:1.3; touch-action:manipulation; }
+.font-btn:hover { border-color:var(--accent); background:#f0f8f0; }
+.font-btn.active { border-color:var(--accent); background:rgba(122,158,126,0.12); }
+.font-btn small { display:block; font-size:11px; opacity:.5; font-family:'Patrick Hand',cursive; margin-top:2px; }
+
+.font-size-row { display:flex; align-items:center; gap:10px; margin-top:10px; }
+.font-size-row label { font-size:13px; color:rgba(44,36,22,0.6); font-family:'Patrick Hand',cursive; min-width:60px; }
+#fontSizeSlider { flex:1; accent-color:var(--accent); }
+#fontSizeVal { font-family:'Caveat',cursive; font-size:16px; font-weight:700; color:var(--accent); min-width:36px; text-align:center; }
+
+.bg-row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.bg-url-input { flex:1; min-width:160px; padding:9px 12px; border:2px solid rgba(44,36,22,0.18); border-radius:10px; font-family:'Patrick Hand',cursive; font-size:14px; color:#2c2416; background:white; outline:none; }
+.bg-url-input:focus { border-color:var(--accent); }
+.bg-apply { padding:9px 14px; background:var(--accent); color:white; border:none; border-radius:10px; font-family:'Patrick Hand',cursive; font-size:14px; cursor:pointer; touch-action:manipulation; }
+.bg-clear  { padding:9px 12px; background:rgba(44,36,22,0.08); color:#2c2416; border:none; border-radius:10px; font-family:'Patrick Hand',cursive; font-size:14px; cursor:pointer; touch-action:manipulation; }
+.bg-tip { font-size:12px; color:rgba(44,36,22,0.45); margin-top:6px; }
+.bg-size-row { display:flex; align-items:center; gap:8px; margin-top:10px; font-size:13px; color:#5a4e3a; }
+.bg-size-row select { font-family:'Patrick Hand',cursive; font-size:13px; padding:5px 8px; border:1.5px solid rgba(44,36,22,0.2); border-radius:8px; background:white; color:#2c2416; outline:none; }
+.bg-opacity-row { display:flex; align-items:center; gap:10px; margin-top:10px; }
+.bg-opacity-row label { font-size:13px; color:rgba(44,36,22,0.6); font-family:'Patrick Hand',cursive; min-width:60px; }
+#bgOpacitySlider { flex:1; accent-color:var(--accent); }
+#bgOpacityVal { font-family:'Caveat',cursive; font-size:15px; font-weight:700; color:var(--accent); min-width:36px; text-align:center; }
+
+.io-label { font-size:12px; color:rgba(44,36,22,0.5); font-family:'Patrick Hand',cursive; text-transform:uppercase; letter-spacing:.8px; margin-bottom:7px; }
+.io-row { display:flex; gap:8px; flex-wrap:wrap; }
+.io-btn { display:inline-flex; align-items:center; gap:6px; padding:9px 16px; border-radius:10px; font-family:'Patrick Hand',cursive; font-size:14px; cursor:pointer; border:none; transition:all .2s; touch-action:manipulation; text-decoration:none; }
+.io-primary  { background:var(--accent); color:white; }
+.io-primary:hover  { opacity:.85; }
+.io-secondary { background:#2c2416; color:rgba(245,240,232,.9); }
+.io-secondary:hover { opacity:.85; }
+.io-print { background:#4a6fa5; color:white; }
+.io-print:hover { opacity:.85; }
+.io-import { background:rgba(44,36,22,0.08); border:2px dashed rgba(44,36,22,0.2) !important; color:#2c2416; }
+.io-import:hover { background:rgba(44,36,22,0.14); border-color:var(--accent) !important; color:var(--accent); }
+
+.ch-list-modal { display:flex; flex-direction:column; gap:8px; }
+.ch-row { display:flex; align-items:center; gap:10px; padding:10px 12px; background:white; border-radius:10px; border:1.5px solid rgba(44,36,22,0.1); }
+.ch-row-num { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Caveat',cursive; font-size:13px; font-weight:700; color:white; flex-shrink:0; }
+.ch-row-name { flex:1; font-size:15px; color:#2c2416; }
+.ch-row-go { padding:4px 10px; background:rgba(122,158,126,0.15); border:1px solid rgba(122,158,126,0.3); border-radius:8px; color:#2c2416; font-family:'Patrick Hand',cursive; font-size:12px; cursor:pointer; touch-action:manipulation; }
+.ch-row-go:hover { background:rgba(122,158,126,0.3); }
+.ch-row-del { width:28px; height:28px; border:none; background:rgba(192,68,68,0.08); border-radius:50%; cursor:pointer; color:#c04444; font-size:14px; display:flex; align-items:center; justify-content:center; touch-action:manipulation; }
+.ch-row-del:hover { background:rgba(192,68,68,0.18); }
+.modal-add-row { display:flex; gap:8px; margin-top:10px; }
+.modal-add-input { flex:1; padding:9px 12px; border:2px solid rgba(44,36,22,0.15); border-radius:10px; font-family:'Patrick Hand',cursive; font-size:14px; color:#2c2416; background:white; outline:none; }
+.modal-add-input:focus { border-color:var(--accent); }
+.modal-add-btn { padding:9px 16px; background:var(--accent); color:white; border:none; border-radius:10px; font-family:'Patrick Hand',cursive; font-size:14px; cursor:pointer; touch-action:manipulation; }
+.modal-export-btn { width:100%; padding:12px; background:#2c2416; color:rgba(245,240,232,.9); border:none; border-radius:12px; font-family:'Patrick Hand',cursive; font-size:15px; cursor:pointer; transition:opacity .2s; touch-action:manipulation; }
+.modal-export-btn:hover { opacity:.85; }
+#importStatus { display:none; margin-top:8px; padding:8px 12px; border-radius:8px; font-size:13px; font-family:'Patrick Hand',cursive; }
+
+/* ═══════════════════════════════════════════
+   COLOUR THEMES
+═══════════════════════════════════════════ */
+body.t-sage  { --accent:#7a9e7e; --tab-bg:#e8dfc8; --sticky:#d4c5a9; }
+body.t-dusk  { --paper:#f0edf8; --paper-dark:#e6e0f4; --accent:#8878c0; --tab-bg:#ddd8ee; --sticky:#ccc4e4; --line:rgba(60,40,100,0.1); }
+body.t-ocean { --paper:#edf4f7; --paper-dark:#deeef5; --accent:#4a90a4; --tab-bg:#cde4ee; --sticky:#bcd8e4; --line:rgba(20,60,80,0.1); }
+body.t-rose  { --paper:#fdf0f2; --paper-dark:#f4e4e8; --accent:#c06878; --tab-bg:#f0d8dc; --sticky:#e8ccd0; --line:rgba(100,30,50,0.1); }
+body.t-slate { --paper:#f0f2f4; --paper-dark:#e4e8ec; --accent:#5a7a94; --tab-bg:#d8e0e8; --sticky:#ccd4dc; --line:rgba(30,50,70,0.1); }
+body.t-amber { --paper:#fdf8ec; --paper-dark:#f5eeda; --accent:#c09040; --tab-bg:#ede8d0; --sticky:#e4d8b4; --line:rgba(80,55,10,0.12); }
+
+@media print {
+  * { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body { background:white !important; padding:0 !important; display:block !important; }
+  .topbar, .settings-btn, .rings, .side-tabs-wrapper, .add-bar,
+  #formatBar, #fmtPanel, .modal-overlay, .page-margin, .media-add-btn, .media-load-btn, .media-item-del { display:none !important; }
+  .app-wrapper { max-width:100% !important; }
+  .notebook { filter:none !important; }
+  .pages-area { overflow:visible !important; border-radius:0 !important; }
+  .pages-area::before, .pages-area::after { display:none !important; }
+  .page { border-radius:0 !important; min-height:auto !important; box-shadow:none !important; }
+  .chapter-panel { display:block !important; page-break-before:always; }
+  .chapter-panel:first-child { page-break-before:avoid; }
+  .media-panel.collapsed .media-panel-body { display:block !important; }
+}
+
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:rgba(44,36,22,0.2); border-radius:3px; }
+</style>
+</head>
+<body class="t-sage">
+
+<!-- FORMAT BAR -->
+<div id="formatBar">
+  <button class="fmt-btn fmt-h" onmousedown="evt(event);fmtHeading('h1')">H1</button>
+  <button class="fmt-btn fmt-h" onmousedown="evt(event);fmtHeading('h2')">H2</button>
+  <button class="fmt-btn fmt-h" onmousedown="evt(event);fmtHeading('h3')">H3</button>
+  <div class="fmt-sep"></div>
+  <button class="fmt-btn" onmousedown="evt(event);fmtExec('bold')"><b>B</b></button>
+  <button class="fmt-btn" onmousedown="evt(event);fmtExec('italic')"><i style="font-family:serif">I</i></button>
+  <button class="fmt-btn" style="text-decoration:underline" onmousedown="evt(event);fmtExec('underline')">U</button>
+  <div class="fmt-sep"></div>
+  <button class="fmt-btn fmt-color" style="background:#d63031" onmousedown="evt(event);fmtColor('#d63031')"></button>
+  <button class="fmt-btn fmt-color" style="background:#0984e3" onmousedown="evt(event);fmtColor('#0984e3')"></button>
+  <button class="fmt-btn fmt-color" style="background:#2c2416" onmousedown="evt(event);fmtColor('#2c2416')"></button>
+  <div class="fmt-sep"></div>
+  <button class="fmt-btn fmt-hl" style="background:#ffeaa7;color:#2c2416" onmousedown="evt(event);fmtHL('#ffeaa7')">HL</button>
+  <button class="fmt-btn fmt-hl" style="background:rgba(214,48,49,0.22);color:#d63031" onmousedown="evt(event);fmtHL('rgba(214,48,49,0.22)')">HL</button>
+  <button class="fmt-btn fmt-hl" style="background:rgba(9,132,227,0.2);color:#0984e3" onmousedown="evt(event);fmtHL('rgba(9,132,227,0.2)')">HL</button>
+  <button class="fmt-btn" style="font-size:11px;font-family:sans-serif;color:rgba(245,240,232,.5)" onmousedown="evt(event);clearFmt()">✕c</button>
+  <div class="fmt-sep"></div>
+  <button class="fmt-btn" style="font-size:20px;font-weight:300;font-family:sans-serif" onmousedown="evt(event);fsz(-1)">−</button>
+  <span class="fmt-size-lbl" id="fmtSizeLbl">16</span>
+  <button class="fmt-btn" style="font-size:20px;font-weight:300;font-family:sans-serif" onmousedown="evt(event);fsz(1)">+</button>
+  <div class="fmt-sep"></div>
+  <button class="fmt-btn" onmousedown="evt(event);fmtExec('insertUnorderedList')">≡</button>
+  <button class="fmt-btn" style="font-size:11px;font-family:sans-serif" onmousedown="evt(event);fmtExec('removeFormat')">✕f</button>
+  <button class="fmt-btn fmt-close" onmousedown="evt(event);hideBar()">✕</button>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsOverlay" onclick="if(event.target===this)closeSettings()">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>⚙️ Ρυθμίσεις Notebook</h2>
+      <button class="modal-close" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title">📑 Κεφάλαια / Μαθήματα</div>
+        <div class="ch-list-modal" id="modalChList"></div>
+        <div class="modal-add-row" style="margin-top:10px">
+          <input class="modal-add-input" id="newChInput" placeholder="Τίτλος νέου μαθήματος..." onkeydown="if(event.key==='Enter')addChFromModal()"/>
+          <button class="modal-add-btn" onclick="addChFromModal()">+ Προσθήκη</button>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">🎨 Θέμα Χρώματος</div>
+        <div class="swatch-grid" id="swatchGrid">
+          <div class="m-swatch active" style="background:#7a9e7e" data-theme="t-sage"></div>
+          <div class="m-swatch"        style="background:#8878c0" data-theme="t-dusk"></div>
+          <div class="m-swatch"        style="background:#4a90a4" data-theme="t-ocean"></div>
+          <div class="m-swatch"        style="background:#c06878" data-theme="t-rose"></div>
+          <div class="m-swatch"        style="background:#5a7a94" data-theme="t-slate"></div>
+          <div class="m-swatch"        style="background:#c09040" data-theme="t-amber"></div>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">✍️ Γραμματοσειρά</div>
+        <div class="font-grid">
+          <button class="font-btn active" data-font="'Kalam',cursive" onclick="setFont(this)"><span style="font-family:'Kalam',cursive;font-size:16px">Kalam</span><small>Ζεστή / Στρογγυλή</small></button>
+          <button class="font-btn" data-font="'Caveat',cursive" onclick="setFont(this)"><span style="font-family:'Caveat',cursive;font-size:18px">Caveat</span><small>Ελεύθερη / Ζωηρή</small></button>
+          <button class="font-btn" data-font="'Patrick Hand',cursive" onclick="setFont(this)"><span style="font-family:'Patrick Hand',cursive;font-size:15px">Patrick Hand</span><small>Καθαρή / Σχολική</small></button>
+          <button class="font-btn" data-font="'Architects Daughter',cursive" onclick="setFont(this)"><span style="font-family:'Architects Daughter',cursive;font-size:13px">Architects D.</span><small>Τεχνική / Blocky</small></button>
+          <button class="font-btn" data-font="'Indie Flower',cursive" onclick="setFont(this)"><span style="font-family:'Indie Flower',cursive;font-size:15px">Indie Flower</span><small>Παιχνιδιάρικη</small></button>
+          <button class="font-btn" data-font="'Shadows Into Light',cursive" onclick="setFont(this)"><span style="font-family:'Shadows Into Light',cursive;font-size:14px">Shadows Light</span><small>Λεπτή / Ρομαντική</small></button>
+        </div>
+        <div class="font-size-row">
+          <label>Μέγεθος:</label>
+          <input type="range" id="fontSizeSlider" min="12" max="30" value="16" step="1" oninput="fsz(0,+this.value)"/>
+          <span id="fontSizeVal">16px</span>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">🖼 Custom Background</div>
+        <div class="bg-row">
+          <input class="bg-url-input" id="bgUrlInput" placeholder="https://... (PNG/JPG URL)"/>
+          <button class="bg-apply" onclick="applyBg()">Εφαρμογή</button>
+          <button class="bg-clear" onclick="clearBg()">✕</button>
+        </div>
+        <p class="bg-tip">Tip: notebook template PNG ως φόντο σελίδας.</p>
+        <div class="bg-size-row">
+          <span>Μέγεθος:</span>
+          <select id="bgSizeSelect" onchange="applyBgSize()">
+            <option value="cover">Cover</option>
+            <option value="contain">Contain</option>
+            <option value="100% 100%">Stretch</option>
+            <option value="auto">Auto</option>
+          </select>
+        </div>
+        <div class="bg-opacity-row">
+          <label>Opacity:</label>
+          <input type="range" id="bgOpacitySlider" min="5" max="100" value="100" step="5" oninput="applyBgOpacity(this.value)"/>
+          <span id="bgOpacityVal">100%</span>
+        </div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">📂 Εισαγωγή / Εξαγωγή / PDF</div>
+        <div class="io-label">Εξαγωγή</div>
+        <div class="io-row">
+          <button class="io-btn io-primary" onclick="exportJSON()">⬇ JSON</button>
+          <button class="io-btn io-secondary" onclick="exportTXT()">⬇ TXT</button>
+          <button class="io-btn io-print" onclick="printNB()">🖨 PDF / Print</button>
+        </div>
+        <div class="io-label" style="margin-top:14px">Εισαγωγή</div>
+        <div class="io-row">
+          <label class="io-btn io-import">⬆ JSON<input type="file" accept=".json" onchange="importJSON(event)" style="display:none"/></label>
+          <label class="io-btn io-import">⬆ TXT<input type="file" accept=".txt" onchange="importTXT(event)" style="display:none"/></label>
+        </div>
+        <p class="bg-tip" style="margin-top:6px">JSON: πλήρης αποθήκευση. TXT: νέο κεφάλαιο.</p>
+        <div id="importStatus"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app-wrapper">
+  <div class="topbar">
+    <span class="topbar-title">📔 Multimedia Notebook</span>
+    <button class="settings-btn" id="undoBtn" onclick="historyUndo()" style="opacity:0.35;cursor:not-allowed;padding:8px 13px;" title="Αναίρεση (Ctrl+Z)">
+      ↩ Αναίρεση
+    </button>
+    <button class="settings-btn" onclick="openSettings()">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Ρυθμίσεις &amp; Μαθήματα
+    </button>
+  </div>
+
+  <div class="notebook">
+    <div class="rings" id="rings"></div>
+    <div class="pages-area">
+      <div class="page" id="mainPage">
+        <div class="page-margin"></div>
+        <div class="page-header">
+          <input class="nb-title-input" type="text" value="Σημειώσεις Μαθήματος" id="nbTitle"/>
+          <input class="date-field" type="text" id="dateField" placeholder="ημ/μη/έτος"/>
+        </div>
+        <div class="page-content" id="pageContent"></div>
+      </div>
+    </div>
+    <!-- Side tabs + format panel -->
+    <div class="side-tabs-wrapper">
+      <div id="fmtPanel">
+        <div class="fmtp-sec">
+          <div class="fmtp-title">Headings</div>
+          <div class="fmtp-row">
+            <button class="fmtp-btn fmtp-h" onmousedown="evt(event);fmtHeading('h1')">H1</button>
+            <button class="fmtp-btn fmtp-h" onmousedown="evt(event);fmtHeading('h2')">H2</button>
+            <button class="fmtp-btn fmtp-h" onmousedown="evt(event);fmtHeading('h3')">H3</button>
+            <button class="fmtp-btn" style="font-size:11px;font-family:'Patrick Hand',cursive" onmousedown="evt(event);fmtExec('formatBlock','p')">¶</button>
+          </div>
+        </div>
+        <div class="fmtp-sec">
+          <div class="fmtp-title">Μορφοποίηση</div>
+          <div class="fmtp-row">
+            <button class="fmtp-btn" onmousedown="evt(event);fmtExec('bold')"><b>B</b></button>
+            <button class="fmtp-btn" onmousedown="evt(event);fmtExec('italic')"><i style="font-family:serif">I</i></button>
+            <button class="fmtp-btn" style="text-decoration:underline" onmousedown="evt(event);fmtExec('underline')">U</button>
+            <button class="fmtp-btn" onmousedown="evt(event);fmtExec('insertUnorderedList')">≡</button>
+            <button class="fmtp-btn" style="font-size:10px;font-family:sans-serif" onmousedown="evt(event);fmtExec('removeFormat')">✕f</button>
+          </div>
+        </div>
+        <div class="fmtp-sec">
+          <div class="fmtp-title">Χρώμα Γραφής</div>
+          <div class="fmtp-row">
+            <button class="fmtp-btn fmtp-color" style="background:#d63031" onmousedown="evt(event);fmtColor('#d63031')"></button>
+            <button class="fmtp-btn fmtp-color" style="background:#0984e3" onmousedown="evt(event);fmtColor('#0984e3')"></button>
+            <button class="fmtp-btn fmtp-color" style="background:#27ae60" onmousedown="evt(event);fmtColor('#27ae60')"></button>
+            <button class="fmtp-btn fmtp-color" style="background:#2c2416" onmousedown="evt(event);fmtColor('#2c2416')"></button>
+            <button class="fmtp-btn" style="font-size:10px;font-family:sans-serif;color:rgba(245,240,232,.4)" onmousedown="evt(event);clearFmt()">✕c</button>
+          </div>
+        </div>
+        <div class="fmtp-sec">
+          <div class="fmtp-title">Highlight</div>
+          <div class="fmtp-row">
+            <button class="fmtp-btn fmtp-hl" style="background:#ffeaa7;color:#2c2416" onmousedown="evt(event);fmtHL('#ffeaa7')">Κίτρ</button>
+            <button class="fmtp-btn fmtp-hl" style="background:rgba(214,48,49,0.22);color:#c0302a" onmousedown="evt(event);fmtHL('rgba(214,48,49,0.22)')">Κόκκ</button>
+            <button class="fmtp-btn fmtp-hl" style="background:rgba(9,132,227,0.2);color:#0763aa" onmousedown="evt(event);fmtHL('rgba(9,132,227,0.2)')">Μπλε</button>
+          </div>
+        </div>
+        <div class="fmtp-sec">
+          <div class="fmtp-title">Μέγεθος</div>
+          <div class="fmtp-size-row">
+            <button class="fmtp-size-btn" onmousedown="evt(event);fsz(-1)">−</button>
+            <span class="fmtp-size-val" id="fmtpSizeVal">16px</span>
+            <button class="fmtp-size-btn" onmousedown="evt(event);fsz(1)">+</button>
+          </div>
+        </div>
+        <div class="fmtp-sec">
+          <button class="fmtp-btn fmtp-close" onclick="closeFmtPanel()" style="width:100%">✕ Κλείσιμο</button>
+        </div>
+      </div>
+      <div class="side-tabs" id="sideTabs">
+        <div class="tab-pencil" onclick="toggleFmtPanel()" title="Μορφοποίηση">✏️</div>
+      </div>
+    </div>
+  </div>
+</div><!-- /app-wrapper -->
+
+<script>
+// ════════════════════════════════════
+//  HISTORY (UNDO) SYSTEM
+// ════════════════════════════════════
+const HISTORY_MAX = 30;
+let historyStack = [];   // array of JSON strings (snapshots)
+let historyPaused = false;
+
+function saveHistory(label) {
+  if (historyPaused) return;
+  const snap = JSON.stringify(getSnap());
+  // avoid duplicate consecutive snapshots
+  if (historyStack.length && historyStack[historyStack.length-1].snap === snap) return;
+  historyStack.push({ snap, label: label||'αλλαγή' });
+  if (historyStack.length > HISTORY_MAX) historyStack.shift();
+  updateUndoBtn();
+}
+
+function historyUndo() {
+  if (!historyStack.length) return;
+  const entry = historyStack.pop();
+  historyPaused = true;
+  try {
+    loadSnap(JSON.parse(entry.snap));
+  } finally {
+    historyPaused = false;
+  }
+  updateUndoBtn();
+  // brief flash on button
+  const btn = document.getElementById('undoBtn');
+  if (btn) {
+    btn.textContent = `↩ ${entry.label}`;
+    setTimeout(() => updateUndoBtn(), 1400);
+  }
+}
+
+function updateUndoBtn() {
+  const btn = document.getElementById('undoBtn');
+  if (!btn) return;
+  if (historyStack.length) {
+    const last = historyStack[historyStack.length-1];
+    btn.style.opacity = '1';
+    btn.style.cursor  = 'pointer';
+    btn.innerHTML     = `↩ Αναίρεση <span style="font-size:11px;opacity:0.6">(${last.label})</span>`;
+  } else {
+    btn.style.opacity = '0.35';
+    btn.style.cursor  = 'not-allowed';
+    btn.innerHTML     = '↩ Αναίρεση';
+  }
+}
+
+// Ctrl+Z global handler (only when not in a note-area, which has native undo)
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey||e.metaKey) && e.key==='z' && !e.shiftKey) {
+    const active = document.activeElement;
+    const inNote = active?.closest?.('.note-area,.ch-title-edit,.sticky,.media-notes,.media-url-input,.modal');
+    if (!inNote && historyStack.length) {
+      e.preventDefault();
+      historyUndo();
+    }
+  }
+});
+
+// ════════════════════════════════════
+//  STATE
+// ════════════════════════════════════
+let chapters   = [];
+let activeId   = null;
+let modalOpen  = false;
+let noteFontSize = 16;
+
+const ACCENT_COLORS = ['#7a9e7e','#8878c0','#4a90a4','#c06878','#5a7a94','#c09040'];
+const ALL_THEMES    = ['t-sage','t-dusk','t-ocean','t-rose','t-slate','t-amber'];
+
+// Media data store: { chapterId: { audio:[], slides:[], text:[], pdf:[], notebooklm:[] } }
+const mediaStore = {};
+
+// ════════════════════════════════════
+//  MEDIA SYSTEM
+// ════════════════════════════════════
+const MEDIA_TYPES = [
+  { id:'audio',      icon:'🎵', label:'Audio',       hint:'URL αρχείου ήχου (.mp3, .ogg, Drive, κτλ.)' },
+  { id:'slides',     icon:'📊', label:'Slides',      hint:'Google Slides embed URL ή PowerPoint online' },
+  { id:'notebooklm', icon:'🤖', label:'NotebookLM',  hint:'URL συνομιλίας ή audio overview NotebookLM' },
+  { id:'pdf',        icon:'📄', label:'PDF',         hint:'URL αρχείου PDF (Google Drive, κτλ.)' },
+  { id:'text',       icon:'📝', label:'Κείμενο',     hint:'Ελεύθερο κείμενο, απόσπασμα, σημειώσεις' },
+];
+
+function initMediaStore(chId) {
+  if (!mediaStore[chId]) {
+    mediaStore[chId] = { audio:[], slides:[], notebooklm:[], pdf:[], text:[] };
+  }
+}
+
+function buildMediaPanel(chId) {
+  initMediaStore(chId);
+  const panel = document.createElement('div');
+  panel.className = 'media-panel';
+  panel.id = 'media_' + chId;
+
+  const header = document.createElement('div');
+  header.className = 'media-panel-header';
+  header.innerHTML = `
+    <span class="media-panel-title">🎬 Πολυμέσα Μαθήματος</span>
+    <span class="media-panel-toggle">▼</span>
+  `;
+  header.onclick = () => panel.classList.toggle('collapsed');
+
+  const body = document.createElement('div');
+  body.className = 'media-panel-body';
+  body.id = 'mediabody_' + chId;
+
+  // Type tabs
+  const tabsRow = document.createElement('div');
+  tabsRow.className = 'media-type-tabs';
+  tabsRow.id = 'mediatabs_' + chId;
+
+  MEDIA_TYPES.forEach((mt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'media-type-tab' + (i===0 ? ' active' : '');
+    btn.dataset.type = mt.id;
+    btn.innerHTML = `${mt.icon} ${mt.label}`;
+    btn.onclick = () => switchMediaTab(chId, mt.id);
+    tabsRow.appendChild(btn);
+  });
+  body.appendChild(tabsRow);
+
+  // Type panes
+  MEDIA_TYPES.forEach((mt, i) => {
+    const pane = document.createElement('div');
+    pane.className = 'media-type-pane' + (i===0 ? ' active' : '');
+    pane.id = 'mediapane_' + chId + '_' + mt.id;
+
+    const itemsList = document.createElement('div');
+    itemsList.className = 'media-items-list';
+    itemsList.id = 'medialist_' + chId + '_' + mt.id;
+    pane.appendChild(itemsList);
+
+    const addRow = document.createElement('div');
+    addRow.className = 'media-add-row';
+    const addBtn = document.createElement('button');
+    addBtn.className = 'media-add-btn';
+    addBtn.textContent = '+ Προσθήκη ' + mt.label;
+    addBtn.onclick = () => addMediaItem(chId, mt.id);
+    addRow.appendChild(addBtn);
+    pane.appendChild(addRow);
+
+    body.appendChild(pane);
+  });
+
+  panel.appendChild(header);
+  panel.appendChild(body);
+  return panel;
+}
+
+function switchMediaTab(chId, typeId) {
+  const tabsRow = document.getElementById('mediatabs_' + chId);
+  const body    = document.getElementById('mediabody_' + chId);
+  tabsRow.querySelectorAll('.media-type-tab').forEach(b => {
+    b.classList.toggle('active', b.dataset.type === typeId);
+  });
+  body.querySelectorAll('.media-type-pane').forEach(p => {
+    p.classList.remove('active');
+  });
+  const pane = document.getElementById('mediapane_' + chId + '_' + typeId);
+  if (pane) pane.classList.add('active');
+}
+
+function addMediaItem(chId, typeId, savedData) {
+  initMediaStore(chId);
+  const mt = MEDIA_TYPES.find(m => m.id === typeId);
+  if (!mt) return;
+
+  const itemId = 'mi_' + Date.now() + Math.random().toString(36).slice(2,5);
+  mediaStore[chId][typeId].push({ id: itemId, label: '', url: '', notes: '', content: '' });
+
+  const list = document.getElementById('medialist_' + chId + '_' + typeId);
+  if (!list) return;
+
+  const item = document.createElement('div');
+  item.className = 'media-item';
+  item.id = itemId;
+
+  const defaultLabel = savedData?.label || (mt.label + ' ' + (mediaStore[chId][typeId].length));
+
+  item.innerHTML = `
+    <div class="media-item-header">
+      <span class="media-item-icon">${mt.icon}</span>
+      <input class="media-item-label" type="text" value="${esc(defaultLabel)}" placeholder="Τίτλος..." 
+             oninput="updateMediaData('${chId}','${typeId}','${itemId}','label',this.value)"/>
+      <button class="media-item-del" onclick="delMediaItem('${chId}','${typeId}','${itemId}')">✕</button>
+    </div>
+    <div class="media-item-body">
+      ${buildItemBody(chId, typeId, itemId, mt, savedData)}
+    </div>
+  `;
+
+  list.appendChild(item);
+
+  // Restore saved URL/content if present
+  if (savedData?.url) {
+    const inp = item.querySelector('.media-url-input');
+    if (inp) inp.value = savedData.url;
+  }
+  if (savedData?.content) {
+    const ta = item.querySelector('.text-block');
+    if (ta) ta.textContent = savedData.content;
+  }
+  if (savedData?.notes) {
+    const na = item.querySelector('.media-notes');
+    if (na) na.value = savedData.notes;
+  }
+  // Auto-load if URL present
+  if (savedData?.url) loadMediaEmbed(chId, typeId, itemId, savedData.url);
+
+  setTimeout(buildRings, 200);
+}
+
+function buildItemBody(chId, typeId, itemId, mt, saved) {
+  if (typeId === 'text') {
+    return `
+      <div class="media-label-small">Κείμενο / Απόσπασμα</div>
+      <div class="media-embed" style="min-height:100px;">
+        <div class="text-block" contenteditable="true" 
+             placeholder="Πληκτρολόγησε ή επικόλλησε κείμενο..."
+             oninput="updateMediaData('${chId}','${typeId}','${itemId}','content',this.innerText)">
+        </div>
+      </div>
+    `;
+  }
+
+  if (typeId === 'notebooklm') {
+    return `
+      <div class="media-label-small">NotebookLM URL (audio overview ή συνομιλία)</div>
+      <div class="media-url-row">
+        <input class="media-url-input" type="url" placeholder="https://notebooklm.google.com/..." 
+               id="urlinput_${itemId}"
+               oninput="updateMediaData('${chId}','${typeId}','${itemId}','url',this.value)"/>
+        <button class="media-load-btn" onclick="loadMediaEmbed('${chId}','${typeId}','${itemId}',document.getElementById('urlinput_${itemId}').value)">Φόρτωση</button>
+      </div>
+      <div class="media-embed empty" id="embed_${itemId}">
+        <div class="notebooklm-link" id="nlmlink_${itemId}" style="display:none">
+          <a href="#" target="_blank" id="nlmanchor_${itemId}">🤖 Άνοιγμα στο NotebookLM →</a>
+        </div>
+        <span id="embedhint_${itemId}">Βάλε URL και πάτα Φόρτωση</span>
+      </div>
+      <div style="margin-top:8px">
+        <div class="media-label-small">Σημειώσεις</div>
+        <textarea class="media-notes" placeholder="Σημειώσεις για αυτό το NotebookLM..."
+                  oninput="updateMediaData('${chId}','${typeId}','${itemId}','notes',this.value)"></textarea>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="media-label-small">${mt.hint}</div>
+    <div class="media-url-row">
+      <input class="media-url-input" type="url" placeholder="https://..." 
+             id="urlinput_${itemId}"
+             oninput="updateMediaData('${chId}','${typeId}','${itemId}','url',this.value)"/>
+      <button class="media-load-btn" onclick="loadMediaEmbed('${chId}','${typeId}','${itemId}',document.getElementById('urlinput_${itemId}').value)">Φόρτωση</button>
+    </div>
+    <div class="media-embed empty" id="embed_${itemId}">Βάλε URL και πάτα Φόρτωση</div>
+    <div style="margin-top:8px">
+      <div class="media-label-small">Σημειώσεις</div>
+      <textarea class="media-notes" placeholder="Σημειώσεις για αυτό το media..."
+                oninput="updateMediaData('${chId}','${typeId}','${itemId}','notes',this.value)"></textarea>
+    </div>
+  `;
+}
+
+function loadMediaEmbed(chId, typeId, itemId, url) {
+  url = (url||'').trim();
+  const box = document.getElementById('embed_' + itemId);
+  if (!box) return;
+
+  updateMediaData(chId, typeId, itemId, 'url', url);
+
+  if (!url) {
+    box.className = 'media-embed empty';
+    box.innerHTML = 'Βάλε URL και πάτα Φόρτωση';
+    return;
+  }
+
+  box.className = 'media-embed';
+
+  if (typeId === 'audio') {
+    // Try direct audio embed; Drive links get transformed
+    let src = url;
+    const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+    if (driveMatch) src = `https://drive.google.com/uc?export=download&id=${driveMatch[1]}`;
+    box.innerHTML = `<audio controls src="${esc(src)}">Ο browser δεν υποστηρίζει audio.</audio>`;
+  } else if (typeId === 'slides') {
+    let src = url;
+    // Convert Google Slides view URL to embed
+    if (url.includes('docs.google.com/presentation') && !url.includes('/embed')) {
+      src = url.replace(/\/pub\?.*/, '/embed').replace(/\/edit.*/, '/embed').replace(/\/present.*/, '/embed');
+      if (!src.includes('?')) src += '?start=false&loop=false&delayms=3000';
+    }
+    box.innerHTML = `<iframe src="${esc(src)}" allowfullscreen></iframe>`;
+  } else if (typeId === 'pdf') {
+    let src = url;
+    // Google Drive PDF direct view
+    const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+    if (driveMatch) src = `https://drive.google.com/file/d/${driveMatch[1]}/preview`;
+    // Generic PDF viewer fallback
+    if (!driveMatch && !url.endsWith('.pdf')) {
+      src = `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+    } else if (driveMatch) {
+      // already set
+    } else {
+      src = `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
+    }
+    box.innerHTML = `<iframe src="${esc(src)}" allowfullscreen></iframe>`;
+  } else if (typeId === 'notebooklm') {
+    // NotebookLM can't be iframed (X-Frame-Options). Show a button link + try audio if it's an audio URL
+    const hint = document.getElementById('embedhint_' + itemId);
+    const linkDiv = document.getElementById('nlmlink_' + itemId);
+    const anchor = document.getElementById('nlmanchor_' + itemId);
+
+    if (hint) hint.style.display = 'none';
+    if (linkDiv) linkDiv.style.display = 'block';
+    if (anchor) anchor.href = url;
+
+    // If it's an audio URL (mp3 etc), also embed audio player
+    if (/\.(mp3|ogg|wav|m4a|aac)(\?.*)?$/i.test(url) || url.includes('drive.google.com')) {
+      const driveMatch = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+      const audioSrc = driveMatch ? `https://drive.google.com/uc?export=download&id=${driveMatch[1]}` : url;
+      box.innerHTML = `
+        <div style="width:100%;padding:12px;">
+          <audio controls style="width:100%" src="${esc(audioSrc)}">Ο browser δεν υποστηρίζει audio.</audio>
+          <div style="margin-top:8px;text-align:center;">
+            <a href="${esc(url)}" target="_blank" style="font-family:'Patrick Hand',cursive;font-size:13px;color:var(--accent);text-decoration:none;">🔗 Άνοιγμα στο NotebookLM</a>
+          </div>
+        </div>`;
+    } else {
+      box.innerHTML = `
+        <div class="notebooklm-link">
+          <a href="${esc(url)}" target="_blank">🤖 Άνοιγμα στο NotebookLM →</a>
+        </div>
+        <div style="padding:8px 14px;font-family:'Patrick Hand',cursive;font-size:12px;color:rgba(44,36,22,0.45);text-align:center;">
+          Το NotebookLM δεν επιτρέπει embed — ανοίγει σε νέα καρτέλα
+        </div>`;
+    }
+  }
+}
+
+function updateMediaData(chId, typeId, itemId, field, value) {
+  initMediaStore(chId);
+  const arr = mediaStore[chId][typeId];
+  const entry = arr.find(e => e.id === itemId);
+  if (entry) entry[field] = value;
+}
+
+function delMediaItem(chId, typeId, itemId) {
+  initMediaStore(chId);
+  mediaStore[chId][typeId] = mediaStore[chId][typeId].filter(e => e.id !== itemId);
+  document.getElementById(itemId)?.remove();
+  setTimeout(buildRings, 200);
+}
+
+// ════════════════════════════════════
+//  INIT
+// ════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const d = new Date();
+  document.getElementById('dateField').value =
+    `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+
+  buildRings();
+
+  // First chapter: Παύλος & Διονύσιος — with demo media
+  const id1 = addChapter('Παύλος & Διονύσιος Αρεοπαγίτης');
+  addChapter('Κεφάλαιο 2');
+  setActive(id1);
+
+  // Pre-populate first chapter note
+  const note1 = document.getElementById('note_' + id1);
+  if (note1) note1.innerHTML = `<p><strong>Θέμα:</strong> Συνάντηση Παύλου και Διονυσίου Αρεοπαγίτου στην Αθήνα (Πράξ. 17:34)</p><p><em>Ο Παύλος στον Άρειο Πάγο — κήρυγμα στους Αθηναίους. Ο Διονύσιος γίνεται ο πρώτος Χριστιανός φιλόσοφος.</em></p>`;
+
+  // Show format bar when editing note areas
+  document.getElementById('pageContent').addEventListener('focusin', e => {
+    if (e.target.closest('.note-area,.ch-title-edit')) showBar();
+  });
+  document.getElementById('pageContent').addEventListener('focusout', e => {
+    setTimeout(() => {
+      const a = document.activeElement;
+      if (!a?.closest('#formatBar,#fmtPanel,.note-area,.ch-title-edit')) hideBar();
+    }, 180);
+  });
+
+  // Swatch clicks
+  document.getElementById('swatchGrid').addEventListener('click', e => {
+    const sw = e.target.closest('.m-swatch');
+    if (!sw) return;
+    document.querySelectorAll('.m-swatch').forEach(s => s.classList.remove('active'));
+    sw.classList.add('active');
+    ALL_THEMES.forEach(t => document.body.classList.remove(t));
+    document.body.classList.add(sw.dataset.theme);
+    refreshTabColors();
+  });
+});
+
+// ════════════════════════════════════
+//  RINGS
+// ════════════════════════════════════
+function buildRings() {
+  const el = document.getElementById('rings');
+  el.innerHTML = '';
+  const h = Math.max(document.getElementById('mainPage').offsetHeight, 720);
+  for (let i=0; i<Math.floor(h/46); i++) {
+    const r = document.createElement('div');
+    r.className = 'ring';
+    el.appendChild(r);
+  }
+}
+
+// ════════════════════════════════════
+//  CHAPTERS
+// ════════════════════════════════════
+function addChapter(title) {
+  const id  = 'ch_' + Date.now() + Math.random().toString(36).slice(2,5);
+  const idx = chapters.length + 1;
+  if (chapters.length > 0) saveHistory('προσθήκη μαθήματος');
+  const ch  = { id, title: title || `Μάθημα ${idx}` };
+  chapters.push(ch);
+  initMediaStore(id);
+
+  const panel = document.createElement('div');
+  panel.className = 'chapter-panel';
+  panel.id = 'panel_' + id;
+  panel.innerHTML = `
+    <div class="chapter-header">
+      <span class="chapter-num" id="chnum_${id}">${idx}</span>
+      <div class="ch-title-edit" contenteditable="true"
+           onblur="syncTitle('${id}',this)"
+           onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"
+           >${esc(ch.title)}</div>
+    </div>
+    <div class="note-area" id="note_${id}"
+         contenteditable="true"
+         data-placeholder="Γράψε σημειώσεις εδώ..."
+         spellcheck="true"></div>
+    <div class="add-bar">
+      <button class="add-btn" onclick="insBullet('${id}')">+ Bullet</button>
+      <button class="add-btn" onclick="addSticky('${id}')">+ Sticky</button>
+      <button class="add-btn" onclick="delChapter('${id}')">🗑 Διαγραφή</button>
+    </div>
+    <div id="stickies_${id}" style="margin-top:8px"></div>
+  `;
+
+  // Append media panel
+  const mediaPanel = buildMediaPanel(id);
+  panel.appendChild(mediaPanel);
+
+  document.getElementById('pageContent').appendChild(panel);
+
+  const tabsEl = document.getElementById('sideTabs');
+  const pencil = tabsEl.querySelector('.tab-pencil');
+  const tab = document.createElement('div');
+  tab.className = 'tab'; tab.id = 'tab_'+id; tab.title = ch.title;
+  tab.onclick = () => setActive(id);
+  tab.innerHTML = `<span class="tab-num" id="tabnum_${id}">${idx}</span>
+                   <span class="tab-label" id="tablabel_${id}">${esc(ch.title)}</span>`;
+  tabsEl.insertBefore(tab, pencil);
+
+  refreshTabColors();
+  setActive(id);
+  setTimeout(buildRings, 150);
+  return id;
+}
+
+function setActive(id) {
+  activeId = id;
+  document.querySelectorAll('.chapter-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel_'+id)?.classList.add('active');
+  document.getElementById('tab_'+id)?.classList.add('active');
+  refreshTabColors();
+}
+
+function refreshTabColors() {
+  document.querySelectorAll('.tab').forEach((tab, i) => {
+    const col = ACCENT_COLORS[i % ACCENT_COLORS.length];
+    tab.style.borderLeftColor = col;
+    tab.style.background = tab.classList.contains('active') ? hexA(col,.18) : '';
+  });
+  chapters.forEach((ch, i) => {
+    const el = document.getElementById('chnum_'+ch.id);
+    if (el) el.style.background = ACCENT_COLORS[i % ACCENT_COLORS.length];
+  });
+}
+
+function syncTitle(id, el) {
+  const ch = chapters.find(c => c.id === id);
+  if (!ch) return;
+  const newTitle = el.innerText.trim();
+  if (newTitle === ch.title) return; // no change, no snapshot
+  saveHistory('μετονομασία "' + ch.title + '"');
+  ch.title = newTitle;
+  const lbl = document.getElementById('tablabel_'+id);
+  const tab = document.getElementById('tab_'+id);
+  if (lbl) lbl.textContent = ch.title;
+  if (tab) tab.title = ch.title;
+  if (modalOpen) buildModalChList();
+}
+
+function delChapter(id) {
+  if (chapters.length <= 1) return;
+  const ch = chapters.find(c => c.id === id);
+  saveHistory('διαγραφή "' + (ch?.title || 'κεφαλαίου') + '"');
+  chapters = chapters.filter(c => c.id !== id);
+  delete mediaStore[id];
+  document.getElementById('panel_'+id)?.remove();
+  document.getElementById('tab_'+id)?.remove();
+  if (activeId === id) setActive(chapters[chapters.length-1].id);
+  renumber();
+  if (modalOpen) buildModalChList();
+}
+
+function renumber() {
+  chapters.forEach((ch, i) => {
+    const n = i+1;
+    const tn = document.getElementById('tabnum_'+ch.id);
+    const cn = document.getElementById('chnum_'+ch.id);
+    if (tn) tn.textContent = n;
+    if (cn) cn.textContent = n;
+  });
+  refreshTabColors();
+}
+
+function insBullet(id) {
+  const n = document.getElementById('note_'+id);
+  if (n) { n.focus(); document.execCommand('insertUnorderedList'); }
+}
+
+function addSticky(id) {
+  const c = document.getElementById('stickies_'+id);
+  if (!c) return;
+  saveHistory('προσθήκη sticky');
+  const s = document.createElement('div');
+  s.className = 'sticky'; s.contentEditable = 'true';
+  s.textContent = 'Σημείωση...';
+  s.style.transform = `rotate(${(Math.random()-.5)*4}deg)`;
+  c.appendChild(s); s.focus();
+}
+
+// ════════════════════════════════════
+//  FORMAT BAR
+// ════════════════════════════════════
+function evt(e) { e.preventDefault(); }
+function showBar() { document.getElementById('formatBar').classList.add('show'); }
+function hideBar() { document.getElementById('formatBar').classList.remove('show'); }
+
+function fmtExec(cmd, val) { document.execCommand(cmd, false, val || null); }
+
+function fmtHeading(tag) {
+  const sel = window.getSelection();
+  if (!sel || !sel.rangeCount) return;
+  const parent = sel.anchorNode?.parentElement?.closest('h1,h2,h3');
+  document.execCommand('formatBlock', false, (parent && parent.tagName.toLowerCase()===tag) ? 'p' : tag);
+}
+
+function fmtColor(c) { document.execCommand('foreColor', false, c); }
+function fmtHL(c) { document.execCommand('hiliteColor', false, c); }
+
+function clearFmt() {
+  document.execCommand('removeFormat', false, null);
+  document.execCommand('foreColor', false, '#2c2416');
+}
+
+// ════════════════════════════════════
+//  FONT SIZE
+// ════════════════════════════════════
+function fsz(delta, absolute) {
+  if (absolute !== undefined) {
+    noteFontSize = Math.min(30, Math.max(12, absolute));
+  } else {
+    noteFontSize = Math.min(30, Math.max(12, noteFontSize + delta));
+  }
+  document.documentElement.style.setProperty('--note-size', noteFontSize + 'px');
+  const a = document.getElementById('fmtSizeLbl');
+  const b = document.getElementById('fmtpSizeVal');
+  const c = document.getElementById('fontSizeVal');
+  const s = document.getElementById('fontSizeSlider');
+  if (a) a.textContent = noteFontSize;
+  if (b) b.textContent = noteFontSize + 'px';
+  if (c) c.textContent = noteFontSize + 'px';
+  if (s) s.value = noteFontSize;
+}
+
+// ════════════════════════════════════
+//  SIDE FORMAT PANEL
+// ════════════════════════════════════
+function toggleFmtPanel() { document.getElementById('fmtPanel').classList.toggle('open'); }
+function closeFmtPanel()  { document.getElementById('fmtPanel').classList.remove('open'); }
+
+// ════════════════════════════════════
+//  SETTINGS MODAL
+// ════════════════════════════════════
+function openSettings() {
+  modalOpen = true;
+  buildModalChList();
+  document.getElementById('settingsOverlay').classList.add('open');
+}
+function closeSettings() {
+  modalOpen = false;
+  document.getElementById('settingsOverlay').classList.remove('open');
+}
+
+function buildModalChList() {
+  const c = document.getElementById('modalChList');
+  c.innerHTML = '';
+  chapters.forEach((ch, i) => {
+    const col = ACCENT_COLORS[i % ACCENT_COLORS.length];
+    const row = document.createElement('div');
+    row.className = 'ch-row';
+    row.innerHTML = `
+      <span class="ch-row-num" style="background:${col}">${i+1}</span>
+      <span class="ch-row-name">${esc(ch.title)}</span>
+      <button class="ch-row-go" onclick="goTo('${ch.id}')">Μετάβαση</button>
+      <button class="ch-row-del" onclick="delChapter('${ch.id}')">✕</button>
+    `;
+    c.appendChild(row);
+  });
+}
+
+function goTo(id) { closeSettings(); setActive(id); }
+
+function addChFromModal() {
+  const inp = document.getElementById('newChInput');
+  const t = inp.value.trim();
+  if (!t) return;
+  addChapter(t); inp.value = '';
+  buildModalChList();
+}
+
+// ════════════════════════════════════
+//  FONT PICKER
+// ════════════════════════════════════
+function setFont(btn) {
+  document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.documentElement.style.setProperty('--body-font', btn.dataset.font);
+}
+
+// ════════════════════════════════════
+//  BACKGROUND
+// ════════════════════════════════════
+function applyBg() {
+  const url = document.getElementById('bgUrlInput').value.trim();
+  if (!url) return;
+  const page = document.getElementById('mainPage');
+  page.style.setProperty('--bg-img', `url("${url}")`);
+  applyBgSize();
+  applyBgOpacity(document.getElementById('bgOpacitySlider').value);
+}
+function applyBgSize() {
+  document.getElementById('mainPage').style.setProperty('--bg-size', document.getElementById('bgSizeSelect').value);
+}
+function applyBgOpacity(val) {
+  const v = parseInt(val);
+  document.getElementById('mainPage').style.setProperty('--bg-opacity', (v/100).toFixed(2));
+  const lbl = document.getElementById('bgOpacityVal');
+  if (lbl) lbl.textContent = v + '%';
+}
+function clearBg() {
+  document.getElementById('bgUrlInput').value = '';
+  const page = document.getElementById('mainPage');
+  page.style.removeProperty('--bg-img');
+  page.style.removeProperty('--bg-opacity');
+  document.getElementById('bgOpacitySlider').value = 100;
+  document.getElementById('bgOpacityVal').textContent = '100%';
+}
+
+// ════════════════════════════════════
+//  SNAPSHOT (includes media store)
+// ════════════════════════════════════
+function getSnap() {
+  const theme = ALL_THEMES.find(t => document.body.classList.contains(t)) || 't-sage';
+  const font  = getComputedStyle(document.documentElement).getPropertyValue('--body-font').trim();
+  return {
+    title: document.getElementById('nbTitle').value,
+    date:  document.getElementById('dateField').value,
+    theme, font,
+    fontSize: noteFontSize,
+    chapters: chapters.map((ch, i) => ({
+      index: i+1, title: ch.title,
+      html:  document.getElementById('note_'+ch.id)?.innerHTML || '',
+      text:  document.getElementById('note_'+ch.id)?.innerText.trim() || '',
+      stickies: Array.from(document.getElementById('stickies_'+ch.id)?.querySelectorAll('.sticky')||[]).map(s=>s.innerText),
+      media: mediaStore[ch.id] || {}
+    }))
+  };
+}
+
+// ════════════════════════════════════
+//  EXPORT
+// ════════════════════════════════════
+function exportJSON() {
+  const snap = getSnap();
+  dlBlob(JSON.stringify(snap,null,2), (snap.title||'notebook')+'.notebook.json', 'application/json');
+  showStatus('✅ JSON αποθηκεύτηκε!','ok');
+}
+function exportTXT() {
+  const snap = getSnap();
+  let txt = `📔 ${snap.title}\n📅 ${snap.date}\n${'─'.repeat(40)}\n\n`;
+  snap.chapters.forEach(ch => {
+    txt += `[${ch.index}] ${ch.title}\n${'─'.repeat(30)}\n${ch.text||''}\n`;
+    if (ch.stickies?.length) txt += '\n📌 ' + ch.stickies.join(' | ') + '\n';
+    // Include media URLs in export
+    if (ch.media) {
+      Object.entries(ch.media).forEach(([type, items]) => {
+        if (items.length) {
+          txt += `\n🎬 ${type.toUpperCase()}:\n`;
+          items.forEach(m => {
+            txt += `  • ${m.label||type}: ${m.url||m.content||''}\n`;
+            if (m.notes) txt += `    Σημ.: ${m.notes}\n`;
+          });
+        }
+      });
+    }
+    txt += '\n';
+  });
+  dlBlob(txt, (snap.title||'notebook')+'.txt', 'text/plain');
+  showStatus('✅ TXT αποθηκεύτηκε!','ok');
+}
+function printNB() {
+  document.querySelectorAll('.chapter-panel').forEach(p=>p.classList.add('active'));
+  document.querySelectorAll('.media-panel').forEach(p=>p.classList.remove('collapsed'));
+  closeSettings();
+  setTimeout(()=>{
+    window.print();
+    setTimeout(()=>{
+      document.querySelectorAll('.chapter-panel').forEach(p=>p.classList.remove('active'));
+      if (activeId) document.getElementById('panel_'+activeId)?.classList.add('active');
+    },500);
+  },200);
+}
+
+// ════════════════════════════════════
+//  IMPORT
+// ════════════════════════════════════
+function importJSON(evt2) {
+  const file = evt2.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.chapters||!Array.isArray(data.chapters)) throw new Error('Μη έγκυρο JSON');
+      const hasContent = chapters.some(ch => document.getElementById('note_'+ch.id)?.innerText.trim().length>0);
+      if (hasContent && !confirm('Αντικατάσταση τρέχοντος notebook;')) return;
+      loadSnap(data);
+      showStatus(`✅ Φορτώθηκε: "${data.title||'Notebook'}" — ${data.chapters.length} κεφάλαια`,'ok');
+    } catch(err) { showStatus('❌ '+err.message,'err'); }
+  };
+  r.readAsText(file); evt2.target.value='';
+}
+function importTXT(evt2) {
+  const file = evt2.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = e => {
+    const lines = e.target.result.trim().split('\n');
+    const title = file.name.replace(/\.txt$/i,'');
+    const id = addChapter(title);
+    const noteEl = document.getElementById('note_'+id);
+    if (noteEl) noteEl.innerHTML = lines.map(l=>l.trim()===''?'<p><br></p>':`<p>${esc(l)}</p>`).join('');
+    setActive(id);
+    if (modalOpen) buildModalChList();
+    showStatus(`✅ Εισήχθη: "${title}"`,'ok');
+  };
+  r.readAsText(file); evt2.target.value='';
+}
+
+function loadSnap(data) {
+  chapters.forEach(ch => { document.getElementById('panel_'+ch.id)?.remove(); document.getElementById('tab_'+ch.id)?.remove(); });
+  chapters=[]; activeId=null;
+  Object.keys(mediaStore).forEach(k => delete mediaStore[k]);
+
+  if (data.title) document.getElementById('nbTitle').value=data.title;
+  if (data.date)  document.getElementById('dateField').value=data.date;
+  if (data.theme) { ALL_THEMES.forEach(t=>document.body.classList.remove(t)); document.body.classList.add(data.theme); document.querySelectorAll('.m-swatch').forEach(sw=>sw.classList.toggle('active',sw.dataset.theme===data.theme)); }
+  if (data.font)  document.documentElement.style.setProperty('--body-font',data.font);
+  if (data.fontSize) fsz(0,data.fontSize);
+
+  data.chapters.forEach(chData => {
+    const id = addChapter(chData.title||'Κεφάλαιο');
+    const noteEl = document.getElementById('note_'+id);
+    if (noteEl && chData.html) noteEl.innerHTML=chData.html;
+    if (chData.stickies?.length) {
+      const sc = document.getElementById('stickies_'+id);
+      if (sc) chData.stickies.forEach(txt=>{ const s=document.createElement('div'); s.className='sticky'; s.contentEditable='true'; s.textContent=txt; s.style.transform=`rotate(${(Math.random()-.5)*4}deg)`; sc.appendChild(s); });
+    }
+    // Restore media
+    if (chData.media) {
+      Object.entries(chData.media).forEach(([typeId, items]) => {
+        if (Array.isArray(items)) {
+          items.forEach(item => addMediaItem(id, typeId, item));
+        }
+      });
+    }
+  });
+  if (chapters.length) setActive(chapters[0].id);
+  refreshTabColors();
+  setTimeout(buildRings,200);
+  if (modalOpen) buildModalChList();
+}
+
+// ════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════
+function showStatus(msg, type) {
+  const el = document.getElementById('importStatus');
+  if (!el) return;
+  el.textContent=msg; el.style.display='block';
+  el.style.cssText += type==='ok'
+    ? ';background:rgba(122,158,126,.18);color:#3a6b3e;border:1.5px solid rgba(122,158,126,.4)'
+    : ';background:rgba(192,68,68,.12);color:#c04444;border:1.5px solid rgba(192,68,68,.3)';
+  clearTimeout(el._t); el._t=setTimeout(()=>el.style.display='none',4000);
+}
+function dlBlob(content, filename, mime) {
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type:mime}));
+  a.download=filename; a.click();
+}
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function hexA(hex,a) {
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+</script>
+</body>
+</html>

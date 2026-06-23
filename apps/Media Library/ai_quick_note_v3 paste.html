@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Quick Note v3</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&family=Fraunces:ital,wght@0,300;0,500;1,300;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0e0f13; --sf:#16181f; --sf2:#1e2029; --bd:rgba(255,255,255,0.06); --bd2:rgba(255,255,255,0.14);
+  --gold:#d4a96a; --gold2:rgba(212,169,106,0.15); --gold3:rgba(212,169,106,0.07);
+  --tx:#e8e2d6; --mu:#6b6455; --gr:#5a9e7c; --er:#c0392b; --bl:#4a8fa8; --pu:#9b7acc;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--tx);font-family:'IBM Plex Mono',monospace;font-size:12px;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(212,169,106,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(212,169,106,0.025) 1px,transparent 1px);
+  background-size:32px 32px;pointer-events:none;}
+.app{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:28px 18px 80px;}
+
+header{margin-bottom:24px;border-bottom:1px solid var(--bd2);padding-bottom:16px;}
+.logo{font-family:'Fraunces',serif;font-size:26px;font-weight:300;color:var(--gold);}
+.logo em{font-style:italic;}
+.ai-badge{display:inline-block;background:rgba(155,122,204,.2);border:1px solid rgba(155,122,204,.4);color:var(--pu);font-size:9px;letter-spacing:.15em;text-transform:uppercase;padding:2px 8px;border-radius:2px;margin-left:8px;vertical-align:middle;}
+.ver-badge{font-size:9px;color:var(--mu);border:1px solid var(--bd);padding:2px 8px;border-radius:2px;margin-left:6px;vertical-align:middle;}
+.drive-badge{font-size:9px;color:var(--gr);border:1px solid rgba(90,158,124,.4);padding:2px 8px;border-radius:2px;margin-left:6px;vertical-align:middle;}
+.sub{font-size:10px;color:var(--mu);letter-spacing:.2em;text-transform:uppercase;margin-top:4px;}
+
+/* MAIN TABS */
+.tabs{display:flex;gap:0;border:1px solid var(--bd);border-radius:2px;overflow:hidden;margin-bottom:18px;}
+.tab{flex:1;padding:10px 14px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;background:transparent;border:none;color:var(--mu);transition:all .15s;text-align:center;}
+.tab:not(:last-child){border-right:1px solid var(--bd);}
+.tab.active{background:var(--gold2);color:var(--gold);}
+.tab:hover:not(.active){background:var(--gold3);color:var(--tx);}
+.panel{display:none;}.panel.active{display:block;}
+
+/* SUB TABS */
+.sub-tabs{display:flex;gap:6px;margin-bottom:14px;}
+.sub-tab{padding:6px 14px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;background:transparent;border:1px solid var(--bd);border-radius:2px;color:var(--mu);transition:all .15s;}
+.sub-tab.active{border-color:var(--gold);color:var(--gold);background:var(--gold3);}
+.sub-tab:hover:not(.active){border-color:var(--bd2);color:var(--tx);}
+.sub-panel{display:none;}.sub-panel.active{display:block;}
+
+/* SECTION */
+.section{background:var(--sf);border:1px solid var(--bd);border-radius:3px;padding:16px 18px;margin-bottom:12px;}
+.sec-title{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--bd);}
+
+/* BATCH ENTRIES */
+.batch-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+.batch-entry{background:var(--sf2);border:1px solid var(--bd);border-radius:3px;padding:12px 14px;position:relative;animation:slideIn .2s ease;}
+@keyframes slideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.batch-entry .entry-num{font-size:9px;color:var(--gold);letter-spacing:.1em;margin-bottom:10px;}
+.batch-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.batch-row:last-child{margin-bottom:0;}
+.batch-field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:200px;}
+.batch-field label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu);}
+.batch-field label .req{color:var(--gold);}
+.del-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--mu);cursor:pointer;font-size:13px;line-height:1;padding:2px 4px;transition:color .15s;}
+.del-btn:hover{color:var(--er);}
+.add-entry-btn{width:100%;padding:9px;background:transparent;border:1px dashed rgba(212,169,106,.3);border-radius:2px;color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;cursor:pointer;transition:all .15s;}
+.add-entry-btn:hover{border-color:var(--gold);background:var(--gold3);}
+
+/* BOOK SELECTOR */
+.book-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px;}
+.book-btn{padding:7px;background:transparent;border:1px solid var(--bd);border-radius:2px;color:var(--mu);font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;transition:all .15s;text-align:center;}
+.book-btn:hover{border-color:var(--bd2);color:var(--tx);}
+.book-btn.sel{background:rgba(74,143,168,.2);border-color:var(--bl);color:var(--bl);}
+
+/* PAGE MAP VIEWER */
+.pagemap-info{padding:10px 14px;background:rgba(74,143,168,.07);border:1px solid rgba(74,143,168,.2);border-radius:3px;margin-top:10px;font-size:10px;color:var(--bl);line-height:1.8;}
+.pagemap-info strong{color:var(--tx);}
+.pagemap-scroll{max-height:220px;overflow-y:auto;margin-top:8px;}
+.pm-row{display:flex;gap:0;border-bottom:1px solid var(--bd);padding:4px 0;}
+.pm-row:last-child{border-bottom:none;}
+.pm-pg{min-width:52px;color:var(--gold);font-size:10px;flex-shrink:0;}
+.pm-title{font-size:10px;color:var(--tx);}
+.pm-section{font-size:9px;color:var(--mu);margin-top:2px;}
+.pm-source{font-size:9px;color:var(--gr);}
+
+/* FORM */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;}
+.field:last-child{margin-bottom:0;}
+label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--mu);}
+label .req{color:var(--gold);}
+input,select,textarea{background:var(--sf2);border:1px solid var(--bd);border-radius:2px;color:var(--tx);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:7px 10px;outline:none;transition:border-color .15s;width:100%;}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);}
+input::placeholder,textarea::placeholder{color:var(--mu);}
+
+/* GEN BUTTON */
+.gen-btn{width:100%;padding:12px;border-radius:2px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;transition:all .15s;margin-top:12px;background:linear-gradient(135deg,rgba(212,169,106,.85),rgba(180,130,60,.85));border:none;color:#0e0f13;font-weight:500;}
+.gen-btn:hover{opacity:.88;}
+.gen-btn:disabled{opacity:.35;cursor:not-allowed;}
+
+/* THINKING */
+.thinking{display:none;align-items:center;gap:12px;padding:12px 14px;background:rgba(155,122,204,.08);border:1px solid rgba(155,122,204,.2);border-radius:3px;margin-top:10px;}
+.thinking.on{display:flex;}
+.dots{display:flex;gap:5px;}
+.dot{width:6px;height:6px;background:var(--pu);border-radius:50%;animation:pulse 1.2s ease infinite;}
+.dot:nth-child(2){animation-delay:.2s;}.dot:nth-child(3){animation-delay:.4s;}
+@keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+.think-txt{font-size:11px;color:var(--pu);}
+
+/* OUTPUT */
+.output-area{display:flex;flex-direction:column;gap:10px;margin-top:12px;}
+.output-card{background:var(--sf2);border:1px solid var(--bd);border-radius:3px;overflow:hidden;animation:fadeIn .25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.out-head{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--gold2);border-bottom:1px solid var(--bd);}
+.out-title{font-size:10px;color:var(--gold);letter-spacing:.1em;}
+.out-sub{font-size:9px;color:var(--mu);margin-top:2px;}
+.out-actions{display:flex;gap:6px;align-items:center;}
+.field-grid{padding:10px 14px;display:flex;flex-direction:column;}
+.frow{display:flex;gap:0;border-bottom:1px solid var(--bd);}
+.frow:last-child{border-bottom:none;}
+.fk{font-size:9px;color:var(--mu);letter-spacing:.1em;text-transform:uppercase;min-width:110px;padding:5px 0;flex-shrink:0;}
+.fv{font-size:11px;color:var(--tx);padding:5px 8px;word-break:break-all;line-height:1.5;}
+.fv.url-c{color:var(--bl);}
+.fv.id-c{color:var(--gold);}
+.fv.type-c{color:var(--pu);}
+.fv.tags-c{color:var(--gr);}
+.fv.page-c{color:var(--gold);font-weight:500;}
+
+/* BTNS */
+.btn-copy{padding:5px 11px;background:transparent;border:1px solid var(--gr);border-radius:2px;color:var(--gr);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;cursor:pointer;transition:all .15s;}
+.btn-copy:hover{background:rgba(90,158,124,.15);}
+.btn-copy.copied{color:var(--gold);border-color:var(--gold);}
+.btn-ghost{padding:5px 11px;background:transparent;border:1px solid var(--bd2);border-radius:2px;color:var(--mu);font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;transition:all .15s;}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+.btn-danger{padding:5px 11px;background:transparent;border:1px solid rgba(192,57,43,.4);border-radius:2px;color:var(--er);font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;transition:all .15s;}
+.btn-danger:hover{background:rgba(192,57,43,.1);}
+
+/* DB BAR */
+.db-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:10px 14px;background:rgba(212,169,106,.05);border:1px solid var(--bd);border-radius:3px;margin-bottom:12px;}
+.db-bar-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--mu);margin-right:4px;}
+.db-count{font-size:9px;color:var(--gold);margin-right:auto;}
+.db-btn{padding:5px 12px;background:transparent;border:1px solid var(--bd2);border-radius:2px;color:var(--mu);font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;cursor:pointer;transition:all .15s;}
+.db-btn:hover{border-color:var(--gold);color:var(--gold);background:var(--gold3);}
+.db-btn.import-xl{border-color:rgba(90,158,124,.4);color:var(--gr);}
+.db-btn.import-xl:hover{background:rgba(90,158,124,.1);}
+.db-btn.export-xl{border-color:rgba(74,143,168,.4);color:var(--bl);}
+.db-btn.export-xl:hover{background:rgba(74,143,168,.1);}
+.db-btn.export-json{border-color:rgba(155,122,204,.4);color:var(--pu);}
+.db-btn.export-json:hover{background:rgba(155,122,204,.1);}
+
+/* TABLE */
+.db-table-wrap{overflow-x:auto;border:1px solid var(--bd);border-radius:3px;}
+.db-table{width:100%;border-collapse:collapse;font-size:10px;}
+.db-table th{padding:7px 10px;text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);border-bottom:1px solid var(--bd);white-space:nowrap;background:var(--sf);}
+.db-table td{padding:6px 10px;border-bottom:1px solid var(--bd);color:var(--tx);vertical-align:top;}
+.db-table tr:last-child td{border-bottom:none;}
+.db-table tr:hover td{background:var(--gold3);}
+.td-id{color:var(--gold);font-weight:500;}
+.td-url{color:var(--bl);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.td-type{color:var(--pu);}
+.td-apps{color:var(--gr);font-size:9px;}
+
+/* PAGE MATCH DISPLAY */
+.page-match{background:rgba(74,143,168,.08);border:1px solid rgba(74,143,168,.25);border-radius:3px;padding:9px 14px;font-size:10.5px;color:var(--bl);line-height:1.7;margin-bottom:0;}
+.page-match strong{color:var(--tx);}
+
+/* HIST */
+.hist-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--bd);cursor:pointer;transition:background .1s;}
+.hist-item:hover{background:var(--gold3);}
+.hist-item:last-child{border-bottom:none;}
+.hid{font-size:10px;color:var(--gold);}
+.htitle{font-size:11px;color:var(--tx);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:380px;}
+.hdate{font-size:9px;color:var(--mu);margin-top:2px;}
+.hbadge{font-size:9px;padding:2px 7px;border-radius:2px;margin-left:8px;white-space:nowrap;}
+.hb-ml{background:var(--gold2);color:var(--gold);}
+.hb-ib{background:rgba(74,143,168,.2);color:var(--bl);}
+.err-box{background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.3);border-radius:3px;padding:11px 14px;margin-top:10px;font-size:11px;color:var(--er);}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div>
+    <div class="logo">AI <em>Quick Note</em>
+      <span class="ai-badge">✦ Claude</span>
+      <span class="ver-badge">v3</span>
+      <span class="drive-badge">📄 PDF maps από Google Drive</span>
+    </div>
+    <div class="sub">Batch entries · Excel &amp; JSON import/export · Αντιστοίχιση σε επίπεδο σελίδας βιβλίου</div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="mainTab('ml')" id="main-ml">📚 Media Library</button>
+  <button class="tab" onclick="mainTab('ib')" id="main-ib">📖 Interactive Book</button>
+  <button class="tab" onclick="mainTab('hist')" id="main-hist">📋 Ιστορικό</button>
+</div>
+
+<!-- ══ MEDIA LIBRARY ══ -->
+<div class="panel active" id="panel-ml">
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="subTab('ml','add')" id="ml-sub-add">➕ Προσθήκη</button>
+    <button class="sub-tab" onclick="subTab('ml','db')" id="ml-sub-db">🗄 Βάση</button>
+  </div>
+  <div class="sub-panel active" id="ml-sp-add">
+    <div class="section">
+      <div class="sec-title">Batch entries — URL + τίτλος → AI συμπληρώνει τα υπόλοιπα</div>
+      <div class="batch-list" id="ml-batch-list"></div>
+      <button class="add-entry-btn" onclick="addMLEntry()">+ Νέο entry</button>
+    </div>
+    <button class="gen-btn" id="ml-gen-btn" onclick="generateMLBatch()">✦ Δημιουργία με AI για όλα τα entries</button>
+    <div class="thinking" id="ml-thinking">
+      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <div class="think-txt" id="ml-think-txt">Αναλύω URLs…</div>
+    </div>
+    <div class="output-area" id="ml-output"></div>
+  </div>
+  <div class="sub-panel" id="ml-sp-db">
+    <div class="db-bar">
+      <span class="db-bar-label">📚 Media Library</span>
+      <span class="db-count" id="ml-db-count">0 εγγραφές</span>
+      <label class="db-btn import-xl" style="cursor:pointer">↑ Import Excel
+        <input type="file" accept=".xlsx,.xls" style="display:none" onchange="importMLExcel(this)">
+      </label>
+      <button class="db-btn import-xl" onclick="openPasteModal('ml')">📋 Paste</button>
+      <button class="db-btn export-xl" onclick="exportMLExcel()">↓ Excel</button>
+      <button class="db-btn export-json" onclick="exportMLJson()">↓ JSON (Orchestrator)</button>
+      <button class="db-btn" onclick="if(confirm('Εκκαθάριση;')){mlDb=[];saveDB();renderMLTable();}">✕</button>
+    </div>
+    <div class="db-table-wrap">
+      <table class="db-table">
+        <thead><tr><th>#</th><th>media_id</th><th>type</th><th>title</th><th>url</th><th>app_context</th><th>tags</th><th>status</th><th>date</th><th></th></tr></thead>
+        <tbody id="ml-db-tbody"></tbody>
+      </table>
+    </div>
+    <div id="ml-db-empty" style="display:none;text-align:center;padding:20px;color:var(--mu);font-size:10px;">Κενή βάση. Προσθέσε ή κάνε import.</div>
+  </div>
+</div>
+
+<!-- ══ INTERACTIVE BOOK ══ -->
+<div class="panel" id="panel-ib">
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="subTab('ib','add')" id="ib-sub-add">➕ Προσθήκη</button>
+    <button class="sub-tab" onclick="subTab('ib','db')" id="ib-sub-db">🗄 Βάση</button>
+    <button class="sub-tab" onclick="subTab('ib','map')" id="ib-sub-map">🗺 Page Maps</button>
+  </div>
+
+  <!-- ADD -->
+  <div class="sub-panel active" id="ib-sp-add">
+    <div class="section">
+      <div class="sec-title">Βιβλίο</div>
+      <div class="book-grid" id="book-grid">
+        <button class="book-btn" data-book="A_Gymnasiou" onclick="selBook(this)">Α΄ Γυμνασίου</button>
+        <button class="book-btn sel" data-book="B_Gymnasiou" onclick="selBook(this)">Β΄ Γυμνασίου ✓</button>
+        <button class="book-btn" data-book="G_Gymnasiou" onclick="selBook(this)">Γ΄ Γυμνασίου</button>
+        <button class="book-btn" data-book="A_Lykeiou" onclick="selBook(this)">Α΄ Λυκείου</button>
+        <button class="book-btn" data-book="B_Lykeiou" onclick="selBook(this)">Β΄ Λυκείου</button>
+        <button class="book-btn" data-book="G_Lykeiou" onclick="selBook(this)">Γ΄ Λυκείου</button>
+      </div>
+      <div class="pagemap-info" id="pm-info" style="margin-top:10px;font-size:9px;">
+        📄 Page map φορτωμένο από PDF — σελίδες βιβλίου
+      </div>
+    </div>
+    <div class="section">
+      <div class="sec-title">Batch entries — URL + θεματική → AI βρίσκει ακριβή σελίδα</div>
+      <div class="batch-list" id="ib-batch-list"></div>
+      <button class="add-entry-btn" onclick="addIBEntry()">+ Νέο entry</button>
+    </div>
+    <button class="gen-btn" id="ib-gen-btn" onclick="generateIBBatch()">✦ Εύρεση σελίδας + Δημιουργία για όλα</button>
+    <div class="thinking" id="ib-thinking">
+      <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+      <div class="think-txt" id="ib-think-txt">Αναζητώ σελίδες…</div>
+    </div>
+    <div class="output-area" id="ib-output"></div>
+  </div>
+
+  <!-- DB -->
+  <div class="sub-panel" id="ib-sp-db">
+    <div class="db-bar">
+      <span class="db-bar-label">📖 Interactive Book</span>
+      <span class="db-count" id="ib-db-count">0 εγγραφές</span>
+      <label class="db-btn import-xl" style="cursor:pointer">↑ Import Excel
+        <input type="file" accept=".xlsx,.xls" style="display:none" onchange="importIBExcel(this)">
+      </label>
+      <button class="db-btn import-xl" onclick="openPasteModal('ib')">📋 Paste</button>
+      <button class="db-btn export-xl" onclick="exportIBExcel()">↓ Excel</button>
+      <button class="db-btn export-json" onclick="exportIBJson()">↓ JSON (Sync)</button>
+      <button class="db-btn" onclick="if(confirm('Εκκαθάριση;')){ibDb=[];saveDB();renderIBTable();}">✕</button>
+    </div>
+    <div class="db-table-wrap">
+      <table class="db-table">
+        <thead><tr><th>#</th><th>book</th><th>page</th><th>title</th><th>field</th><th>url/value</th><th>date</th><th></th></tr></thead>
+        <tbody id="ib-db-tbody"></tbody>
+      </table>
+    </div>
+    <div id="ib-db-empty" style="display:none;text-align:center;padding:20px;color:var(--mu);font-size:10px;">Κενή βάση.</div>
+  </div>
+
+  <!-- MAP VIEWER -->
+  <div class="sub-panel" id="ib-sp-map">
+    <div class="section">
+      <div class="sec-title">Page Maps — Από τα σχολικά βιβλία (Google Drive PDFs)</div>
+      <div style="margin-bottom:10px;">
+        <select id="map-book-sel" onchange="renderPageMap(this.value)" style="max-width:260px;">
+          <option value="B_Gymnasiou">Β΄ Γυμνασίου</option>
+          <option value="A_Gymnasiou">Α΄ Γυμνασίου</option>
+          <option value="G_Gymnasiou">Γ΄ Γυμνασίου</option>
+          <option value="A_Lykeiou">Α΄ Λυκείου</option>
+          <option value="B_Lykeiou">Β΄ Λυκείου</option>
+          <option value="G_Lykeiou">Γ΄ Λυκείου</option>
+        </select>
+      </div>
+      <div id="pm-viewer" class="pagemap-scroll"></div>
+      <div style="margin-top:10px;font-size:9px;color:var(--mu);">
+        Πηγή: Google Drive / «Σχολικά βιβλία» — Thriskeutika PDFs<br>
+        Το AI χρησιμοποιεί αυτό το map για να βρει ακριβή σελίδα από θεματική.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HISTORY ══ -->
+<div class="panel" id="panel-hist">
+  <div class="section">
+    <div class="sec-title">Αποθηκευμένες εγγραφές <span id="hist-count" style="color:var(--mu);font-size:9px;letter-spacing:0;font-weight:normal;"></span></div>
+    <div id="hist-list"><div style="text-align:center;padding:20px;color:var(--mu);font-size:10px;">Κενό.</div></div>
+  </div>
+  <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;">
+    <button class="btn-ghost" onclick="exportHistCSV()">↓ CSV</button>
+    <button class="btn-danger" onclick="if(confirm('Εκκαθάριση;')){histLog=[];saveDB();renderHist();}">✕ Εκκαθάριση</button>
+  </div>
+</div>
+</div>
+
+<!-- ══ PASTE MODAL ══ -->
+<div id="paste-modal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.72);align-items:center;justify-content:center;">
+  <div style="background:#16181f;border:1px solid rgba(212,169,106,0.3);border-radius:4px;padding:22px;width:min(640px,92vw);max-height:90vh;display:flex;flex-direction:column;gap:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);" id="paste-modal-title">📋 Paste από Excel</div>
+      <button onclick="closePasteModal()" style="background:none;border:none;color:var(--mu);cursor:pointer;font-size:18px;line-height:1;padding:0 4px;">×</button>
+    </div>
+    <div style="font-size:10px;color:var(--mu);line-height:1.9;background:rgba(212,169,106,0.05);padding:8px 10px;border-radius:2px;border-left:2px solid var(--gold);">
+      1. Άνοιξε το Excel / Google Sheets<br>
+      2. Επίλεξε <strong style="color:var(--tx)">όλες τις γραμμές</strong> συμπεριλαμβανομένης της επικεφαλίδας (Ctrl+A)<br>
+      3. Αντέγραψε (Ctrl+C) → Επικόλλησε εδώ (Ctrl+V)
+    </div>
+    <textarea id="paste-area" placeholder="Επικόλλησε εδώ (Ctrl+V)…" style="background:#0e0f13;border:1px solid rgba(255,255,255,0.08);border-radius:2px;color:var(--tx);font-family:IBM Plex Mono,monospace;font-size:10px;padding:10px;resize:vertical;min-height:160px;outline:none;width:100%;line-height:1.6;" oninput="previewPaste(this.value)"></textarea>
+    <div id="paste-preview" style="font-size:9px;color:var(--mu);min-height:16px;padding:4px 0;"></div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="importPaste()" style="flex:1;padding:10px;background:linear-gradient(135deg,rgba(212,169,106,.85),rgba(180,130,60,.85));border:none;border-radius:2px;color:#0e0f13;font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;font-weight:500;">✦ Εισαγωγή</button>
+      <button onclick="closePasteModal()" style="padding:10px 18px;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:2px;color:var(--mu);font-family:IBM Plex Mono,monospace;font-size:10px;cursor:pointer;">Ακύρωση</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// PAGE MAPS — εξαγμένα από τα πραγματικά PDFs
+// ══════════════════════════════════════════
+const PAGE_MAPS = {
+
+B_Gymnasiou: {
+  label: 'Θρησκευτικά Β΄ Γυμνασίου — Η Εκκλησία: πορεία ζωής μέσα στην ιστορία',
+  driveFile: 'Thriskeutika_B_Gymnasiou.pdf',
+  pages: [
+    { page:7,  title:'Ενότητα 1: Η Εκκλησία εξαπλώνεται', section:'Α΄ Θεματική — Πεντηκοστή, Αποστολή, Άγιο Πνεύμα, αναλήψη' },
+    { page:12, title:'Ενότητα 2: Ιεροσόλυμα — Η πρώτη χριστιανική κοινότητα', section:'Α΄ Θεματική — κοινοχρησία, Εκκλησία ως Σώμα Χριστού, Διάκονοι' },
+    { page:19, title:'Ενότητα 3: Από διώκτης, Απόστολος των Εθνών', section:'Β΄ Θεματική — Παύλος, Δαμασκός, Φίλιπποι, Αθήνα Άρειος Πάγος, Διονύσιος Αρεοπαγίτης, Επιστολές' },
+    { page:29, title:'Ενότητα 4: Τέλος διωγμών — Μέγας Κωνσταντίνος', section:'Γ΄ Θεματική — Διάταγμα Μεδιολάνων 313, κατακόμβες, βασιλικές, χριστιανισμός επίσημη θρησκεία' },
+    { page:40, title:'Ενότητα 5: Η Εκκλησία οργανώνεται', section:'Γ΄ Θεματική — κλήρος λαός, επίσκοπος, μοναχισμός, Μέγας Βασίλειος, Βασιλειάδα, Εφραίμ Σύρος' },
+    { page:50, title:'Ενότητα 6: Ελληνισμός και Χριστιανισμός', section:'Δ΄ Θεματική — ελληνική γλώσσα, Απολογητές, Ιουστίνος σπερματικός λόγος, Τρεις Ιεράρχες' },
+    { page:69, title:'Ενότητα 7: Σύνθεση Χριστιανισμού και Ελληνισμού στην τέχνη', section:'Δ΄ Θεματική — Αγία Σοφία, ψηφιδωτά, εικόνες Φαγιούμ, αγιογραφία, βυζαντινή τέχνη' },
+    { page:78, title:'Ενότητα 8: Συζητώντας για τα όριά μας', section:'Ε΄ Θεματική — Σύνοδοι, δόγματα, πίστη, όρια' },
+    { page:82, title:'Ενότητα 9: Η χριστιανική Εκκλησία αποφασίζει και ορίζει την πίστη', section:'Ε΄ Θεματική — Α΄ Σύνοδος Νίκαιας 325, Αρειανισμός, Ομοούσιος, οικουμενικές σύνοδοι' },
+    { page:96, title:'Ενότητα 10: Η δύναμη της εικόνας', section:'ΣΤ΄ Θεματική — εικονογραφία, ιστορία εικόνας, τιμητική προσκύνηση' },
+    { page:102,title:'Ενότητα 11: Η απεικόνιση του Θεού στη βιβλική παράδοση', section:'ΣΤ΄ Θεματική — βιβλική παράδοση, πρώτοι αιώνες, εικαστική έκφραση' },
+    { page:110,title:'Ενότητα 12: Εικονομαχία — τιμητική προσκύνηση υπό διωγμό', section:'ΣΤ΄ Θεματική — εικονομαχία 726-843, Ιωάννης Δαμασκηνός, Β΄ Σύνοδος Νίκαιας 787, αποκατάσταση' },
+    { page:121,title:'Ενότητα 13: Θεολογία και κάλλος Ορθόδοξης εικονογραφίας', section:'ΣΤ΄ Θεματική — θεολογία εικόνας, κάλλος, Ορθόδοξη παράδοση' },
+    { page:130,title:'Ενότητα 14: Μετά την Άλωση της Πόλης', section:'Ζ΄ Θεματική — Άλωση 1453, Κωνσταντινούπολη, Τουρκοκρατία, εθνική συνείδηση' },
+    { page:139,title:'Ενότητα 15: Η δύναμη του λαϊκού πολιτισμού', section:'Ζ΄ Θεματική — λαϊκός πολιτισμός, εκκλησιαστική τέχνη μετά Άλωση' },
+    { page:148,title:'Ενότητα 16: Από οικουμενική Ορθοδοξία στις εθνικές Εκκλησίες', section:'Ζ΄ Θεματική — αυτοκεφαλία, Εκκλησία Ελλάδος, οικουμενισμός' },
+  ]
+},
+
+A_Gymnasiou: {
+  label: 'Θρησκευτικά Α΄ Γυμνασίου — Η συνάντηση Θεού και ανθρώπου στην Αγία Γραφή',
+  driveFile: 'Thriskeutika_A_Gymnasiou.pdf',
+  pages: [
+    { page:7,  title:'Ενότητα 1: Η αρχή — ο Θεός δημιουργός', section:'Παλαιά Διαθήκη, κτίση, δημιουργία, άνθρωπος εικόνα Θεού' },
+    { page:14, title:'Ενότητα 2: Αβραάμ — ο πατέρας της πίστης', section:'Αβραάμ, Γένεσις, κλήση, υπακοή, Χαναάν, Ισαάκ' },
+    { page:22, title:'Ενότητα 3: Μωυσής — ο απελευθερωτής', section:'Μωυσής, Έξοδος, δεκάλογος, Σινά, νόμος, πάσχα' },
+    { page:30, title:'Ενότητα 4: Δαβίδ — ο ποιητής-βασιλιάς', section:'Δαβίδ, ψαλμοί, βασιλεία, Σολομών, Ναός Ιερουσαλήμ' },
+    { page:38, title:'Ενότητα 5: Οι προφήτες — φωνή Θεού', section:'Ηλίας, Ησαΐας, Ιερεμίας, μεσσιανικές προφητείες, προφητεία' },
+    { page:46, title:'Ενότητα 6: Ιησούς Χριστός — ο Σωτήρας', section:'Ευαγγέλια, γέννηση, βάπτιση, κήρυγμα, παραβολές' },
+    { page:56, title:'Ενότητα 7: Η σταύρωση και η Ανάσταση', section:'Πάθος, σταυρός, θάνατος, Ανάσταση, εμφανίσεις' },
+    { page:64, title:'Ενότητα 8: Ο Ιησούς διδάσκει', section:'Επί του Όρους Ομιλία, εντολές αγάπης, Κυριακή Προσευχή' },
+    { page:72, title:'Ενότητα 9: Παραβολές του Ιησού', section:'Παραβολή άσωτου, καλός Σαμαρείτης, τάλαντα' },
+  ]
+},
+
+G_Gymnasiou: {
+  label: 'Θρησκευτικά Γ΄ Γυμνασίου — Η μαρτυρία της Ορθόδοξης Εκκλησίας',
+  driveFile: 'Thriskeutika_G_Gymnasiou.pdf',
+  pages: [
+    { page:5,  title:'Ενότητα 1: Η Ορθόδοξη Εκκλησία σήμερα', section:'Α΄ Θεματική — αδελφοσύνη, κοινή πίστη, Ορθοδοξία στον σύγχρονο κόσμο, οργάνωση' },
+    { page:18, title:'Ενότητα 2: Η πρόταση ζωής της Ορθόδοξης Εκκλησίας', section:'Β΄ Θεματική — λατρεία, μυστήρια, ευχαριστία, πνευματική ζωή' },
+    { page:30, title:'Ενότητα 3: Ιεραποστολή και Διακονία', section:'Γ΄ Θεματική — αγάπη, κοινωνική προσφορά, φιλανθρωπία, ιεραποστολή' },
+    { page:44, title:'Ενότητα 4: Σεβασμός του άλλου στην Ορθόδοξη παράδοση', section:'Δ΄ Θεματική — ετερότητα, ανεκτικότητα, διάλογος, δικαιώματα' },
+    { page:58, title:'Ενότητα 5: Ορθόδοξη Εκκλησία σε διάλογο με τον δυτικό Χριστιανισμό', section:'Ε΄ Θεματική — Καθολικοί, Προτεστάντες, οικουμενικός διάλογος, σχίσμα 1054' },
+    { page:72, title:'Ενότητα 6: Μονοθεϊστικές θρησκείες — Ιουδαϊσμός και Ισλάμ', section:'ΣΤ΄ Θεματική — Ισλάμ, Ιουδαϊσμός, Μωάμεθ, Κοράνιο, εβραϊκή παράδοση' },
+    { page:88, title:'Ενότητα 7: Θρησκείες της Ανατολής', section:'Ζ΄ Θεματική — Βουδισμός, Ινδουισμός, Κομφουκιανισμός, ανατολικές θρησκείες' },
+  ]
+},
+
+A_Lykeiou: {
+  label: 'Θρησκευτικά Α΄ Λυκείου — Ορθόδοξη πίστη και λατρεία',
+  driveFile: 'Thriskeutika_A_Lykeiou.pdf',
+  pages: [
+    { page:7,  title:'1.1 Ο άνθρωπος ζει με τον Θεό', section:'Θεματική 1: Ορθόδοξη πίστη και διδασκαλία' },
+    { page:13, title:'1.2 Η πίστη στον Τριαδικό Θεό', section:'Θεματική 1: Τριαδολογία, Πατήρ Υιός Πνεύμα' },
+    { page:21, title:'1.3 Η μεταμορφωτική δύναμη της προσευχής', section:'Θεματική 1: προσευχή, ησυχασμός, Ορθόδοξη παράδοση' },
+    { page:26, title:'1.4 Η αγιότητα στην Ορθόδοξη χριστιανική παράδοση', section:'Θεματική 1: άγιοι, θέωση, παράδοση' },
+    { page:33, title:'1.5 Η έννοια του προσώπου στη θεολογία', section:'Θεματική 1: πρόσωπο, ταυτότητα, Καππαδόκες Πατέρες' },
+    { page:41, title:'2.1 Εις Μίαν Αγίαν Καθολικήν Αποστολικήν Εκκλησία', section:'Θεματική 2: Σώμα Εκκλησίας, ενότητα, αποστολικότητα' },
+    { page:54, title:'2.2 Θεία Ευχαριστία — η ταυτότητα της Εκκλησίας', section:'Θεματική 2: Ευχαριστία, λειτουργία, μυστήριο' },
+    { page:65, title:'2.3 Η ενότητα της εκκλησιαστικής κοινότητας', section:'Θεματική 2: κοινότητα, ενότητα, κοινωνία' },
+    { page:72, title:'2.4 Το περιεχόμενο της σωτηρίας στον Χριστιανισμό', section:'Θεματική 2: σωτηρία, θέωση, Χριστολογία' },
+    { page:83, title:'3.1 Η λατρεία ως έκφραση πίστης', section:'Θεματική 3: Λατρεία και Μυστήρια — λατρεία, προσευχή, ακολουθίες' },
+    { page:91, title:'3.2 Οι γιορτές στην Ορθόδοξη Εκκλησία', section:'Θεματική 3: εορτολόγιο, Πάσχα, Χριστούγεννα, Θεοφάνεια' },
+    { page:100,title:'3.3 Η γλώσσα της Ορθόδοξης χριστιανικής παράδοσης', section:'Θεματική 3: υμνολογία, εκκλησιαστική μουσική, βυζαντινή μελωδία' },
+    { page:106,title:'3.4 Βάπτισμα — είσοδος στην Εκκλησία', section:'Θεματική 3: βάπτισμα, χρίσμα, μυστήριο ένταξης' },
+    { page:112,title:'3.5 Το βαθύτερο νόημα του μυστηρίου του γάμου', section:'Θεματική 3: γάμος, οικογένεια, αγάπη, μυστήριο' },
+    { page:117,title:'3.6 Μετάνοια — η υπέρβαση της αμαρτίας', section:'Θεματική 3: εξομολόγηση, μετάνοια, συγχώρεση' },
+    { page:124,title:'3.7 Η ιεροσύνη στην Ορθόδοξη Εκκλησία', section:'Θεματική 3: ιερωσύνη, κλήρος, λειτουργός' },
+    { page:131,title:'4.1 Χαρακτηριστικά χριστιανικού ήθους', section:'Θεματική 4: Διαστάσεις χριστιανικής διδασκαλίας — ήθος, αξίες, αρετές' },
+    { page:140,title:'4.2 Η ελευθερία του ανθρώπου στην ανθρωπολογία', section:'Θεματική 4: ελευθερία, βούληση, θεία χάρις' },
+    { page:145,title:'4.3 Η αγάπη ως πρόταση ζωής', section:'Θεματική 4: αγάπη, φιλανθρωπία, αγάπη προς εχθρούς' },
+    { page:153,title:'4.4 Η διδασκαλία για την ισότητα', section:'Θεματική 4: ισότητα, αξιοπρέπεια, κοινωνική δικαιοσύνη' },
+    { page:160,title:'4.5 Η θεολογική θεώρηση για την ευθύνη', section:'Θεματική 4: ευθύνη, οικολογία, δημιουργία' },
+  ]
+},
+
+B_Lykeiou: {
+  label: 'Θρησκευτικά Β΄ Λυκείου — Χριστιανισμός και Θρησκεύματα',
+  driveFile: 'Thriskeutika_B_Lykeiou.pdf',
+  pages: [
+    { page:8,  title:'1.1 Η αναζήτηση του Θεού', section:'Θεματική 1: Ο Θεός — θρησκευτική εμπειρία, αναζήτηση' },
+    { page:10, title:'1.2 Η αποκάλυψη του Θεού στον κόσμο', section:'Θεματική 1: αποκάλυψη, ιστορία, φύση' },
+    { page:15, title:'1.3 Ο Θεός δημιουργός του κόσμου', section:'Θεματική 1: δημιουργία, κτίση, επιστήμη και θρησκεία' },
+    { page:22, title:'1.4 Το μυστήριο του Τριαδικού Θεού', section:'Θεματική 1: Τριάδα, Πατήρ Υιός Πνεύμα, δόγμα' },
+    { page:25, title:'1.5 Σχέση ζωής με τον Θεό στην Ορθόδοξη Εκκλησία', section:'Θεματική 1: λατρεία, προσευχή, ησυχασμός' },
+    { page:32, title:'1.6 Ιησούς Χριστός — λυτρωτής και σωτήρας', section:'Θεματική 1: Χριστολογία, σταύρωση, Ανάσταση, σωτηρία' },
+    { page:35, title:'1.7 Το τέλος της ζωής — εσχατολογία', section:'Θεματική 1: θάνατος, ανάσταση νεκρών, αιώνια ζωή' },
+    { page:42, title:'2.1 Η παράδοση της Ορθόδοξης Εκκλησίας', section:'Θεματική 2: Η προσφορά του Χριστιανισμού — παράδοση, Σύνοδοι, Πατέρες' },
+    { page:46, title:'2.2 Η έκφραση της πίστης στην Ορθόδοξη παράδοση', section:'Θεματική 2: τέχνη, εικόνες, μουσική, αρχιτεκτονική' },
+    { page:51, title:'2.3 Χριστιανικό μήνυμα και πανανθρώπινες αξίες', section:'Θεματική 2: αγάπη, ειρήνη, δικαιοσύνη, ανθρώπινα δικαιώματα' },
+    { page:60, title:'2.4 Υπεράσπιση ανθρωπίνων δικαιωμάτων', section:'Θεματική 2: Εκκλησία και κοινωνία, ανθρωπισμός' },
+    { page:65, title:'2.5 Η συγχώρεση ως υπέρβαση', section:'Θεματική 2: συγχώρεση, μετάνοια, αγάπη προς εχθρούς' },
+    { page:69, title:'2.6 Ο άλλος για τον χριστιανό', section:'Θεματική 2: ο άλλος, ετερότητα, φιλοξενία' },
+    { page:76, title:'3.x Χριστιανική κοινότητα — πλουραλιστικός κόσμος', section:'Θεματική 3: Χριστιανισμός και Ισλάμ — ενδοχριστιανικός διάλογος' },
+    { page:90, title:'Ισλάμ — η τρίτη αβρααμική θρησκεία', section:'Θεματική 3: Μωάμεθ, Κοράνιο, πέντε πυλώνες, τζαμί, Ραμαζάνι' },
+    { page:108,title:'Ιουδαϊσμός — η ρίζα', section:'Θεματική 3: Τορά, συναγωγή, Σάββατο, ιουδαϊκές γιορτές, Ισραήλ' },
+    { page:124,title:'Βουδισμός και άλλες θρησκείες', section:'Θεματική 3: Βούδας, νιρβάνα, 4 ευγενείς αλήθειες, 8πλό μονοπάτι' },
+  ]
+},
+
+G_Lykeiou: {
+  label: 'Θρησκευτικά Γ΄ Λυκείου — Χριστιανισμός και σύγχρονος κόσμος',
+  driveFile: 'Thriskeutika_G_Lykeiou.pdf',
+  pages: [
+    { page:7,  title:'1.1 Επιστήμη και θρησκεία', section:'Θεματική 1: Χριστιανισμός στα ερωτήματα επιστήμης — σχέση επιστήμης-πίστης' },
+    { page:10, title:'1.2 Ηθική της τεχνολογίας', section:'Θεματική 1: τεχνολογία, βιοηθική, ηθικοί προβληματισμοί' },
+    { page:14, title:'1.3 Εφαρμογές Γενετικής', section:'Θεματική 1: γενετική, κλωνοποίηση, ιατρική ηθική' },
+    { page:19, title:'1.4 Οικοθεολογία', section:'Θεματική 1: οικολογία, δημιουργία, ευθύνη για τη φύση, περιβάλλον' },
+    { page:25, title:'2.1 Πλούτος και φτώχεια', section:'Θεματική 2: Χριστιανισμός απέναντι στις προκλήσεις — κοινωνική δικαιοσύνη, φτώχεια' },
+    { page:31, title:'2.2 Η ηθική της εργασίας', section:'Θεματική 2: εργασία, αξιοπρέπεια, δικαιώματα εργαζομένων' },
+    { page:36, title:'2.3 Η μοναξιά του ανθρώπου', section:'Θεματική 2: μοναξιά, αλλοτρίωση, σύγχρονος κόσμος' },
+    { page:39, title:'2.4 Η επανάσταση του Χριστιανισμού', section:'Θεματική 2: χριστιανική κοινωνία, επανάσταση αγάπης' },
+    { page:47, title:'3.1 Το όραμα της ειρήνης', section:'Θεματική 3: Χριστιανικό όραμα — ειρήνη, διάλογος, συμφιλίωση' },
+    { page:52, title:'3.2 Η ευθύνη για τη δικαιοσύνη', section:'Θεματική 3: δικαιοσύνη, ανθρώπινα δικαιώματα, κοινωνική ευθύνη' },
+    { page:58, title:'3.3 Η κατάκτηση της ευτυχίας', section:'Θεματική 3: ευτυχία, νόημα ζωής, ψυχική υγεία' },
+    { page:62, title:'3.4 Η ελπίδα για τη μεταμόρφωση του κόσμου', section:'Θεματική 3: εσχατολογία, ελπίδα, Βασιλεία Θεού' },
+  ]
+}
+
+}; // END PAGE_MAPS
+
+// ══ STATE ══
+let mlDb    = JSON.parse(localStorage.getItem('aqn_mldb3')  || '[]');
+let ibDb    = JSON.parse(localStorage.getItem('aqn_ibdb3')  || '[]');
+let histLog = JSON.parse(localStorage.getItem('aqn_hist3')  || '[]');
+let selectedBook = 'B_Gymnasiou';
+let mlEntryCount = 0;
+let ibEntryCount = 0;
+
+function saveDB(){
+  localStorage.setItem('aqn_mldb3',  JSON.stringify(mlDb));
+  localStorage.setItem('aqn_ibdb3',  JSON.stringify(ibDb));
+  localStorage.setItem('aqn_hist3',  JSON.stringify(histLog.slice(0,200)));
+}
+
+// ══ PAGE MAP DISPLAY ══
+function renderPageMap(book){
+  const map = PAGE_MAPS[book];
+  if(!map){ document.getElementById('pm-viewer').innerHTML=''; return; }
+  document.getElementById('pm-viewer').innerHTML = map.pages.map(p=>`
+    <div class="pm-row">
+      <div class="pm-pg">σελ. ${p.page}</div>
+      <div>
+        <div class="pm-title">${p.title}</div>
+        <div class="pm-section">${p.section}</div>
+      </div>
+    </div>`).join('');
+}
+
+function updatePmInfo(book){
+  const map = PAGE_MAPS[book];
+  if(!map) return;
+  document.getElementById('pm-info').innerHTML =
+    `📄 <strong>${map.label}</strong><br>Πηγή: Google Drive / ${map.driveFile} · ${map.pages.length} σελίδες αντιστοιχισμένες`;
+}
+
+// ══ TABS ══
+function mainTab(t){
+  ['ml','ib','hist'].forEach(id=>{
+    document.getElementById('main-'+id).classList.toggle('active',id===t);
+    document.getElementById('panel-'+id).classList.toggle('active',id===t);
+  });
+  if(t==='hist') renderHist();
+  if(t==='ml') renderMLTable();
+  if(t==='ib'){ renderIBTable(); renderPageMap(selectedBook); }
+}
+
+function subTab(prefix,t){
+  const opts={ml:['add','db'], ib:['add','db','map']};
+  (opts[prefix]||[]).forEach(id=>{
+    document.getElementById(prefix+'-sub-'+id).classList.toggle('active',id===t);
+    document.getElementById(prefix+'-sp-'+id).classList.toggle('active',id===t);
+  });
+  if(prefix==='ib' && t==='map') renderPageMap(document.getElementById('map-book-sel').value);
+}
+
+function selBook(el){
+  document.querySelectorAll('.book-btn').forEach(b=>{b.classList.remove('sel');b.textContent=b.textContent.replace(' ✓','');});
+  el.classList.add('sel'); selectedBook=el.dataset.book; el.textContent+=' ✓';
+  updatePmInfo(selectedBook);
+  renderPageMap(selectedBook);
+}
+
+// ══ BATCH BUILDERS ══
+function addMLEntry(){
+  mlEntryCount++;
+  const n=mlEntryCount;
+  const list=document.getElementById('ml-batch-list');
+  const div=document.createElement('div'); div.className='batch-entry'; div.id='ml-entry-'+n;
+  div.innerHTML=`<div class="entry-num">Entry #${n}</div>
+    <button class="del-btn" onclick="this.closest('.batch-entry').remove()">×</button>
+    <div class="batch-row">
+      <div class="batch-field"><label>URL <span class="req">*</span></label>
+        <input id="ml-url-${n}" placeholder="https://i.ibb.co/... ή youtube.com/..."></div>
+      <div class="batch-field"><label>Τίτλος <span class="req">*</span></label>
+        <input id="ml-title-${n}" placeholder="π.χ. Εικονομαχία — Ιωάννης Δαμασκηνός"></div>
+    </div>
+    <div class="batch-row">
+      <div class="batch-field" style="min-width:100%;"><label>Σημειώσεις</label>
+        <input id="ml-notes-${n}" placeholder="π.χ. από παρουσίαση Sacred Blueprint"></div>
+    </div>`;
+  list.appendChild(div);
+}
+
+function addIBEntry(){
+  ibEntryCount++;
+  const n=ibEntryCount;
+  const list=document.getElementById('ib-batch-list');
+  const div=document.createElement('div'); div.className='batch-entry'; div.id='ib-entry-'+n;
+  div.innerHTML=`<div class="entry-num">Entry #${n}</div>
+    <button class="del-btn" onclick="this.closest('.batch-entry').remove()">×</button>
+    <div class="batch-row">
+      <div class="batch-field"><label>URL <span class="req">*</span></label>
+        <input id="ib-url-${n}" placeholder="https://i.ibb.co/... ή youtube.com/..."></div>
+      <div class="batch-field"><label>Τίτλος media <span class="req">*</span></label>
+        <input id="ib-title-${n}" placeholder="π.χ. Απόστολος Παύλος — Αθήνα"></div>
+    </div>
+    <div class="batch-row">
+      <div class="batch-field" style="min-width:100%;"><label>Θεματική (για εύρεση σελίδας) <span class="req">*</span></label>
+        <input id="ib-topic-${n}" placeholder="π.χ. Εικονομαχία · Παύλος Αθήνα · Μέγας Κωνσταντίνος"></div>
+    </div>`;
+  list.appendChild(div);
+}
+
+// ══ URL CONVERTER ══
+function convertUrl(raw,fieldHint){
+  if(!raw) return raw;
+  const url=raw.trim();
+  const ytW=url.match(/youtube\.com\/watch\?v=([\w-]+)/);
+  const ytS=url.match(/youtu\.be\/([\w-]+)/);
+  if(ytW||ytS){ const id=(ytW||ytS)[1]; return fieldHint==='videoId'?id:`https://www.youtube.com/embed/${id}`; }
+  const sl=url.match(/\/presentation\/d\/([\w-]+)/);
+  if(sl && !url.includes('/pubembed')) return `https://docs.google.com/presentation/d/${sl[1]}/pubembed?start=false&loop=false&delayms=3000`;
+  const dr=url.match(/drive\.google\.com\/file\/d\/([\w-]+)/);
+  if(dr){ const id=dr[1]; return (fieldHint==='audioUrl')?`https://drive.google.com/uc?export=download&id=${id}`:`https://drive.google.com/file/d/${id}/preview`; }
+  return url;
+}
+
+// ══ CLAUDE API ══
+async function callClaude(system,user){
+  const r=await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,system,messages:[{role:"user",content:user}]})
+  });
+  const d=await r.json();
+  if(!r.ok) throw new Error(d.error?.message||'API Error');
+  return d.content[0].text.trim();
+}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+// ══ ML GENERATE ══
+const ML_SYSTEM=`Είσαι βοηθός δασκάλου θρησκευτικών που διαχειρίζεται Media Library για εκπαιδευτικές εφαρμογές.
+Εφαρμογές: Timeline Map, Mind Palace, Explorer History, Interactive Book, Console, Living Anchor, UE5.
+Θέματα: Θρησκευτικά (Αγία Γραφή, Πατερολογία, Βυζαντινή ιστορία, Φιλοσοφία, Εικονογραφία).
+
+Τύπος από URL: i.ibb.co/image CDN→image · youtube/youtu.be→youtube · docs.google.com/presentation→google_slides · github.io+book→interactive_book · αλλιώς→image
+
+Επέστρεψε ΜΟΝΟ valid JSON χωρίς backticks:
+{"media_id":"<ID>","type":"<type>","title":"<τίτλος>","url":"<url>","source_platform":"<imgbb|YouTube|Google Drive|GitHub Pages|Local>","app_context":"<εφαρμογές με ;>","tags":"<λέξεις-κλειδιά ελληνικά με ,>","language":"el","notes":"<σημείωση>","status":"active"}
+
+app_context: ≥2 εφαρμογές. tags: 4-7 ελληνικές λέξεις.`;
+
+function buildMLCard(d,cols,tabRow){
+  const card=document.createElement('div'); card.className='output-card';
+  const colNames=['media_id','type','title','url','source','app_context','unit','tags','lang','notes','date','status'];
+  const colorMap={0:'id-c',1:'type-c',3:'url-c',7:'tags-c'};
+  const rows=colNames.map((n,i)=>`<div class="frow"><div class="fk">${n}</div><div class="fv ${colorMap[i]||''}">${cols[i]||'—'}</div></div>`).join('');
+  const safeRow=btoa(unescape(encodeURIComponent(tabRow)));
+  card.innerHTML=`<div class="out-head"><div><div class="out-title">📚 ${d.media_id} — ${d.title}</div><div class="out-sub">${d.type} · ${d.app_context}</div></div><div class="out-actions"><button class="btn-ghost" onclick="this.closest('.output-card').remove()">✕</button><button class="btn-copy" onclick="copyRow(this,'${safeRow}')">Αντιγραφή</button></div></div><div class="field-grid">${rows}</div>`;
+  return card;
+}
+
+// ══ IB GENERATE ══
+function buildIBSystem(){
+  const map=PAGE_MAPS[selectedBook];
+  if(!map) return `Είσαι βοηθός εκπαιδευτικού θρησκευτικών. Βρες σελίδα βιβλίου από θεματική. Επέστρεψε JSON: {"page_number":0,"page_title":"","reasoning":"","field":"image","value":"","title":""}`;
+  const mapStr=map.pages.map(p=>`Σελ. ${p.page}: ${p.title} — ${p.section}`).join('\n');
+  return `Είσαι βοηθός δασκάλου θρησκευτικών. Βιβλίο: ${map.label}\n\nΑΚΡΙΒΗΣ ΧΑΡΤΗΣ ΣΕΛΙΔΩΝ (από PDF Google Drive):\n${mapStr}\n\nΑπό URL+θεματική, βρες ΤΗΝ ΑΚΡΙΒΗ σελίδα βιβλίου και τύπο media:\n- image URL → πεδίο image\n- youtube → πεδίο videoId (ΜΟΝΟ το ID)\n- docs.google.com/presentation → πεδίο slidesUrl\n- drive.google.com/uc → πεδίο audioUrl\n- άλλο http → πεδίο webUrl\n\nΕπέστρεψε ΜΟΝΟ valid JSON χωρίς backticks:\n{"page_number":<αριθμός>,"page_title":"<τίτλος ενότητας>","reasoning":"<1 πρόταση>","field":"<image|videoId|slidesUrl|audioUrl|webUrl>","value":"<url ή id>","title":"<τίτλος media>"}`;
+}
+
+function buildIBCard(d,cols,tabRow){
+  const card=document.createElement('div'); card.className='output-card';
+  const bookLabel={A_Lykeiou:'Α΄ Λυκείου',B_Lykeiou:'Β΄ Λυκείου',G_Lykeiou:'Γ΄ Λυκείου',A_Gymnasiou:'Α΄ Γυμνασίου',B_Gymnasiou:'Β΄ Γυμνασίου',G_Gymnasiou:'Γ΄ Γυμνασίου'}[selectedBook]||selectedBook;
+  const colNames=['number','videoId','image','slidesUrl','audioUrl','webUrl','driveUrl','linkUrl','linkName','title'];
+  const rows=colNames.map((n,i)=>`<div class="frow"><div class="fk">${n}</div><div class="fv ${i===0?'page-c':cols[i]&&cols[i].startsWith('http')?'url-c':''}">${cols[i]||'—'}</div></div>`).join('');
+  const sug=d.page_number?`<div class="page-match">📖 <strong>${bookLabel} — Σελ. ${d.page_number}</strong> «${d.page_title||''}»<br><span style="color:var(--mu)">${d.reasoning||''}</span></div>`:'';
+  const safeRow=btoa(unescape(encodeURIComponent(tabRow)));
+  card.innerHTML=`<div class="out-head"><div><div class="out-title" style="color:var(--bl)">📖 ${bookLabel} — σελ. ${d.page_number||'?'}</div><div class="out-sub">${d.field||''} · ${d.title||''}</div></div><div class="out-actions"><button class="btn-ghost" onclick="this.closest('.output-card').remove()">✕</button><button class="btn-copy" onclick="copyRow(this,'${safeRow}')">Αντιγραφή</button></div></div>${sug}<div class="field-grid">${rows}</div>`;
+  return card;
+}
+
+// ══ COPY ══
+function copyRow(btn,b64){
+  const raw=decodeURIComponent(atob(b64));
+  const ok=()=>{btn.textContent='✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Αντιγραφή';btn.classList.remove('copied');},2200);};
+  navigator.clipboard.writeText(raw).then(ok).catch(()=>{const t=document.createElement('textarea');t.value=raw;t.style.cssText='position:fixed;opacity:0;';document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);ok();});
+}
+
+// ══ ML TABLE ══
+function renderMLTable(){
+  const tbody=document.getElementById('ml-db-tbody'), empty=document.getElementById('ml-db-empty');
+  document.getElementById('ml-db-count').textContent=mlDb.length+' εγγραφές';
+  if(!mlDb.length){tbody.innerHTML='';empty.style.display='block';return;} empty.style.display='none';
+  tbody.innerHTML=mlDb.map((r,i)=>`<tr><td>${i+1}</td><td class="td-id">${r.media_id||''}</td><td class="td-type">${r.type||''}</td><td>${r.title||''}</td><td class="td-url" title="${r.url||''}">${r.url||''}</td><td class="td-apps">${r.app_context||''}</td><td style="font-size:9px;color:var(--gr)">${r.tags||''}</td><td>${r.status||''}</td><td style="font-size:9px;color:var(--mu)">${r.date_added||''}</td><td><button class="btn-danger" style="font-size:9px;padding:3px 7px;" onclick="delML(${i})">✕</button></td></tr>`).join('');
+}
+function delML(i){if(confirm('Διαγραφή;')){mlDb.splice(i,1);saveDB();renderMLTable();}}
+
+// ══ IB TABLE ══
+function renderIBTable(){
+  const tbody=document.getElementById('ib-db-tbody'), empty=document.getElementById('ib-db-empty');
+  document.getElementById('ib-db-count').textContent=ibDb.length+' εγγραφές';
+  if(!ibDb.length){tbody.innerHTML='';empty.style.display='block';return;} empty.style.display='none';
+  tbody.innerHTML=ibDb.map((r,i)=>`<tr><td>${i+1}</td><td class="td-type" style="font-size:9px;">${r.book||''}</td><td class="td-id">${r.page||''}</td><td>${r.title||''}</td><td style="color:var(--pu)">${r.field||''}</td><td class="td-url" title="${r.value||''}">${r.value||''}</td><td style="font-size:9px;color:var(--mu)">${r.date||''}</td><td><button class="btn-danger" style="font-size:9px;padding:3px 7px;" onclick="delIB(${i})">✕</button></td></tr>`).join('');
+}
+function delIB(i){if(confirm('Διαγραφή;')){ibDb.splice(i,1);saveDB();renderIBTable();}}
+
+// ══ ML EXCEL IMPORT ══
+function importMLExcel(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'}); let imported=0;
+      wb.SheetNames.forEach(name=>{
+        const ws=wb.Sheets[name]; const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+        if(!rows.length) return;
+        const h=rows[0].map(c=>String(c).trim().toLowerCase());
+        const iId=h.findIndex(c=>c.includes('media_id')), iType=h.findIndex(c=>c==='type'||c.includes('type')), iTitle=h.findIndex(c=>c.includes('title')), iUrl=h.findIndex(c=>c.includes('url'));
+        const iSrc=h.findIndex(c=>c.includes('source')), iApp=h.findIndex(c=>c.includes('app_context')), iTags=h.findIndex(c=>c.includes('tags'));
+        const iNotes=h.findIndex(c=>c.includes('notes')), iStatus=h.findIndex(c=>c.includes('status')), iDate=h.findIndex(c=>c.includes('date'));
+        if(iId<0||iUrl<0) return;
+        const existIds=new Set(mlDb.map(r=>r.media_id));
+        rows.slice(1).forEach(row=>{
+          const mid=String(row[iId]||'').trim(); if(!mid||existIds.has(mid)) return;
+          mlDb.push({media_id:mid,type:row[iType]||'',title:row[iTitle]||'',url:row[iUrl]||'',source_platform:row[iSrc]||'',app_context:row[iApp]||'',tags:row[iTags]||'',language:'el',notes:row[iNotes]||'',status:row[iStatus]||'active',date_added:row[iDate]||new Date().toISOString().slice(0,10)});
+          existIds.add(mid); imported++;
+        });
+      });
+      saveDB(); renderMLTable(); alert(`✓ Εισήχθησαν ${imported} νέες εγγραφές`);
+    }catch(err){alert('✗ '+err.message);} input.value='';
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ══ ML EXCEL EXPORT ══
+function exportMLExcel(){
+  if(!mlDb.length){alert('Κενή βάση.');return;}
+  const wb=XLSX.utils.book_new();
+  const headers=['media_id','type','title','url','source_platform','app_context','unit_id','tags','language','notes','date_added','status'];
+  const rows=[headers,...mlDb.map(r=>headers.map(h=>r[h]||''))];
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:12},{wch:14},{wch:40},{wch:55},{wch:14},{wch:38},{wch:8},{wch:40},{wch:6},{wch:30},{wch:12},{wch:8}];
+  XLSX.utils.book_append_sheet(wb,ws,'📚 Media Library');
+  XLSX.writeFile(wb,`media_library_${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+
+// ══ ML JSON EXPORT ══
+function exportMLJson(){
+  if(!mlDb.length){alert('Κενή βάση.');return;}
+  const out={meta:{last_updated:new Date().toISOString().slice(0,10),source:'AI Quick Note v3'},media:mlDb.map(r=>({media_id:r.media_id,type:r.type,title:r.title,url:r.url,app_context:r.app_context?r.app_context.split(/[;,]/).map(s=>s.trim()).filter(Boolean):[],tags:r.tags?r.tags.split(',').map(s=>s.trim()).filter(Boolean):[],status:r.status||'active'}))};
+  dlFile(`media_library_${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(out,null,2));
+}
+
+// ══ IB EXCEL IMPORT ══
+function importIBExcel(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'}); let imported=0;
+      wb.SheetNames.forEach(name=>{
+        const ws=wb.Sheets[name]; const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+        if(!rows.length) return;
+        const h=rows[0].map(c=>String(c).trim().toLowerCase());
+        const iBook=h.findIndex(c=>c.includes('book')), iPage=h.findIndex(c=>c.includes('page')), iTitle=h.findIndex(c=>c.includes('title'));
+        const iField=h.findIndex(c=>c.includes('field')), iValue=h.findIndex(c=>c.includes('value')||c.includes('url')), iDate=h.findIndex(c=>c.includes('date'));
+        if(iPage<0) return;
+        rows.slice(1).forEach(row=>{const page=row[iPage]; if(page==='') return; ibDb.push({book:row[iBook]||'',page,title:row[iTitle]||'',field:row[iField]||'',value:row[iValue]||'',date:row[iDate]||new Date().toISOString().slice(0,10)}); imported++;});
+      });
+      saveDB(); renderIBTable(); alert(`✓ Εισήχθησαν ${imported} εγγραφές`);
+    }catch(err){alert('✗ '+err.message);} input.value='';
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ══ IB EXCEL EXPORT ══
+function exportIBExcel(){
+  if(!ibDb.length){alert('Κενή βάση.');return;}
+  const wb=XLSX.utils.book_new();
+  const colNames=['number','videoId','image','slidesUrl','audioUrl','webUrl','driveUrl','linkUrl','linkName','title'];
+  const fieldIdx={videoId:1,image:2,slidesUrl:3,audioUrl:4,webUrl:5,driveUrl:6,linkUrl:7};
+  const byBook={};
+  ibDb.forEach(r=>{const b=r.book||'Unknown'; if(!byBook[b]) byBook[b]=[]; byBook[b].push(r);});
+  Object.entries(byBook).forEach(([book,recs])=>{
+    const rows=[colNames,...recs.map(r=>{const cols=Array(10).fill(''); cols[0]=String(r.page||''); if(r.field&&fieldIdx[r.field]!==undefined) cols[fieldIdx[r.field]]=r.value||''; cols[9]=r.title||''; return cols;})];
+    const ws=XLSX.utils.aoa_to_sheet(rows);
+    XLSX.utils.book_append_sheet(wb,ws,book.replace('_Lykeiou','_Lyk').replace('_Gymnasiou','_Gym').slice(0,31));
+  });
+  const sum=[['book','page','page_title','title','field','value','date'],...ibDb.map(r=>[r.book,r.page,r.page_title||'',r.title,r.field,r.value,r.date])];
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(sum),'📋 Σύνοψη');
+  XLSX.writeFile(wb,`interactive_book_${new Date().toISOString().slice(0,10)}.xlsx`);
+}
+
+// ══ IB JSON EXPORT ══
+function exportIBJson(){
+  if(!ibDb.length){alert('Κενή βάση.');return;}
+  const fieldIdx={videoId:1,image:2,slidesUrl:3,audioUrl:4,webUrl:5,driveUrl:6,linkUrl:7};
+  const colNames=['number','videoId','image','slidesUrl','audioUrl','webUrl','driveUrl','linkUrl','linkName','title'];
+  const byBook={};
+  ibDb.forEach(r=>{const b=r.book||'Unknown'; if(!byBook[b]) byBook[b]=[]; const cols=Array(10).fill(''); cols[0]=String(r.page||''); if(r.field&&fieldIdx[r.field]!==undefined) cols[fieldIdx[r.field]]=r.value||''; cols[9]=r.title||''; byBook[b].push(Object.fromEntries(colNames.map((n,i)=>[n,cols[i]])));});
+  dlFile(`interactive_book_${new Date().toISOString().slice(0,10)}.json`,JSON.stringify({meta:{last_updated:new Date().toISOString().slice(0,10)},books:byBook},null,2));
+}
+
+// ══ HISTORY ══
+function renderHist(){
+  document.getElementById('hist-count').textContent=`(${histLog.length})`;
+  const list=document.getElementById('hist-list');
+  if(!histLog.length){list.innerHTML='<div style="text-align:center;padding:20px;color:var(--mu);font-size:10px;">Κενό.</div>';return;}
+  list.innerHTML=histLog.map((h,i)=>{
+    const badge=h.kind==='ml'?`<span class="hbadge hb-ml">Media Lib</span>`:`<span class="hbadge hb-ib">📖 ${h.book||''}</span>`;
+    return `<div class="hist-item" onclick="copyFromHist(${i})" title="Κλικ → αντιγραφή tab-row"><div style="flex:1;min-width:0;"><div class="hid">${h.id||'σελ.'+h.page}</div><div class="htitle">${h.title||''}</div><div class="hdate">${h.date}</div></div>${badge}</div>`;
+  }).join('');
+}
+function copyFromHist(i){navigator.clipboard.writeText(histLog[i].tabRow).then(()=>alert('✓ Αντιγράφηκε!'));}
+function exportHistCSV(){
+  const rows=['kind,id_or_page,title,date,row'];
+  histLog.forEach(h=>rows.push([h.kind,h.id||h.page,`"${(h.title||'').replace(/"/g,'""')}"`,h.date,`"${(h.tabRow||'').replace(/"/g,'""')}"`].join(',')));
+  dlFile('quick_note_hist_'+new Date().toISOString().slice(0,10)+'.csv',rows.join('\n'),'text/csv');
+}
+
+// ══ DOWNLOAD ══
+function dlFile(name,content,mime='application/json'){
+  try{const b64=btoa(unescape(encodeURIComponent(content)));const a=document.createElement('a');a.href=`data:${mime};base64,`+b64;a.download=name;document.body.appendChild(a);a.click();document.body.removeChild(a);}
+  catch(e){const w=window.open('','_blank');if(w){w.document.write('<pre style="font-family:monospace;font-size:11px;white-space:pre-wrap;">'+content.replace(/</g,'&lt;')+'</pre>');w.document.title=name;}}
+}
+
+// ══ BATCH COPY ALL ══
+let _allTabRows = []; // φυλάμε κάθε tabRow που παράγεται στη συνεδρία
+
+function copyAllRows(btn){
+  if(!_allTabRows.length){ alert('Δεν υπάρχουν γραμμές ακόμα.'); return; }
+  const combined = _allTabRows.join('\n');
+  const ok = () => {
+    btn.textContent = '✓ Αντιγράφηκαν ' + _allTabRows.length + ' γραμμές!';
+    btn.style.borderColor = 'var(--gr)'; btn.style.color = 'var(--gr)';
+    setTimeout(()=>{ btn.textContent = '📋 Αντιγραφή ΟΛΩΝ (' + _allTabRows.length + ')'; btn.style.borderColor=''; btn.style.color=''; }, 2800);
+  };
+  navigator.clipboard.writeText(combined).then(ok).catch(()=>{
+    const t=document.createElement('textarea'); t.value=combined; t.style.cssText='position:fixed;opacity:0;';
+    document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); ok();
+  });
+}
+
+function updateCopyAllBtn(prefix){
+  const btnId = prefix + '-copy-all-btn';
+  let btn = document.getElementById(btnId);
+  if(!btn) return;
+  const count = _allTabRows.length;
+  btn.textContent = '📋 Αντιγραφή ΟΛΩΝ (' + count + ')';
+  btn.style.display = count > 0 ? 'block' : 'none';
+}
+
+// ══ INIT — τρέχει στο τέλος του script, μετά από όλες τις function declarations ══
+
+// ══ GENERATE ML ══
+async function generateMLBatch(){
+  const entries=document.querySelectorAll('#ml-batch-list .batch-entry');
+  if(!entries.length){alert('Πρόσθεσε τουλάχιστον ένα entry.');return;}
+  const items=[]; let valid=true;
+  entries.forEach(e=>{
+    const id=e.id.replace('ml-entry-','');
+    const url=document.getElementById('ml-url-'+id)?.value.trim();
+    const title=document.getElementById('ml-title-'+id)?.value.trim();
+    const notes=document.getElementById('ml-notes-'+id)?.value.trim();
+    if(!url||!title){valid=false;return;}
+    items.push({id,url,title,notes});
+  });
+  if(!valid){alert('Συμπλήρωσε URL και Τίτλο σε όλα τα entries.');return;}
+
+  document.getElementById('ml-gen-btn').disabled=true;
+  document.getElementById('ml-thinking').classList.add('on');
+  document.getElementById('ml-output').innerHTML='';
+  _allTabRows = [];
+  const today=new Date().toISOString().slice(0,10);
+  let nextNum=27; mlDb.forEach(r=>{const m=(r.media_id||'').match(/\d+/);if(m){const n=parseInt(m[0]);if(n>=nextNum)nextNum=n+1;}});
+
+  for(let i=0;i<items.length;i++){
+    const item=items[i];
+    const sugId=`IMG-${String(nextNum).padStart(3,'0')}`; nextNum++;
+    document.getElementById('ml-think-txt').textContent=`Entry ${i+1}/${items.length}: "${item.title}"…`;
+    try{
+      const raw=await callClaude(ML_SYSTEM,`URL: ${item.url}\nΤίτλος: ${item.title}\n${item.notes?'Σημειώσεις: '+item.notes:''}\nΠροτεινόμενο ID: ${sugId}\nΗμερομηνία: ${today}`);
+      let data; try{data=JSON.parse(raw.replace(/^```[\w]*\n?/,'').replace(/\n?```$/,'').trim());}catch{throw new Error('Άκυρο JSON');}
+      data.url=convertUrl(data.url||item.url,data.type); data.date_added=today;
+      mlDb.push(data); saveDB(); renderMLTable();
+      const cols=[data.media_id,data.type,data.title,data.url,data.source_platform,data.app_context,'',data.tags,data.language,data.notes,today,data.status];
+      const tabRow=cols.join('\t');
+      _allTabRows.push(tabRow);
+      histLog.unshift({kind:'ml',id:data.media_id,title:data.title,url:data.url,date:today,tabRow}); saveDB();
+      document.getElementById('ml-output').appendChild(buildMLCard(data,cols,tabRow));
+      updateCopyAllBtn('ml');
+    }catch(err){
+      const e=document.createElement('div');e.className='err-box';e.textContent=`Entry "${item.title}": ${err.message}`;
+      document.getElementById('ml-output').appendChild(e);
+    }
+    if(i<items.length-1) await sleep(600);
+  }
+  document.getElementById('ml-gen-btn').disabled=false;
+  document.getElementById('ml-thinking').classList.remove('on');
+}
+
+// ══ GENERATE IB ══
+async function generateIBBatch(){
+  const entries=document.querySelectorAll('#ib-batch-list .batch-entry');
+  if(!entries.length){alert('Πρόσθεσε τουλάχιστον ένα entry.');return;}
+  const items=[]; let valid=true;
+  entries.forEach(e=>{
+    const id=e.id.replace('ib-entry-','');
+    const url=document.getElementById('ib-url-'+id)?.value.trim();
+    const title=document.getElementById('ib-title-'+id)?.value.trim();
+    const topic=document.getElementById('ib-topic-'+id)?.value.trim();
+    if(!url||!title||!topic){valid=false;return;}
+    items.push({id,url,title,topic});
+  });
+  if(!valid){alert('Συμπλήρωσε URL, Τίτλο και Θεματική σε όλα.');return;}
+
+  document.getElementById('ib-gen-btn').disabled=true;
+  document.getElementById('ib-thinking').classList.add('on');
+  document.getElementById('ib-output').innerHTML='';
+  _allTabRows = [];
+  const today=new Date().toISOString().slice(0,10);
+  const IB_SYSTEM=buildIBSystem();
+
+  for(let i=0;i<items.length;i++){
+    const item=items[i];
+    document.getElementById('ib-think-txt').textContent=`Entry ${i+1}/${items.length}: "${item.title}" → ${selectedBook}…`;
+    try{
+      const raw=await callClaude(IB_SYSTEM,`Θεματική: ${item.topic}\nURL: ${item.url}\nΤίτλος: ${item.title}\nΒιβλίο: ${selectedBook}`);
+      let d; try{d=JSON.parse(raw.replace(/^```[\w]*\n?/,'').replace(/\n?```$/,'').trim());}catch{throw new Error('Άκυρο JSON');}
+      const fieldIdx={videoId:1,image:2,slidesUrl:3,audioUrl:4,webUrl:5,driveUrl:6,linkUrl:7};
+      const cols=Array(10).fill('');
+      cols[0]=String(d.page_number||'');
+      if(d.field&&fieldIdx[d.field]!==undefined) cols[fieldIdx[d.field]]=convertUrl(d.value||item.url,d.field);
+      cols[9]=d.title||item.title;
+      const tabRow=cols.join('\t');
+      _allTabRows.push(tabRow);
+      const rec={book:selectedBook,page:d.page_number,page_title:d.page_title,title:d.title||item.title,field:d.field,value:cols[fieldIdx[d.field]||2],reasoning:d.reasoning,date:today,tabRow};
+      ibDb.push(rec); histLog.unshift({kind:'ib',book:selectedBook,page:d.page_number,title:rec.title,url:item.url,date:today,tabRow});
+      saveDB(); renderIBTable();
+      document.getElementById('ib-output').appendChild(buildIBCard(d,cols,tabRow));
+      updateCopyAllBtn('ib');
+    }catch(err){
+      const e=document.createElement('div');e.className='err-box';e.textContent=`Entry "${item.title}": ${err.message}`;
+      document.getElementById('ib-output').appendChild(e);
+    }
+    if(i<items.length-1) await sleep(600);
+  }
+  document.getElementById('ib-gen-btn').disabled=false;
+  document.getElementById('ib-thinking').classList.remove('on');
+}
+
+// ══ PASTE MODAL ══
+let _pasteTarget = 'ml'; // 'ml' ή 'ib'
+
+function openPasteModal(target){
+  _pasteTarget = target;
+  const titles = { ml:'📋 Paste Media Library από Excel', ib:'📋 Paste Interactive Book από Excel' };
+  document.getElementById('paste-modal-title').textContent = titles[target] || '📋 Paste από Excel';
+  document.getElementById('paste-area').value = '';
+  document.getElementById('paste-preview').textContent = '';
+  const modal = document.getElementById('paste-modal');
+  modal.style.display = 'flex';
+  setTimeout(()=>document.getElementById('paste-area').focus(), 100);
+}
+
+function closePasteModal(){
+  document.getElementById('paste-modal').style.display = 'none';
+}
+
+// Κλείσιμο με Escape
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closePasteModal(); });
+
+// Preview: δείχνει πόσες γραμμές εντοπίστηκαν
+function previewPaste(text){
+  const prev = document.getElementById('paste-preview');
+  if(!text.trim()){ prev.textContent=''; return; }
+  const rows = text.trim().split('\n').filter(r=>r.trim());
+  const dataRows = rows.length > 1 ? rows.length - 1 : rows.length; // αφαίρεσε header
+  prev.textContent = `Εντοπίστηκαν ${rows.length} γραμμές (${dataRows} εγγραφές + ${rows.length>1?1:0} επικεφαλίδα)`;
+  prev.style.color = dataRows > 0 ? 'var(--gr)' : 'var(--er)';
+}
+
+function importPaste(){
+  const text = document.getElementById('paste-area').value.trim();
+  if(!text){ alert('Επικόλλησε δεδομένα πρώτα.'); return; }
+
+  const rows = text.split('\n').map(r=>r.split('\t'));
+  if(rows.length < 2){ alert('Χρειάζονται τουλάχιστον επικεφαλίδα + 1 γραμμή.'); return; }
+
+  const header = rows[0].map(h=>h.trim().toLowerCase());
+  const dataRows = rows.slice(1).filter(r=>r.some(c=>c.trim()));
+
+  let imported = 0;
+
+  if(_pasteTarget === 'ml'){
+    // Αναζήτηση στηλών με ευέλικτο matching
+    const col = (keys) => { for(const k of keys){ const i=header.findIndex(h=>h.includes(k)); if(i>=0) return i; } return -1; };
+    const iId    = col(['media_id']);
+    const iType  = col(['type']);
+    const iTitle = col(['title']);
+    const iUrl   = col(['url']);
+    const iSrc   = col(['source']);
+    const iApp   = col(['app_context','app context','context']);
+    const iTags  = col(['tags']);
+    const iNotes = col(['notes']);
+    const iStatus= col(['status']);
+    const iDate  = col(['date']);
+
+    if(iId < 0 || iUrl < 0){
+      alert('Δεν βρέθηκαν οι στήλες media_id / url. Βεβαιώσου ότι η πρώτη γραμμή είναι επικεφαλίδα.');
+      return;
+    }
+    const existIds = new Set(mlDb.map(r=>r.media_id));
+    dataRows.forEach(row=>{
+      const mid = (row[iId]||'').trim();
+      if(!mid || existIds.has(mid)) return;
+      mlDb.push({
+        media_id: mid,
+        type:         (row[iType]  ||'').trim(),
+        title:        (row[iTitle] ||'').trim(),
+        url:          (row[iUrl]   ||'').trim(),
+        source_platform:(row[iSrc] ||'').trim(),
+        app_context:  (row[iApp]   ||'').trim(),
+        tags:         (row[iTags]  ||'').trim(),
+        language: 'el',
+        notes:        (row[iNotes] ||'').trim(),
+        status:       (row[iStatus]||'active').trim(),
+        date_added:   (row[iDate]  ||new Date().toISOString().slice(0,10)).trim(),
+      });
+      existIds.add(mid);
+      imported++;
+    });
+    saveDB(); renderMLTable();
+
+  } else { // ib
+    const col = (keys) => { for(const k of keys){ const i=header.findIndex(h=>h.includes(k)); if(i>=0) return i; } return -1; };
+    const iBook  = col(['book']);
+    const iPage  = col(['page','number']);
+    const iTitle = col(['title']);
+    const iField = col(['field']);
+    const iValue = col(['value','url']);
+    const iDate  = col(['date']);
+
+    if(iPage < 0){
+      alert('Δεν βρέθηκε στήλη page/number. Βεβαιώσου ότι η πρώτη γραμμή είναι επικεφαλίδα.');
+      return;
+    }
+    dataRows.forEach(row=>{
+      const page = (row[iPage]||'').trim();
+      if(!page) return;
+      ibDb.push({
+        book:  (row[iBook] ||'').trim(),
+        page,
+        title: (row[iTitle]||'').trim(),
+        field: (row[iField]||'').trim(),
+        value: (row[iValue]||'').trim(),
+        date:  (row[iDate] ||new Date().toISOString().slice(0,10)).trim(),
+      });
+      imported++;
+    });
+    saveDB(); renderIBTable();
+  }
+
+  closePasteModal();
+  // Switch to DB tab to show results
+  subTab(_pasteTarget, 'db');
+  alert(`✓ Εισήχθησαν ${imported} νέες εγγραφές` + (imported === 0 ? '\n(Πιθανόν υπάρχουν ήδη ή λείπουν τα IDs)' : ''));
+}
+
+// ══ COPY ALL BTN ══
+function addCopyAllBtn(prefix){
+  const existing=document.getElementById(prefix+'-copy-all-btn');
+  if(existing) return;
+  const outputArea=document.getElementById(prefix+'-output');
+  if(!outputArea) return;
+  const btn=document.createElement('button');
+  btn.id=prefix+'-copy-all-btn';
+  btn.onclick=function(){copyAllRows(this);};
+  btn.style.cssText='display:none;width:100%;padding:10px;background:transparent;border:1px solid var(--bl);border-radius:2px;color:var(--bl);font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .15s;margin-top:8px;';
+  btn.textContent='📋 Αντιγραφή ΟΛΩΝ (0)';
+  outputArea.parentNode.insertBefore(btn,outputArea.nextSibling);
+}
+
+// ══ INIT — τρέχει τελευταίο, μετά από όλες τις συναρτήσεις ══
+addMLEntry();
+addIBEntry();
+renderMLTable();
+renderIBTable();
+updatePmInfo(selectedBook);
+renderPageMap('B_Gymnasiou');
+addCopyAllBtn('ml');
+addCopyAllBtn('ib');
+</script>
+</body>
+</html>

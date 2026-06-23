@@ -1,0 +1,223 @@
+name: Distribute Lesson Data to App Repos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/current/**"
+
+jobs:
+  distribute:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout sacred-blueprint
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect changed files
+        id: changed
+        run: |
+          CHANGED=$(git diff --name-only HEAD~1 HEAD -- data/current/)
+          echo "Files changed:"
+          echo "$CHANGED"
+          echo "timeline=$(echo "$CHANGED"      | grep -c 'timeline.json'      || true)" >> $GITHUB_OUTPUT
+          echo "investigation=$(echo "$CHANGED" | grep -c 'investigation.json' || true)" >> $GITHUB_OUTPUT
+          echo "history3d=$(echo "$CHANGED"     | grep -c 'history3d.json'     || true)" >> $GITHUB_OUTPUT
+          echo "mindpalace=$(echo "$CHANGED"    | grep -c 'mindpalace.json'    || true)" >> $GITHUB_OUTPUT
+          echo "anchor=$(echo "$CHANGED"        | grep -c 'anchor.json'        || true)" >> $GITHUB_OUTPUT
+          echo "books=$(echo "$CHANGED"         | grep -c 'books.json'         || true)" >> $GITHUB_OUTPUT
+          echo "notebook=$(echo "$CHANGED"      | grep -c 'notebook.json'      || true)" >> $GITHUB_OUTPUT
+          echo "personalpage=$(echo "$CHANGED"  | grep -c 'personalpage.json'  || true)" >> $GITHUB_OUTPUT
+          echo "ue5=$(echo "$CHANGED"           | grep -c 'ue5/'               || true)" >> $GITHUB_OUTPUT
+
+      - name: Configure git
+        run: |
+          git config --global user.name  "Sacred Blueprint Bot"
+          git config --global user.email "bot@sacred-blueprint"
+
+      # ── timeline → Map-Timeline ──────────────────────────────
+      - name: Push → Map-Timeline
+        if: steps.changed.outputs.timeline != '0'
+        env:
+          PAT: ${{ secrets.DEPLOY_PAT }}
+        run: |
+          git clone https://x-access-token:${PAT}@github.com/dporpatonelis-crypto/Map-Timeline.git /tmp/Map-Timeline
+          cp data/current/timeline.json /tmp/Map-Timeline/public/data/timeline.json
+          cd /tmp/Map-Timeline
+          git add public/data/timeline.json
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "lesson-data: update timeline.json [bot]"
+          git push
+          echo "✅ Map-Timeline updated"
+
+      # ── investigation → idea-weaver-board (Vercel) ───────────
+      - name: Push → idea-weaver-board
+        if: steps.changed.outputs.investigation != '0'
+        env:
+          PAT: ${{ secrets.DEPLOY_PAT }}
+        run: |
+          git clone https://x-access-token:${PAT}@github.com/dporpatonelis-crypto/idea-weaver-board.git /tmp/idea-weaver-board
+          cp data/current/investigation.json /tmp/idea-weaver-board/public/data/investigation.json
+          cd /tmp/idea-weaver-board
+          git add public/data/investigation.json
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "lesson-data: update investigation.json [bot]"
+          git push
+          echo "✅ idea-weaver-board updated"
+
+      # ── history3d → history-explorer-3d (Vercel) ────────────
+      - name: Push → history-explorer-3d
+        if: steps.changed.outputs.history3d != '0'
+        env:
+          PAT: ${{ secrets.DEPLOY_PAT }}
+        run: |
+          git clone https://x-access-token:${PAT}@github.com/dporpatonelis-crypto/history-explorer-3d.git /tmp/history-explorer-3d
+          cp data/current/history3d.json /tmp/history-explorer-3d/public/data/history3d.json
+          cd /tmp/history-explorer-3d
+          git add public/data/history3d.json
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "lesson-data: update history3d.json [bot]"
+          git push
+          echo "✅ history-explorer-3d updated"
+
+      # ── mindpalace → mind-palace-cases ──────────────────────
+      - name: Push → mind-palace-cases
+        if: steps.changed.outputs.mindpalace != '0'
+        env:
+          PAT: ${{ secrets.DEPLOY_PAT }}
+        run: |
+          git clone https://x-access-token:${PAT}@github.com/dporpatonelis-crypto/mind-palace-cases.git /tmp/mind-palace-cases
+          cp data/current/mindpalace.json /tmp/mind-palace-cases/public/data/mindpalace.json
+          cd /tmp/mind-palace-cases
+          git add public/data/mindpalace.json
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "lesson-data: update mindpalace.json [bot]"
+          git push
+          echo "✅ mind-palace-cases updated"
+
+      # ── anchor → living-anchor ───────────────────────────────
+      - name: Push → living-anchor
+        if: steps.changed.outputs.anchor != '0'
+        env:
+          PAT: ${{ secrets.DEPLOY_PAT }}
+        run: |
+          git clone https://x-access-token:${PAT}@github.com/dporpatonelis-crypto/living-anchor.git /tmp/living-anchor
+          cp data/current/anchor.json /tmp/living-anchor/public/data/anchor.json
+          cd /tmp/living-anchor
+          git add public/data/anchor.json
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "lesson-data: update anchor.json [bot]"
+          git push
+          echo "✅ living-anchor updated"
+
+      # ── books → interactive-books ────────────────────────────
+      - name: Push → interactive-books
+        if: steps.changed.outputs.books != '0'
+        env:
+          PAT: ${{ secrets.DEPLOY_PAT }}
+        run: |
+          git clone https://x-access-token:${PAT}@github.com/dporpatonelis-crypto/interactive-books.git /tmp/interactive-books
+          cp data/current/books.json /tmp/interactive-books/public/data/books.json
+          cd /tmp/interactive-books
+          git add public/data/books.json
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "lesson-data: update books.json [bot]"
+          git push
+          echo "✅ interactive-books updated"
+
+      # ── notebook → notebook-media ────────────────────────────
+      - name: Push → notebook-media
+        if: steps.changed.outputs.notebook != '0'
+        env:
+          PAT: ${{ secrets.DEPLOY_PAT }}
+        run: |
+          git clone https://x-access-token:${PAT}@github.com/dporpatonelis-crypto/notebook-media.git /tmp/notebook-media
+          cp data/current/notebook.json /tmp/notebook-media/public/data/notebook.json
+          cd /tmp/notebook-media
+          git add public/data/notebook.json
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "lesson-data: update notebook.json [bot]"
+          git push
+          echo "✅ notebook-media updated"
+
+      # ── personalpage → personal-page ─────────────────────────
+      - name: Push → personal-page
+        if: steps.changed.outputs.personalpage != '0'
+        env:
+          PAT: ${{ secrets.DEPLOY_PAT }}
+        run: |
+          git clone https://x-access-token:${PAT}@github.com/dporpatonelis-crypto/personal-page.git /tmp/personal-page
+          cp data/current/personalpage.json /tmp/personal-page/public/data/personalpage.json
+          cd /tmp/personal-page
+          git add public/data/personalpage.json
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "lesson-data: update personalpage.json [bot]"
+          git push
+          echo "✅ personal-page updated"
+
+      # ── unreal → sheetunreal ─────────────────────────────────
+      - name: Push → sheetunreal (UE5)
+        if: steps.changed.outputs.ue5 != '0'
+        env:
+          PAT: ${{ secrets.DEPLOY_PAT }}
+        run: |
+          git clone https://x-access-token:${PAT}@github.com/dporpatonelis-crypto/sheetunreal.git /tmp/sheetunreal
+
+          for SCENARIO_DIR in data/current/ue5/*/; do
+            SCENARIO_ID=$(basename "$SCENARIO_DIR")
+            TARGET="/tmp/sheetunreal/scenarios/$SCENARIO_ID"
+            mkdir -p "$TARGET"
+            cp "$SCENARIO_DIR"scenario.json       "$TARGET/scenario.json"       2>/dev/null || true
+            cp "$SCENARIO_DIR"assets.json         "$TARGET/assets.json"         2>/dev/null || true
+            cp "$SCENARIO_DIR"manifest_entry.json "$TARGET/manifest_entry.json" 2>/dev/null || true
+            echo "  → Copied scenario: $SCENARIO_ID"
+          done
+
+          python3 - <<'PYEOF'
+import json, os, glob
+
+catalog_path = "/tmp/sheetunreal/catalog.json"
+catalog = json.load(open(catalog_path)) if os.path.exists(catalog_path) else {"scenarios": []}
+existing_ids = {s["id"] for s in catalog["scenarios"]}
+
+for mf in glob.glob("/tmp/sheetunreal/scenarios/*/manifest_entry.json"):
+    entry = json.load(open(mf))
+    if entry["id"] not in existing_ids:
+        catalog["scenarios"].append(entry)
+        print(f"  + Added: {entry['id']}")
+    else:
+        catalog["scenarios"] = [entry if s["id"] == entry["id"] else s for s in catalog["scenarios"]]
+        print(f"  ~ Updated: {entry['id']}")
+
+json.dump(catalog, open(catalog_path, "w"), indent=2, ensure_ascii=False)
+print("catalog.json written.")
+PYEOF
+
+          cd /tmp/sheetunreal
+          git add scenarios/ catalog.json
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "lesson-data: update UE5 scenarios [bot]"
+          git push
+          echo "✅ sheetunreal updated"
+
+      # ── Summary ──────────────────────────────────────────────
+      - name: Summary
+        if: always()
+        run: |
+          echo "## 📤 Distribution Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| App | Repo | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|---|" >> $GITHUB_STEP_SUMMARY
+          echo "| 🗺️ Timeline Explorer    | Map-Timeline           | ${{ steps.changed.outputs.timeline != '0' && '✅ pushed' || '⏭️ skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🕵️ Investigation Board  | idea-weaver-board      | ${{ steps.changed.outputs.investigation != '0' && '✅ pushed' || '⏭️ skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🏛️ History Explorer 3D  | history-explorer-3d    | ${{ steps.changed.outputs.history3d != '0' && '✅ pushed' || '⏭️ skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🧠 Mind Palace Debate   | mind-palace-cases      | ${{ steps.changed.outputs.mindpalace != '0' && '✅ pushed' || '⏭️ skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| ⚓ Living Anchor        | living-anchor          | ${{ steps.changed.outputs.anchor != '0' && '✅ pushed' || '⏭️ skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 📖 Interactive Books    | interactive-books      | ${{ steps.changed.outputs.books != '0' && '✅ pushed' || '⏭️ skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 📔 Notebook Media       | notebook-media         | ${{ steps.changed.outputs.notebook != '0' && '✅ pushed' || '⏭️ skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🌐 Personal Page        | personal-page          | ${{ steps.changed.outputs.personalpage != '0' && '✅ pushed' || '⏭️ skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🎮 Unreal Engine 5      | sheetunreal            | ${{ steps.changed.outputs.ue5 != '0' && '✅ pushed' || '⏭️ skipped' }} |" >> $GITHUB_STEP_SUMMARY
