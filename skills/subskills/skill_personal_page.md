@@ -7,9 +7,42 @@
 
 - **Environment:** VS Code + Continue Extension
 - **Workspace:** `~/sacred-blueprint`
-- **App:** Personal Page (Notebook Media Manager — hub εφαρμογή, ίδιο schema με Notebook Media)
-- **Role:** Δημιουργείς chapters για το Personal Page hub με πλούσιο εκπαιδευτικό περιεχόμενο και παιδαγωγικές σημειώσεις. Χρησιμοποιεί **ακριβώς το ίδιο schema** με το Notebook Media αλλά με διαφορετική εκπαιδευτική εστίαση (hub/overview αντί για classroom notes).
+- **App:** Personal Page (hub εφαρμογή, ίδιο schema με Notebook Media)
+- **Role:** Δημιουργείς chapters για το Personal Page hub με παιδαγωγικές σημειώσεις. Εκτελείς χωρίς άδεια για τεχνικά βήματα.
+## 📋 ΠΡΟΑΠΑΙΤΟΥΜΕΝΑ — Διάβασε πριν ξεκινήσεις
 
+**Δεν ρωτάς για master_output.json πριν ξεκινήσεις.** Το παράγεις εσύ στο STEP 5.
+
+**Το μάθημα πρέπει να έχει ήδη δημιουργηθεί** με:
+```bash
+bash workflows/new_lesson.sh "Τίτλος Μαθήματος" lesson_type
+```
+Αυτό δημιουργεί τον φάκελο `lessons/YYYYMMDD_HHMMSS_<slug>/` με `meta.json` μέσα.
+
+**Έγκυροι τύποι μαθήματος:**
+`patristic_text_analysis` | `historical_event` | `theological_concept` | `3d_exploration` | `quick_concept_overview`
+
+**Το meta.json που δημιουργείται έχει αυτή τη δομή:**
+```json
+{
+  "topic": "Τίτλος Μαθήματος",
+  "lesson_type": "theological_concept",
+  "stages": [],
+  "status": "draft",
+  "created": "2026-06-24T10:00:00Z",
+  "updated": "2026-06-24T10:00:00Z"
+}
+```
+
+**Μετά το STEP 5** (sync to master_output.json), το μάθημα δημοσιεύεται με:
+```bash
+bash workflows/publish_lesson.sh lessons/YYYYMMDD_HHMMSS_<slug>/ --skip-transform
+```
+
+**Ροή εργασίας:**
+1. `new_lesson.sh` → δημιουργεί φάκελο + meta.json
+2. Τρέχεις skill(s) → παράγουν JSON + ενημερώνουν master_output.json
+3. `publish_lesson.sh` → διανέμει στα apps + push στο GitHub
 ---
 
 ## 📥 INPUT
@@ -25,20 +58,19 @@
 ### STEP 1 — Extraction
 
 Από το κείμενο εξήγαγε:
-- **1–2 chapters** — το Personal Page λειτουργεί ως **ενότητα θέματος** στο hub, όχι ως ημερήσιο notebook
+- **1–2 chapters** — το Personal Page λειτουργεί ως ενότητα θέματος στο hub
 - Τίτλο ενότητας (συνοπτικός, για navigation)
 - Πλούσιο HTML: bold, em, ul/li με βασικές έννοιες, πηγές, ερωτήματα
 - Plain text για αναζήτηση
 - 2–3 stickies (παιδαγωγικές υπενθυμίσεις για τον δάσκαλο)
-- Media skeleton με παιδαγωγικά notes για **πότε/πώς** κάθε media χρησιμοποιείται στο μάθημα
+- Media skeleton με παιδαγωγικά notes για πότε/πώς κάθε media χρησιμοποιείται
 
 Εκτύπωσε σύνοψη.
+> Σημείωση: το master_output.json δημιουργείται αυτόματα στο STEP 5 — δεν χρειάζεται να υπάρχει εκ των προτέρων.
 
 ---
 
 ### STEP 2 — JSON Generation
-
-Ίδιο schema με Notebook Media, **διαφορετική εστίαση στο περιεχόμενο:**
 
 ```json
 {
@@ -48,55 +80,15 @@
     {
       "index": 1,
       "title": "<σύντομος τίτλος κεφαλαίου>",
-      "html": "<p><strong>Θέμα:</strong> <πλούσια HTML περιγραφή></p><ul><li><strong>Βασικές έννοιες:</strong> ...</li><li><strong>Πηγές:</strong> ...</li><li><strong>Ερωτήματα προς διερεύνηση:</strong> ...</li></ul>",
-      "text": "<ίδιο ως plain text για αναζήτηση>",
-      "stickies": [
-        "<παιδαγωγική σημείωση 1 — για τον δάσκαλο>",
-        "<σημείωση 2>",
-        "<σημείωση 3 — προαιρετική>"
-      ],
+      "html": "<p><strong>Θέμα:</strong> <πλούσια HTML περιγραφή></p><ul><li><strong>Βασικές έννοιες:</strong> ...</li><li><strong>Πηγές:</strong> ...</li><li><strong>Ερωτήματα:</strong> ...</li></ul>",
+      "text": "<ίδιο ως plain text>",
+      "stickies": ["<σημείωση 1>", "<σημείωση 2>", "<σημείωση 3 — προαιρετική>"],
       "media": {
-        "audio": [
-          {
-            "id": "pp_audio_1",
-            "label": "<τίτλος audio ή podcast>",
-            "url": "<URL ή κενό>",
-            "notes": "<σε ποιο σημείο του μαθήματος — πριν/κατά/μετά>"
-          }
-        ],
-        "slides": [
-          {
-            "id": "pp_slides_1",
-            "label": "<τίτλος παρουσίασης>",
-            "url": "<Google Slides pubembed URL ή κενό>",
-            "notes": "<σε ποια φάση της διδασκαλίας>"
-          }
-        ],
-        "notebooklm": [
-          {
-            "id": "pp_nlm_1",
-            "label": "NotebookLM — <θέμα>",
-            "url": "",
-            "notes": "<ερώτηση προς NotebookLM για βαθύτερη ανάλυση>"
-          }
-        ],
-        "pdf": [
-          {
-            "id": "pp_pdf_1",
-            "label": "<τίτλος κειμένου/πηγής>",
-            "url": "<URL ή κενό>",
-            "notes": "<ποιο μέρος να διαβαστεί και γιατί>"
-          }
-        ],
-        "text": [
-          {
-            "id": "pp_text_1",
-            "label": "<τίτλος αποσπάσματος ή σημείωσης>",
-            "url": "",
-            "content": "<σύντομο απόσπασμα πηγής, παράθεμα ή εκπαιδευτική σημείωση>",
-            "notes": "<σχόλιο χρήσης>"
-          }
-        ]
+        "audio":      [{"id":"pp_audio_1","label":"<τίτλος>","url":"","notes":"<πριν/κατά/μετά>"}],
+        "slides":     [{"id":"pp_slides_1","label":"<τίτλος>","url":"","notes":"<φάση διδασκαλίας>"}],
+        "notebooklm": [{"id":"pp_nlm_1","label":"NotebookLM — <θέμα>","url":"","notes":"<ερώτηση>"}],
+        "pdf":        [{"id":"pp_pdf_1","label":"<τίτλος>","url":"","notes":"<ποιο μέρος>"}],
+        "text":       [{"id":"pp_text_1","label":"<τίτλος>","url":"","content":"<απόσπασμα>","notes":""}]
       }
     }
   ]
@@ -105,17 +97,35 @@
 
 **Διαφορές από Notebook Media:**
 - `pp_` prefix στα ids (αντί για `mi_`)
-- `stickies`: έως 3 (αντί για 2) — το Personal Page έχει περισσότερο χώρο για παιδαγωγικές σημειώσεις
-- `html`: πιο δομημένο με ul/li ενότητες (βασικές έννοιες + πηγές + ερωτήματα)
-- `notes` κάθε media: εξηγεί **πότε** (πριν/κατά/μετά το μάθημα) αντί απλώς πώς
-
-**Media field mapping:**
-- `image` URL → `text[].content` ως παράθεμα αναφοράς
-- `youtube` URL → `audio[].url`
-- `google_slides` URL → `slides[].url`
-- `pdf` URL → `pdf[].url`
+- `stickies`: έως 3
+- `html`: πάντα με ul/li για βασικές έννοιες + πηγές + ερωτήματα
+- `notes`: πάντα με χρονική αναφορά (πριν/κατά/μετά το μάθημα)
 
 Εκτύπωσε σε code block.
+
+Εκτύπωσε το πλήρες JSON σε code block.
+
+### STEP 2b — Επιλογή αποθήκευσης
+📦 Τι θέλεις να κάνεις με αυτό το JSON;
+A) Πλήρης ροή  — αποθήκευση + sync master + publish (συνέχισε στα STEP 3, 4, 5)
+
+B) Μόνο αρχείο — γράψε μόνο το data/current/<file>.json, χωρίς publish (μόνο STEP 3)
+
+C) Μόνο copy   — εκτύπωσε το JSON για να το αντιγράψω χειροκίνητα (σταμάτα εδώ)
+
+**→ PAUSE:** Περίμενε επιλογή A / B / C.
+- Αν **A**: συνέχισε κανονικά σε STEP 3 → 4 → 5.
+- Αν **B**: τρέξε μόνο το STEP 3 και σταμάτα. Μην τρέξεις STEP 4 και 5.
+- Αν **C**: σταμάτα εδώ. Το JSON είναι ήδη εκτυπωμένο παραπάνω.
+
+
+### STEP 2c — Επιβεβαίωση εξαγόμενων
+
+Πριν παράγεις JSON, ζήτησε επιβεβαίωση:
+
+Είναι σωστά; Απάντησε OK για να συνεχίσω, ή διόρθωσε ό,τι χρειάζεται.
+
+**→ PAUSE:** Περίμενε απάντηση. Αν ο χρήστης διορθώσει, ενσωμάτωσε τις αλλαγές και μη ρωτήσεις ξανά.
 
 ---
 
@@ -140,11 +150,37 @@ print('Written.')
 [LOG] Personal Page
   Title        : <τίτλος>
   Chapters     : N
-  Stickies     : N (παιδαγωγικές σημειώσεις)
+  Stickies     : N
   Media filled : audio: N, slides: N, pdf: N, text: N
-  Media empty  : <λίστα κενών>
   File         : ~/sacred-blueprint/data/current/personalpage.json
   Status       : complete
+```
+
+---
+
+### STEP 5 — Sync to master_output.json
+
+```bash
+python3 -c "
+import json, os
+
+master_path = os.path.expanduser('~/sacred-blueprint/data/current/master_output.json')
+try:
+    with open(master_path, 'r', encoding='utf-8') as f:
+        master = json.load(f)
+except:
+    master = {}
+
+section_path = os.path.expanduser('~/sacred-blueprint/data/current/personalpage.json')
+with open(section_path, 'r', encoding='utf-8') as f:
+    section = json.load(f)
+
+master['personal_page'] = section
+
+with open(master_path, 'w', encoding='utf-8') as f:
+    json.dump(master, f, indent=2, ensure_ascii=False)
+print('master_output.json updated: personal_page')
+"
 ```
 
 ---
@@ -157,9 +193,8 @@ print('Written.')
 
 ## 🚨 RULES
 
-1. **1–2 chapters:** Το Personal Page είναι hub overview — δεν χρειάζεται πολλά chapters.
+1. **1–2 chapters:** Hub overview — δεν χρειάζεται πολλά chapters.
 2. **HTML δομημένο:** Πάντα με ul/li για βασικές έννοιες, πηγές, ερωτήματα.
 3. **notebooklm.url πάντα κενό:** Συμπληρώνεται χειροκίνητα.
-4. **notes με χρονική αναφορά:** «Πριν το μάθημα», «Κατά τη διάρκεια», «Για εμβάθυνση» — συγκεκριμένα.
-5. **pp_ prefix:** Όλα τα ids ξεκινούν με `pp_` για να διαφέρουν από τα notebook `mi_`.
-6. **Ίδιο schema με Notebook:** Αν αμφιβάλλεις για τη δομή, βλ. `skill_notebook_media.md`.
+4. **notes με χρονική αναφορά:** «Πριν το μάθημα», «Κατά τη διάρκεια», «Για εμβάθυνση».
+5. **pp_ prefix:** Όλα τα ids ξεκινούν με `pp_`.

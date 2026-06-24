@@ -9,6 +9,40 @@
 - **Workspace:** `~/sacred-blueprint`
 - **App:** Timeline Explorer (Leaflet.js, standalone HTML, localStorage, UE broadcast)
 - **Role:** Μετατρέπεις κείμενο ή υπάρχον JSON σε εγγραφή Timeline Explorer. Εκτελείς χωρίς να ζητάς άδεια για κάθε βήμα.
+## 📋 ΠΡΟΑΠΑΙΤΟΥΜΕΝΑ — Διάβασε πριν ξεκινήσεις
+
+**Δεν ρωτάς για master_output.json πριν ξεκινήσεις.** Το παράγεις εσύ στο STEP 5.
+
+**Το μάθημα πρέπει να έχει ήδη δημιουργηθεί** με:
+```bash
+bash workflows/new_lesson.sh "Τίτλος Μαθήματος" lesson_type
+```
+Αυτό δημιουργεί τον φάκελο `lessons/YYYYMMDD_HHMMSS_<slug>/` με `meta.json` μέσα.
+
+**Έγκυροι τύποι μαθήματος:**
+`patristic_text_analysis` | `historical_event` | `theological_concept` | `3d_exploration` | `quick_concept_overview`
+
+**Το meta.json που δημιουργείται έχει αυτή τη δομή:**
+```json
+{
+  "topic": "Τίτλος Μαθήματος",
+  "lesson_type": "theological_concept",
+  "stages": [],
+  "status": "draft",
+  "created": "2026-06-24T10:00:00Z",
+  "updated": "2026-06-24T10:00:00Z"
+}
+```
+
+**Μετά το STEP 5** (sync to master_output.json), το μάθημα δημοσιεύεται με:
+```bash
+bash workflows/publish_lesson.sh lessons/YYYYMMDD_HHMMSS_<slug>/ --skip-transform
+```
+
+**Ροή εργασίας:**
+1. `new_lesson.sh` → δημιουργεί φάκελο + meta.json
+2. Τρέχεις skill(s) → παράγουν JSON + ενημερώνουν master_output.json
+3. `publish_lesson.sh` → διανέμει στα apps + push στο GitHub
 
 ---
 
@@ -35,6 +69,7 @@
 - URL Google Slides (κενό αν δεν υπάρχει)
 
 Εκτύπωσε σύνοψη εξαγόμενων πριν προχωρήσεις.
+> Σημείωση: το master_output.json δημιουργείται αυτόματα στο STEP 5 — δεν χρειάζεται να υπάρχει εκ των προτέρων.
 
 ---
 
@@ -63,18 +98,39 @@
 
 Εκτύπωσε σε code block.
 
+Εκτύπωσε το πλήρες JSON σε code block.
+
+### STEP 2b — Επιλογή αποθήκευσης
+📦 Τι θέλεις να κάνεις με αυτό το JSON;
+A) Πλήρης ροή  — αποθήκευση + sync master + publish (συνέχισε στα STEP 3, 4, 5)
+
+B) Μόνο αρχείο — γράψε μόνο το data/current/<file>.json, χωρίς publish (μόνο STEP 3)
+
+C) Μόνο copy   — εκτύπωσε το JSON για να το αντιγράψω χειροκίνητα (σταμάτα εδώ)
+
+**→ PAUSE:** Περίμενε επιλογή A / B / C.
+- Αν **A**: συνέχισε κανονικά σε STEP 3 → 4 → 5.
+- Αν **B**: τρέξε μόνο το STEP 3 και σταμάτα. Μην τρέξεις STEP 4 και 5.
+- Αν **C**: σταμάτα εδώ. Το JSON είναι ήδη εκτυπωμένο παραπάνω.
+
+
+### STEP 2c — Επιβεβαίωση εξαγόμενων
+
+Πριν παράγεις JSON, ζήτησε επιβεβαίωση:
+
+Είναι σωστά; Απάντησε OK για να συνεχίσω, ή διόρθωσε ό,τι χρειάζεται.
+
+**→ PAUSE:** Περίμενε απάντηση. Αν ο χρήστης διορθώσει, ενσωμάτωσε τις αλλαγές και μη ρωτήσεις ξανά.
+
 ---
 
 ### STEP 3 — Write to Workspace
-
-Αποθήκευσε στον φάκελο `data/current/` ή στον φάκελο του ενεργού μαθήματος:
 
 ```bash
 python3 -c "
 import json, os
 data = <GENERATED_JSON>
 path = os.path.expanduser('~/sacred-blueprint/data/current/timeline.json')
-# Αν υπάρχει ήδη αρχείο, φόρτωσέ το και πρόσθεσε την εγγραφή
 if os.path.exists(path):
     with open(path, 'r', encoding='utf-8') as f:
         existing = json.load(f)
@@ -98,6 +154,33 @@ print('Written. Total entries:', len(data))
   Media        : img=<ok/empty> slides=<ok/empty>
   File         : ~/sacred-blueprint/data/current/timeline.json
   Status       : complete
+```
+
+---
+
+### STEP 5 — Sync to master_output.json
+
+```bash
+python3 -c "
+import json, os
+
+master_path = os.path.expanduser('~/sacred-blueprint/data/current/master_output.json')
+try:
+    with open(master_path, 'r', encoding='utf-8') as f:
+        master = json.load(f)
+except:
+    master = {}
+
+section_path = os.path.expanduser('~/sacred-blueprint/data/current/timeline.json')
+with open(section_path, 'r', encoding='utf-8') as f:
+    section = json.load(f)
+
+master['timeline_item'] = section
+
+with open(master_path, 'w', encoding='utf-8') as f:
+    json.dump(master, f, indent=2, ensure_ascii=False)
+print('master_output.json updated: timeline_item')
+"
 ```
 
 ---

@@ -9,6 +9,40 @@
 - **Workspace:** `~/sacred-blueprint`
 - **App:** Investigation Board (Lovable/Vercel, Google Sheets sync, GitHub → Vercel pipeline)
 - **Role:** Δημιουργείς clues για το Investigation Board από κείμενο ή υπάρχον JSON. Εκτελείς χωρίς άδεια για τεχνικά βήματα.
+## 📋 ΠΡΟΑΠΑΙΤΟΥΜΕΝΑ — Διάβασε πριν ξεκινήσεις
+
+**Δεν ρωτάς για master_output.json πριν ξεκινήσεις.** Το παράγεις εσύ στο STEP 5.
+
+**Το μάθημα πρέπει να έχει ήδη δημιουργηθεί** με:
+```bash
+bash workflows/new_lesson.sh "Τίτλος Μαθήματος" lesson_type
+```
+Αυτό δημιουργεί τον φάκελο `lessons/YYYYMMDD_HHMMSS_<slug>/` με `meta.json` μέσα.
+
+**Έγκυροι τύποι μαθήματος:**
+`patristic_text_analysis` | `historical_event` | `theological_concept` | `3d_exploration` | `quick_concept_overview`
+
+**Το meta.json που δημιουργείται έχει αυτή τη δομή:**
+```json
+{
+  "topic": "Τίτλος Μαθήματος",
+  "lesson_type": "theological_concept",
+  "stages": [],
+  "status": "draft",
+  "created": "2026-06-24T10:00:00Z",
+  "updated": "2026-06-24T10:00:00Z"
+}
+```
+
+**Μετά το STEP 5** (sync to master_output.json), το μάθημα δημοσιεύεται με:
+```bash
+bash workflows/publish_lesson.sh lessons/YYYYMMDD_HHMMSS_<slug>/ --skip-transform
+```
+
+**Ροή εργασίας:**
+1. `new_lesson.sh` → δημιουργεί φάκελο + meta.json
+2. Τρέχεις skill(s) → παράγουν JSON + ενημερώνουν master_output.json
+3. `publish_lesson.sh` → διανέμει στα apps + push στο GitHub
 
 ---
 
@@ -33,6 +67,7 @@
 Στόχος: **5–7 clues** με ποικιλία types.
 
 Εκτύπωσε σύνοψη.
+> Σημείωση: το master_output.json δημιουργείται αυτόματα στο STEP 5 — δεν χρειάζεται να υπάρχει εκ των προτέρων.
 
 ---
 
@@ -54,6 +89,31 @@
 Κατανομή types: τουλάχιστον 2 `evidence`, 1 `suspect`, 2 `note`.
 
 Εκτύπωσε σε code block.
+
+Εκτύπωσε το πλήρες JSON σε code block.
+
+### STEP 2b — Επιλογή αποθήκευσης
+📦 Τι θέλεις να κάνεις με αυτό το JSON;
+A) Πλήρης ροή  — αποθήκευση + sync master + publish (συνέχισε στα STEP 3, 4, 5)
+
+B) Μόνο αρχείο — γράψε μόνο το data/current/<file>.json, χωρίς publish (μόνο STEP 3)
+
+C) Μόνο copy   — εκτύπωσε το JSON για να το αντιγράψω χειροκίνητα (σταμάτα εδώ)
+
+**→ PAUSE:** Περίμενε επιλογή A / B / C.
+- Αν **A**: συνέχισε κανονικά σε STEP 3 → 4 → 5.
+- Αν **B**: τρέξε μόνο το STEP 3 και σταμάτα. Μην τρέξεις STEP 4 και 5.
+- Αν **C**: σταμάτα εδώ. Το JSON είναι ήδη εκτυπωμένο παραπάνω.
+
+
+### STEP 2c — Επιβεβαίωση εξαγόμενων
+
+
+Πριν παράγεις JSON, ζήτησε επιβεβαίωση:
+
+Είναι σωστά; Απάντησε OK για να συνεχίσω, ή διόρθωσε ό,τι χρειάζεται.
+
+**→ PAUSE:** Περίμενε απάντηση. Αν ο χρήστης διορθώσει, ενσωμάτωσε τις αλλαγές και μη ρωτήσεις ξανά.
 
 ---
 
@@ -80,6 +140,33 @@ print('Written.')
   Clues        : N (evidence: N, suspect: N, note: N)
   File         : ~/sacred-blueprint/data/current/investigation.json
   Status       : complete
+```
+
+---
+
+### STEP 5 — Sync to master_output.json
+
+```bash
+python3 -c "
+import json, os
+
+master_path = os.path.expanduser('~/sacred-blueprint/data/current/master_output.json')
+try:
+    with open(master_path, 'r', encoding='utf-8') as f:
+        master = json.load(f)
+except:
+    master = {}
+
+section_path = os.path.expanduser('~/sacred-blueprint/data/current/investigation.json')
+with open(section_path, 'r', encoding='utf-8') as f:
+    section = json.load(f)
+
+master['investigation_board'] = section
+
+with open(master_path, 'w', encoding='utf-8') as f:
+    json.dump(master, f, indent=2, ensure_ascii=False)
+print('master_output.json updated: investigation_board')
+"
 ```
 
 ---

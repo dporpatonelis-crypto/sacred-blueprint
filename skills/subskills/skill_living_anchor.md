@@ -9,6 +9,40 @@
 - **Workspace:** `~/sacred-blueprint`
 - **App:** Living Anchor (layered text annotation, JSON export)
 - **Role:** Δημιουργείς anchors με τριεπίπεδη ανάλυση (literal → structural → critical) και αιτιακές συνδέσεις. Εκτελείς χωρίς άδεια για τεχνικά βήματα.
+## 📋 ΠΡΟΑΠΑΙΤΟΥΜΕΝΑ — Διάβασε πριν ξεκινήσεις
+
+**Δεν ρωτάς για master_output.json πριν ξεκινήσεις.** Το παράγεις εσύ στο STEP 5.
+
+**Το μάθημα πρέπει να έχει ήδη δημιουργηθεί** με:
+```bash
+bash workflows/new_lesson.sh "Τίτλος Μαθήματος" lesson_type
+```
+Αυτό δημιουργεί τον φάκελο `lessons/YYYYMMDD_HHMMSS_<slug>/` με `meta.json` μέσα.
+
+**Έγκυροι τύποι μαθήματος:**
+`patristic_text_analysis` | `historical_event` | `theological_concept` | `3d_exploration` | `quick_concept_overview`
+
+**Το meta.json που δημιουργείται έχει αυτή τη δομή:**
+```json
+{
+  "topic": "Τίτλος Μαθήματος",
+  "lesson_type": "theological_concept",
+  "stages": [],
+  "status": "draft",
+  "created": "2026-06-24T10:00:00Z",
+  "updated": "2026-06-24T10:00:00Z"
+}
+```
+
+**Μετά το STEP 5** (sync to master_output.json), το μάθημα δημοσιεύεται με:
+```bash
+bash workflows/publish_lesson.sh lessons/YYYYMMDD_HHMMSS_<slug>/ --skip-transform
+```
+
+**Ροή εργασίας:**
+1. `new_lesson.sh` → δημιουργεί φάκελο + meta.json
+2. Τρέχεις skill(s) → παράγουν JSON + ενημερώνουν master_output.json
+3. `publish_lesson.sh` → διανέμει στα apps + push στο GitHub
 
 ---
 
@@ -29,12 +63,13 @@
 Για κάθε anchor:
 - **Phrase:** Η ακριβής φράση ή έννοια από το κείμενο
 - **Literal layer:** Τι λέει κυριολεκτικά (τι, ποιος, πότε)
-- **Structural layer:** Πώς συνδέεται με τη δομή του θέματος / ποιος ο ρόλος της
-- **Critical layer:** Ποια η σημασία, ποια αντίθεση ή παράδοξο εγείρει, γιατί έχει σημασία σήμερα
+- **Structural layer:** Πώς συνδέεται με τη δομή του θέματος
+- **Critical layer:** Ποια η σημασία, ποια αντίθεση ή παράδοξο εγείρει
 - **Cause:** Τι προκάλεσε αυτή τη φράση/κατάσταση
 - **Consequence:** Τι προκάλεσε με τη σειρά της
 
 Εκτύπωσε σύνοψη.
+> Σημείωση: το master_output.json δημιουργείται αυτόματα στο STEP 5 — δεν χρειάζεται να υπάρχει εκ των προτέρων.
 
 ---
 
@@ -64,11 +99,6 @@
   ]
 }
 ```
-
-**Κανόνες για τα layers:**
-- `literal` → 1 πρόταση, περιγραφική
-- `structural` → 1-2 προτάσεις, αναλυτική
-- `critical` → 2-3 προτάσεις, ερμηνευτική — εδώ η παιδαγωγική αξία
 
 Εκτύπωσε σε code block.
 
@@ -103,28 +133,44 @@ print('Written.')
 
 ---
 
+### STEP 5 — Sync to master_output.json
+
+```bash
+python3 -c "
+import json, os
+
+master_path = os.path.expanduser('~/sacred-blueprint/data/current/master_output.json')
+try:
+    with open(master_path, 'r', encoding='utf-8') as f:
+        master = json.load(f)
+except:
+    master = {}
+
+section_path = os.path.expanduser('~/sacred-blueprint/data/current/anchor.json')
+with open(section_path, 'r', encoding='utf-8') as f:
+    section = json.load(f)
+
+master['anchor'] = section
+
+with open(master_path, 'w', encoding='utf-8') as f:
+    json.dump(master, f, indent=2, ensure_ascii=False)
+print('master_output.json updated: anchor')
+"
+```
+
+---
+
 ## 📐 JSON SCHEMA
 
 ```json
 {
-  "metadata": {
-    "title": "string",
-    "source": "string",
-    "date": "YYYY-MM-DD"
-  },
+  "metadata": {"title":"string","source":"string","date":"YYYY-MM-DD"},
   "anchors": [
     {
       "id": "string (slug, lowercase, no spaces)",
       "phrase": "string",
-      "layers": {
-        "literal": "string",
-        "structural": "string",
-        "critical": "string"
-      },
-      "causality": {
-        "cause": "string",
-        "consequence": "string"
-      }
+      "layers": {"literal":"string","structural":"string","critical":"string"},
+      "causality": {"cause":"string","consequence":"string"}
     }
   ]
 }
@@ -136,6 +182,6 @@ print('Written.')
 
 1. **3–4 anchors:** Ελάχιστο 3, μέγιστο 4 — ποιότητα πάνω από ποσότητα.
 2. **Και τα τρία layers υποχρεωτικά:** Κανένα κενό — το `critical` είναι το πιο σημαντικό.
-3. **Slug ids:** Lowercase, χωρίς κενά/τόνους (π.χ. `"homoousion"`, `"periagoge"`, `"apocatastasis"`).
+3. **Slug ids:** Lowercase, χωρίς κενά/τόνους (π.χ. `"homoousion"`, `"periagoge"`).
 4. **Causality:** Και τα δύο πεδία πρέπει να είναι συγκεκριμένα — όχι γενικόλογα.
 5. **Μόνο από πηγή:** Οι anchors επιλέγονται από το κείμενο, δεν επινοούνται.
