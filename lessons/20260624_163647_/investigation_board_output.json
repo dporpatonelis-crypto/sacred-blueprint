@@ -5,19 +5,22 @@
       "id": "c1",
       "title": "Ρωμαίους 13",
       "description": "Η διδασκαλία ότι 'ουκ έστιν εξουσία ει μη υπό Θεού' για τη διασφάλιση της ευταξίας.",
-      "type": "evidence"
+      "type": "evidence",
+      "image": "https://i.ibb.co/8nJp0wwB/The-Sacred-Blueprint-page-0015.jpg"
     },
     {
       "id": "c2",
       "title": "Οι Ιμαντώσεις",
       "description": "Η παρομοίωση της εξουσίας με τα στηρίγματα που κρατούν όρθια την οικία της κοινωνίας.",
-      "type": "concept"
+      "type": "concept",
+      "image": "https://i.ibb.co/PGmWDBjt/The-Sacred-Blueprint-page-0014.jpg"
     },
     {
       "id": "c3",
       "title": "Ύπουλος Διωγμός",
       "description": "Η παρέμβαση των χριστιανών αυτοκρατόρων στο δόγμα ως νέα μορφή δίωξης.",
-      "type": "argument"
+      "type": "argument",
+      "image": "https://i.ibb.co/6RDfMcx1/The-Sacred-Blueprint-page-0013.jpg"
     },
     {
       "id": "c4",
