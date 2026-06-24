@@ -17,44 +17,34 @@
     .status-draft    { background: #fef9c3; color: #854d0e; }
     .status-active   { background: #dcfce7; color: #166534; }
     .status-archived { background: #f1f5f9; color: #475569; }
-
-    /* ── Topbar ── */
     .topbar { display: flex; justify-content: space-between; align-items: center; background: white; padding: 1rem 1.5rem; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem; }
     .topbar h1 { font-size: 1.4rem; font-weight: 600; }
     .topbar-meta { font-size: 0.75rem; color: #64748b; margin-top: 0.15rem; }
     .topbar-actions { display: flex; gap: 0.5rem; }
     .icon-button { width: 2.4rem; height: 2.4rem; border-radius: 40px; background: #f1f5f9; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
     .icon-button:hover { background: #e2e8f0; }
-
-    /* ── Active banner ── */
     .active-banner { background: #dcfce7; border: 1px solid #86efac; border-radius: 12px; padding: 0.6rem 1.2rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; font-size: 0.82rem; }
     .active-banner strong { color: #166534; }
-    .active-banner .ab-label { color: #166534; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; }
-    .active-banner .ab-date  { color: #4ade80; font-size: 0.7rem; }
-    .active-banner .activate-btn { margin-left: auto; padding: 0.25rem 0.9rem; background: #166534; color: white; border-radius: 30px; font-size: 0.72rem; font-weight: 600; cursor: pointer; border: none; }
-    .active-banner .activate-btn:hover { background: #14532d; }
-
-    /* ── Layout ── */
+    .ab-label { color: #166534; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .ab-date  { color: #4ade80; font-size: 0.7rem; }
+    .activate-btn { margin-left: auto; padding: 0.25rem 0.9rem; background: #166534; color: white; border-radius: 30px; font-size: 0.72rem; font-weight: 600; cursor: pointer; border: none; }
+    .activate-btn:hover { background: #14532d; }
     .shell { display: flex; flex-direction: column; gap: 1.5rem; max-width: 1600px; margin: 0 auto; }
     .workspace { display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; }
     @media (max-width: 900px) { .workspace { grid-template-columns: 1fr; } }
-
-    /* ── Sidebar ── */
     .sidebar { background: white; border-radius: 16px; padding: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.04); max-height: 80vh; overflow-y: auto; }
     .search-row { margin-bottom: 0.75rem; }
     .stat-strip { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
     .stat { display: flex; flex-direction: column; background: #f8fafc; padding: 0.3rem 0.8rem; border-radius: 10px; font-size: 0.8rem; }
     .stat strong { font-size: 1.1rem; }
     .scenario-list { display: flex; flex-direction: column; gap: 0.3rem; }
-    .scenario-item { text-align: left; padding: 0.6rem 0.8rem; border-radius: 10px; background: transparent; transition: background 0.1s; border: 1px solid transparent; width: 100%; }
+    .scenario-item { text-align: left; padding: 0.6rem 0.8rem; border-radius: 10px; background: transparent; transition: background 0.1s; border: 1px solid transparent; width: 100%; cursor: pointer; }
     .scenario-item:hover { background: #f1f5f9; }
     .scenario-item.selected { background: #e0f2fe; border-color: #7dd3fc; }
     .scenario-item.is-active-lesson { border-left: 3px solid #22c55e; }
     .scenario-item strong { display: block; font-size: 0.9rem; }
     .scenario-meta { display: flex; gap: 0.5rem; font-size: 0.7rem; color: #64748b; flex-wrap: wrap; margin-top: 0.1rem; }
     .active-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #22c55e; margin-right: 3px; vertical-align: middle; }
-
-    /* ── Detail panel ── */
     .detail-panel { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
     .detail-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem; }
     .detail-header h2 { font-size: 1.4rem; font-weight: 600; }
@@ -64,44 +54,30 @@
     .panel { background: #f8fafc; border-radius: 12px; padding: 1rem; border: 1px solid #eef2f6; }
     .panel-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.3rem; }
     .panel-heading h3 { font-size: 0.9rem; font-weight: 600; }
-
-    /* ── App tabs ── */
     .app-tabs { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.75rem; }
-    .app-tab { padding: 0.3rem 0.8rem; border-radius: 30px; font-size: 0.75rem; font-weight: 500; background: #eef2f6; transition: all 0.1s; display: flex; align-items: center; gap: 0.3rem; border: 2px solid transparent; }
+    .app-tab { padding: 0.3rem 0.8rem; border-radius: 30px; font-size: 0.75rem; font-weight: 500; background: #eef2f6; transition: all 0.1s; display: flex; align-items: center; gap: 0.3rem; border: 2px solid transparent; cursor: pointer; }
     .app-tab:hover { background: #e2e8f0; }
     .app-tab.active { background: #1e293b; color: white; }
     .app-tab.has-output { border-color: #22c55e; }
-
-    /* ── Schema / fields ── */
     .schema-card p { font-size: 0.85rem; color: #475569; margin: 0.25rem 0 0.5rem; }
     .field-list { display: flex; flex-wrap: wrap; gap: 0.2rem; }
     .field-list code { background: #eef2f6; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.65rem; font-family: monospace; color: #1e293b; }
-
-    /* ── Links ── */
     .link-stack { display: flex; flex-direction: column; gap: 0.4rem; }
     .resource-link { display: flex; justify-content: space-between; padding: 0.3rem 0.5rem; background: white; border-radius: 8px; text-decoration: none; color: #1e293b; font-size: 0.8rem; border: 1px solid #e2e8f0; }
     .resource-link:hover { background: #f1f5f9; }
     .resource-link small { color: #64748b; font-size: 0.65rem; }
-
-    /* ── Signals ── */
     .signal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
     .signal { background: white; padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.75rem; border: 1px solid #e2e8f0; }
     .signal strong { display: block; font-size: 0.65rem; color: #64748b; font-weight: 500; }
-
-    /* ── JSON editor ── */
     .json-state { font-size: 0.7rem; padding: 0.1rem 0.6rem; border-radius: 30px; background: #dcfce7; color: #166534; }
     #jsonEditor { height: 180px; width: 100%; font-family: monospace; font-size: 0.7rem; background: #0f172a; color: #e2e8f0; border: none; border-radius: 8px; padding: 0.7rem; }
     .editor-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap; }
     .editor-actions button { padding: 0.3rem 1rem; border-radius: 30px; font-weight: 500; font-size: 0.75rem; background: #e2e8f0; transition: background 0.1s; }
     .editor-actions button:hover { background: #cbd5e1; }
-
-    /* ── Derived files ── */
     .derived-files { display: flex; flex-direction: column; gap: 0.4rem; }
     .derived-file { display: flex; justify-content: space-between; align-items: center; background: white; padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.75rem; border: 1px solid #e2e8f0; }
     .text-button { color: #3b82f6; font-weight: 500; font-size: 0.7rem; background: none; border: none; cursor: pointer; }
     .text-button:hover { text-decoration: underline; }
-
-    /* ── Media manager ── */
     .media-manager { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
     .media-manager-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem; }
     .media-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
@@ -124,24 +100,21 @@
     .media-status { margin-top: 0.5rem; font-size: 0.8rem; padding: 0.3rem 0.6rem; border-radius: 8px; background: #f1f5f9; }
     .media-status.error { background: #fee2e2; color: #991b1b; }
     .media-status.ok { background: #dcfce7; color: #166534; }
-    .hidden { display: none !important; }
   </style>
 </head>
 <body>
-
 <header class="topbar">
   <div>
     <p class="eyebrow">Sacred Blueprint</p>
     <h1>Lesson Orchestrator</h1>
-    <p class="topbar-meta">Δημιουργήθηκε: 2026-06-23 22:25 · 2 μαθήματα</p>
+    <p class="topbar-meta">Δημιουργήθηκε: 2026-06-24 12:54 · 2 μαθήματα</p>
   </div>
   <div class="topbar-actions">
     <button class="icon-button" id="importButton" title="Import JSON">↥</button>
     <button class="icon-button" id="exportButton" title="Export JSON">↧</button>
-    <button class="icon-button" id="refreshButton" title="Refresh page" onclick="location.reload()">↺</button>
+    <button class="icon-button" title="Refresh" onclick="location.reload()">↺</button>
   </div>
 </header>
-
 <div id="activeBanner" class="active-banner" style="display:none">
   <div>
     <span class="ab-label">Ενεργό μάθημα</span>
@@ -150,84 +123,53 @@
   </div>
   <button class="activate-btn" id="activateSelectedBtn" type="button">Ενεργοποίηση επιλεγμένου</button>
 </div>
-
 <main class="shell">
   <section class="workspace">
     <aside class="sidebar">
-      <div class="search-row">
-        <input id="searchInput" type="search" placeholder="Αναζήτηση μαθήματος..." />
-      </div>
+      <div class="search-row"><input id="searchInput" type="search" placeholder="Αναζήτηση μαθήματος..." /></div>
       <div class="stat-strip" id="stats"></div>
       <div class="scenario-list" id="scenarioList"></div>
     </aside>
-
     <section class="detail-panel">
       <div class="detail-header">
-        <div>
-          <p class="eyebrow" id="selectedType">Scenario</p>
-          <h2 id="selectedTitle">Επίλεξε μάθημα</h2>
-        </div>
+        <div><p class="eyebrow" id="selectedType">Scenario</p><h2 id="selectedTitle">Επίλεξε μάθημα</h2></div>
         <div class="detail-header-meta">
           <span class="status-pill" id="selectedStatus"></span>
           <span id="updatedAt" style="font-size:0.72rem;color:#64748b;"></span>
         </div>
       </div>
-
       <div class="dashboard-grid">
         <section class="panel">
-          <div class="panel-heading">
-            <h3>Modules</h3>
-          </div>
+          <div class="panel-heading"><h3>Modules</h3></div>
           <div class="app-tabs" id="appTabs"></div>
           <div class="schema-card" id="schemaSummary"></div>
         </section>
-
         <section class="panel">
-          <div class="panel-heading">
-            <h3>Σύνδεσμοι Apps</h3>
-            <button class="text-button" id="copyLinksButton" type="button">Copy</button>
-          </div>
+          <div class="panel-heading"><h3>Σύνδεσμοι Apps</h3><button class="text-button" id="copyLinksButton" type="button">Copy</button></div>
           <div class="link-stack" id="projectLinks"></div>
         </section>
-
         <section class="panel">
-          <div class="panel-heading">
-            <h3>Media Library</h3>
-            <span id="riskLevel"></span>
-          </div>
+          <div class="panel-heading"><h3>Media Library</h3><span id="riskLevel"></span></div>
           <div class="signal-grid" id="learningSignals"></div>
         </section>
-
         <section class="panel">
-          <div class="panel-heading">
-            <h3>JSON Editor</h3>
-            <span class="json-state" id="jsonState">—</span>
-          </div>
+          <div class="panel-heading"><h3>JSON Editor</h3><span class="json-state" id="jsonState">—</span></div>
           <textarea id="jsonEditor" spellcheck="false"></textarea>
           <div class="editor-actions">
             <button id="applyJsonButton" type="button">Apply</button>
             <button id="formatJsonButton" type="button">Format</button>
           </div>
         </section>
-
         <section class="panel">
-          <div class="panel-heading">
-            <h3>Generated Files</h3>
-            <span id="derivedState">—</span>
-          </div>
+          <div class="panel-heading"><h3>Generated Files</h3><span id="derivedState">—</span></div>
           <div class="derived-files" id="derivedFiles"></div>
         </section>
       </div>
     </section>
   </section>
-
-  <!-- Media Manager -->
   <section class="media-manager">
     <div class="media-manager-header">
-      <div>
-        <p class="eyebrow">Media Library</p>
-        <h2>Πολυμέσα & Tags</h2>
-      </div>
+      <div><p class="eyebrow">Media Library</p><h2>Πολυμέσα &amp; Tags</h2></div>
       <div class="media-actions">
         <input id="githubUrlInput" type="url" placeholder="GitHub raw media_library.json URL" />
         <button id="fetchGithubButton" type="button">Fetch</button>
@@ -236,40 +178,18 @@
     </div>
     <div class="media-grid">
       <section class="panel">
-        <div class="panel-heading">
-          <h3>Media Entry</h3>
-          <span id="mediaEditState">New</span>
-        </div>
+        <div class="panel-heading"><h3>Media Entry</h3><span id="mediaEditState">New</span></div>
         <div class="form-grid">
           <label>ID<input id="mediaIdInput" type="text" placeholder="IMG-xxx" /></label>
           <label>Τίτλος<input id="mediaTitleInput" type="text" placeholder="Όνομα" /></label>
           <label>URL<input id="mediaUrlInput" type="url" placeholder="https://..." /></label>
-          <label>Τύπος
-            <select id="mediaTypeInput">
-              <option value="auto">Auto</option>
-              <option value="image">Εικόνα</option>
-              <option value="youtube">YouTube</option>
-              <option value="google_slides">Google Slides</option>
-              <option value="google_drive">Google Drive</option>
-              <option value="notebooklm">NotebookLM</option>
-            </select>
-          </label>
+          <label>Τύπος<select id="mediaTypeInput"><option value="auto">Auto</option><option value="image">Εικόνα</option><option value="youtube">YouTube</option><option value="google_slides">Google Slides</option><option value="google_drive">Google Drive</option><option value="notebooklm">NotebookLM</option></select></label>
           <label>Source<input id="mediaSourceInput" type="text" placeholder="imgbb / youtube" /></label>
           <label>App Context<input id="mediaContextInput" type="text" placeholder="Timeline; UE5" /></label>
           <label>Unit ID<input id="mediaUnitInput" type="text" placeholder="unit_1" /></label>
           <label>Tags<input id="mediaTagsInput" type="text" placeholder="ιστορία, φιλοσοφία" /></label>
-          <label>Γλώσσα
-            <select id="mediaLanguageInput">
-              <option value="el">Ελληνικά</option>
-              <option value="en">English</option>
-            </select>
-          </label>
-          <label>Κατάσταση
-            <select id="mediaStatusInput">
-              <option value="active">active</option>
-              <option value="draft">draft</option>
-            </select>
-          </label>
+          <label>Γλώσσα<select id="mediaLanguageInput"><option value="el">Ελληνικά</option><option value="en">English</option></select></label>
+          <label>Κατάσταση<select id="mediaStatusInput"><option value="active">active</option><option value="draft">draft</option></select></label>
         </div>
         <label class="notes-label">Σημειώσεις<textarea id="mediaNotesInput" rows="3" placeholder="οδηγίες χρήσης"></textarea></label>
         <div class="editor-actions">
@@ -280,13 +200,8 @@
         <div class="media-preview" id="mediaPreview"></div>
       </section>
       <section class="panel">
-        <div class="panel-heading">
-          <h3>Library</h3>
-          <span id="mediaStats">0 media</span>
-        </div>
-        <div class="search-row">
-          <input id="mediaSearchInput" type="search" placeholder="Αναζήτηση media..." />
-        </div>
+        <div class="panel-heading"><h3>Library</h3><span id="mediaStats">0 media</span></div>
+        <div class="search-row"><input id="mediaSearchInput" type="search" placeholder="Αναζήτηση media..." /></div>
         <div class="media-table-wrap">
           <table class="media-table">
             <thead><tr><th>ID</th><th>Τύπος</th><th>Τίτλος</th><th>Tags</th><th>App Context</th><th>Ενέργειες</th></tr></thead>
@@ -298,20 +213,16 @@
     </div>
   </section>
 </main>
-
 <input id="fileInput" type="file" accept=".json" hidden />
-
 <script>
 (function() {
   'use strict';
 
-  // ── Bootstrap data από bash (ασφαλής φόρτωση) ─────
-  const BOOTSTRAP_SCENARIOS = JSON.parse("[{\"id\": \"20260623_180420_\", \"title\": \"\u03a0\u03b1\u03cd\u03bb\u03bf\u03c2 & \u03a7\u03c1\u03c5\u03c3\u03cc\u03c3\u03c4\u03bf\u03bc\u03bf\u03c2 (\u0395\u03be\u03bf\u03c5\u03c3\u03af\u03b1 \u03ba\u03b1\u03b9 \u03a0\u03af\u03c3\u03c4\u03b7)\", \"type\": \"theological_concept\", \"status\": \"draft\", \"updatedAt\": \"2026-06-23\", \"tags\": [], \"source\": {\"kind\": \"file\", \"notes\": \"\"}, \"links\": [], \"lesson_dir\": \"/Users/dimitriosporpatonelis/sacred-blueprint/lessons/20260623_180420_\", \"appOutputs\": {\"history3d\": {\"characters\": [{\"id\": \"char_paul\", \"name\": \"\u0391\u03c0. \u03a0\u03b1\u03cd\u03bb\u03bf\u03c2\", \"role\": \"\u0391\u03c0\u03cc\u03c3\u03c4\u03bf\u03bb\u03bf\u03c2\", \"description\": \"\u039f \u03ba\u03ae\u03c1\u03c5\u03ba\u03b1\u03c2 \u03c4\u03b7\u03c2 '\u03bc\u03c9\u03c1\u03af\u03b1\u03c2 \u03c4\u03bf\u03c5 \u03a3\u03c4\u03b1\u03c5\u03c1\u03bf\u03cd' \u03c0\u03bf\u03c5 \u03b1\u03bd\u03c4\u03b9\u03bc\u03b5\u03c4\u03ce\u03c0\u03b9\u03c3\u03b5 \u03c4\u03bf \u03b8\u03b7\u03c1\u03af\u03bf \u03c4\u03c9\u03bd \u03b4\u03b9\u03c9\u03b3\u03bc\u03ce\u03bd.\", \"position_x\": 10, \"position_y\": 0, \"position_z\": 5, \"image\": \"https://i.ibb.co/q3Ty33Vq/The-Sacred-Blueprint-page-0005.jpg\"}, {\"id\": \"char_john\", \"name\": \"\u0399. \u03a7\u03c1\u03c5\u03c3\u03cc\u03c3\u03c4\u03bf\u03bc\u03bf\u03c2\", \"role\": \"\u0395\u03c1\u03bc\u03b7\u03bd\u03b5\u03c5\u03c4\u03ae\u03c2 / \u03a0\u03b1\u03c4\u03ae\u03c1\", \"description\": \"\u039f '\u039d\u03ad\u03bf\u03c2 \u03a0\u03b1\u03cd\u03bb\u03bf\u03c2' \u03c0\u03bf\u03c5 \u03bc\u03b5\u03c4\u03ad\u03c4\u03c1\u03b5\u03c8\u03b5 \u03c4\u03b7 \u03c1\u03b7\u03c4\u03bf\u03c1\u03b9\u03ba\u03ae \u03c3\u03b5 \u03cc\u03c0\u03bb\u03bf \u03ba\u03b1\u03c4\u03ac \u03c4\u03b7\u03c2 \u03b1\u03c5\u03c4\u03bf\u03ba\u03c1\u03b1\u03c4\u03bf\u03c1\u03b9\u03ba\u03ae\u03c2 \u03b1\u03b4\u03b9\u03ba\u03af\u03b1\u03c2.\", \"position_x\": -10, \"position_y\": 0, \"position_z\": 5, \"image\": \"https://i.ibb.co/twQyyfQP/The-Sacred-Blueprint-page-0011.jpg\"}], \"facts\": [{\"id\": \"fact_1\", \"title\": \"\u03a1\u03b7\u03c4\u03bf\u03c1\u03b9\u03ba\u03ae \u03c9\u03c2 \u038c\u03c0\u03bb\u03bf\", \"content\": \"\u0397 \u03c7\u03c1\u03c5\u03c3\u03ae \u03b3\u03bb\u03ce\u03c3\u03c3\u03b1 \u03c4\u03bf\u03c5 \u0399\u03c9\u03ac\u03bd\u03bd\u03b7 \u03ad\u03b4\u03c9\u03c3\u03b5 \u03c6\u03c9\u03bd\u03ae \u03c3\u03c4\u03bf\u03bd \u03a0\u03b1\u03cd\u03bb\u03bf \u03bc\u03ad\u03c3\u03b1 \u03c3\u03c4\u03b9\u03c2 \u03c0\u03bf\u03bb\u03cd\u03b2\u03bf\u03c5\u03b5\u03c2 \u03c0\u03cc\u03bb\u03b5\u03b9\u03c2.\", \"era\": \"4\u03bf\u03c2 \u03b1\u03b9\u03ce\u03bd\u03b1\u03c2\"}, {\"id\": \"fact_2\", \"title\": \"\u0394\u03b9\u03b1\u03c6\u03bf\u03c1\u03ac \u03a0\u03bb\u03b1\u03b9\u03c3\u03af\u03bf\u03c5\", \"content\": \"\u039f \u03a0\u03b1\u03cd\u03bb\u03bf\u03c2 \u03ba\u03b7\u03c1\u03cd\u03c4\u03c4\u03b5\u03b9 \u03b3\u03b9\u03b1 \u03bd\u03b1 \u03b5\u03c0\u03b9\u03b2\u03b9\u03ce\u03c3\u03b5\u03b9 \u03b7 \u03c0\u03af\u03c3\u03c4\u03b7, \u03bf \u03a7\u03c1\u03c5\u03c3\u03cc\u03c3\u03c4\u03bf\u03bc\u03bf\u03c2 \u03b3\u03b9\u03b1 \u03bd\u03b1 \u03bc\u03b7\u03bd \u03b1\u03bb\u03bb\u03bf\u03b9\u03c9\u03b8\u03b5\u03af \u03b1\u03c0\u03cc \u03c4\u03b7\u03bd \u03b5\u03be\u03bf\u03c5\u03c3\u03af\u03b1.\", \"era\": \"\u0394\u03b9\u03b1\u03c7\u03c1\u03bf\u03bd\u03b9\u03ba\u03cc\"}], \"screens\": {\"title\": \"\u0391\u03c0\u03cc \u03c4\u03bf\u03bd \u0386\u03c1\u03b5\u03b9\u03bf \u03a0\u03ac\u03b3\u03bf \u03c3\u03c4\u03bf \u03a0\u03b1\u03bb\u03ac\u03c4\u03b9\", \"background\": \"bg-empire.jpg\"}}, \"notebook\": {\"title\": \"\u03a3\u03b7\u03bc\u03b5\u03b9\u03ce\u03c3\u03b5\u03b9\u03c2: \u0391\u03c0\u03cc\u03c3\u03c4\u03bf\u03bb\u03bf\u03c2 \u03ba\u03b1\u03b9 \u0395\u03c1\u03bc\u03b7\u03bd\u03b5\u03c5\u03c4\u03ae\u03c2\", \"chapters\": [{\"index\": 1, \"title\": \"\u0397 \u03a1\u03b7\u03c4\u03bf\u03c1\u03b9\u03ba\u03ae \u03c9\u03c2 \u038c\u03c0\u03bb\u03bf\", \"html\": \"<ul><li><strong>\u0398\u03ad\u03bc\u03b1:</strong> \u0397 \u03bc\u03b5\u03c4\u03b1\u03c4\u03c1\u03bf\u03c0\u03ae \u03c4\u03b7\u03c2 '\u03bc\u03c9\u03c1\u03af\u03b1\u03c2 \u03c4\u03bf\u03c5 \u03a3\u03c4\u03b1\u03c5\u03c1\u03bf\u03cd' \u03c3\u03b5 \u03b5\u03c0\u03b9\u03c4\u03b1\u03ba\u03c4\u03b9\u03ba\u03cc \u03bb\u03cc\u03b3\u03bf.</li></ul>\", \"text\": \"\u0397 '\u03c7\u03c1\u03c5\u03c3\u03ae' \u03b3\u03bb\u03ce\u03c3\u03c3\u03b1 \u03c4\u03bf\u03c5 \u0399\u03c9\u03ac\u03bd\u03bd\u03b7 \u03ba\u03b1\u03b8\u03b9\u03c3\u03c4\u03ac \u03c4\u03bf\u03bd \u03a0\u03b1\u03cd\u03bb\u03bf \u03ba\u03b1\u03c4\u03b1\u03bd\u03bf\u03b7\u03c4\u03cc \u03c3\u03b5 \u03bc\u03b9\u03b1 \u03c7\u03c1\u03b9\u03c3\u03c4\u03b9\u03b1\u03bd\u03b9\u03ba\u03ae \u03ba\u03bf\u03b9\u03bd\u03c9\u03bd\u03af\u03b1.\", \"stickies\": [\"\u03a3\u03b7\u03bc\u03b1\u03bd\u03c4\u03b9\u03ba\u03cc: \u039f \u03a7\u03c1\u03c5\u03c3\u03cc\u03c3\u03c4\u03bf\u03bc\u03bf\u03c2 \u03b5\u03c6\u03b1\u03c1\u03bc\u03cc\u03b6\u03b5\u03b9 \u03c4\u03bf\u03bd \u03a0\u03b1\u03cd\u03bb\u03bf \u03c3\u03b5 \u03ba\u03bf\u03b9\u03bd\u03c9\u03bd\u03b9\u03ba\u03ad\u03c2 \u03ba\u03c1\u03af\u03c3\u03b5\u03b9\u03c2.\"], \"media\": {\"slides\": [{\"id\": \"slide_1\", \"label\": \"\u03a0\u03b1\u03cd\u03bb\u03bf\u03c2 & \u03a7\u03c1\u03c5\u03c3\u03cc\u03c3\u03c4\u03bf\u03bc\u03bf\u03c2\", \"url\": \"https://example.com/icon.jpg\", \"notes\": \"\u0397 \u03c0\u03bd\u03b5\u03c5\u03bc\u03b1\u03c4\u03b9\u03ba\u03ae \u03c3\u03cd\u03bd\u03b4\u03b5\u03c3\u03b7.\"}]}}]}}}, {\"id\": \"20260623_222132_\", \"title\": \"\u03a0\u03b1\u03cd\u03bb\u03bf\u03c2 \u03ba\u03b1\u03b9 \u03a7\u03c1\u03c5\u03c3\u03cc\u03c3\u03c4\u03bf\u03bc\u03bf\u03c2: \u0391\u03c0\u03cc\u03c3\u03c4\u03bf\u03bb\u03bf\u03c2 \u03ba\u03b1\u03b9 \u0395\u03c1\u03bc\u03b7\u03bd\u03b5\u03c5\u03c4\u03ae\u03c2 \u03c3\u03c4\u03bf \u0394\u03b9\u03b7\u03bd\u03b5\u03ba\u03ad\u03c2\", \"type\": \"theological_concept\", \"status\": \"draft\", \"updatedAt\": \"2026-06-23\", \"tags\": [], \"source\": {\"kind\": \"file\", \"notes\": \"\"}, \"links\": [], \"lesson_dir\": \"/Users/dimitriosporpatonelis/sacred-blueprint/lessons/20260623_222132_\", \"appOutputs\": {\"history3d\": {\"characters\": [{\"id\": \"char_paul\", \"name\": \"\u0391\u03c0. \u03a0\u03b1\u03cd\u03bb\u03bf\u03c2\", \"role\": \"\u0391\u03c0\u03cc\u03c3\u03c4\u03bf\u03bb\u03bf\u03c2\", \"description\": \"\u039f \u03ba\u03ae\u03c1\u03c5\u03ba\u03b1\u03c2 \u03c4\u03b7\u03c2 '\u03bc\u03c9\u03c1\u03af\u03b1\u03c2 \u03c4\u03bf\u03c5 \u03a3\u03c4\u03b1\u03c5\u03c1\u03bf\u03cd' \u03c0\u03bf\u03c5 \u03b1\u03bd\u03c4\u03b9\u03bc\u03b5\u03c4\u03ce\u03c0\u03b9\u03c3\u03b5 \u03c4\u03bf \u03b8\u03b7\u03c1\u03af\u03bf \u03c4\u03c9\u03bd \u03b4\u03b9\u03c9\u03b3\u03bc\u03ce\u03bd.\", \"position_x\": 10, \"position_y\": 0, \"position_z\": 5, \"image\": \"https://i.ibb.co/q3Ty33Vq/The-Sacred-Blueprint-page-0005.jpg\"}, {\"id\": \"char_john\", \"name\": \"\u0399. \u03a7\u03c1\u03c5\u03c3\u03cc\u03c3\u03c4\u03bf\u03bc\u03bf\u03c2\", \"role\": \"\u0395\u03c1\u03bc\u03b7\u03bd\u03b5\u03c5\u03c4\u03ae\u03c2 / \u03a0\u03b1\u03c4\u03ae\u03c1\", \"description\": \"\u039f '\u039d\u03ad\u03bf\u03c2 \u03a0\u03b1\u03cd\u03bb\u03bf\u03c2' \u03c0\u03bf\u03c5 \u03bc\u03b5\u03c4\u03ad\u03c4\u03c1\u03b5\u03c8\u03b5 \u03c4\u03b7 \u03c1\u03b7\u03c4\u03bf\u03c1\u03b9\u03ba\u03ae \u03c3\u03b5 \u03cc\u03c0\u03bb\u03bf \u03ba\u03b1\u03c4\u03ac \u03c4\u03b7\u03c2 \u03b1\u03c5\u03c4\u03bf\u03ba\u03c1\u03b1\u03c4\u03bf\u03c1\u03b9\u03ba\u03ae\u03c2 \u03b1\u03b4\u03b9\u03ba\u03af\u03b1\u03c2.\", \"position_x\": -10, \"position_y\": 0, \"position_z\": 5, \"image\": \"https://i.ibb.co/twQyyfQP/The-Sacred-Blueprint-page-0011.jpg\"}], \"facts\": [{\"id\": \"fact_1\", \"title\": \"\u03a1\u03b7\u03c4\u03bf\u03c1\u03b9\u03ba\u03ae \u03c9\u03c2 \u038c\u03c0\u03bb\u03bf\", \"content\": \"\u0397 \u03c7\u03c1\u03c5\u03c3\u03ae \u03b3\u03bb\u03ce\u03c3\u03c3\u03b1 \u03c4\u03bf\u03c5 \u0399\u03c9\u03ac\u03bd\u03bd\u03b7 \u03ad\u03b4\u03c9\u03c3\u03b5 \u03c6\u03c9\u03bd\u03ae \u03c3\u03c4\u03bf\u03bd \u03a0\u03b1\u03cd\u03bb\u03bf \u03bc\u03ad\u03c3\u03b1 \u03c3\u03c4\u03b9\u03c2 \u03c0\u03bf\u03bb\u03cd\u03b2\u03bf\u03c5\u03b5\u03c2 \u03c0\u03cc\u03bb\u03b5\u03b9\u03c2.\", \"era\": \"4\u03bf\u03c2 \u03b1\u03b9\u03ce\u03bd\u03b1\u03c2\"}, {\"id\": \"fact_2\", \"title\": \"\u0394\u03b9\u03b1\u03c6\u03bf\u03c1\u03ac \u03a0\u03bb\u03b1\u03b9\u03c3\u03af\u03bf\u03c5\", \"content\": \"\u039f \u03a0\u03b1\u03cd\u03bb\u03bf\u03c2 \u03ba\u03b7\u03c1\u03cd\u03c4\u03c4\u03b5\u03b9 \u03b3\u03b9\u03b1 \u03bd\u03b1 \u03b5\u03c0\u03b9\u03b2\u03b9\u03ce\u03c3\u03b5\u03b9 \u03b7 \u03c0\u03af\u03c3\u03c4\u03b7, \u03bf \u03a7\u03c1\u03c5\u03c3\u03cc\u03c3\u03c4\u03bf\u03bc\u03bf\u03c2 \u03b3\u03b9\u03b1 \u03bd\u03b1 \u03bc\u03b7\u03bd \u03b1\u03bb\u03bb\u03bf\u03b9\u03c9\u03b8\u03b5\u03af \u03b1\u03c0\u03cc \u03c4\u03b7\u03bd \u03b5\u03be\u03bf\u03c5\u03c3\u03af\u03b1.\", \"era\": \"\u0394\u03b9\u03b1\u03c7\u03c1\u03bf\u03bd\u03b9\u03ba\u03cc\"}], \"screens\": {\"title\": \"\u0391\u03c0\u03cc \u03c4\u03bf\u03bd \u0386\u03c1\u03b5\u03b9\u03bf \u03a0\u03ac\u03b3\u03bf \u03c3\u03c4\u03bf \u03a0\u03b1\u03bb\u03ac\u03c4\u03b9\", \"background\": \"bg-empire.jpg\"}}, \"notebook\": {\"title\": \"\u03a3\u03b7\u03bc\u03b5\u03b9\u03ce\u03c3\u03b5\u03b9\u03c2: \u0391\u03c0\u03cc\u03c3\u03c4\u03bf\u03bb\u03bf\u03c2 \u03ba\u03b1\u03b9 \u0395\u03c1\u03bc\u03b7\u03bd\u03b5\u03c5\u03c4\u03ae\u03c2\", \"chapters\": [{\"index\": 1, \"title\": \"\u0397 \u03a1\u03b7\u03c4\u03bf\u03c1\u03b9\u03ba\u03ae \u03c9\u03c2 \u038c\u03c0\u03bb\u03bf\", \"html\": \"<ul><li><strong>\u0398\u03ad\u03bc\u03b1:</strong> \u0397 \u03bc\u03b5\u03c4\u03b1\u03c4\u03c1\u03bf\u03c0\u03ae \u03c4\u03b7\u03c2 '\u03bc\u03c9\u03c1\u03af\u03b1\u03c2 \u03c4\u03bf\u03c5 \u03a3\u03c4\u03b1\u03c5\u03c1\u03bf\u03cd' \u03c3\u03b5 \u03b5\u03c0\u03b9\u03c4\u03b1\u03ba\u03c4\u03b9\u03ba\u03cc \u03bb\u03cc\u03b3\u03bf.</li></ul>\", \"text\": \"\u0397 '\u03c7\u03c1\u03c5\u03c3\u03ae' \u03b3\u03bb\u03ce\u03c3\u03c3\u03b1 \u03c4\u03bf\u03c5 \u0399\u03c9\u03ac\u03bd\u03bd\u03b7 \u03ba\u03b1\u03b8\u03b9\u03c3\u03c4\u03ac \u03c4\u03bf\u03bd \u03a0\u03b1\u03cd\u03bb\u03bf \u03ba\u03b1\u03c4\u03b1\u03bd\u03bf\u03b7\u03c4\u03cc \u03c3\u03b5 \u03bc\u03b9\u03b1 \u03c7\u03c1\u03b9\u03c3\u03c4\u03b9\u03b1\u03bd\u03b9\u03ba\u03ae \u03ba\u03bf\u03b9\u03bd\u03c9\u03bd\u03af\u03b1.\", \"stickies\": [\"\u03a3\u03b7\u03bc\u03b1\u03bd\u03c4\u03b9\u03ba\u03cc: \u039f \u03a7\u03c1\u03c5\u03c3\u03cc\u03c3\u03c4\u03bf\u03bc\u03bf\u03c2 \u03b5\u03c6\u03b1\u03c1\u03bc\u03cc\u03b6\u03b5\u03b9 \u03c4\u03bf\u03bd \u03a0\u03b1\u03cd\u03bb\u03bf \u03c3\u03b5 \u03ba\u03bf\u03b9\u03bd\u03c9\u03bd\u03b9\u03ba\u03ad\u03c2 \u03ba\u03c1\u03af\u03c3\u03b5\u03b9\u03c2.\"], \"media\": {\"slides\": [{\"id\": \"slide_1\", \"label\": \"\u03a0\u03b1\u03cd\u03bb\u03bf\u03c2 & \u03a7\u03c1\u03c5\u03c3\u03cc\u03c3\u03c4\u03bf\u03bc\u03bf\u03c2\", \"url\": \"https://example.com/icon.jpg\", \"notes\": \"\u0397 \u03c0\u03bd\u03b5\u03c5\u03bc\u03b1\u03c4\u03b9\u03ba\u03ae \u03c3\u03cd\u03bd\u03b4\u03b5\u03c3\u03b7.\"}]}}]}}}]\n");
-  const BOOTSTRAP_ACTIVE_ID = JSON.parse("20260623_222132_");
-  const BOOTSTRAP_ACTIVE_TITLE = JSON.parse("\u039f \u0391\u03c0\u03cc\u03c3\u03c4\u03bf\u03bb\u03bf\u03c2 \u03c4\u03c9\u03bd \u0395\u03b8\u03bd\u03ce\u03bd \u03ba\u03b1\u03b9 \u03c4\u03bf \u03a3\u03c4\u03cc\u03bc\u03b1 \u03c4\u03b7\u03c2 \u0395\u03ba\u03ba\u03bb\u03b7\u03c3\u03af\u03b1\u03c2");
-  const BOOTSTRAP_ACTIVE_DATE  = JSON.parse("2026-06-23T19:25:29Z");
-  const GENERATED_AT = "2026-06-23T19:25:30Z";
-
+  const BOOTSTRAP_SCENARIOS = [{"id": "20260624_125050_", "title": "Ο Απόστολος των Εθνών και το Στόμα της Εκκλησίας", "type": "theological_concept", "status": "draft", "updatedAt": "2026-06-24", "tags": [], "source": {"kind": "file", "notes": ""}, "links": [], "lesson_dir": "/Users/dimitriosporpatonelis/sacred-blueprint/lessons/20260624_125050_", "appOutputs": {"timeline": [{"id": 0, "year": "περ. 50-67 μ.Χ.", "title": "Η Θεμελίωση μέσα στο Αίμα", "desc": "Ο Απ. Παύλος συγγράφει τις Επιστολές (Ρωμ. 13, Φιλ. 2) και αντιμετωπίζει τους ειδωλολατρικούς διωγμούς.", "img": "", "location": "Ρώμη", "lat": 0, "lng": 0, "zoom": 6, "slides": "https://docs.google.com/presentation/d/paul_era"}, {"id": 1, "year": "387 μ.Χ.", "title": "Η Κρίση των Ανδριάντων", "desc": "Ο Ι. Χρυσόστομος ερμηνεύει τον Παύλο στην Αντιόχεια για να αποτρέψει την αυτοκρατορική οργή του Θεοδοσίου.", "img": "", "location": "Αντιόχεια", "lat": 0, "lng": 0, "zoom": 6, "slides": "https://docs.google.com/presentation/d/paul_era"}, {"id": 2, "year": "398-404 μ.Χ.", "title": "Η Παρρησία κατά της Αυλής", "desc": "Ο Χρυσόστομος στην Κωνσταντινούπολη ελέγχει την ηθική έκπτωση της αυλής του Αρκαδίου και της Ευδοξίας.", "img": "", "location": "Κωνσταντινούπολη", "lat": 0, "lng": 0, "zoom": 6, "slides": "https://docs.google.com/presentation/d/paul_era"}], "investigation": {"topic": "Η Εξουσία: Όργανο Τάξης ή Πειρασμός Σκοπιμότητας;", "clues": [{"title": "Ρωμαίους 13", "description": "Η διδασκαλία ότι 'ουκ έστιν εξουσία ει μη υπό Θεού' για τη διασφάλιση της ευταξίας.", "type": "evidence"}, {"title": "Οι Ιμαντώσεις", "description": "Η παρομοίωση της εξουσίας με τα στηρίγματα που κρατούν όρθια την οικία της κοινωνίας.", "type": "concept"}, {"title": "Ύπουλος Διωγμός", "description": "Η παρέμβαση των χριστιανών αυτοκρατόρων στο δόγμα ως νέα μορφή δίωξης.", "type": "argument"}, {"title": "Παιδαγωγικός Φόβος", "description": "Η χρήση της κρατικής ισχύος ως μέσο πνευματικής εγρήγορσης των πιστών.", "type": "concept"}]}, "history3d": {"characters": [{"id": "char_paul", "name": "Απ. Παύλος", "role": "Απόστολος", "description": "Ο κήρυκας της 'μωρίας του Σταυρού' που αντιμετώπισε το θηρίο των διωγμών.", "position_x": 10, "position_y": 0, "position_z": 5, "image": "https://i.ibb.co/q3Ty33Vq/The-Sacred-Blueprint-page-0005.jpg"}, {"id": "char_john", "name": "Ι. Χρυσόστομος", "role": "Ερμηνευτής / Πατήρ", "description": "Ο 'Νέος Παύλος' που μετέτρεψε τη ρητορική σε όπλο κατά της αυτοκρατορικής αδικίας.", "position_x": -10, "position_y": 0, "position_z": 5, "image": "https://i.ibb.co/twQyyfQP/The-Sacred-Blueprint-page-0011.jpg"}], "dialogs": [], "facts": [{"id": "fact_1", "title": "Ρητορική ως Όπλο", "content": "Η χρυσή γλώσσα του Ιωάννη έδωσε φωνή στον Παύλο μέσα στις πολύβουες πόλεις.", "era": "4ος αιώνας"}, {"id": "fact_2", "title": "Διαφορά Πλαισίου", "content": "Ο Παύλος κηρύττει για να επιβιώσει η πίστη, ο Χρυσόστομος για να μην αλλοιωθεί από την εξουσία.", "era": "Διαχρονικό"}], "screens": {"title": "Από τον Άρειο Πάγο στο Παλάτι", "background": "bg-empire.jpg"}}, "mindpalace": {"case_id": "", "title": "Ο Απόστολος των Εθνών και το Στόμα της Εκκλησίας", "investigation_board": {"topic": "Η Εξουσία: Όργανο Τάξης ή Πειρασμός Σκοπιμότητας;", "clues": [{"id": "c1", "title": "Ρωμαίους 13", "description": "Η διδασκαλία ότι 'ουκ έστιν εξουσία ει μη υπό Θεού' για τη διασφάλιση της ευταξίας.", "type": "evidence"}, {"id": "c2", "title": "Οι Ιμαντώσεις", "description": "Η παρομοίωση της εξουσίας με τα στηρίγματα που κρατούν όρθια την οικία της κοινωνίας.", "type": "concept"}, {"id": "c3", "title": "Ύπουλος Διωγμός", "description": "Η παρέμβαση των χριστιανών αυτοκρατόρων στο δόγμα ως νέα μορφή δίωξης.", "type": "argument"}, {"id": "c4", "title": "Παιδαγωγικός Φόβος", "description": "Η χρήση της κρατικής ισχύος ως μέσο πνευματικής εγρήγορσης των πιστών.", "type": "concept"}], "connections": [{"from": "c1", "to": "c2", "type": "development", "description": "Ο Χρυσόστομος μετατρέπει το αποστολικό ρητό σε κοινωνική αρχιτεκτονική."}, {"from": "c3", "to": "c4", "type": "conflict", "description": "Η σταθερότητα της αυτοκρατορίας γίνεται παγίδα πολιτικής σκοπιμότητας."}]}, "mind_palace": {"case_id": "power-and-kenosis", "method": "comparative_hermeneutics", "status": "complete", "figures": [{"name": "Απ. Παύλος", "work": "Φιλιππησίους 2 (Κένωση)", "era": "1ος αι.", "image": "https://i.ibb.co/q3Ty33Vq/The-Sacred-Blueprint-page-0005.jpg"}, {"name": "Ι. Χρυσόστομος", "work": "Λόγοι περί Ανδριάντων", "era": "4ος-5ος αι.", "image": "https://i.ibb.co/pvGvV04f/The-Sacred-Blueprint-page-0010.jpg"}], "concepts": {"core": "Η Κένωση ως Απάντηση στην Κοσμική Ισχύ"}, "clues": [{"id": "mp1", "title": "Πραγματική Αυθεντία", "content": "Η σωτηρία βρίσκεται στα 'πράγματα' της μετοχής και όχι στα 'ρήματα' των διαταγμάτων.", "source": "Χρυσόστομος", "type": "argument", "difficulty": 3}], "rooms": [{"id": "r1", "name": "Η Αίθουσα της Πολιτείας", "theme": "basilica", "unlock_requirements": ["mp1"], "central_question": "Καταλύει ο Χριστιανισμός την κοινωνία;", "background": "https://i.ibb.co/LDN0sWGp/The-Sacred-Blueprint-page-0002.jpg"}], "dialogues": [{"room_id": "r1", "greeting": "Παύλος & Χρυσόστομος", "questions": ["Πώς ορίζεται η εξουσία;"], "suggested_answers": ["Ως όργανο αγαθότητας"], "revelation": "Ο χριστιανισμός αγιάζει την κοινωνία μέσω της ευταξίας."}]}}, "unreal": {"id": "paul_chrysostom_summit", "version": "1.0", "characters": {"paul": {"displayName": "Απ. Παύλος", "shortName": "Paul", "color": "#1a4a8b"}, "chrysostom": {"displayName": "Ι. Χρυσόστομος", "shortName": "Chrys", "color": "#c4862a"}}, "acts": [{"id": "act_authority", "title": "Η Εξουσία ως Όργανο Τάξης", "type": "cinematic", "dialogues": [{"id": "d1", "speaker": "paul", "text": "Έγραψα ότι ουκ έστιν εξουσία ει μη υπό Θεού για να δείξω ότι δεν είμαστε επαναστάτες."}, {"id": "d2", "speaker": "chrysostom", "text": "Και εγώ χρησιμοποίησα τον λόγο σου για να δείξω ότι η εξουσία είναι οι ιμαντώσεις που κρατούν την οικία όρθια."}]}, {"id": "act_kenosis", "title": "Η Κένωση και η Αυλή", "type": "theological_debate", "dialogues": [{"id": "d3", "speaker": "paul", "text": "Η κένωση του Λόγου είναι το φρόνημα που πρέπει να έχετε, απορρίπτοντας κάθε δόξα."}, {"id": "d4", "speaker": "chrysostom", "text": "Αυτός ο ύμνος με στήριξε όταν η αυλή προσπαθούσε να επιβάλει τη θέλησή της στην πίστη."}]}]}, "notebook": {"title": "Σημειώσεις: Απόστολος και Ερμηνευτής", "chapters": [{"index": 1, "title": "Η Ρητορική ως Όπλο", "html": "<ul><li><strong>Θέμα:</strong> Η μετατροπή της 'μωρίας του Σταυρού' σε επιτακτικό λόγο.</li></ul>", "text": "Η 'χρυσή' γλώσσα του Ιωάννη καθιστά τον Παύλο κατανοητό σε μια χριστιανική κοινωνία.", "stickies": ["Σημαντικό: Ο Χρυσόστομος εφαρμόζει τον Παύλο σε κοινωνικές κρίσεις."], "media": {"slides": [{"id": "slide_1", "label": "Παύλος & Χρυσόστομος", "url": "https://example.com/icon.jpg", "notes": "Η πνευματική σύνδεση."}]}}]}}}, {"id": "20260623_180420_", "title": "Παύλος & Χρυσόστομος (Εξουσία και Πίστη)", "type": "theological_concept", "status": "draft", "updatedAt": "2026-06-23", "tags": [], "source": {"kind": "file", "notes": ""}, "links": [], "lesson_dir": "/Users/dimitriosporpatonelis/sacred-blueprint/lessons/20260623_180420_", "appOutputs": {"timeline": [{"id": 0, "year": "περ. 50-67 μ.Χ.", "title": "Η Θεμελίωση μέσα στο Αίμα", "desc": "Ο Απ. Παύλος συγγράφει τις Επιστολές (Ρωμ. 13, Φιλ. 2) και αντιμετωπίζει τους ειδωλολατρικούς διωγμούς.", "img": "", "location": "Ρώμη", "lat": 0, "lng": 0, "zoom": 6, "slides": "https://docs.google.com/presentation/d/paul_era"}, {"id": 1, "year": "387 μ.Χ.", "title": "Η Κρίση των Ανδριάντων", "desc": "Ο Ι. Χρυσόστομος ερμηνεύει τον Παύλο στην Αντιόχεια για να αποτρέψει την αυτοκρατορική οργή του Θεοδοσίου.", "img": "", "location": "Αντιόχεια", "lat": 0, "lng": 0, "zoom": 6, "slides": "https://docs.google.com/presentation/d/paul_era"}, {"id": 2, "year": "398-404 μ.Χ.", "title": "Η Παρρησία κατά της Αυλής", "desc": "Ο Χρυσόστομος στην Κωνσταντινούπολη ελέγχει την ηθική έκπτωση της αυλής του Αρκαδίου και της Ευδοξίας.", "img": "", "location": "Κωνσταντινούπολη", "lat": 0, "lng": 0, "zoom": 6, "slides": "https://docs.google.com/presentation/d/paul_era"}], "investigation": {"topic": "Η Εξουσία: Όργανο Τάξης ή Πειρασμός Σκοπιμότητας;", "clues": [{"title": "Ρωμαίους 13", "description": "Η διδασκαλία ότι 'ουκ έστιν εξουσία ει μη υπό Θεού' για τη διασφάλιση της ευταξίας.", "type": "evidence"}, {"title": "Οι Ιμαντώσεις", "description": "Η παρομοίωση της εξουσίας με τα στηρίγματα που κρατούν όρθια την οικία της κοινωνίας.", "type": "concept"}, {"title": "Ύπουλος Διωγμός", "description": "Η παρέμβαση των χριστιανών αυτοκρατόρων στο δόγμα ως νέα μορφή δίωξης.", "type": "argument"}, {"title": "Παιδαγωγικός Φόβος", "description": "Η χρήση της κρατικής ισχύος ως μέσο πνευματικής εγρήγορσης των πιστών.", "type": "concept"}]}, "history3d": {"characters": [{"id": "char_paul", "name": "Απ. Παύλος", "role": "Απόστολος", "description": "Ο κήρυκας της 'μωρίας του Σταυρού' που αντιμετώπισε το θηρίο των διωγμών.", "position_x": 10, "position_y": 0, "position_z": 5, "image": "https://i.ibb.co/q3Ty33Vq/The-Sacred-Blueprint-page-0005.jpg"}, {"id": "char_john", "name": "Ι. Χρυσόστομος", "role": "Ερμηνευτής / Πατήρ", "description": "Ο 'Νέος Παύλος' που μετέτρεψε τη ρητορική σε όπλο κατά της αυτοκρατορικής αδικίας.", "position_x": -10, "position_y": 0, "position_z": 5, "image": "https://i.ibb.co/twQyyfQP/The-Sacred-Blueprint-page-0011.jpg"}], "dialogs": [], "facts": [{"id": "fact_1", "title": "Ρητορική ως Όπλο", "content": "Η χρυσή γλώσσα του Ιωάννη έδωσε φωνή στον Παύλο μέσα στις πολύβουες πόλεις.", "era": "4ος αιώνας"}, {"id": "fact_2", "title": "Διαφορά Πλαισίου", "content": "Ο Παύλος κηρύττει για να επιβιώσει η πίστη, ο Χρυσόστομος για να μην αλλοιωθεί από την εξουσία.", "era": "Διαχρονικό"}], "screens": {"title": "Από τον Άρειο Πάγο στο Παλάτι", "background": "bg-empire.jpg"}}, "mindpalace": {"case_id": "", "title": "Ο Απόστολος των Εθνών και το Στόμα της Εκκλησίας", "investigation_board": {"topic": "Η Εξουσία: Όργανο Τάξης ή Πειρασμός Σκοπιμότητας;", "clues": [{"id": "c1", "title": "Ρωμαίους 13", "description": "Η διδασκαλία ότι 'ουκ έστιν εξουσία ει μη υπό Θεού' για τη διασφάλιση της ευταξίας.", "type": "evidence"}, {"id": "c2", "title": "Οι Ιμαντώσεις", "description": "Η παρομοίωση της εξουσίας με τα στηρίγματα που κρατούν όρθια την οικία της κοινωνίας.", "type": "concept"}, {"id": "c3", "title": "Ύπουλος Διωγμός", "description": "Η παρέμβαση των χριστιανών αυτοκρατόρων στο δόγμα ως νέα μορφή δίωξης.", "type": "argument"}, {"id": "c4", "title": "Παιδαγωγικός Φόβος", "description": "Η χρήση της κρατικής ισχύος ως μέσο πνευματικής εγρήγορσης των πιστών.", "type": "concept"}], "connections": [{"from": "c1", "to": "c2", "type": "development", "description": "Ο Χρυσόστομος μετατρέπει το αποστολικό ρητό σε κοινωνική αρχιτεκτονική."}, {"from": "c3", "to": "c4", "type": "conflict", "description": "Η σταθερότητα της αυτοκρατορίας γίνεται παγίδα πολιτικής σκοπιμότητας."}]}, "mind_palace": {"case_id": "power-and-kenosis", "method": "comparative_hermeneutics", "status": "complete", "figures": [{"name": "Απ. Παύλος", "work": "Φιλιππησίους 2 (Κένωση)", "era": "1ος αι.", "image": "https://i.ibb.co/q3Ty33Vq/The-Sacred-Blueprint-page-0005.jpg"}, {"name": "Ι. Χρυσόστομος", "work": "Λόγοι περί Ανδριάντων", "era": "4ος-5ος αι.", "image": "https://i.ibb.co/pvGvV04f/The-Sacred-Blueprint-page-0010.jpg"}], "concepts": {"core": "Η Κένωση ως Απάντηση στην Κοσμική Ισχύ"}, "clues": [{"id": "mp1", "title": "Πραγματική Αυθεντία", "content": "Η σωτηρία βρίσκεται στα 'πράγματα' της μετοχής και όχι στα 'ρήματα' των διαταγμάτων.", "source": "Χρυσόστομος", "type": "argument", "difficulty": 3}], "rooms": [{"id": "r1", "name": "Η Αίθουσα της Πολιτείας", "theme": "basilica", "unlock_requirements": ["mp1"], "central_question": "Καταλύει ο Χριστιανισμός την κοινωνία;", "background": "https://i.ibb.co/LDN0sWGp/The-Sacred-Blueprint-page-0002.jpg"}], "dialogues": [{"room_id": "r1", "greeting": "Παύλος & Χρυσόστομος", "questions": ["Πώς ορίζεται η εξουσία;"], "suggested_answers": ["Ως όργανο αγαθότητας"], "revelation": "Ο χριστιανισμός αγιάζει την κοινωνία μέσω της ευταξίας."}]}}, "unreal": {"id": "paul_chrysostom_summit", "version": "1.0", "characters": {"paul": {"displayName": "Απ. Παύλος", "shortName": "Paul", "color": "#1a4a8b"}, "chrysostom": {"displayName": "Ι. Χρυσόστομος", "shortName": "Chrys", "color": "#c4862a"}}, "acts": [{"id": "act_authority", "title": "Η Εξουσία ως Όργανο Τάξης", "type": "cinematic", "dialogues": [{"id": "d1", "speaker": "paul", "text": "Έγραψα ότι ουκ έστιν εξουσία ει μη υπό Θεού για να δείξω ότι δεν είμαστε επαναστάτες."}, {"id": "d2", "speaker": "chrysostom", "text": "Και εγώ χρησιμοποίησα τον λόγο σου για να δείξω ότι η εξουσία είναι οι ιμαντώσεις που κρατούν την οικία όρθια."}]}, {"id": "act_kenosis", "title": "Η Κένωση και η Αυλή", "type": "theological_debate", "dialogues": [{"id": "d3", "speaker": "paul", "text": "Η κένωση του Λόγου είναι το φρόνημα που πρέπει να έχετε, απορρίπτοντας κάθε δόξα."}, {"id": "d4", "speaker": "chrysostom", "text": "Αυτός ο ύμνος με στήριξε όταν η αυλή προσπαθούσε να επιβάλει τη θέλησή της στην πίστη."}]}]}, "notebook": {"title": "Σημειώσεις: Απόστολος και Ερμηνευτής", "chapters": [{"index": 1, "title": "Η Ρητορική ως Όπλο", "html": "<ul><li><strong>Θέμα:</strong> Η μετατροπή της 'μωρίας του Σταυρού' σε επιτακτικό λόγο.</li></ul>", "text": "Η 'χρυσή' γλώσσα του Ιωάννη καθιστά τον Παύλο κατανοητό σε μια χριστιανική κοινωνία.", "stickies": ["Σημαντικό: Ο Χρυσόστομος εφαρμόζει τον Παύλο σε κοινωνικές κρίσεις."], "media": {"slides": [{"id": "slide_1", "label": "Παύλος & Χρυσόστομος", "url": "https://example.com/icon.jpg", "notes": "Η πνευματική σύνδεση."}]}}]}}}];
+  const BOOTSTRAP_ACTIVE_ID    = "20260624_125050_";
+  const BOOTSTRAP_ACTIVE_TITLE = "\u039f \u0391\u03c0\u03cc\u03c3\u03c4\u03bf\u03bb\u03bf\u03c2 \u03c4\u03c9\u03bd \u0395\u03b8\u03bd\u03ce\u03bd \u03ba\u03b1\u03b9 \u03c4\u03bf \u03a3\u03c4\u03cc\u03bc\u03b1 \u03c4\u03b7\u03c2 \u0395\u03ba\u03ba\u03bb\u03b7\u03c3\u03af\u03b1\u03c2";
+  const BOOTSTRAP_ACTIVE_DATE  = "2026-06-24T09:54:52Z";
+  const GENERATED_AT = "2026-06-24T09:54:52Z";
   const storageKey = 'sb-orchestrator-v4';
 
   const APPS = [
@@ -327,23 +238,22 @@
   ];
 
   const SCHEMAS = {
-    timeline:      { root:'array',  summary:'Array χρονολογικών εγγραφών.',        fields:['year','title','desc','location','lat','lng'] },
-    investigation: { root:'object', summary:'Topic + clues (evidence/suspect/note).', fields:['topic','clues[].title','clues[].type'] },
-    history3d:     { root:'object', summary:'Characters, dialogs, facts, screens.',  fields:['characters[]','dialogs[]','facts[]','screens'] },
-    mindpalace:    { root:'object', summary:'Investigation Board + Mind Palace.',    fields:['case_id','investigation_board','mind_palace'] },
-    anchor:        { root:'object', summary:'Metadata + anchors με 3 layers.',       fields:['metadata','anchors[].phrase','anchors[].layers'] },
-    books:         { root:'object', summary:'Σελίδες βιβλίου.',                      fields:['pages[].number','pages[].type','pages[].title'] },
-    unreal:        { root:'object', summary:'UE5 scenario (3 αρχεία).',              fields:['id','version','characters','acts[].dialogues'] },
-    notebook:      { root:'object', summary:'Notebook chapters με media skeleton.', fields:['title','chapters[].html','chapters[].media'] },
-    personalpage:  { root:'object', summary:'Hub chapters με παιδαγωγικά notes.',   fields:['title','chapters[].html','chapters[].stickies'] }
+    timeline:      { root:'array',  summary:'Array χρονολογικών εγγραφών.',           fields:['year','title','desc','location','lat','lng'] },
+    investigation: { root:'object', summary:'Topic + clues (evidence/suspect/note).',  fields:['topic','clues[].title','clues[].type'] },
+    history3d:     { root:'object', summary:'Characters, dialogs, facts, screens.',    fields:['characters[]','dialogs[]','facts[]','screens'] },
+    mindpalace:    { root:'object', summary:'Investigation Board + Mind Palace.',      fields:['case_id','investigation_board','mind_palace'] },
+    anchor:        { root:'object', summary:'Metadata + anchors με 3 layers.',         fields:['metadata','anchors[].phrase','anchors[].layers'] },
+    books:         { root:'object', summary:'Σελίδες βιβλίου.',                        fields:['pages[].number','pages[].type','pages[].title'] },
+    unreal:        { root:'object', summary:'UE5 scenario (3 αρχεία).',                fields:['id','version','characters','acts[].dialogues'] },
+    notebook:      { root:'object', summary:'Notebook chapters με media skeleton.',   fields:['title','chapters[].html','chapters[].media'] },
+    personalpage:  { root:'object', summary:'Hub chapters με παιδαγωγικά notes.',     fields:['title','chapters[].html','chapters[].stickies'] }
   };
 
-  // ── State ────────────────────────────────────────────
   function loadSavedMedia() {
     try { return JSON.parse(localStorage.getItem(storageKey + '-media') || 'null'); } catch { return null; }
   }
-  function saveMedia(library) {
-    try { localStorage.setItem(storageKey + '-media', JSON.stringify(library)); } catch {}
+  function saveMedia(lib) {
+    try { localStorage.setItem(storageKey + '-media', JSON.stringify(lib)); } catch {}
   }
 
   const data = {
@@ -351,139 +261,119 @@
     mediaLibrary: loadSavedMedia() || { meta: { last_updated: today(), source: 'Local' }, media: [] }
   };
 
-  let selectedId  = BOOTSTRAP_ACTIVE_ID || (data.scenarios[0]?.id);
-  let selectedApp = 'unreal';
+  let selectedId  = (BOOTSTRAP_ACTIVE_ID && BOOTSTRAP_ACTIVE_ID !== '') ? BOOTSTRAP_ACTIVE_ID : (data.scenarios[0] && data.scenarios[0].id);
+  let selectedApp = 'timeline';
   let editingMediaId = null;
 
-  // ── DOM ──────────────────────────────────────────────
   const el = id => document.getElementById(id);
+  function today() { return new Date().toISOString().slice(0,10); }
+  function esc(s)  { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-  // ── Utils ────────────────────────────────────────────
-  function today() { return new Date().toISOString().slice(0, 10); }
-  function esc(s)  { return String(s ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;'); }
-  function escA(s) { return esc(s).replaceAll('`','&#096;'); }
+  function getScenario() { return data.scenarios.find(s => s.id === selectedId) || data.scenarios[0]; }
+  function getOutput()   { const s = getScenario(); if (!s) return null; return (s.appOutputs || {})[selectedApp] || null; }
+  function getMediaById(id) { return (data.mediaLibrary && data.mediaLibrary.media || []).find(i => i.media_id === id); }
 
-  function getScenario()   { return data.scenarios.find(s => s.id === selectedId) || data.scenarios[0]; }
-  function getOutput()     {
-    const s = getScenario();
-    if (!s) return null;
-    return (s.appOutputs || {})[selectedApp] || null;
-  }
-  function getMediaById(id){ return (data.mediaLibrary?.media || []).find(i => i.media_id === id); }
-
-  // ── Active banner ────────────────────────────────────
   function renderActiveBanner() {
     const banner = el('activeBanner');
     if (!banner) return;
-    if (BOOTSTRAP_ACTIVE_ID) {
+    if (BOOTSTRAP_ACTIVE_ID && BOOTSTRAP_ACTIVE_ID !== '') {
       banner.style.display = 'flex';
-      const t = el('activeBannerTitle');
-      const d = el('activeBannerDate');
+      const t = el('activeBannerTitle'); const d = el('activeBannerDate');
       if (t) t.textContent = BOOTSTRAP_ACTIVE_TITLE;
       if (d) d.textContent = BOOTSTRAP_ACTIVE_DATE ? '· ' + BOOTSTRAP_ACTIVE_DATE.slice(0,10) : '';
     }
   }
 
-  // ── Stats ────────────────────────────────────────────
   function renderStats() {
-    const outputs = data.scenarios.reduce((n, s) => n + Object.keys(s.appOutputs || {}).length, 0);
-    const media   = (data.mediaLibrary?.media || []).filter(i => i.status === 'active').length;
+    const outputs = data.scenarios.reduce((n,s) => n + Object.keys(s.appOutputs||{}).length, 0);
+    const media   = (data.mediaLibrary && data.mediaLibrary.media || []).filter(i => i.status === 'active').length;
     const statsEl = el('stats');
-    if (statsEl) statsEl.innerHTML = `
-      <div class="stat"><strong>${data.scenarios.length}</strong><span>Μαθήματα</span></div>
-      <div class="stat"><strong>${outputs}</strong><span>Modules</span></div>
-      <div class="stat"><strong>${media}</strong><span>Media</span></div>
-    `;
+    if (statsEl) statsEl.innerHTML =
+      '<div class="stat"><strong>' + data.scenarios.length + '</strong><span>Μαθήματα</span></div>' +
+      '<div class="stat"><strong>' + outputs + '</strong><span>Modules</span></div>' +
+      '<div class="stat"><strong>' + media + '</strong><span>Media</span></div>';
   }
 
-  // ── Scenario list ─────────────────────────────────────
   function renderScenarioList() {
-    const q = (el('searchInput')?.value || '').toLowerCase();
+    const q = (el('searchInput') && el('searchInput').value || '').toLowerCase();
     const list = el('scenarioList');
     if (!list) return;
     const filtered = data.scenarios.filter(s =>
-      [s.title, s.type, s.status, ...(s.tags||[])].join(' ').toLowerCase().includes(q)
+      [s.title, s.type, s.status].concat(s.tags||[]).join(' ').toLowerCase().includes(q)
     );
-    list.innerHTML = filtered.map(s => `
-      <button class="scenario-item ${s.id === selectedId ? 'selected' : ''} ${s.id === BOOTSTRAP_ACTIVE_ID ? 'is-active-lesson' : ''}"
-              data-id="${escA(s.id)}" type="button">
-        <strong>${s.id === BOOTSTRAP_ACTIVE_ID ? '<span class="active-dot"></span>' : ''}${esc(s.title)}</strong>
-        <div class="scenario-meta">
-          <span class="badge">${esc(s.status)}</span>
-          <span>${Object.keys(s.appOutputs||{}).length} modules</span>
-          <span>${esc(s.updatedAt||'')}</span>
-        </div>
-      </button>
-    `).join('');
+    list.innerHTML = filtered.map(s =>
+      '<button class="scenario-item' +
+        (s.id === selectedId ? ' selected' : '') +
+        (s.id === BOOTSTRAP_ACTIVE_ID ? ' is-active-lesson' : '') +
+        '" data-id="' + esc(s.id) + '" type="button">' +
+        '<strong>' + (s.id === BOOTSTRAP_ACTIVE_ID ? '<span class="active-dot"></span>' : '') + esc(s.title) + '</strong>' +
+        '<div class="scenario-meta">' +
+          '<span class="badge">' + esc(s.status) + '</span>' +
+          '<span>' + Object.keys(s.appOutputs||{}).length + ' modules</span>' +
+          '<span>' + esc(s.updatedAt||'') + '</span>' +
+        '</div></button>'
+    ).join('');
   }
 
-  // ── Detail ────────────────────────────────────────────
   function renderDetail() {
     const s = getScenario();
     if (!s) return;
-    if (!SCHEMAS[selectedApp]) selectedApp = 'unreal';
-
-    if (el('selectedType'))   el('selectedType').textContent   = s.type || 'Theology';
-    if (el('selectedTitle'))  el('selectedTitle').textContent  = s.title;
+    if (!SCHEMAS[selectedApp]) selectedApp = 'timeline';
+    if (el('selectedType'))   el('selectedType').textContent  = s.type || 'Theology';
+    if (el('selectedTitle'))  el('selectedTitle').textContent = s.title;
     if (el('selectedStatus')) {
       el('selectedStatus').textContent = s.status;
-      el('selectedStatus').className   = `status-pill status-${s.status}`;
+      el('selectedStatus').className   = 'status-pill status-' + s.status;
     }
-    if (el('updatedAt')) el('updatedAt').textContent = s.updatedAt ? `Updated ${s.updatedAt}` : '';
-
-    renderAppTabs(s);
-    renderSchemaSummary();
-    renderLinks(s);
-    renderMediaSummary();
-    renderJsonEditor();
-    renderDerivedFiles();
+    if (el('updatedAt')) el('updatedAt').textContent = s.updatedAt ? 'Updated ' + s.updatedAt : '';
+    renderAppTabs(s); renderSchemaSummary(); renderLinks(s);
+    renderMediaSummary(); renderJsonEditor(); renderDerivedFiles();
   }
 
   function renderAppTabs(s) {
-    const outputs = new Set(Object.keys(s.appOutputs || {}));
+    const outputs = new Set(Object.keys(s.appOutputs||{}));
     const tabs = el('appTabs');
     if (!tabs) return;
-    tabs.innerHTML = APPS.map(a => `
-      <button class="app-tab ${a.id === selectedApp ? 'active' : ''} ${outputs.has(a.id) ? 'has-output' : ''}"
-              data-app="${a.id}" type="button">
-        <span>${a.icon}</span> ${a.name}
-      </button>
-    `).join('');
+    tabs.innerHTML = APPS.map(a =>
+      '<button class="app-tab' +
+        (a.id === selectedApp ? ' active' : '') +
+        (outputs.has(a.id) ? ' has-output' : '') +
+        '" data-app="' + a.id + '" type="button">' +
+        '<span>' + a.icon + '</span> ' + a.name + '</button>'
+    ).join('');
   }
 
   function renderSchemaSummary() {
-    const app    = APPS.find(a => a.id === selectedApp);
+    const app = APPS.find(a => a.id === selectedApp);
     const schema = SCHEMAS[selectedApp];
-    const card   = el('schemaSummary');
+    const card = el('schemaSummary');
     if (!card || !app || !schema) return;
-    card.innerHTML = `
-      <div><strong>${esc(app.name)}</strong> <span class="badge">${schema.root}</span></div>
-      <p>${esc(schema.summary)}</p>
-      <div class="field-list">${schema.fields.map(f => `<code>${esc(f)}</code>`).join('')}</div>
-    `;
+    card.innerHTML =
+      '<div><strong>' + esc(app.name) + '</strong> <span class="badge">' + schema.root + '</span></div>' +
+      '<p>' + esc(schema.summary) + '</p>' +
+      '<div class="field-list">' + schema.fields.map(f => '<code>' + esc(f) + '</code>').join('') + '</div>';
   }
 
   function renderLinks(s) {
-    const app   = APPS.find(a => a.id === selectedApp);
-    const links = [...(s.links || [])];
-    if (app?.url) links.unshift({ label: app.name, kind: 'App', url: app.url });
+    const app = APPS.find(a => a.id === selectedApp);
+    const links = [].concat(s.links||[]);
+    if (app && app.url) links.unshift({ label: app.name, kind: 'App', url: app.url });
     const stack = el('projectLinks');
     if (!stack) return;
     stack.innerHTML = links.length
-      ? links.map(l => `<a class="resource-link" href="${escA(l.url)}" target="_blank" rel="noreferrer"><span>${esc(l.label)}</span><small>${esc(l.kind||'')}</small></a>`).join('')
+      ? links.map(l => '<a class="resource-link" href="' + esc(l.url) + '" target="_blank" rel="noreferrer"><span>' + esc(l.label) + '</span><small>' + esc(l.kind||'') + '</small></a>').join('')
       : '<p style="font-size:0.8rem;color:#94a3b8;">Δεν υπάρχουν σύνδεσμοι.</p>';
   }
 
   function renderMediaSummary() {
-    const active = (data.mediaLibrary?.media || []).filter(i => i.status === 'active').length;
-    if (el('riskLevel')) el('riskLevel').textContent = `${active} active`;
+    const active = (data.mediaLibrary && data.mediaLibrary.media || []).filter(i => i.status === 'active').length;
+    if (el('riskLevel')) el('riskLevel').textContent = active + ' active';
     const signals = el('learningSignals');
-    if (signals) signals.innerHTML = `
-      <div class="signal"><strong>Active media</strong><span>${active}</span></div>
-      <div class="signal"><strong>Source</strong><span>${esc(data.mediaLibrary?.meta?.source || 'Local')}</span></div>
-      <div class="signal"><strong>Updated</strong><span>${esc(data.mediaLibrary?.meta?.last_updated || '')}</span></div>
-      <div class="signal"><strong>Dashboard</strong><span>${GENERATED_AT.slice(0,10)}</span></div>
-    `;
+    if (signals) signals.innerHTML =
+      '<div class="signal"><strong>Active media</strong><span>' + active + '</span></div>' +
+      '<div class="signal"><strong>Source</strong><span>' + esc((data.mediaLibrary && data.mediaLibrary.meta && data.mediaLibrary.meta.source) || 'Local') + '</span></div>' +
+      '<div class="signal"><strong>Updated</strong><span>' + esc((data.mediaLibrary && data.mediaLibrary.meta && data.mediaLibrary.meta.last_updated) || '') + '</span></div>' +
+      '<div class="signal"><strong>Dashboard</strong><span>' + GENERATED_AT.slice(0,10) + '</span></div>';
   }
 
   function renderJsonEditor() {
@@ -500,96 +390,87 @@
     const stateEl = el('derivedState');
     if (!filesEl) return;
     if (!output) { filesEl.innerHTML = '<p style="font-size:0.8rem;color:#94a3b8">Χωρίς output.</p>'; return; }
-
     const files = selectedApp === 'unreal'
-      ? [
-          { name: `scenario_${output.id||'unreal'}.json`,  content: output },
-          { name: `assets_${output.id||'unreal'}.json`,    content: buildAssets(output) },
-          { name: `manifest_${output.id||'unreal'}.json`,  content: buildManifest(output) }
-        ]
-      : [{ name: `${selectedApp}_${today()}.json`, content: output }];
-
-    if (stateEl) stateEl.textContent = `${files.length} file${files.length > 1 ? 's' : ''}`;
-    filesEl.innerHTML = files.map(f => `
-      <div class="derived-file">
-        <div><strong>${esc(f.name)}</strong> <span class="badge">${Array.isArray(f.content)?'array':'object'}</span></div>
-        <button class="text-button" data-copy-file="${escA(f.name)}" type="button">Copy</button>
-      </div>
-    `).join('');
+      ? [{ name: 'scenario_' + (output.id||'unreal') + '.json', content: output },
+         { name: 'assets_'   + (output.id||'unreal') + '.json', content: buildAssets(output) },
+         { name: 'manifest_' + (output.id||'unreal') + '.json', content: buildManifest(output) }]
+      : [{ name: selectedApp + '_' + today() + '.json', content: output }];
+    if (stateEl) stateEl.textContent = files.length + ' file' + (files.length > 1 ? 's' : '');
+    filesEl.innerHTML = files.map(f =>
+      '<div class="derived-file">' +
+        '<div><strong>' + esc(f.name) + '</strong> <span class="badge">' + (Array.isArray(f.content)?'array':'object') + '</span></div>' +
+        '<button class="text-button" data-copy-file="' + esc(f.name) + '" type="button">Copy</button>' +
+      '</div>'
+    ).join('');
   }
 
-  // ── Builders ─────────────────────────────────────────
   function buildAssets(scenario) {
-    const assets = { _comment: `Assets for ${scenario.id}`, assets: {} };
-    (scenario.acts || []).forEach(act => {
-      (act.dialogues || []).forEach(d => {
+    const assets = { _comment: 'Assets for ' + scenario.id, assets: {} };
+    (scenario.acts||[]).forEach(act => {
+      (act.dialogues||[]).forEach(d => {
         const m = (d.audioUrl||'').match(/\{\{(\w+)\}\}/);
-        if (m) assets.assets[m[1]] = { type:'audio', label:`${d.speaker} — ${act.title}`, url:'', speaker:d.speaker, dialogueId:d.id };
+        if (m) assets.assets[m[1]] = { type:'audio', label: d.speaker + ' — ' + act.title, url:'', speaker:d.speaker, dialogueId:d.id };
       });
     });
     return assets;
   }
 
   function buildManifest(scenario) {
-    return { id:scenario.id, title:scenario.title, subtitle:scenario.subtitle||'', description:scenario.subtitle||'', scenarioFile:`scenarios/${scenario.id}/scenario.json`, characters:Object.keys(scenario.characters||{}), status:'draft' };
+    return { id:scenario.id, title:scenario.title, subtitle:scenario.subtitle||'',
+      description:scenario.subtitle||'', scenarioFile:'scenarios/' + scenario.id + '/scenario.json',
+      characters:Object.keys(scenario.characters||{}), status:'draft' };
   }
 
-  // ── Validation ────────────────────────────────────────
   function validateEditor() {
-    const editorEl = el('jsonEditor');
-    const stateEl  = el('jsonState');
+    const editorEl = el('jsonEditor'); const stateEl = el('jsonState');
     if (!editorEl || !stateEl) return { parsed: null };
     try {
       const parsed = JSON.parse(editorEl.value);
-      stateEl.textContent = 'Valid';
-      stateEl.style.background = '#86efac';
+      stateEl.textContent = 'Valid'; stateEl.style.background = '#86efac';
       return { parsed };
     } catch(e) {
-      stateEl.textContent = e.message.slice(0, 40);
-      stateEl.style.background = '#fca5a5';
+      stateEl.textContent = e.message.slice(0,40); stateEl.style.background = '#fca5a5';
       return { parsed: null };
     }
   }
 
-  // ── Media ─────────────────────────────────────────────
   function renderMediaTable() {
-    const q = (el('mediaSearchInput')?.value || '').toLowerCase();
-    const media = (data.mediaLibrary?.media || []);
-    const filtered = q ? media.filter(i => [i.media_id,i.type,i.title,...(i.tags||[]),...(i.app_context||[])].join(' ').toLowerCase().includes(q)) : media;
-    if (el('mediaStats')) el('mediaStats').textContent = `${media.length} media`;
+    const q = (el('mediaSearchInput') && el('mediaSearchInput').value || '').toLowerCase();
+    const media = (data.mediaLibrary && data.mediaLibrary.media || []);
+    const filtered = q ? media.filter(i => [i.media_id,i.type,i.title].concat(i.tags||[]).concat(i.app_context||[]).join(' ').toLowerCase().includes(q)) : media;
+    if (el('mediaStats')) el('mediaStats').textContent = media.length + ' media';
     const tbody = el('mediaTableBody');
     if (!tbody) return;
     tbody.innerHTML = filtered.length
-      ? filtered.map(i => `
-          <tr>
-            <td><code>${esc(i.media_id)}</code></td>
-            <td><span class="badge">${esc(i.type)}</span></td>
-            <td><strong>${esc(i.title)}</strong><small>${esc(i.date_added)} · ${esc(i.status)}</small></td>
-            <td>${(i.tags||[]).map(t=>`<span class="badge">${esc(t)}</span>`).join('')}</td>
-            <td>${(i.app_context||[]).map(a=>`<span class="badge">${esc(a)}</span>`).join('')}</td>
-            <td class="table-actions">
-              <button data-media-action="edit"   data-media-id="${escA(i.media_id)}" type="button">Edit</button>
-              <button data-media-action="copy"   data-media-id="${escA(i.media_id)}" type="button">URL</button>
-              <button data-media-action="delete" data-media-id="${escA(i.media_id)}" type="button">Del</button>
-            </td>
-          </tr>`).join('')
-      : `<tr><td colspan="6">Δεν βρέθηκαν media</td></tr>`;
+      ? filtered.map(i =>
+          '<tr><td><code>' + esc(i.media_id) + '</code></td>' +
+          '<td><span class="badge">' + esc(i.type) + '</span></td>' +
+          '<td><strong>' + esc(i.title) + '</strong><small>' + esc(i.date_added) + ' · ' + esc(i.status) + '</small></td>' +
+          '<td>' + (i.tags||[]).map(t => '<span class="badge">' + esc(t) + '</span>').join('') + '</td>' +
+          '<td>' + (i.app_context||[]).map(a => '<span class="badge">' + esc(a) + '</span>').join('') + '</td>' +
+          '<td class="table-actions">' +
+            '<button data-media-action="edit"   data-media-id="' + esc(i.media_id) + '" type="button">Edit</button>' +
+            '<button data-media-action="copy"   data-media-id="' + esc(i.media_id) + '" type="button">URL</button>' +
+            '<button data-media-action="delete" data-media-id="' + esc(i.media_id) + '" type="button">Del</button>' +
+          '</td></tr>'
+        ).join('')
+      : '<tr><td colspan="6">Δεν βρέθηκαν media</td></tr>';
   }
 
   function formToMediaItem() {
     return {
-      media_id:        el('mediaIdInput')?.value.trim()      || '',
-      type:            el('mediaTypeInput')?.value           || 'image',
-      title:           el('mediaTitleInput')?.value.trim()   || '',
-      url:             el('mediaUrlInput')?.value.trim()     || '',
-      source_platform: el('mediaSourceInput')?.value.trim() || '',
-      app_context:    (el('mediaContextInput')?.value||'').split(';').map(s=>s.trim()).filter(Boolean),
-      unit_id:         el('mediaUnitInput')?.value.trim()    || '',
-      tags:           (el('mediaTagsInput')?.value||'').split(',').map(s=>s.trim()).filter(Boolean),
-      language:        el('mediaLanguageInput')?.value       || 'el',
-      notes:           el('mediaNotesInput')?.value          || '',
-      date_added:      editingMediaId ? (getMediaById(editingMediaId)?.date_added || today()) : today(),
-      status:          el('mediaStatusInput')?.value         || 'active'
+      media_id:        (el('mediaIdInput')      && el('mediaIdInput').value.trim())      || '',
+      type:            (el('mediaTypeInput')     && el('mediaTypeInput').value)           || 'image',
+      title:           (el('mediaTitleInput')    && el('mediaTitleInput').value.trim())   || '',
+      url:             (el('mediaUrlInput')      && el('mediaUrlInput').value.trim())     || '',
+      source_platform: (el('mediaSourceInput')   && el('mediaSourceInput').value.trim())  || '',
+      app_context:    ((el('mediaContextInput')  && el('mediaContextInput').value)||'').split(';').map(s=>s.trim()).filter(Boolean),
+      unit_id:         (el('mediaUnitInput')     && el('mediaUnitInput').value.trim())    || '',
+      tags:           ((el('mediaTagsInput')     && el('mediaTagsInput').value)||'').split(',').map(s=>s.trim()).filter(Boolean),
+      language:        (el('mediaLanguageInput') && el('mediaLanguageInput').value)       || 'el',
+      notes:           (el('mediaNotesInput')    && el('mediaNotesInput').value)          || '',
+      date_added:      editingMediaId ? ((getMediaById(editingMediaId) && getMediaById(editingMediaId).date_added) || today()) : today(),
+      status:          (el('mediaStatusInput')   && el('mediaStatusInput').value)         || 'active'
     };
   }
 
@@ -597,45 +478,45 @@
     const item = formToMediaItem();
     if (!item.media_id || !item.title || !item.url) { setMediaStatus('Συμπλήρωσε ID, τίτλο και URL.','error'); return; }
     const media = data.mediaLibrary.media;
-    const idx   = media.findIndex(e => e.media_id === item.media_id);
-    if (idx >= 0 && editingMediaId !== item.media_id) { setMediaStatus(`ID ${item.media_id} υπάρχει.`,'error'); return; }
+    const idx = media.findIndex(e => e.media_id === item.media_id);
+    if (idx >= 0 && editingMediaId !== item.media_id) { setMediaStatus('ID ' + item.media_id + ' υπάρχει.','error'); return; }
     if (idx >= 0) media[idx] = item; else media.push(item);
     data.mediaLibrary.meta.last_updated = today();
     saveMedia(data.mediaLibrary);
-    clearMediaForm();
-    renderMediaTable();
-    renderStats();
-    setMediaStatus(`${idx>=0?'Ενημερώθηκε':'Προστέθηκε'}: ${item.media_id}`,'ok');
+    clearMediaForm(); renderMediaTable(); renderStats();
+    setMediaStatus((idx>=0?'Ενημερώθηκε':'Προστέθηκε') + ': ' + item.media_id, 'ok');
   }
 
   function editMedia(id) {
-    const i = getMediaById(id);
-    if (!i) return;
+    const i = getMediaById(id); if (!i) return;
     editingMediaId = id;
-    if (el('mediaEditState'))    el('mediaEditState').textContent = `Editing ${id}`;
-    if (el('mediaIdInput'))      el('mediaIdInput').value      = i.media_id;
-    if (el('mediaTitleInput'))   el('mediaTitleInput').value   = i.title;
-    if (el('mediaUrlInput'))     el('mediaUrlInput').value     = i.url;
-    if (el('mediaTypeInput'))    el('mediaTypeInput').value    = i.type;
-    if (el('mediaSourceInput'))  el('mediaSourceInput').value  = i.source_platform||'';
-    if (el('mediaContextInput')) el('mediaContextInput').value = (i.app_context||[]).join('; ');
-    if (el('mediaUnitInput'))    el('mediaUnitInput').value    = i.unit_id||'';
-    if (el('mediaTagsInput'))    el('mediaTagsInput').value    = (i.tags||[]).join(', ');
-    if (el('mediaLanguageInput'))el('mediaLanguageInput').value= i.language||'el';
-    if (el('mediaStatusInput'))  el('mediaStatusInput').value  = i.status||'active';
-    if (el('mediaNotesInput'))   el('mediaNotesInput').value   = i.notes||'';
-    if (el('saveMediaButton'))   el('saveMediaButton').textContent = 'Update';
+    if (el('mediaEditState'))    el('mediaEditState').textContent    = 'Editing ' + id;
+    if (el('mediaIdInput'))      el('mediaIdInput').value            = i.media_id;
+    if (el('mediaTitleInput'))   el('mediaTitleInput').value         = i.title;
+    if (el('mediaUrlInput'))     el('mediaUrlInput').value           = i.url;
+    if (el('mediaTypeInput'))    el('mediaTypeInput').value          = i.type;
+    if (el('mediaSourceInput'))  el('mediaSourceInput').value        = i.source_platform||'';
+    if (el('mediaContextInput')) el('mediaContextInput').value       = (i.app_context||[]).join('; ');
+    if (el('mediaUnitInput'))    el('mediaUnitInput').value          = i.unit_id||'';
+    if (el('mediaTagsInput'))    el('mediaTagsInput').value          = (i.tags||[]).join(', ');
+    if (el('mediaLanguageInput'))el('mediaLanguageInput').value      = i.language||'el';
+    if (el('mediaStatusInput'))  el('mediaStatusInput').value        = i.status||'active';
+    if (el('mediaNotesInput'))   el('mediaNotesInput').value         = i.notes||'';
+    if (el('saveMediaButton'))   el('saveMediaButton').textContent   = 'Update';
   }
 
   function clearMediaForm() {
     editingMediaId = null;
-    ['mediaIdInput','mediaTitleInput','mediaUrlInput','mediaSourceInput','mediaContextInput','mediaUnitInput','mediaTagsInput','mediaNotesInput'].forEach(id => { if(el(id)) el(id).value=''; });
-    if(el('mediaTypeInput'))    el('mediaTypeInput').value='auto';
-    if(el('mediaLanguageInput'))el('mediaLanguageInput').value='el';
-    if(el('mediaStatusInput'))  el('mediaStatusInput').value='active';
-    if(el('mediaEditState'))    el('mediaEditState').textContent='New';
-    if(el('saveMediaButton'))   el('saveMediaButton').textContent='Save';
-    if(el('mediaPreview'))      el('mediaPreview').innerHTML='';
+    ['mediaIdInput','mediaTitleInput','mediaUrlInput','mediaSourceInput',
+     'mediaContextInput','mediaUnitInput','mediaTagsInput','mediaNotesInput'].forEach(function(id) {
+      if (el(id)) el(id).value = '';
+    });
+    if (el('mediaTypeInput'))    el('mediaTypeInput').value    = 'auto';
+    if (el('mediaLanguageInput'))el('mediaLanguageInput').value= 'el';
+    if (el('mediaStatusInput'))  el('mediaStatusInput').value  = 'active';
+    if (el('mediaEditState'))    el('mediaEditState').textContent = 'New';
+    if (el('saveMediaButton'))   el('saveMediaButton').textContent = 'Save';
+    if (el('mediaPreview'))      el('mediaPreview').innerHTML   = '';
   }
 
   function deleteMedia(id) {
@@ -643,32 +524,30 @@
     data.mediaLibrary.meta.last_updated = today();
     if (editingMediaId === id) clearMediaForm();
     saveMedia(data.mediaLibrary);
-    renderMediaTable();
-    renderStats();
-    setMediaStatus(`Διαγράφηκε: ${id}`,'ok');
+    renderMediaTable(); renderStats();
+    setMediaStatus('Διαγράφηκε: ' + id, 'ok');
   }
 
   function previewMedia() {
     const item = formToMediaItem();
     if (!item.url) { setMediaStatus('Δώσε URL.','error'); return; }
-    let html = `<a href="${escA(item.url)}" target="_blank">Άνοιγμα URL</a>`;
-    if (item.type === 'image') html = `<img src="${escA(item.url)}" alt="${escA(item.title)}" />`;
-    else if (['youtube','google_slides','google_drive'].includes(item.type)) html = `<iframe src="${escA(item.url)}" title="${escA(item.title)}"></iframe>`;
+    let html = '<a href="' + esc(item.url) + '" target="_blank">Άνοιγμα URL</a>';
+    if (item.type === 'image') html = '<img src="' + esc(item.url) + '" alt="' + esc(item.title) + '" />';
+    else if (['youtube','google_slides','google_drive'].includes(item.type))
+      html = '<iframe src="' + esc(item.url) + '" title="' + esc(item.title) + '"></iframe>';
     if (el('mediaPreview')) el('mediaPreview').innerHTML = html;
   }
 
   function exportMediaLibrary() {
     const blob = new Blob([JSON.stringify({ meta: data.mediaLibrary.meta, media: data.mediaLibrary.media }, null, 2)], { type:'application/json' });
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `media_library_${today()}.json`;
-    a.click();
-    URL.revokeObjectURL(a.href);
+    a.href = URL.createObjectURL(blob); a.download = 'media_library_' + today() + '.json';
+    a.click(); URL.revokeObjectURL(a.href);
     setMediaStatus('Export ολοκληρώθηκε.','ok');
   }
 
   async function fetchMediaFromGithub() {
-    const url = el('githubUrlInput')?.value.trim();
+    const url = el('githubUrlInput') && el('githubUrlInput').value.trim();
     if (!url) { setMediaStatus('Βάλε GitHub raw URL.','error'); return; }
     if (!/^https:\/\/(raw\.githubusercontent\.com|gist\.githubusercontent\.com)\//.test(url)) {
       setMediaStatus('Χρησιμοποίησε raw.githubusercontent.com URL.','error'); return;
@@ -676,131 +555,119 @@
     setMediaStatus('Φόρτωση...','ok');
     try {
       const res = await fetch(url, { cache:'no-store' });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
       const payload = JSON.parse(await res.text());
       const source  = Array.isArray(payload) ? { media: payload } : payload;
       data.mediaLibrary = { meta: { last_updated: today(), source: url }, media: (source.media || []) };
       saveMedia(data.mediaLibrary);
-      renderMediaTable();
-      renderStats();
-      renderMediaSummary();
-      setMediaStatus(`Φορτώθηκαν ${data.mediaLibrary.media.length} media.`,'ok');
-    } catch(e) { setMediaStatus(`Αποτυχία: ${e.message}`,'error'); }
+      renderMediaTable(); renderStats(); renderMediaSummary();
+      setMediaStatus('Φορτώθηκαν ' + data.mediaLibrary.media.length + ' media.','ok');
+    } catch(e) { setMediaStatus('Αποτυχία: ' + e.message,'error'); }
   }
 
-  function setMediaStatus(msg, mode='ok') {
+  function setMediaStatus(msg, mode) {
     const el2 = el('mediaStatusMessage');
-    if (el2) { el2.textContent = msg; el2.className = `media-status ${mode}`; }
+    if (el2) { el2.textContent = msg; el2.className = 'media-status ' + (mode||'ok'); }
   }
 
-  // ── Import / Export ───────────────────────────────────
   function downloadJson(filename, payload) {
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(a.href);
+    a.href = URL.createObjectURL(blob); a.download = filename;
+    a.click(); URL.revokeObjectURL(a.href);
   }
 
-  // ── Events ────────────────────────────────────────────
   function bindEvents() {
-    el('scenarioList')?.addEventListener('click', e => {
+    el('scenarioList') && el('scenarioList').addEventListener('click', function(e) {
       const item = e.target.closest('.scenario-item');
       if (!item) return;
       selectedId = item.dataset.id;
-      renderScenarioList();
-      renderDetail();
+      renderScenarioList(); renderDetail();
     });
 
-    el('appTabs')?.addEventListener('click', e => {
+    el('appTabs') && el('appTabs').addEventListener('click', function(e) {
       const tab = e.target.closest('.app-tab');
       if (!tab) return;
       selectedApp = tab.dataset.app;
       renderDetail();
     });
 
-    el('searchInput')?.addEventListener('input', renderScenarioList);
+    el('searchInput')    && el('searchInput').addEventListener('input', renderScenarioList);
+    el('jsonEditor')     && el('jsonEditor').addEventListener('input', validateEditor);
 
-    el('jsonEditor')?.addEventListener('input', validateEditor);
-
-    el('applyJsonButton')?.addEventListener('click', () => {
-      const { parsed } = validateEditor();
-      if (!parsed) return;
-      const s = getScenario();
-      if (!s) return;
+    el('applyJsonButton') && el('applyJsonButton').addEventListener('click', function() {
+      const result = validateEditor();
+      if (!result.parsed) return;
+      const s = getScenario(); if (!s) return;
       if (!s.appOutputs) s.appOutputs = {};
-      s.appOutputs[selectedApp] = parsed;
+      s.appOutputs[selectedApp] = result.parsed;
       renderDerivedFiles();
     });
 
-    el('formatJsonButton')?.addEventListener('click', () => {
-      const { parsed } = validateEditor();
-      if (parsed && el('jsonEditor')) el('jsonEditor').value = JSON.stringify(parsed, null, 2);
+    el('formatJsonButton') && el('formatJsonButton').addEventListener('click', function() {
+      const result = validateEditor();
+      if (result.parsed && el('jsonEditor')) el('jsonEditor').value = JSON.stringify(result.parsed, null, 2);
     });
 
-    el('importButton')?.addEventListener('click', () => el('fileInput')?.click());
-    el('fileInput')?.addEventListener('change', async () => {
-      const [file] = el('fileInput').files;
+    el('importButton') && el('importButton').addEventListener('click', function() {
+      el('fileInput') && el('fileInput').click();
+    });
+
+    el('fileInput') && el('fileInput').addEventListener('change', async function() {
+      const file = el('fileInput').files[0];
       if (!file) return;
       try {
         const text = await file.text();
         const parsed = JSON.parse(text);
-        // Αν έχει scenarios key, merge
         if (Array.isArray(parsed.scenarios)) {
-          parsed.scenarios.forEach(s => {
-            const idx = data.scenarios.findIndex(existing => existing.id === s.id);
+          parsed.scenarios.forEach(function(s) {
+            const idx = data.scenarios.findIndex(function(e) { return e.id === s.id; });
             if (idx >= 0) data.scenarios[idx] = s; else data.scenarios.push(s);
           });
         }
-        if (parsed.mediaLibrary) {
-          data.mediaLibrary = parsed.mediaLibrary;
-          saveMedia(data.mediaLibrary);
-        }
+        if (parsed.mediaLibrary) { data.mediaLibrary = parsed.mediaLibrary; saveMedia(data.mediaLibrary); }
         render();
       } catch(e) { alert('Import failed: ' + e.message); }
       finally { el('fileInput').value = ''; }
     });
 
-    el('exportButton')?.addEventListener('click', () => {
+    el('exportButton') && el('exportButton').addEventListener('click', function() {
       downloadJson('orchestrator-export.json', { scenarios: data.scenarios, mediaLibrary: data.mediaLibrary });
     });
 
-    el('copyLinksButton')?.addEventListener('click', async () => {
+    el('copyLinksButton') && el('copyLinksButton').addEventListener('click', async function() {
       const s = getScenario();
-      const text = (s?.links || []).map(l => `${l.label}: ${l.url}`).join('\n');
+      const text = (s && s.links || []).map(function(l) { return l.label + ': ' + l.url; }).join('\n');
       await navigator.clipboard.writeText(text);
       el('copyLinksButton').textContent = 'Copied';
-      setTimeout(() => { el('copyLinksButton').textContent = 'Copy'; }, 1000);
+      setTimeout(function() { el('copyLinksButton').textContent = 'Copy'; }, 1000);
     });
 
-    el('derivedFiles')?.addEventListener('click', async e => {
+    el('derivedFiles') && el('derivedFiles').addEventListener('click', async function(e) {
       const btn = e.target.closest('[data-copy-file]');
       if (!btn) return;
-      const output = getOutput();
-      const name = btn.dataset.copyFile;
+      const output = getOutput(); const name = btn.dataset.copyFile;
       let content = output;
       if (name.startsWith('assets_'))   content = buildAssets(output);
       if (name.startsWith('manifest_')) content = buildManifest(output);
       await navigator.clipboard.writeText(JSON.stringify(content, null, 2));
       btn.textContent = 'Copied';
-      setTimeout(() => { btn.textContent = 'Copy'; }, 1000);
+      setTimeout(function() { btn.textContent = 'Copy'; }, 1000);
     });
 
-    el('activateSelectedBtn')?.addEventListener('click', () => {
-      const s = getScenario();
-      if (!s) return;
-      alert(`Για να ενεργοποιήσεις το "${s.title}":\n\nbash workflows/activate_lesson.sh ${s.lesson_dir || 'lessons/' + s.id}`);
+    el('activateSelectedBtn') && el('activateSelectedBtn').addEventListener('click', function() {
+      const s = getScenario(); if (!s) return;
+      alert('Για να ενεργοποιήσεις το "' + s.title + '":\n\nbash workflows/activate_lesson.sh ' + (s.lesson_dir || 'lessons/' + s.id));
     });
 
-    el('saveMediaButton')?.addEventListener('click', saveMediaFromForm);
-    el('clearMediaButton')?.addEventListener('click', clearMediaForm);
-    el('previewMediaButton')?.addEventListener('click', previewMedia);
-    el('exportMediaButton')?.addEventListener('click', exportMediaLibrary);
-    el('fetchGithubButton')?.addEventListener('click', fetchMediaFromGithub);
-    el('mediaSearchInput')?.addEventListener('input', renderMediaTable);
+    el('saveMediaButton')   && el('saveMediaButton').addEventListener('click', saveMediaFromForm);
+    el('clearMediaButton')  && el('clearMediaButton').addEventListener('click', clearMediaForm);
+    el('previewMediaButton')&& el('previewMediaButton').addEventListener('click', previewMedia);
+    el('exportMediaButton') && el('exportMediaButton').addEventListener('click', exportMediaLibrary);
+    el('fetchGithubButton') && el('fetchGithubButton').addEventListener('click', fetchMediaFromGithub);
+    el('mediaSearchInput')  && el('mediaSearchInput').addEventListener('input', renderMediaTable);
 
-    el('mediaTableBody')?.addEventListener('click', async e => {
+    el('mediaTableBody') && el('mediaTableBody').addEventListener('click', async function(e) {
       const btn = e.target.closest('[data-media-action]');
       if (!btn) return;
       const id = btn.dataset.mediaId;
@@ -808,24 +675,17 @@
       if (btn.dataset.mediaAction === 'delete') deleteMedia(id);
       if (btn.dataset.mediaAction === 'copy') {
         const i = getMediaById(id);
-        if (i) { await navigator.clipboard.writeText(i.url); setMediaStatus(`URL copied: ${id}`,'ok'); }
+        if (i) { await navigator.clipboard.writeText(i.url); setMediaStatus('URL copied: ' + id,'ok'); }
       }
     });
   }
 
-  // ── Render all ────────────────────────────────────────
   function render() {
-    renderActiveBanner();
-    renderStats();
-    renderScenarioList();
-    renderDetail();
-    renderMediaTable();
+    renderActiveBanner(); renderStats(); renderScenarioList();
+    renderDetail(); renderMediaTable();
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    bindEvents();
-    render();
-  });
+  document.addEventListener('DOMContentLoaded', function() { bindEvents(); render(); });
 })();
 </script>
 </body>
