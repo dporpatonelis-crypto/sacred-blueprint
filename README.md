@@ -1,114 +1,211 @@
-# Sacred Blueprint — Skill Tree (Complete)
-## Δομή, Τοποθεσία Αρχείων, Σύνδεση
+# Sacred Blueprint — Σύνοψη Συστήματος
 
 ---
 
-## Φάκελοι εγκατάστασης
+## Βήματα υλοποίησης distribute.yml
+
+### Βήμα 1 — Δημιουργία PAT (Personal Access Token)
+
+Στο GitHub → Settings → Developer settings → Fine-grained tokens → Generate new token
+
+- **Name:** `sacred-blueprint-deploy`
+- **Repository access:** Only select repositories → επίλεξε:
+  - `Map-Timeline`
+  - `idea-weaver-board`
+  - `history-explorer-3d`
+  - `mind-palace-cases`
+  - `personal-page`
+- **Permissions → Contents:** Read and write
+- Αντέγραψε το token
+
+### Βήμα 2 — Πρόσθεσε Secret στο sacred-blueprint repo
+
+GitHub → `sacred-blueprint` repo → Settings → Secrets and variables → Actions → New repository secret
+
+- **Name:** `DEPLOY_PAT`
+- **Value:** το token που αντέγραψες
+
+### Βήμα 3 — Πρόσθεσε το workflow αρχείο
+
+```bash
+# Στο Mac mini
+mkdir -p ~/sacred-blueprint/.github/workflows
+cp distribute.yml ~/sacred-blueprint/.github/workflows/distribute.yml
+
+git add .github/
+git commit -m "ci: add distribute workflow"
+git push
+```
+
+### Βήμα 4 — Επιβεβαίωση δομής φακέλων στα app repos
+
+Βεβαιώσου ότι υπάρχουν οι παρακάτω φάκελοι πριν τρέξει το Action:
+
+| Repo | Φάκελος που πρέπει να υπάρχει |
+|---|---|
+| `Map-Timeline` | `data/` (δημιουργείται αυτόματα) |
+| `idea-weaver-board` | `src/data/library/` (δημιούργησέ τον χειροκίνητα αν δεν υπάρχει) |
+| `history-explorer-3d` | `public/data/` (ήδη υπάρχει) |
+| `mind-palace-cases` | `cases/` (δημιουργείται αυτόματα) |
+| `personal-page` | `public/data/lessons/` (δημιούργησέ τον αν δεν υπάρχει) |
+
+### Βήμα 5 — Δοκιμή
+
+```bash
+# Τρέξε ένα publish για να τριγκάρεις το Action
+bash workflows/publish_lesson.sh lessons/ΟΝΟΜΑ_ΦΑΚΕΛΟΥ/ --skip-transform
+```
+
+Μετά: GitHub → `sacred-blueprint` → Actions → Distribute Lesson Data to App Repos → έλεγξε το Summary
+
+---
+
+## Πίνακας Εφαρμογών
+
+| # | Εφαρμογή | Repo | Skill | data/current/ | Τι κάνει | Τρόπος deploy |
+|---|---|---|---|---|---|---|
+| 1 | 🗺️ **Timeline Explorer** | `Map-Timeline` | `skill_timeline_explorer` | `timeline.json` | Χάρτης Leaflet με χρονολογική γραμμή. Κάθε event = pin στον χάρτη + card. Puzzle Mode ξεχωριστή σελίδα. | GitHub Pages. Action αντιγράφει `data/<id>.json` + ενημερώνει `catalog.json` |
+| 2 | 🕵️ **Investigation Board** | `idea-weaver-board` | `skill_investigation_board` | `investigation.json` | Board με clues (evidence/suspect/note). Μαθητής συνδέει στοιχεία για να λύσει την "υπόθεση". | Vercel. Action αντιγράφει `src/data/library/<id>.json` |
+| 3 | 🏛️ **History Explorer 3D** | `history-explorer-3d` | `skill_history3d` | `history3d.json` | React Three Fiber σκηνή με NPC χαρακτήρες, διαλόγους και fact panels. Διαχειρίζεται μέσω Google Sheet. | Vercel (Lovable). Action κάνει transform + αντιγράφει `public/data/<id>.json` + ενημερώνει `manifest.json` |
+| 4 | 🧠 **Mind Palace Debate** | `mind-palace-cases` | `skill_lesson_architect` | `mindpalace.json` | Investigation Board + δωμάτια Mind Palace με διαλόγους NPCs και ερωτήματα. Αίσθηση mystery game. | GitHub Pages. Action αντιγράφει `cases/<id>.json` + ενημερώνει `catalog.json` |
+| 5 | 🌐 **Personal Page** | `personal-page` | `skill_personal_page` / `skill_notebook_media` | `personalpage.json` ή `notebook.json` | Hub εφαρμογή. Chapters με HTML περιεχόμενο, media skeleton (slides/pdf/audio), παιδαγωγικές σημειώσεις. | GitHub Pages / Vercel. Action αντιγράφει `public/data/lessons/<id>.json` + ενημερώνει `index.json` |
+| — | ⚓ **Living Anchor** | `living-anchor` | `skill_living_anchor` | `anchor.json` | Layered text annotation (literal/structural/critical). Αποθηκεύεται στο sacred-blueprint, deploy χειροκίνητο. | Χειροκίνητο |
+| — | 📖 **Interactive Books** | `interactive-books` | `skill_interactive_books` | `books.json` | Βιβλίο με σελίδες (text/image/video/slides/quiz). Αποθηκεύεται στο sacred-blueprint, deploy χειροκίνητο. | Χειροκίνητο |
+| — | 🎮 **Unreal Engine 5** | `sheetunreal` | `skill_unreal_engine5` | `ue5/<id>/` | UE5 C++ scenario με MetaHuman NPCs, acts, dialogues, audio assets. Διαχειρίζεται αποκλειστικά μέσω Google Sheet. | Χειροκίνητο |
+
+---
+
+## Σύνοψη Συστήματος
+
+### Αρχιτεκτονική
 
 ```
-~/sacred-blueprint/
-├── .continue/
-│   └── prompts/
-│       └── new-lesson-workflow.md          ← Slash command /new-lesson-workflow
-├── Skills/
-│   └── subskills/
-│       ├── skill_timeline_explorer.md      ← @skill_timeline_explorer
-│       ├── skill_investigation_board.md    ← @skill_investigation_board
-│       ├── skill_history3d.md              ← @skill_history3d
-│       ├── skill_lesson_architect.md       ← @skill_lesson_architect
-│       ├── skill_living_anchor.md          ← @skill_living_anchor
-│       ├── skill_interactive_books.md      ← @skill_interactive_books
-│       ├── skill_notebook_media.md         ← @skill_notebook_media
-│       ├── skill_personal_page.md          ← @skill_personal_page
-│       ├── skill_unreal_engine5.md         ← @skill_unreal_engine5
-│       └── skill_media_enrichment.md       ← @skill_media_enrichment
-├── workflows/
-│   ├── new_lesson.sh
-│   └── publish_lesson.sh
-├── data/
-│   └── current/                            ← Working directory για όλα τα JSON
-│       ├── timeline.json
-│       ├── investigation.json
-│       ├── history3d.json
-│       ├── anchor.json
-│       ├── books.json
-│       ├── notebook.json
-│       ├── personalpage.json
-│       └── ue5/
-│           └── <scenario_id>/
-│               ├── scenario.json
-│               ├── assets.json
-│               └── manifest_entry.json
-└── lessons/
-    └── [TIMESTAMP_FOLDER]/
-        ├── meta.json
-        └── master_output.json
+Mac mini (VS Code + Continue + Qwen)
+          │
+          │ bash workflows/
+          ▼
+┌─────────────────────────────────────────┐
+│         sacred-blueprint repo           │
+│                                         │
+│  lessons/                               │
+│  └── YYYYMMDD_<slug>/                   │  ← Βιβλιοθήκη (μόνιμη)
+│      ├── meta.json                      │
+│      └── master_output.json            │
+│                                         │
+│  data/current/                          │  ← Ενεργό μάθημα (αντικαθίσταται)
+│  ├── timeline.json                      │
+│  ├── investigation.json                 │
+│  ├── history3d.json                     │
+│  ├── mindpalace.json                    │
+│  ├── personalpage.json                  │
+│  ├── notebook.json                      │
+│  └── active_lesson.json                 │
+│                                         │
+│  lessons/index.html                     │  ← Orchestrator Dashboard
+└─────────────────────────────────────────┘
+          │
+          │ git push → trigger GitHub Action
+          ▼
+┌─────────────────────────────────────────┐
+│      distribute.yml (GitHub Action)     │
+│                                         │
+│  Ανιχνεύει ποια αρχεία άλλαξαν         │
+│  → Push μόνο στα αντίστοιχα repos      │
+└─────────────────────────────────────────┘
+          │
+    ┌─────┴──────────────────────────────┐
+    │                                    │
+    ▼                                    ▼
+Map-Timeline          idea-weaver-board  history-explorer-3d
+mind-palace-cases     personal-page      (κ.λπ.)
+    │
+    ▼
+GitHub Pages / Vercel → Live εφαρμογές
 ```
 
 ---
 
-## Πώς καλείς κάθε skill
+### Ροή δημιουργίας μαθήματος
 
-| Skill | Κλήση | App |
+```
+1. new_lesson.sh "Θέμα" lesson_type
+        ↓
+   lessons/YYYYMMDD_slug/ + meta.json
+
+2. Skills στο Continue (@skill_*)
+        ↓
+   data/current/<app>.json
+   + master_output.json (συσσωρεύεται)
+
+3. publish_lesson.sh --skip-transform
+        ↓
+   distribute.sh    → data/current/ (εξαγωγή sections)
+   generate_dashboard.sh → lessons/index.html
+   sync_github.sh   → git push
+
+4. GitHub Action (distribute.yml)
+        ↓
+   Push σε κάθε app repo που άλλαξε
+   + Ενημέρωση catalog/manifest/index
+
+5. Apps ανανεώνονται αυτόματα
+   (GitHub Pages / Vercel auto-deploy)
+```
+
+---
+
+### Εναλλαγή ενεργού μαθήματος
+
+```bash
+# Ενεργοποίηση παλιού μαθήματος από βιβλιοθήκη
+bash workflows/activate_lesson.sh lessons/YYYYMMDD_slug/
+        ↓
+   distribute.sh → data/current/ (αντιγραφή εκείνου του μαθήματος)
+   git push → Action → Apps
+```
+
+---
+
+### Skills — Πλήρης Λίστα
+
+| Skill | Κλήση | Output key | App |
+|---|---|---|---|
+| `skill_timeline_explorer` | `@skill_timeline_explorer` | `timeline_item` | 🗺️ Timeline |
+| `skill_investigation_board` | `@skill_investigation_board` | `investigation_board` | 🕵️ Investigation |
+| `skill_history3d` | `@skill_history3d` | `history3d` | 🏛️ History 3D |
+| `skill_lesson_architect` | `@skill_lesson_architect` | `mind_palace` + `investigation_board` | 🧠 Mind Palace |
+| `skill_living_anchor` | `@skill_living_anchor` | `anchor` | ⚓ Living Anchor |
+| `skill_interactive_books` | `@skill_interactive_books` | `books` | 📖 Interactive Books |
+| `skill_notebook_media` | `@skill_notebook_media` | `notebook` | 🌐 Personal Page |
+| `skill_personal_page` | `@skill_personal_page` | `personal_page` | 🌐 Personal Page |
+| `skill_unreal_engine5` | `@skill_unreal_engine5` | `unreal_scenario` + assets + manifest | 🎮 UE5 |
+| `skill_media_enrichment` | `@skill_media_enrichment` | in-place στο master | Όλες |
+
+---
+
+### Workflows — Πλήρης Λίστα
+
+| Script | Χρήση | Τι κάνει |
 |---|---|---|
-| `new-lesson-workflow.md` | `/new-lesson-workflow` | Orchestrator |
-| `skill_timeline_explorer.md` | `@skill_timeline_explorer` + κείμενο | 🗺️ Timeline Explorer |
-| `skill_investigation_board.md` | `@skill_investigation_board` + κείμενο | 🕵️ Investigation Board |
-| `skill_history3d.md` | `@skill_history3d` + κείμενο | 🏛️ History Explorer 3D |
-| `skill_lesson_architect.md` | `@skill_lesson_architect` + κείμενο | 🧠 Mind Palace |
-| `skill_living_anchor.md` | `@skill_living_anchor` + κείμενο | ⚓ Living Anchor |
-| `skill_interactive_books.md` | `@skill_interactive_books` + κείμενο | 📖 Interactive Books |
-| `skill_notebook_media.md` | `@skill_notebook_media` + κείμενο | 📔 Notebook Media |
-| `skill_personal_page.md` | `@skill_personal_page` + κείμενο | 🌐 Personal Page |
-| `skill_unreal_engine5.md` | `@skill_unreal_engine5` + κείμενο | 🎮 Unreal Engine 5 |
-| `skill_media_enrichment.md` | `@skill_media_enrichment` + master_output + media library | Όλες |
+| `new_lesson.sh` | `bash workflows/new_lesson.sh "Θέμα" type` | Δημιουργεί φάκελο + meta.json |
+| `distribute.sh` | `bash workflows/distribute.sh lessons/ΦΑΚΕΛΟΣ/` | Εξάγει sections → data/current/ + βιβλιοθήκη |
+| `publish_lesson.sh` | `bash workflows/publish_lesson.sh lessons/ΦΑΚΕΛΟΣ/ [--skip-transform]` | Ολοκληρωμένη δημοσίευση (distribute + dashboard + push) |
+| `activate_lesson.sh` | `bash workflows/activate_lesson.sh lessons/ΦΑΚΕΛΟΣ/` | Ενεργοποίηση παλιού μαθήματος |
+| `generate_dashboard.sh` | `bash workflows/generate_dashboard.sh` | Αναγεννά lessons/index.html |
+| `sync_github.sh` | `bash workflows/sync_github.sh "message"` | Commit + push στο sacred-blueprint |
 
 ---
 
-## Ροή εκτέλεσης
+### Αρχεία ανά εφαρμογή — Naming Conventions
 
-```
-/new-lesson-workflow
-        │
-        ├─ STEP 1: cd + ζητάει TOPIC/TYPE
-        ├─ STEP 2: bash new_lesson.sh → δημιουργεί φάκελο
-        ├─ STEP 3: Αναμονή για master_output.json
-        ├─ STEP 4: bash publish_lesson.sh → open dashboard
-        │
-        └─ STEP 5 (optional, σειριακά):
-               │
-               ├─ @skill_timeline_explorer    → data/current/timeline.json
-               ├─ @skill_investigation_board  → data/current/investigation.json
-               ├─ @skill_history3d            → data/current/history3d.json
-               ├─ @skill_lesson_architect     → lessons/<case_id>/<case_id>.json
-               ├─ @skill_living_anchor        → data/current/anchor.json
-               ├─ @skill_interactive_books    → data/current/books.json
-               ├─ @skill_notebook_media       → data/current/notebook.json
-               ├─ @skill_personal_page        → data/current/personalpage.json
-               ├─ @skill_unreal_engine5       → data/current/ue5/<id>/ (3 files)
-               └─ @skill_media_enrichment     → master_output.json (in-place)
-```
-
----
-
-## Ειδικές συμπεριφορές ανά skill
-
-| Skill | Ιδιαιτερότητα |
-|---|---|
-| `skill_timeline_explorer` | **Append** στο υπάρχον αρχείο — δεν αντικαθιστά |
-| `skill_unreal_engine5` | Γράφει **3 αρχεία** ταυτόχρονα (scenario + assets + manifest) |
-| `skill_lesson_architect` | Τα `image` fields μένουν κενά — συμπληρώνονται από `skill_media_enrichment` |
-| `skill_personal_page` | Ίδιο schema με Notebook Media — ids με `pp_` prefix |
-| `skill_media_enrichment` | Μοναδικό skill που **τροποποιεί** υπάρχον αρχείο in-place |
-
----
-
-## Τι διορθώθηκε από τα αρχικά αρχεία
-
-| Πρόβλημα | Λύση |
-|---|---|
-| Duplicate skills (DOCX + MD για το ίδιο) | Ένα αρχείο ανά skill |
-| Approval gates σε κάθε τεχνικό βήμα | Pause μόνο για δεδομένα/επιλογές χρήστη |
-| Swift file με markdown content | Αφαιρέθηκε — δεν ήταν Swift |
-| Skills ασύνδετα μεταξύ τους | Orchestrator καλεί όλα τα sub-skills ρητά |
-| Καμία κάλυψη για 7 apps | Νέα skills για Timeline, Investigation, History3D, Anchor, Books, Notebook, Personal Page, UE5 |
+| Orchestrator id | master_output key | data/current/ file | Repo |
+|---|---|---|---|
+| `timeline` | `timeline_item` | `timeline.json` | `Map-Timeline` |
+| `investigation` | `investigation_board` | `investigation.json` | `idea-weaver-board` |
+| `history3d` | `history3d` | `history3d.json` | `history-explorer-3d` |
+| `mindpalace` | `mind_palace` | `mindpalace.json` | `mind-palace-cases` |
+| `anchor` | `anchor` | `anchor.json` | `living-anchor` |
+| `books` | `books` | `books.json` | `interactive-books` |
+| `notebook` | `notebook` | `notebook.json` | `personal-page` |
+| `personalpage` | `personal_page` | `personalpage.json` | `personal-page` |
+| `unreal` | `unreal_scenario` | `ue5/<id>/` (3 αρχεία) | `sheetunreal` |
