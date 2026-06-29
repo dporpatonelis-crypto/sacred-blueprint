@@ -6,9 +6,7 @@ title       = sys.argv[2]
 lesson_type = sys.argv[3]
 today       = sys.argv[4]
 
-catalog_path = os.environ.get("CATALOG_PATH", "/tmp/mind-palace-cases/catalog.json")
-os.makedirs(os.path.dirname(catalog_path), exist_ok=True)
-
+catalog_path = "/tmp/mind-palace-cases/catalog.json"
 try:
     catalog = json.load(open(catalog_path, "r", encoding="utf-8"))
 except:

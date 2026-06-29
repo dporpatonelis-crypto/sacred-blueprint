@@ -2,10 +2,8 @@
 import json, os, sys
 
 lesson_id  = sys.argv[1]
-index_path = os.environ.get("INDEX_PATH", "/tmp/personal-page/public/data/lessons/index.json")
+index_path = "/tmp/personal-page/public/data/lessons/index.json"
 lesson_file = lesson_id + ".json"
-
-os.makedirs(os.path.dirname(index_path), exist_ok=True)
 
 try:
     index = json.load(open(index_path, "r", encoding="utf-8"))
