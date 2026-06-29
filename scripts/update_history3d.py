@@ -5,7 +5,9 @@ lesson_id = sys.argv[1]
 title     = sys.argv[2]
 today     = sys.argv[3]
 
-src_path = "data/current/history3d.json"
+# Source data is in sacred-blueprint (where workflow runs)
+src_path = os.environ.get("GITHUB_WORKSPACE", ".") + "/data/current/history3d.json"
+# Output goes to the cloned repo
 out_dir  = "/tmp/history-explorer-3d/public/data"
 os.makedirs(out_dir, exist_ok=True)
 
