@@ -16,12 +16,12 @@ jobs:
       - name: Checkout sacred-blueprint
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2
 
       - name: Detect changed files
         id: changed
         run: |
-          CHANGED=$(git diff --name-only HEAD~1 HEAD -- data/current/ 2>/dev/null || git ls-files data/current/)
+          CHANGED=$(git diff --name-only HEAD~1 HEAD -- data/current/)
           echo "Files changed:"
           echo "$CHANGED"
           echo "timeline=$(echo "$CHANGED"      | grep -c 'timeline.json'      || true)" >> $GITHUB_OUTPUT
@@ -40,7 +40,6 @@ jobs:
         if: steps.changed.outputs.timeline != '0'
         env:
           PAT: ${{ secrets.DEPLOY_PAT }}
-          CATALOG_PATH: /tmp/Map-Timeline/catalog.json
         run: |
           git clone https://x-access-token:${PAT}@github.com/dporpatonelis-crypto/Map-Timeline.git /tmp/Map-Timeline
           LESSON_ID=$(jq -r '.lesson_id // "lesson"' data/current/active_lesson.json 2>/dev/null || echo "lesson")
@@ -49,8 +48,8 @@ jobs:
           mkdir -p /tmp/Map-Timeline/data
           cp data/current/timeline.json /tmp/Map-Timeline/data/${LESSON_ID}.json
           cp data/current/active_lesson.json /tmp/Map-Timeline/active_lesson.json
+          python3 scripts/update_timeline_catalog.py "$LESSON_ID" "$TITLE" "$TODAY"
           cd /tmp/Map-Timeline
-          python3 $GITHUB_WORKSPACE/scripts/update_timeline_catalog.py "$LESSON_ID" "$TITLE" "$TODAY"
           git add data/ catalog.json active_lesson.json
           git diff --cached --quiet && echo "No changes" && exit 0
           git commit -m "lesson-data: update timeline ${LESSON_ID} [bot]"
@@ -82,10 +81,8 @@ jobs:
           LESSON_ID=$(jq -r '.lesson_id // "lesson"' data/current/active_lesson.json 2>/dev/null || echo "lesson")
           TITLE=$(jq -r '.title // "Μάθημα"' data/current/active_lesson.json 2>/dev/null || echo "Μάθημα")
           TODAY=$(date +%Y-%m-%d)
-          mkdir -p /tmp/history-explorer-3d/public/data
-          cp data/current/history3d.json /tmp/history-explorer-3d/public/data/${LESSON_ID}.json
+          python3 scripts/update_history3d.py "$LESSON_ID" "$TITLE" "$TODAY"
           cd /tmp/history-explorer-3d
-          python3 $GITHUB_WORKSPACE/scripts/update_history3d.py "$LESSON_ID" "$TITLE" "$TODAY"
           git add public/data/
           git diff --cached --quiet && echo "No changes" && exit 0
           git commit -m "lesson-data: update history3d ${LESSON_ID} [bot]"
@@ -96,7 +93,6 @@ jobs:
         if: steps.changed.outputs.mindpalace != '0'
         env:
           PAT: ${{ secrets.DEPLOY_PAT }}
-          CATALOG_PATH: /tmp/mind-palace-cases/catalog.json
         run: |
           git clone https://x-access-token:${PAT}@github.com/dporpatonelis-crypto/mind-palace-cases.git /tmp/mind-palace-cases
           CASE_ID=$(jq -r '.case_id // "lesson"' data/current/mindpalace.json 2>/dev/null || echo "lesson")
@@ -106,8 +102,8 @@ jobs:
           mkdir -p /tmp/mind-palace-cases/cases
           cp data/current/mindpalace.json /tmp/mind-palace-cases/cases/${CASE_ID}.json
           [ -f data/current/active_lesson.json ] && cp data/current/active_lesson.json /tmp/mind-palace-cases/active_lesson.json
+          python3 scripts/update_mindpalace_catalog.py "$CASE_ID" "$TITLE" "$LESSON_TYPE" "$TODAY"
           cd /tmp/mind-palace-cases
-          python3 $GITHUB_WORKSPACE/scripts/update_mindpalace_catalog.py "$CASE_ID" "$TITLE" "$LESSON_TYPE" "$TODAY"
           git add cases/ catalog.json active_lesson.json
           git diff --cached --quiet && echo "No changes" && exit 0
           git commit -m "lesson-data: update mind palace ${CASE_ID} [bot]"
@@ -118,7 +114,6 @@ jobs:
         if: steps.changed.outputs.personalpage != '0' || steps.changed.outputs.notebook != '0'
         env:
           PAT: ${{ secrets.DEPLOY_PAT }}
-          INDEX_PATH: /tmp/personal-page/public/data/lessons/index.json
         run: |
           git clone https://x-access-token:${PAT}@github.com/dporpatonelis-crypto/personal-page.git /tmp/personal-page
           LESSON_ID=$(jq -r '.lesson_id // "lesson"' data/current/active_lesson.json 2>/dev/null || echo "lesson")
@@ -128,8 +123,8 @@ jobs:
           else
             cp data/current/notebook.json /tmp/personal-page/public/data/lessons/${LESSON_ID}.json
           fi
+          python3 scripts/update_personal_page_index.py "$LESSON_ID"
           cd /tmp/personal-page
-          python3 $GITHUB_WORKSPACE/scripts/update_personal_page_index.py "$LESSON_ID"
           git add public/data/lessons/
           git diff --cached --quiet && echo "No changes" && exit 0
           git commit -m "lesson-data: update personal page ${LESSON_ID} [bot]"
