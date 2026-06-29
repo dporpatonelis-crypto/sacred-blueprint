@@ -9,40 +9,6 @@
 - **Workspace:** `~/sacred-blueprint`
 - **App:** History Explorer 3D (React Three Fiber, curved screens, NPC models, Firebase Storage)
 - **Role:** Δημιουργείς JSON με characters, dialogs, facts και screens για το 3D περιβάλλον. Εκτελείς χωρίς άδεια για τεχνικά βήματα.
-## 📋 ΠΡΟΑΠΑΙΤΟΥΜΕΝΑ — Διάβασε πριν ξεκινήσεις
-
-**Δεν ρωτάς για master_output.json πριν ξεκινήσεις.** Το παράγεις εσύ στο STEP 5.
-
-**Το μάθημα πρέπει να έχει ήδη δημιουργηθεί** με:
-```bash
-bash workflows/new_lesson.sh "Τίτλος Μαθήματος" lesson_type
-```
-Αυτό δημιουργεί τον φάκελο `lessons/YYYYMMDD_HHMMSS_<slug>/` με `meta.json` μέσα.
-
-**Έγκυροι τύποι μαθήματος:**
-`patristic_text_analysis` | `historical_event` | `theological_concept` | `3d_exploration` | `quick_concept_overview`
-
-**Το meta.json που δημιουργείται έχει αυτή τη δομή:**
-```json
-{
-  "topic": "Τίτλος Μαθήματος",
-  "lesson_type": "theological_concept",
-  "stages": [],
-  "status": "draft",
-  "created": "2026-06-24T10:00:00Z",
-  "updated": "2026-06-24T10:00:00Z"
-}
-```
-
-**Μετά το STEP 5** (sync to master_output.json), το μάθημα δημοσιεύεται με:
-```bash
-bash workflows/publish_lesson.sh lessons/YYYYMMDD_HHMMSS_<slug>/ --skip-transform
-```
-
-**Ροή εργασίας:**
-1. `new_lesson.sh` → δημιουργεί φάκελο + meta.json
-2. Τρέχεις skill(s) → παράγουν JSON + ενημερώνουν master_output.json
-3. `publish_lesson.sh` → διανέμει στα apps + push στο GitHub
 
 ---
 
@@ -65,24 +31,6 @@ bash workflows/publish_lesson.sh lessons/YYYYMMDD_HHMMSS_<slug>/ --skip-transfor
 - **Background** (επιλογή: `bg-agora.jpg` | `bg-library.jpg` | `bg-temple.jpg` | `bg-palace.jpg`)
 
 Εκτύπωσε σύνοψη.
-> Σημείωση: το master_output.json δημιουργείται αυτόματα στο STEP 5 — δεν χρειάζεται να υπάρχει εκ των προτέρων.
-
-### STEP 1b — Επιβεβαίωση εξαγόμενων
-
-Πριν παράγεις JSON, εκτύπωσε τα εξαγόμενα στοιχεία σε ανθρώπινη μορφή και ζήτησε επιβεβαίωση:
-📋 Εξαγόμενα στοιχεία — επιβεβαίωσε πριν συνεχίσω:
-Πρόσωπα     : <λίστα>
-
-Χρονολογίες : <λίστα>
-
-Τοποθεσίες  : <λίστα>
-
-Βασικές έννοιες : <λίστα>
-
-Τίτλος      : <τίτλος που θα χρησιμοποιηθεί>
-Είναι σωστά; Απάντησε OK για να συνεχίσω, ή διόρθωσε ό,τι χρειάζεται.
-
-**→ PAUSE:** Περίμενε απάντηση. Αν ο χρήστης διορθώσει, ενσωμάτωσε τις αλλαγές και μη ρωτήσεις ξανά.
 
 ---
 
@@ -96,14 +44,20 @@ bash workflows/publish_lesson.sh lessons/YYYYMMDD_HHMMSS_<slug>/ --skip-transfor
       "name": "<Όνομα χαρακτήρα>",
       "role": "<ρόλος/τίτλος>",
       "description": "<σύντομη βιογραφία, 1-2 προτάσεις>",
-      "position_x": 0, "position_y": 0, "position_z": 0, "rotation": 0
+      "position_x": 0, "position_y": 0.05, "position_z": 0, "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "glbModel": "/models/<ΌνομαΧωρίςΚενά>.glb"
     },
     {
       "id": "char_2",
       "name": "<Όνομα χαρακτήρα>",
       "role": "<ρόλος/τίτλος>",
       "description": "<σύντομη βιογραφία>",
-      "position_x": 3, "position_y": 0, "position_z": 0, "rotation": 180
+      "position_x": 3, "position_y": 0.05, "position_z": 0, "rotation": 180,
+      "color": "",
+      "robeColor": "",
+      "glbModel": "/models/<ΌνομαΧωρίςΚενά>.glb"
     }
   ],
   "dialogs": [
@@ -127,7 +81,11 @@ bash workflows/publish_lesson.sh lessons/YYYYMMDD_HHMMSS_<slug>/ --skip-transfor
   ],
   "screens": {
     "title": "<τίτλος σκηνής>",
-    "background": "bg-agora.jpg"
+    "background": "bg-agora.jpg",
+    "left_image_url": "",
+    "right_image_url": "",
+    "left_label": "<τίτλος αριστερής εικόνας>",
+    "right_label": "<τίτλος δεξιάς εικόνας>"
   }
 }
 ```
@@ -139,30 +97,6 @@ bash workflows/publish_lesson.sh lessons/YYYYMMDD_HHMMSS_<slug>/ --skip-transfor
 - `bg-palace.jpg` → Παλάτι (αυτοκράτορες, πολιτική ιστορία)
 
 Εκτύπωσε σε code block.
-Εκτύπωσε το πλήρες JSON σε code block.
-
-### STEP 2b — Επιλογή αποθήκευσης
-📦 Τι θέλεις να κάνεις με αυτό το JSON;
-A) Πλήρης ροή  — αποθήκευση + sync master + publish (συνέχισε στα STEP 3, 4, 5)
-
-B) Μόνο αρχείο — γράψε μόνο το data/current/<file>.json, χωρίς publish (μόνο STEP 3)
-
-C) Μόνο copy   — εκτύπωσε το JSON για να το αντιγράψω χειροκίνητα (σταμάτα εδώ)
-
-**→ PAUSE:** Περίμενε επιλογή A / B / C.
-- Αν **A**: συνέχισε κανονικά σε STEP 3 → 4 → 5.
-- Αν **B**: τρέξε μόνο το STEP 3 και σταμάτα. Μην τρέξεις STEP 4 και 5.
-- Αν **C**: σταμάτα εδώ. Το JSON είναι ήδη εκτυπωμένο παραπάνω.
-
-
-### STEP 2c — Επιβεβαίωση εξαγόμενων
-Πριν παράγεις JSON, ζήτησε επιβεβαίωση:
-
-Είναι σωστά; Απάντησε OK για να συνεχίσω, ή διόρθωσε ό,τι χρειάζεται.
-
-**→ PAUSE:** Περίμενε απάντηση. Αν ο χρήστης διορθώσει, ενσωμάτωσε τις αλλαγές και μη ρωτήσεις ξανά.
-
----
 
 ---
 
@@ -251,3 +185,5 @@ print('master_output.json updated: history3d')
 4. **Facts max 3:** Συνοπτικά, εκπαιδευτικά, χωρίς Wikipedia-style μήκος.
 5. **Background επιλογή:** Ταίριαξε με τη θεματική του μαθήματος.
 6. **Μόνο από πηγή:** Οι ρήσεις των χαρακτήρων αντικατοπτρίζουν πραγματικές θέσεις τους.
+7. **glbModel:** Χρησιμοποίησε το όνομα του χαρακτήρα χωρίς κενά ως filename (π.χ. `Socrates` → `/models/Socrates.glb`). `color` και `robeColor` μένουν κενά — ορίζονται στην εφαρμογή.
+8. **screens.left/right:** Μένουν κενά URLs — συμπληρώνονται από `skill_media_enrichment`.
