@@ -4,8 +4,8 @@ import json, os, sys
 lesson_id   = sys.argv[1]
 title       = sys.argv[2]
 today       = sys.argv[3]
-src_path    = sys.argv[4]   # absolute path to history3d.json
-out_dir     = sys.argv[5]   # absolute path to /tmp/history-explorer-3d/public/data
+src_path    = "data/current/history3d.json"
+out_dir     = "/tmp/history-explorer-3d/public/data"
 
 os.makedirs(out_dir, exist_ok=True)
 src = json.load(open(src_path, "r", encoding="utf-8"))
