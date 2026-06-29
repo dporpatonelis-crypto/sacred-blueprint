@@ -17,12 +17,13 @@ jobs:
       - name: Checkout sacred-blueprint
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # 🔧 πλήρες ιστορικό για να λειτουργεί το git diff
+          fetch-depth: 0
 
       - name: Detect changed files
         id: changed
         run: |
-          CHANGED=$(git diff --name-only HEAD~1 HEAD -- data/current/)
+          git fetch origin main
+          CHANGED=$(git diff --name-only origin/main HEAD -- data/current/)
           echo "Files changed:"
           echo "$CHANGED"
           echo "timeline=$(echo "$CHANGED"      | grep -c 'timeline.json'      || true)" >> $GITHUB_OUTPUT
