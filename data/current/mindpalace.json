@@ -1,54 +1,57 @@
 {
-  "case_id": "trinity-revelation",
-  "method": "comparative_theology",
+  "case_id": "power-and-kenosis",
+  "method": "comparative_hermeneutics",
   "status": "complete",
   "figures": [
     {
-      "name": "Μέγας Βασίλειος",
-      "work": "Εις το 'Εν αρχή ήν ο Λόγος'",
-      "era": "4ος αιώνας"
+      "name": "Απ. Παύλος",
+      "work": "Φιλιππησίους 2 (Κένωση)",
+      "era": "1ος αι.",
+      "image": "https://i.ibb.co/q3Ty33Vq/The-Sacred-Blueprint-page-0005.jpg"
     },
     {
-      "name": "Γρηγόριος Ναζιανζηνός",
-      "work": "Πέντε Θεολογικοί Λόγοι",
-      "era": "4ος αιώνας"
+      "name": "Ι. Χρυσόστομος",
+      "work": "Λόγοι περί Ανδριάντων",
+      "era": "4ος-5ος αι.",
+      "image": "https://i.ibb.co/pvGvV04f/The-Sacred-Blueprint-page-0010.jpg"
     }
   ],
   "concepts": {
-    "core": "Υποστατική Αρχή και Άκτιστο Φως [5, 6]"
+    "core": "Η Κένωση ως Απάντηση στην Κοσμική Ισχύ"
   },
   "clues": [
     {
       "id": "mp1",
-      "title": "Ουσία vs Υπόσταση",
-      "content": "Το κοινό έναντι του ιδιαιτέρου για τη νίκη επί του Ευνομίου [7].",
-      "source": "Γρηγόριος Θεολόγος",
-      "type": "concept",
+      "title": "Πραγματική Αυθεντία",
+      "content": "Η σωτηρία βρίσκεται στα 'πράγματα' της μετοχής και όχι στα 'ρήματα' των διαταγμάτων.",
+      "source": "Χρυσόστομος",
+      "type": "argument",
       "difficulty": 3
     }
   ],
   "rooms": [
     {
       "id": "r1",
-      "name": "Αίθουσα του Φωτός",
-      "theme": "mystical",
+      "name": "Η Αίθουσα της Πολιτείας",
+      "theme": "basilica",
       "unlock_requirements": [
         "mp1"
       ],
-      "central_question": "Είναι ο Θεός γνώσιμος;"
+      "central_question": "Καταλύει ο Χριστιανισμός την κοινωνία;",
+      "background": "https://i.ibb.co/LDN0sWGp/The-Sacred-Blueprint-page-0002.jpg"
     }
   ],
   "dialogues": [
     {
       "room_id": "r1",
-      "greeting": "Συμεών",
+      "greeting": "Παύλος & Χρυσόστομος",
       "questions": [
-        "Πώς βιώνεται το Πνεύμα;"
+        "Πώς ορίζεται η εξουσία;"
       ],
       "suggested_answers": [
-        "Ως Φως"
+        "Ως όργανο αγαθότητας"
       ],
-      "revelation": "Ο Θεός είναι Φως και εν τω Φωτί Του οψόμεθα Φως [7, 8]."
+      "revelation": "Ο χριστιανισμός αγιάζει την κοινωνία μέσω της ευταξίας."
     }
   ]
 }
