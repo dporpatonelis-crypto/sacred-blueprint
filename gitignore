@@ -1,0 +1,14 @@
+# ── Τοπικές εφαρμογές — δεν ανεβαίνουν στο GitHub ──────────
+# Βάλε αυτό στο ~/sacred-blueprint/.gitignore
+
+# Φάκελος τοπικών εφαρμογών
+apps/
+
+# Logs
+logs/
+*.log
+
+# Temp files
+/tmp/
+.DS_Store
+**/node_modules/
