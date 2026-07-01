@@ -1,19 +1,19 @@
 {
   "events": [
     {
-      "period": "50-60 AD",
-      "title": "Foundation of Christian Political Discourse",
-      "description": "Paul writes Romans 13 and Philippians 2, establishing the relationship between Church and State and the doctrine of kenosis."
+      "period": "1ος αιώνας",
+      "title": "Η Αρχή και η 'Βροντή' του Λόγου",
+      "description": "Ο Ιωάννης ο Ευαγγελιστής μαρτυρεί τον Λόγο που ήταν 'εν αρχή' και 'προς τον Θεόν'. Η θεολογία του είναι εμπειρική, βασισμένη σε όσα είδε και ψηλάφησαν τα χέρια του, φανερώνοντας τη δόξα του Μονογενούς στο Θαβώρ και στον Ιορδάνη."
     },
     {
-      "period": "386-407 AD",
-      "title": "The Golden Era of Rhetoric",
-      "description": "John Chrysostom, through his Homilies on the Statues and commentaries on Paul, transforms theory into practical rhetoric within the imperial court."
+      "period": "4ος αιώνας",
+      "title": "Η Δογματική Θωράκιση της Τριάδας",
+      "description": "Ο Γρηγόριος ο Θεολόγος, κληρονόμος της ιωάννειας θεολογίας, διατυπώνει το δόγμα της Ταυτότητας Ουσίας των τριών Προσώπων. Η Τριάδα είναι Μοναρχία, ισότητα φύσης και σύμπνοια βούλησης, προστατεύοντας την Εκκλησία από την αίρεση."
     },
     {
-      "period": "5th century AD",
-      "title": "Crisis and Synthesis of Tradition",
-      "description": "The Church is called to discern the 'insidious persecution' of political expediency, keeping kenosis as its compass."
+      "period": "11ος αιώνας",
+      "title": "Η Έλλαμψη του Ακτίστου Φωτός",
+      "description": "Ο Συμεών ο Νέος Θεολόγος βιώνει τη θεολογία ως ζωντανή επαφή με το Πνεύμα. Το Φως δεν είναι δόγμα αλλά εμπειρία που μεταμορφώνει τον άνθρωπο σε 'φως εξ αντανακλάσεως'. Η θεολογία κορυφώνεται στη μετοχή."
     }
   ]
 }

@@ -1,120 +1,124 @@
 {
-  "title": "The Interpretive Network of Authority",
-  "description": "Investigation of the relationship between apostolic discourse and political reality.",
+  "title": "Η Τριπλή Μαρτυρία του Ενός Θεού",
+  "description": "Διερεύνηση της διαλεκτικής μεταξύ βιβλικής μαρτυρίας, δογματικής ακρίβειας και μυστικής εμπειρίας.",
   "groups": [
     {
       "id": "r1",
-      "name": "The Hall of Opening",
-      "theme": "Missionary Power",
+      "name": "Η Βροντή του Λόγου",
+      "theme": "Βιβλική Θεμελίωση",
       "clues": [
         "cp1",
         "cp2",
         "cp3"
-      ]
+      ],
+      "description": "Η θεολογία του Ιωάννη είναι εμπειρική, βασισμένη στη θέα του Λόγου. Το Ευαγγέλιο του είναι η 'βροντή' που κηρύσσει την προαιώνια ύπαρξη του Χριστού."
     },
     {
       "id": "r2",
-      "name": "The Court of Authority",
-      "theme": "Political Theology",
+      "name": "Το Αμυντικό Τείχος της Πίστης",
+      "theme": "Δογματική Ακρίβεια",
       "clues": [
         "cp4",
         "cp5",
         "cp6"
-      ]
+      ],
+      "description": "Ο Γρηγόριος κληρονομεί την παράδοση και την θωρακίζει με την ορολογία της Ταυτότητας Ουσίας. Καταπολεμά τις αιρέσεις (Ευνόμιος) και υπερασπίζεται την Ομοουσιότητα."
     },
     {
       "id": "r3",
-      "name": "The Upper Room of Kenosis",
-      "theme": "Ascetic Theology",
+      "name": "Η Καρδιά που Λάμπει",
+      "theme": "Μυστική Εμπειρία",
       "clues": [
         "cp7",
         "cp8",
         "cp9"
-      ]
+      ],
+      "description": "Ο Συμεών οδηγεί τη θεολογία στην προσωπική έλλαμψη. Το Φως δεν αναλύεται, αλλά βιώνεται, κάνοντας τον άνθρωπο συμμέτοχο της θείας φύσης."
     },
     {
       "id": "r4",
-      "name": "The Prison of the Spirit",
-      "theme": "Martyrdom and Parrhesia",
+      "name": "Η Οικονομία της Σωτηρίας",
+      "theme": "Θεία Οικονομία",
       "clues": [
         "cp10",
         "cp11",
         "cp12"
-      ]
+      ],
+      "description": "Η αποκάλυψη της Τριάδος έχει σκοπό τη θέωση του ανθρώπου, που καλείται να γίνει 'κατ' εικόνα' της Τριαδικής ενότητας."
     }
   ],
   "clues": [
     {
       "id": "cp1",
-      "title": "Opening to the Nations",
-      "content": "Abolition of the Law's walls and preaching of the 'unsearchable riches of Christ'",
-      "type": "theological-shift"
+      "title": "Ο Λόγος εν αρχή",
+      "content": "Ο Λόγος ήταν προς τον Θεόν και Θεός ήταν ο Λόγος",
+      "type": "βιβλική-μαρτυρία"
     },
     {
       "id": "cp2",
-      "title": "The Church as Body",
-      "content": "Continuous journey through persecutions so the Church becomes Christ's Body throughout the oikoumene",
-      "type": "ecclesiology"
+      "title": "Το Θαβώρ",
+      "content": "Η δόξα του Μονογενούς φανερώθηκε στο Θαβώρ",
+      "type": "θεοφάνεια"
     },
     {
       "id": "cp3",
-      "title": "Rhetoric as Servant",
-      "content": "Chrysostom's golden tongue gives voice to Paul's epistles in the cities, turning theory into life",
-      "type": "methodology"
+      "title": "Η Μαρτυρία της Ακοής",
+      "content": "Η μαρτυρία είναι εμπειρική, όχι διανοητικό σχήμα",
+      "type": "μεθοδολογία"
     },
     {
       "id": "cp4",
-      "title": "Order and Authority",
-      "content": "Authority under God as means to ensure social cohesion without destroying society",
-      "type": "political-theology"
+      "title": "Ταυτότητα Ουσίας",
+      "content": "Η Τριάδα είναι Μοναρχία, ισότητα φύσης",
+      "type": "δογματική-ακρίβεια"
     },
     {
       "id": "cp5",
-      "title": "The Metaphor of the Ties",
-      "content": "Authority as instrument of God's goodness to avoid anarchy, like the ties (supports) of a house",
-      "type": "analogy"
+      "title": "Ενέργειες του Πνεύματος",
+      "content": "Το Πνεύμα συμπροσκυνείται και συνδοξάζεται",
+      "type": "πνευματολογία"
     },
     {
       "id": "cp6",
-      "title": "Pedagogical Fear",
-      "content": "Fear of rulers functions pedagogically to maintain spiritual vigilance in times of stability",
-      "type": "pastoral-strategy"
+      "title": "Ποιμαντική Σύνεση",
+      "content": "Η 'οικονομία της σιωπής' για τους απλούς πιστούς",
+      "type": "ποιμαντική"
     },
     {
       "id": "cp7",
-      "title": "Kenosis and Humility",
-      "content": "Rejection of all human glory through Christ's mindset who humbled himself",
-      "type": "christology"
+      "title": "Η Έλλαμψη του Φωτός",
+      "content": "Όταν ο Κύριος εμφανίζεται εν μεγάλω Φωτί",
+      "type": "μυστική-εμπειρία"
     },
     {
       "id": "cp8",
-      "title": "Resistance to Worldly Power",
-      "content": "Kenosis as model for the bishop's stance against imperial court claims",
-      "type": "resistance"
+      "title": "Θεία Ενέργεια",
+      "content": "Το Φως είναι η θεία ενέργεια που μας κάνει κοινωνούς της φύσης του Θεού",
+      "type": "ησυχασμός"
     },
     {
       "id": "cp9",
-      "title": "True Authority",
-      "content": "True authority belongs to Christ; salvation is not in decrees but in participatory experience",
-      "type": "dogmatic-truth"
+      "title": "Μετοχή και Υιοθεσία",
+      "content": "Ο άνθρωπος γίνεται φως αλλά παραμένει κτίσμα",
+      "type": "θέωση"
     },
     {
       "id": "cp10",
-      "title": "Insidious Persecution",
-      "content": "Persecution in Christian empire is more dangerous as it comes from those who bear Christ's name",
-      "type": "historical-insight"
+      "title": "Προοδευτική Αποκάλυψη",
+      "content": "Η αποκάλυψη προχωρά: βιβλική μαρτυρία → δογματική διατύπωση → εμπειρική επιβεβαίωση",
+      "type": "ιστορική-θεολογία"
     },
     {
       "id": "cp11",
-      "title": "Political Expediency",
-      "content": "Church stability often becomes a trap for the state to legislate on matters of faith",
-      "type": "risk-factor"
+      "title": "Υποστατική Αρχή",
+      "content": "Ο Θεός γνωρίζεται ως Πρόσωπο, όχι με λογική ανάλυση",
+      "type": "προσωποκεντρική-θεολογία"
     },
     {
       "id": "cp12",
-      "title": "Prophetic Correction",
-      "content": "Chrysostom as 'New Paul' and 'John the Forerunner' corrects the moral decay of the court with parrhesia",
-      "type": "leadership-model"
+      "title": "Η Κάθαρση της Καρδιάς",
+      "content": "Η προσευχή και η άσκηση οδηγούν στη θέα του Φωτός",
+      "type": "πνευματική-ζωή"
     }
   ]
 }

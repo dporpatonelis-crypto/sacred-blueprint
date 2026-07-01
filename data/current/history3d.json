@@ -2,70 +2,70 @@
   "scenes": [
     {
       "id": "scene1",
-      "title": "The World of Paul",
-      "description": "A world under Roman rule. Paul writes about submission but also eschatological reversal through kenosis.",
-      "era": "1st century",
+      "title": "Η Έφεσος του Ιωάννη",
+      "description": "Ο Ιωάννης, γηραιός πλέον, διδάσκει στην Έφεσο. Το πρόσωπό του λάμπει από την ανάμνηση του Θαβώρ. Γράφει το Ευαγγέλιο, επιμένοντας στη βροντή του Λόγου.",
+      "era": "1ος αιώνας",
       "coordinates": [
-        36.2,
-        36.1
+        37.94,
+        27.34
       ],
-      "color": "#d4af37",
+      "color": "#ffd700",
       "characters": [
-        "Paul",
-        "Roman authorities",
-        "Jewish Christians"
+        "Ιωάννης ο Ευαγγελιστής",
+        "Μαθητές"
       ],
-      "dialogue": "Paul: 'Let every person be subject to the governing authorities; for there is no authority except from God.'"
+      "dialogue": "Ιωάννης: 'Όπερ ηκούσαμεν, όπερ εωράκαμεν τοις οφθαλμοίς ημών, απήγγειλαμεν υμίν.'"
     },
     {
       "id": "scene2",
-      "title": "Antioch of Chrysostom",
-      "description": "The rhetorical podium where speech becomes servant of theology. The city as crossroads of cultures and powers.",
-      "era": "4th century",
+      "title": "Η Καισάρεια του Γρηγορίου",
+      "description": "Ο Γρηγόριος αντιμετωπίζει τις αιρέσεις στη Σύνοδο. Με διορατικότητα και ρητορική δεινότητα, θωρακίζει την πίστη με την ορολογία της Ταυτότητας Ουσίας.",
+      "era": "4ος αιώνας",
       "coordinates": [
-        36.2,
-        36.1
+        38.16,
+        35.27
       ],
       "color": "#8b0000",
       "characters": [
-        "John Chrysostom",
-        "Crowd of Antiochians",
-        "Bishops"
+        "Γρηγόριος ο Θεολόγος",
+        "Επίσκοποι",
+        "Ευνόμιος (αιρετικός)"
       ],
-      "dialogue": "Chrysostom: 'It is not to preach, but to be preached, that makes the gospel powerful.'"
+      "dialogue": "Γρηγόριος: 'Ο Θεός είναι μια φύση σε τρία Πρόσωπα, ισότητα ουσίας και σύμπνοια βουλήσεως.'"
     },
     {
       "id": "scene3",
-      "title": "The Court of Constantinople",
-      "description": "The center of political expediency. Here the bishop's parrhesia is tested against imperial power.",
-      "era": "4th-5th century",
+      "title": "Η Κωνσταντινούπολη του Συμεών",
+      "description": "Ο Συμεών, σε μια ατμόσφαιρα κατάνυξης, βιώνει την έλλαμψη του Φωτός. Το πρόσωπό του μεταμορφώνεται, φανερώνοντας τη μετοχή στη θεία ζωή.",
+      "era": "11ος αιώνας",
       "coordinates": [
-        41.0,
-        29.0
+        41.01,
+        28.98
       ],
-      "color": "#2f4f4f",
+      "color": "#ffa500",
       "characters": [
-        "Chrysostom",
-        "Empress Eudoxia",
-        "Officials"
+        "Συμεών ο Νέος Θεολόγος",
+        "Μοναχοί"
       ],
-      "dialogue": "Chrysostom: 'I fear neither angel nor archangel; only God.'"
+      "dialogue": "Συμεών: 'Ο Θεός είναι Φως, και εν τω Φωτί Αυτού οψόμεθα Φως. Η θεολογία μου ξεκινά εκεί που τελειώνει η δική σας.'"
     },
     {
       "id": "scene4",
-      "title": "The Prison of the Spirit",
-      "description": "The symbolic cell where martyrdom and persecution reveal the true nature of the Church.",
-      "era": "Timeless",
+      "title": "Η Βασιλεία της Αγάπης",
+      "description": "Η ένωση των τριών μαρτυριών: του Λόγου, του δόγματος και της εμπειρίας. Η Εκκλησία ως εικόνα της Τριαδικής ενότητας.",
+      "era": "Διαχρονικό",
       "coordinates": [
         38.0,
         35.0
       ],
-      "color": "#36454f",
+      "color": "#ffffff",
       "characters": [
-        "All martyrs",
-        "Christ"
+        "Ιωάννης",
+        "Γρηγόριος",
+        "Συμεών",
+        "Χριστός"
       ],
-      "dialogue": "Voice of martyr: 'The blood of martyrs is the seed of Christians.'"
+      "dialogue": "Χριστός: 'Ίνα πάντες εν ώσι, καθώς εγώ και ο Πατήρ εν εσμεν.'"
     }
   ]
 }

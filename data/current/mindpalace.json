@@ -1,197 +1,207 @@
 {
-  "case_id": "apostolic-interpretive-power-nexus",
+  "case_id": "oikonomia-tou-pneumatos",
   "method": "dynamic-historical-comparative",
   "status": "complete",
   "figures": [
     {
-      "name": "Paul",
-      "role": "Apostle to the Gentiles",
+      "name": "Ιωάννης ο Ευαγγελιστής",
+      "role": "Ο 'Υιός της Βροντής' - Ευαγγελιστής της Αγάπης",
       "works": [
-        "Romans 13",
-        "Philippians 2"
+        "Κατά Ιωάννην Ευαγγέλιο",
+        "Α' Επιστολή Ιωάννου"
       ],
-      "era": "1st century"
+      "era": "1ος αιώνας - Εποχή θεμελίωσης"
     },
     {
-      "name": "John Chrysostom",
-      "role": "The Mouth of the Church",
+      "name": "Γρηγόριος ο Θεολόγος",
+      "role": "Ο Θεολόγος της Τριάδος - Προστάτης της Ορθοδοξίας",
       "works": [
-        "Homilies on the Statues",
-        "Commentary on Paul"
+        "Θεολογικοί Λόγοι",
+        "Λόγοι περί Τριάδος"
       ],
-      "era": "4th-5th century"
+      "era": "4ος αιώνας - Εποχή δογματικών αγώνων"
+    },
+    {
+      "name": "Συμεών ο Νέος Θεολόγος",
+      "role": "Ο Μύστης του Ακτίστου Φωτός",
+      "works": [
+        "Θεολογικά Κεφάλαια",
+        "Ύμνοι Θείας Αγάπης"
+      ],
+      "era": "11ος αιώνας - Εποχή ησυχαστικής αναγέννησης"
     }
   ],
   "concepts": {
-    "core_theology": "The transformation of the world from desert preaching to Christian empire",
+    "core_theology": "Η προοδευτική αποκάλυψη της Τριάδος μέσα από τη βιβλική μαρτυρία, τη δογματική ακρίβεια και τη μυστική εμπειρία",
     "key_tensions": [
-      "Persecution vs. Stability",
-      "Decrees vs. Participation",
-      "Folly of the Cross vs. Rhetorical skill"
+      "Βιβλική μαρτυρία vs. Δογματική διατύπωση",
+      "Λόγος vs. Εμπειρία",
+      "Ουσία vs. Ενέργεια",
+      "Ποιμαντική σύνεση vs. Δογματική ακρίβεια"
     ]
   },
   "clues": [
     {
       "id": "cp1",
-      "title": "Opening to the Nations",
-      "content": "Abolition of the Law's walls",
-      "source": "Act A",
-      "type": "theological-shift"
+      "title": "Ο Λόγος εν αρχή",
+      "content": "Ο Λόγος ήταν προς τον Θεόν και Θεός ήταν ο Λόγος",
+      "source": "Ιωάννης",
+      "type": "βιβλική-μαρτυρία"
     },
     {
       "id": "cp2",
-      "title": "The Church as Body",
-      "content": "Continuous journey through persecutions",
-      "source": "Act A",
-      "type": "ecclesiology"
+      "title": "Το Θαβώρ",
+      "content": "Η δόξα του Μονογενούς φανερώθηκε στο Θαβώρ",
+      "source": "Ιωάννης",
+      "type": "θεοφάνεια"
     },
     {
       "id": "cp3",
-      "title": "Rhetoric as Servant",
-      "content": "Chrysostom's golden tongue",
-      "source": "Act A",
-      "type": "methodology"
+      "title": "Η Μαρτυρία της Ακοής",
+      "content": "Η μαρτυρία είναι εμπειρική, όχι διανοητικό σχήμα",
+      "source": "Ιωάννης",
+      "type": "μεθοδολογία"
     },
     {
       "id": "cp4",
-      "title": "Order and Authority",
-      "content": "Authority under God",
-      "source": "Romans 13",
-      "type": "political-theology"
+      "title": "Ταυτότητα Ουσίας",
+      "content": "Η Τριάδα είναι Μοναρχία, ισότητα φύσης",
+      "source": "Γρηγόριος",
+      "type": "δογματική-ακρίβεια"
     },
     {
       "id": "cp5",
-      "title": "The Metaphor of the Ties",
-      "content": "Ties of a house",
-      "source": "Homilies on the Statues",
-      "type": "analogy"
+      "title": "Ενέργειες του Πνεύματος",
+      "content": "Το Πνεύμα συμπροσκυνείται και συνδοξάζεται",
+      "source": "Γρηγόριος",
+      "type": "πνευματολογία"
     },
     {
       "id": "cp6",
-      "title": "Pedagogical Fear",
-      "content": "Fear of rulers",
-      "source": "Act B",
-      "type": "pastoral-strategy"
+      "title": "Ποιμαντική Σύνεση",
+      "content": "Η 'οικονομία της σιωπής' για τους απλούς πιστούς",
+      "source": "Γρηγόριος",
+      "type": "ποιμαντική"
     },
     {
       "id": "cp7",
-      "title": "Kenosis and Humility",
-      "content": "Rejection of glory",
-      "source": "Philippians 2",
-      "type": "christology"
+      "title": "Η Έλλαμψη του Φωτός",
+      "content": "Όταν ο Κύριος εμφανίζεται εν μεγάλω Φωτί",
+      "source": "Συμεών",
+      "type": "μυστική-εμπειρία"
     },
     {
       "id": "cp8",
-      "title": "Resistance to Worldly Power",
-      "content": "Kenosis as model",
-      "source": "Act C",
-      "type": "resistance"
+      "title": "Θεία Ενέργεια",
+      "content": "Το Φως είναι η θεία ενέργεια που μας κάνει κοινωνούς της φύσης του Θεού",
+      "source": "Συμεών",
+      "type": "ησυχασμός"
     },
     {
       "id": "cp9",
-      "title": "True Authority",
-      "content": "Authority belongs to Christ",
-      "source": "Act C",
-      "type": "dogmatic-truth"
+      "title": "Μετοχή και Υιοθεσία",
+      "content": "Ο άνθρωπος γίνεται φως αλλά παραμένει κτίσμα",
+      "source": "Συμεών",
+      "type": "θέωση"
     },
     {
       "id": "cp10",
-      "title": "Insidious Persecution",
-      "content": "Persecution by Christians",
-      "source": "Act D",
-      "type": "historical-insight"
+      "title": "Προοδευτική Αποκάλυψη",
+      "content": "Η αποκάλυψη προχωρά: βιβλική μαρτυρία → δογματική διατύπωση → εμπειρική επιβεβαίωση",
+      "source": "Σύνθεση",
+      "type": "ιστορική-θεολογία"
     },
     {
       "id": "cp11",
-      "title": "Political Expediency",
-      "content": "Stability becomes trap",
-      "source": "Act D",
-      "type": "risk-factor"
+      "title": "Υποστατική Αρχή",
+      "content": "Ο Θεός γνωρίζεται ως Πρόσωπο, όχι με λογική ανάλυση",
+      "source": "Σύνθεση",
+      "type": "προσωποκεντρική-θεολογία"
     },
     {
       "id": "cp12",
-      "title": "Prophetic Correction",
-      "content": "Chrysostom corrects the court",
-      "source": "Act D",
-      "type": "leadership-model"
+      "title": "Η Κάθαρση της Καρδιάς",
+      "content": "Η προσευχή και η άσκηση οδηγούν στη θέα του Φωτός",
+      "source": "Συμεών",
+      "type": "πνευματική-ζωή"
     }
   ],
   "rooms": [
     {
       "id": "r1",
-      "name": "The Hall of Opening",
-      "theme": "missionary",
+      "name": "Η Βροντή του Λόγου",
+      "theme": "βιβλική-θεμελίωση",
       "unlock_requirements": [
         "cp1",
         "cp2",
         "cp3"
       ],
-      "central_question": "How does apostolic power become rhetorical skill for the salvation of the nations?"
+      "central_question": "Πώς η βροντή του Ιωάννη γίνεται η βάση για όλη τη θεολογία;"
     },
     {
       "id": "r2",
-      "name": "The Court of Authority",
-      "theme": "political",
+      "name": "Το Αμυντικό Τείχος της Πίστης",
+      "theme": "δογματική-ακρίβεια",
       "unlock_requirements": [
         "cp4",
         "cp5",
         "cp6"
       ],
-      "central_question": "Is political authority a divine gift or a necessary evil to avoid anarchy?"
+      "central_question": "Πώς η δογματική ακρίβεια προστατεύει την εμπειρία της πίστης;"
     },
     {
       "id": "r3",
-      "name": "The Upper Room of Kenosis",
-      "theme": "ascetic-theology",
+      "name": "Η Καρδιά που Λάμπει",
+      "theme": "μυστική-εμπειρία",
       "unlock_requirements": [
         "cp7",
         "cp8",
         "cp9"
       ],
-      "central_question": "How does the doctrine of Christ's humility protect the Church from imperial influence?"
+      "central_question": "Πώς η προσωπική έλλαμψη επικυρώνει τη δογματική αλήθεια;"
     },
     {
       "id": "r4",
-      "name": "The Prison of the Spirit",
-      "theme": "martyria",
+      "name": "Η Οικονομία της Σωτηρίας",
+      "theme": "θεία-οικονομία",
       "unlock_requirements": [
         "cp10",
         "cp11",
         "cp12"
       ],
-      "central_question": "Which persecution is heavier: the pagan one of chains or the Christian one of political expediency?"
+      "central_question": "Πώς η Τριάδα γίνεται το πρότυπο για την ενότητα της Εκκλησίας;"
     }
   ],
   "dialogues": [
     {
-      "room_id": "r2",
+      "room_id": "r1",
       "speakers": [
-        "Paul",
-        "Chrysostom"
+        "Ιωάννης",
+        "Γρηγόριος"
       ],
       "questions": [
-        "Why did we teach submission to authorities?"
+        "Πώς μπορεί ο Λόγος να είναι 'προς τον Θεόν' και ταυτόχρονα να γίνεται σάρξ;"
       ],
       "suggested_answers": [
-        "For order",
-        "To avoid anarchy"
+        "Με τη θεία οικονομία",
+        "Με τη σάρκωση του Λόγου"
       ],
-      "revelation": "Christianity sanctifies society without destroying it, using authority as a pedagogical tool."
+      "revelation": "Ο Λόγος είναι το πρόσωπο που ενώνει τον Πατέρα και την ανθρωπότητα."
     },
     {
-      "room_id": "r4",
+      "room_id": "r3",
       "speakers": [
-        "Paul",
-        "Chrysostom"
+        "Γρηγόριος",
+        "Συμεών"
       ],
       "questions": [
-        "How do we face an emperor who legislates on faith?"
+        "Πώς μπορεί ο άνθρωπος να δει το Άκτιστο Φως;"
       ],
       "suggested_answers": [
-        "With parrhesia",
-        "With the folly of the Cross"
+        "Με την κάθαρση της καρδιάς",
+        "Με την προσευχή"
       ],
-      "revelation": "True authority belongs to Christ, and only apostolic parrhesia can stand against the moral decay of the court."
+      "revelation": "Η θέα του Φωτός είναι η κορύφωση της θεολογίας και η αρχή της αιώνιας ζωής."
     }
   ]
 }
