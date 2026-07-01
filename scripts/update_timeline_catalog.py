@@ -5,7 +5,10 @@ lesson_id = sys.argv[1]
 title     = sys.argv[2]
 today     = sys.argv[3]
 
-catalog_path = "/tmp/Map-Timeline/catalog.json"
+# Default to /tmp path, but allow override via env var
+catalog_path = os.environ.get("CATALOG_PATH", "/tmp/Map-Timeline/catalog.json")
+os.makedirs(os.path.dirname(catalog_path), exist_ok=True)
+
 try:
     catalog = json.load(open(catalog_path, "r", encoding="utf-8"))
 except:

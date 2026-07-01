@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 import json, os, sys
 
-lesson_id   = sys.argv[1]
-title       = sys.argv[2]
-today       = sys.argv[3]
-src_path    = "data/current/history3d.json"
-out_dir     = "/tmp/history-explorer-3d/public/data"
+lesson_id = sys.argv[1]
+title     = sys.argv[2]
+today     = sys.argv[3]
 
+# Source data is in sacred-blueprint (where workflow runs)
+src_path = os.environ.get("GITHUB_WORKSPACE", ".") + "/data/current/history3d.json"
+# Output goes to the cloned repo
+out_dir  = "/tmp/history-explorer-3d/public/data"
 os.makedirs(out_dir, exist_ok=True)
+
 src = json.load(open(src_path, "r", encoding="utf-8"))
 
 def xchar(c):
@@ -49,9 +52,8 @@ result = {
     "facts":      [xfact(f, chars) for f in src.get("facts",[])],
     "screens":    xscreens(src.get("screens",{}))
 }
-out_file = os.path.join(out_dir, lesson_id + ".json")
-json.dump(result, open(out_file, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
-print(f"  -> {out_file} (transformed)")
+json.dump(result, open(os.path.join(out_dir, lesson_id+".json"), "w", encoding="utf-8"), indent=2, ensure_ascii=False)
+print(f"  -> public/data/{lesson_id}.json (transformed)")
 
 manifest_path = os.path.join(out_dir, "manifest.json")
 try:
