@@ -1,42 +1,71 @@
 {
-  "characters": [
+  "scenes": [
     {
-      "id": "char_paul",
-      "name": "Απ. Παύλος",
-      "role": "Απόστολος",
-      "description": "Ο κήρυκας της 'μωρίας του Σταυρού' που αντιμετώπισε το θηρίο των διωγμών.",
-      "position_x": 10,
-      "position_y": 0,
-      "position_z": 5,
-      "image": "https://i.ibb.co/q3Ty33Vq/The-Sacred-Blueprint-page-0005.jpg"
+      "id": "scene1",
+      "title": "The World of Paul",
+      "description": "A world under Roman rule. Paul writes about submission but also eschatological reversal through kenosis.",
+      "era": "1st century",
+      "coordinates": [
+        36.2,
+        36.1
+      ],
+      "color": "#d4af37",
+      "characters": [
+        "Paul",
+        "Roman authorities",
+        "Jewish Christians"
+      ],
+      "dialogue": "Paul: 'Let every person be subject to the governing authorities; for there is no authority except from God.'"
     },
     {
-      "id": "char_john",
-      "name": "Ι. Χρυσόστομος",
-      "role": "Ερμηνευτής / Πατήρ",
-      "description": "Ο 'Νέος Παύλος' που μετέτρεψε τη ρητορική σε όπλο κατά της αυτοκρατορικής αδικίας.",
-      "position_x": -10,
-      "position_y": 0,
-      "position_z": 5,
-      "image": "https://i.ibb.co/twQyyfQP/The-Sacred-Blueprint-page-0011.jpg"
-    }
-  ],
-  "facts": [
-    {
-      "id": "fact_1",
-      "title": "Ρητορική ως Όπλο",
-      "content": "Η χρυσή γλώσσα του Ιωάννη έδωσε φωνή στον Παύλο μέσα στις πολύβουες πόλεις.",
-      "era": "4ος αιώνας"
+      "id": "scene2",
+      "title": "Antioch of Chrysostom",
+      "description": "The rhetorical podium where speech becomes servant of theology. The city as crossroads of cultures and powers.",
+      "era": "4th century",
+      "coordinates": [
+        36.2,
+        36.1
+      ],
+      "color": "#8b0000",
+      "characters": [
+        "John Chrysostom",
+        "Crowd of Antiochians",
+        "Bishops"
+      ],
+      "dialogue": "Chrysostom: 'It is not to preach, but to be preached, that makes the gospel powerful.'"
     },
     {
-      "id": "fact_2",
-      "title": "Διαφορά Πλαισίου",
-      "content": "Ο Παύλος κηρύττει για να επιβιώσει η πίστη, ο Χρυσόστομος για να μην αλλοιωθεί από την εξουσία.",
-      "era": "Διαχρονικό"
+      "id": "scene3",
+      "title": "The Court of Constantinople",
+      "description": "The center of political expediency. Here the bishop's parrhesia is tested against imperial power.",
+      "era": "4th-5th century",
+      "coordinates": [
+        41.0,
+        29.0
+      ],
+      "color": "#2f4f4f",
+      "characters": [
+        "Chrysostom",
+        "Empress Eudoxia",
+        "Officials"
+      ],
+      "dialogue": "Chrysostom: 'I fear neither angel nor archangel; only God.'"
+    },
+    {
+      "id": "scene4",
+      "title": "The Prison of the Spirit",
+      "description": "The symbolic cell where martyrdom and persecution reveal the true nature of the Church.",
+      "era": "Timeless",
+      "coordinates": [
+        38.0,
+        35.0
+      ],
+      "color": "#36454f",
+      "characters": [
+        "All martyrs",
+        "Christ"
+      ],
+      "dialogue": "Voice of martyr: 'The blood of martyrs is the seed of Christians.'"
     }
-  ],
-  "screens": {
-    "title": "Από τον Άρειο Πάγο στο Παλάτι",
-    "background": "bg-empire.jpg"
-  }
+  ]
 }

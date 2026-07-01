@@ -1,23 +1,19 @@
-[
-  {
-    "year": "περ. 50-67 μ.Χ.",
-    "title": "Η Θεμελίωση μέσα στο Αίμα",
-    "desc": "Ο Απ. Παύλος συγγράφει τις Επιστολές (Ρωμ. 13, Φιλ. 2) και αντιμετωπίζει τους ειδωλολατρικούς διωγμούς.",
-    "location": "Ρώμη",
-    "slides": "https://docs.google.com/presentation/d/paul_era"
-  },
-  {
-    "year": "387 μ.Χ.",
-    "title": "Η Κρίση των Ανδριάντων",
-    "desc": "Ο Ι. Χρυσόστομος ερμηνεύει τον Παύλο στην Αντιόχεια για να αποτρέψει την αυτοκρατορική οργή του Θεοδοσίου.",
-    "location": "Αντιόχεια",
-    "slides": "https://docs.google.com/presentation/d/paul_era"
-  },
-  {
-    "year": "398-404 μ.Χ.",
-    "title": "Η Παρρησία κατά της Αυλής",
-    "desc": "Ο Χρυσόστομος στην Κωνσταντινούπολη ελέγχει την ηθική έκπτωση της αυλής του Αρκαδίου και της Ευδοξίας.",
-    "location": "Κωνσταντινούπολη",
-    "slides": "https://docs.google.com/presentation/d/paul_era"
-  }
-]
+{
+  "events": [
+    {
+      "period": "50-60 AD",
+      "title": "Foundation of Christian Political Discourse",
+      "description": "Paul writes Romans 13 and Philippians 2, establishing the relationship between Church and State and the doctrine of kenosis."
+    },
+    {
+      "period": "386-407 AD",
+      "title": "The Golden Era of Rhetoric",
+      "description": "John Chrysostom, through his Homilies on the Statues and commentaries on Paul, transforms theory into practical rhetoric within the imperial court."
+    },
+    {
+      "period": "5th century AD",
+      "title": "Crisis and Synthesis of Tradition",
+      "description": "The Church is called to discern the 'insidious persecution' of political expediency, keeping kenosis as its compass."
+    }
+  ]
+}

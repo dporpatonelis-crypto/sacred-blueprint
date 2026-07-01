@@ -1,57 +1,197 @@
 {
-  "case_id": "power-and-kenosis",
-  "method": "comparative_hermeneutics",
+  "case_id": "apostolic-interpretive-power-nexus",
+  "method": "dynamic-historical-comparative",
   "status": "complete",
   "figures": [
     {
-      "name": "Απ. Παύλος",
-      "work": "Φιλιππησίους 2 (Κένωση)",
-      "era": "1ος αι.",
-      "image": "https://i.ibb.co/q3Ty33Vq/The-Sacred-Blueprint-page-0005.jpg"
+      "name": "Paul",
+      "role": "Apostle to the Gentiles",
+      "works": [
+        "Romans 13",
+        "Philippians 2"
+      ],
+      "era": "1st century"
     },
     {
-      "name": "Ι. Χρυσόστομος",
-      "work": "Λόγοι περί Ανδριάντων",
-      "era": "4ος-5ος αι.",
-      "image": "https://i.ibb.co/pvGvV04f/The-Sacred-Blueprint-page-0010.jpg"
+      "name": "John Chrysostom",
+      "role": "The Mouth of the Church",
+      "works": [
+        "Homilies on the Statues",
+        "Commentary on Paul"
+      ],
+      "era": "4th-5th century"
     }
   ],
   "concepts": {
-    "core": "Η Κένωση ως Απάντηση στην Κοσμική Ισχύ"
+    "core_theology": "The transformation of the world from desert preaching to Christian empire",
+    "key_tensions": [
+      "Persecution vs. Stability",
+      "Decrees vs. Participation",
+      "Folly of the Cross vs. Rhetorical skill"
+    ]
   },
   "clues": [
     {
-      "id": "mp1",
-      "title": "Πραγματική Αυθεντία",
-      "content": "Η σωτηρία βρίσκεται στα 'πράγματα' της μετοχής και όχι στα 'ρήματα' των διαταγμάτων.",
-      "source": "Χρυσόστομος",
-      "type": "argument",
-      "difficulty": 3
+      "id": "cp1",
+      "title": "Opening to the Nations",
+      "content": "Abolition of the Law's walls",
+      "source": "Act A",
+      "type": "theological-shift"
+    },
+    {
+      "id": "cp2",
+      "title": "The Church as Body",
+      "content": "Continuous journey through persecutions",
+      "source": "Act A",
+      "type": "ecclesiology"
+    },
+    {
+      "id": "cp3",
+      "title": "Rhetoric as Servant",
+      "content": "Chrysostom's golden tongue",
+      "source": "Act A",
+      "type": "methodology"
+    },
+    {
+      "id": "cp4",
+      "title": "Order and Authority",
+      "content": "Authority under God",
+      "source": "Romans 13",
+      "type": "political-theology"
+    },
+    {
+      "id": "cp5",
+      "title": "The Metaphor of the Ties",
+      "content": "Ties of a house",
+      "source": "Homilies on the Statues",
+      "type": "analogy"
+    },
+    {
+      "id": "cp6",
+      "title": "Pedagogical Fear",
+      "content": "Fear of rulers",
+      "source": "Act B",
+      "type": "pastoral-strategy"
+    },
+    {
+      "id": "cp7",
+      "title": "Kenosis and Humility",
+      "content": "Rejection of glory",
+      "source": "Philippians 2",
+      "type": "christology"
+    },
+    {
+      "id": "cp8",
+      "title": "Resistance to Worldly Power",
+      "content": "Kenosis as model",
+      "source": "Act C",
+      "type": "resistance"
+    },
+    {
+      "id": "cp9",
+      "title": "True Authority",
+      "content": "Authority belongs to Christ",
+      "source": "Act C",
+      "type": "dogmatic-truth"
+    },
+    {
+      "id": "cp10",
+      "title": "Insidious Persecution",
+      "content": "Persecution by Christians",
+      "source": "Act D",
+      "type": "historical-insight"
+    },
+    {
+      "id": "cp11",
+      "title": "Political Expediency",
+      "content": "Stability becomes trap",
+      "source": "Act D",
+      "type": "risk-factor"
+    },
+    {
+      "id": "cp12",
+      "title": "Prophetic Correction",
+      "content": "Chrysostom corrects the court",
+      "source": "Act D",
+      "type": "leadership-model"
     }
   ],
   "rooms": [
     {
       "id": "r1",
-      "name": "Η Αίθουσα της Πολιτείας",
-      "theme": "basilica",
+      "name": "The Hall of Opening",
+      "theme": "missionary",
       "unlock_requirements": [
-        "mp1"
+        "cp1",
+        "cp2",
+        "cp3"
       ],
-      "central_question": "Καταλύει ο Χριστιανισμός την κοινωνία;",
-      "background": "https://i.ibb.co/LDN0sWGp/The-Sacred-Blueprint-page-0002.jpg"
+      "central_question": "How does apostolic power become rhetorical skill for the salvation of the nations?"
+    },
+    {
+      "id": "r2",
+      "name": "The Court of Authority",
+      "theme": "political",
+      "unlock_requirements": [
+        "cp4",
+        "cp5",
+        "cp6"
+      ],
+      "central_question": "Is political authority a divine gift or a necessary evil to avoid anarchy?"
+    },
+    {
+      "id": "r3",
+      "name": "The Upper Room of Kenosis",
+      "theme": "ascetic-theology",
+      "unlock_requirements": [
+        "cp7",
+        "cp8",
+        "cp9"
+      ],
+      "central_question": "How does the doctrine of Christ's humility protect the Church from imperial influence?"
+    },
+    {
+      "id": "r4",
+      "name": "The Prison of the Spirit",
+      "theme": "martyria",
+      "unlock_requirements": [
+        "cp10",
+        "cp11",
+        "cp12"
+      ],
+      "central_question": "Which persecution is heavier: the pagan one of chains or the Christian one of political expediency?"
     }
   ],
   "dialogues": [
     {
-      "room_id": "r1",
-      "greeting": "Παύλος & Χρυσόστομος",
+      "room_id": "r2",
+      "speakers": [
+        "Paul",
+        "Chrysostom"
+      ],
       "questions": [
-        "Πώς ορίζεται η εξουσία;"
+        "Why did we teach submission to authorities?"
       ],
       "suggested_answers": [
-        "Ως όργανο αγαθότητας"
+        "For order",
+        "To avoid anarchy"
       ],
-      "revelation": "Ο χριστιανισμός αγιάζει την κοινωνία μέσω της ευταξίας."
+      "revelation": "Christianity sanctifies society without destroying it, using authority as a pedagogical tool."
+    },
+    {
+      "room_id": "r4",
+      "speakers": [
+        "Paul",
+        "Chrysostom"
+      ],
+      "questions": [
+        "How do we face an emperor who legislates on faith?"
+      ],
+      "suggested_answers": [
+        "With parrhesia",
+        "With the folly of the Cross"
+      ],
+      "revelation": "True authority belongs to Christ, and only apostolic parrhesia can stand against the moral decay of the court."
     }
   ]
 }

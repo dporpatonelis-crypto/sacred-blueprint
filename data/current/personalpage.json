@@ -1,24 +1,19 @@
 {
-  "title": "Hub: Θεολογία και Βίωμα",
-  "chapters": [
+  "title": "Apostolic Interpretive Power and Authority",
+  "subtitle": "From Pauline foundation to Chrysostom's rhetoric",
+  "summary": "This lesson highlights the dialectical relationship between theology and political power. Starting from Paul, who established the relationship between Church and State through 'order' (Romans 13) and the example of Christ's kenosis (Philippians 2), we arrive at John Chrysostom. Chrysostom, as a rhetorician of the empire, turned Pauline thought into a tool of parrhesia against the moral decay of the court. Through four thematic rooms (Opening, Authority, Kenosis, Martyrdom), the learner is invited to discover how tradition functions as a spiritual compass, protecting the Church from the 'insidious persecution' of political expediency while maintaining social cohesion.",
+  "sections": [
     {
-      "index": 1,
-      "title": "Γιατί Θεολόγοι;",
-      "html": "<ul><li><strong>Ιωάννης:</strong> Για την υπερβατική αφετηρία [9].</li><li><strong>Γρηγόριος:</strong> Για τη δογματική κατοχύρωση [9].</li><li><strong>Συμεών:</strong> Για τη βιωματική ανανέωση [9].</li></ul>",
-      "text": "Ο τίτλος συνδέει την αποκάλυψη με τη διατύπωση και την έλλαμψη [9].",
-      "stickies": [
-        "Χρήση σε κατηχητικό"
-      ],
-      "media": {
-        "slides": [
-          {
-            "id": "pp_slide",
-            "label": "Το Φως του Συμεών",
-            "url": "",
-            "notes": "Αναφορά στη φωτοφάνεια"
-          }
-        ]
-      }
+      "heading": "Apostolic Foundation",
+      "content": "Paul, amidst the persecutions of the 1st century, lays the foundation: authority is from God, but the true identity of the Church lies in participatory union with the Body of Christ. Kenosis becomes the antidote to worldly power."
+    },
+    {
+      "heading": "Chrysostom's Rhetoric",
+      "content": "In the 4th-5th century, Chrysostom translates Paul's epistles into the daily life of the cities. His speech is not mere theory but prophetic correction of the court, using rhetorical skill as servant of truth."
+    },
+    {
+      "heading": "Didactic Conclusions",
+      "content": "The contrast between persecution and stability reveals that Christian civilization does not dissolve society but sanctifies it, using the supports of authority (ties) for pedagogical purposes. The problem arises when political stability becomes a trap and the state legislates on faith instead of serving it."
     }
   ]
 }
