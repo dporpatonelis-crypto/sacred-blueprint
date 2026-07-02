@@ -1,57 +1,54 @@
 {
-  "case_id": "power-and-kenosis",
-  "method": "comparative_hermeneutics",
+  "case_id": "trinity-revelation",
+  "method": "comparative_theology",
   "status": "complete",
   "figures": [
     {
-      "name": "Απ. Παύλος",
-      "work": "Φιλιππησίους 2 (Κένωση)",
-      "era": "1ος αι.",
-      "image": "https://i.ibb.co/q3Ty33Vq/The-Sacred-Blueprint-page-0005.jpg"
+      "name": "Μέγας Βασίλειος",
+      "work": "Εις το 'Εν αρχή ήν ο Λόγος'",
+      "era": "4ος αιώνας"
     },
     {
-      "name": "Ι. Χρυσόστομος",
-      "work": "Λόγοι περί Ανδριάντων",
-      "era": "4ος-5ος αι.",
-      "image": "https://i.ibb.co/pvGvV04f/The-Sacred-Blueprint-page-0010.jpg"
+      "name": "Γρηγόριος Ναζιανζηνός",
+      "work": "Πέντε Θεολογικοί Λόγοι",
+      "era": "4ος αιώνας"
     }
   ],
   "concepts": {
-    "core": "Η Κένωση ως Απάντηση στην Κοσμική Ισχύ"
+    "core": "Υποστατική Αρχή και Άκτιστο Φως [5, 6]"
   },
   "clues": [
     {
       "id": "mp1",
-      "title": "Πραγματική Αυθεντία",
-      "content": "Η σωτηρία βρίσκεται στα 'πράγματα' της μετοχής και όχι στα 'ρήματα' των διαταγμάτων.",
-      "source": "Χρυσόστομος",
-      "type": "argument",
+      "title": "Ουσία vs Υπόσταση",
+      "content": "Το κοινό έναντι του ιδιαιτέρου για τη νίκη επί του Ευνομίου [7].",
+      "source": "Γρηγόριος Θεολόγος",
+      "type": "concept",
       "difficulty": 3
     }
   ],
   "rooms": [
     {
       "id": "r1",
-      "name": "Η Αίθουσα της Πολιτείας",
-      "theme": "basilica",
+      "name": "Αίθουσα του Φωτός",
+      "theme": "mystical",
       "unlock_requirements": [
         "mp1"
       ],
-      "central_question": "Καταλύει ο Χριστιανισμός την κοινωνία;",
-      "background": "https://i.ibb.co/LDN0sWGp/The-Sacred-Blueprint-page-0002.jpg"
+      "central_question": "Είναι ο Θεός γνώσιμος;"
     }
   ],
   "dialogues": [
     {
       "room_id": "r1",
-      "greeting": "Παύλος & Χρυσόστομος",
+      "greeting": "Συμεών",
       "questions": [
-        "Πώς ορίζεται η εξουσία;"
+        "Πώς βιώνεται το Πνεύμα;"
       ],
       "suggested_answers": [
-        "Ως όργανο αγαθότητας"
+        "Ως Φως"
       ],
-      "revelation": "Ο χριστιανισμός αγιάζει την κοινωνία μέσω της ευταξίας."
+      "revelation": "Ο Θεός είναι Φως και εν τω Φωτί Του οψόμεθα Φως [7, 8]."
     }
   ]
 }
