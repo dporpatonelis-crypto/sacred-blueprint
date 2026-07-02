@@ -1,8 +1,6 @@
 #!/bin/bash
 # ============================================================
-# sync_github.sh — Commit και push (MONI MEGA LYSI)
-# Αποκλειστικό σενάριο για το sacred-blueprint repo
-# Πλήρης αυτοματοποίηση με auto-detection of new lessons in /lessons/
+# sync_github.sh — Commit και push με πλήρες error reporting
 # ============================================================
 
 BASE="$(pwd)"
@@ -23,7 +21,6 @@ echo "      🔄 GitHub Sync — Auto-Detection Mode        "
 echo "═══════════════════════════════════════════════════"
 echo ""
 
-# ── STEP 1: Find all lesson folders that have *_output.json files ─────────────────
 echo "🔍 Scanning /lessons/ for active lessons..."
 NEW_LESSONS=()
 
@@ -35,66 +32,75 @@ for dir in lessons/*/; do
 done
 
 echo ""
-if [ ${#NEW_LESSONS[@]} -eq 0 ]; then
-  echo "⚠ No new lesson folders detected with output files."
-else
-  echo "🔧 Preparing Git add..."
-  
-   # Add all discovered lesson folders to git
-  for dir in "${NEW_LESSONS[@]}"; do
-    basename_dir=$(basename "$dir")
-    
-     # Add ALL files from the lesson directory
-    git add "$dir"/*.json "$dir"/*_output.json "$dir"/master_output.json "$dir"/meta.json 2>/dev/null || true
-    echo "   → Added: $basename_dir/"
-  done
-  
-   # Also add index.html for dashboard updates  
-  if [ -f "lessons/index.html" ]; then
-    git add lessons/index.html 2>/dev/null || true
-    echo "   → Added: lessons/index.html"
-  fi
-  
-  echo ""
-  echo "📦 Additional config & data files..."
-  
-   # Add supporting files  
-  git add \
-    config/ \
-    skills/prompts/ \
-    workflows/ \
-    scripts/ \
-    orchestrator/ \
-    README.md \
-    data/current/ \
-     2>/dev/null || true
-  
-  echo ""
-  if git diff --cached --quiet; then
-    echo "ⓘ No changes to commit. All files already tracked."
-    exit 0
-  else
-    echo ""
-    echo "✅ Committing changes..."
-    git commit -m "$MSG" && echo "   → Commit: $MSG" || {
-      echo "   ✗ Commit failed — check .gitignore or permissions"
-      exit 1
-     }
 
-    if git push origin main &>/dev/null; then
-      echo ""
-      echo "═══════════════════════════════════════════════════"
-      echo "      🎉 GITHUB SYNC SUCCESSFUL!                      "
-      echo "═══════════════════════════════════════════════════"
-      echo ""
-      echo "✓ ${#NEW_LESSONS[@]} lesson(s) published to GitHub"
-      echo "🌐 Remote: origin/main"
-      exit 0
-    else
-      echo ""
-      echo "⚠ Push failed — check network/remote configuration"
-      echo "  Local commit successful."
-      exit 1
-    fi
+git add \
+  config/ \
+  skills/prompts/ \
+  lessons/*/meta.json \
+  lessons/*/master_output.json \
+  lessons/*/*_output.json \
+  lessons/index.html \
+  workflows/ \
+  scripts/ \
+  orchestrator/ \
+  README.md \
+  data/current/ \
+  2>/dev/null || true
+
+if git diff --cached --quiet; then
+  echo "ⓘ Καμία αλλαγή για commit."
+  exit 0
+fi
+
+echo "✅ Committing changes..."
+if ! git commit -m "$MSG"; then
+  echo "✗ Commit failed — έλεγξε .gitignore ή permissions"
+  exit 1
+fi
+echo "   → Commit: $MSG"
+echo ""
+
+# ── PULL πρώτα, για να αποφύγουμε non-fast-forward rejection ──
+echo "🔄 Έλεγχος για αλλαγές στο remote (πιθανές από GitHub Action)..."
+git fetch origin main 2>&1
+
+BEHIND=$(git rev-list HEAD..origin/main --count 2>/dev/null || echo "0")
+if [ "$BEHIND" -gt 0 ]; then
+  echo "  ⚠ Το remote έχει $BEHIND νέα commits (πιθανόν από Actions)."
+  echo "  Κάνω pull --rebase..."
+  if ! git pull --rebase origin main; then
+    echo "  ✗ Rebase conflict — χρειάζεται χειροκίνητη επίλυση:"
+    echo "     git status"
+    echo "     # διόρθωσε conflicts"
+    echo "     git rebase --continue"
+    exit 1
   fi
+  echo "  ✓ Rebase ολοκληρώθηκε."
+fi
+echo ""
+
+# ── PUSH με πλήρες error output (όχι κρυμμένο) ──
+echo "☁️  Push στο GitHub..."
+PUSH_OUTPUT=$(git push origin main 2>&1)
+PUSH_STATUS=$?
+
+if [ $PUSH_STATUS -eq 0 ]; then
+  echo ""
+  echo "═══════════════════════════════════════════════════"
+  echo "      🎉 GITHUB SYNC SUCCESSFUL!                    "
+  echo "═══════════════════════════════════════════════════"
+  echo ""
+  echo "✓ ${#NEW_LESSONS[@]} lesson(s) tracked"
+  echo "🌐 Remote: origin/main"
+  exit 0
+else
+  echo ""
+  echo "✗ Push απέτυχε. Πλήρες error:"
+  echo "──────────────────────────────────────────"
+  echo "$PUSH_OUTPUT"
+  echo "──────────────────────────────────────────"
+  echo ""
+  echo "Local commit έγινε επιτυχώς — μόνο το push απέτυχε."
+  echo "Χειροκίνητο retry: git push origin main"
+  exit 1
 fi

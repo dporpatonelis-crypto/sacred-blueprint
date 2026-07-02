@@ -1,0 +1,64 @@
+{
+  "id": "three_theologians_summit",
+  "version": "1.1",
+  "characters": {
+    "john": {
+      "displayName": "Ιωάννης Θεολόγος",
+      "shortName": "John",
+      "color": "#0044ff"
+    },
+    "gregory": {
+      "displayName": "Γρηγόριος Θεολόγος",
+      "shortName": "Greg",
+      "color": "#ffaa00"
+    },
+    "symeon": {
+      "displayName": "Συμεών Νέος Θεολόγος",
+      "shortName": "Sym",
+      "color": "#ffffff"
+    }
+  },
+  "acts": [
+    {
+      "id": "act_1",
+      "title": "Η Βροντή και η Ακρίβεια",
+      "type": "dialogue",
+      "dialogues": [
+        {
+          "id": "d1",
+          "speaker": "john",
+          "text": "Εγώ παρέδωσα τον Λόγο που ψηλάφησαν οι χείρες μας [3].",
+          "camera": "close-up"
+        },
+        {
+          "id": "d2",
+          "speaker": "gregory",
+          "text": "Και εγώ έδωσα τη γλώσσα της Ταυτότητας της Ουσίας για να προστατεύσω τη Μοναρχία της Τριάδας [3]."
+        }
+      ]
+    },
+    {
+      "id": "act_2",
+      "title": "Η Οικονομία του Πνεύματος",
+      "type": "theological_debate",
+      "dialogues": [
+        {
+          "id": "d3",
+          "speaker": "john",
+          "text": "Γιατί η Σύνοδος δίστασε να ονομάσει το Πνεύμα 'Θεό'; [4]",
+          "camera": "wide"
+        },
+        {
+          "id": "d4",
+          "speaker": "gregory",
+          "text": "Ήταν πράξη οικονομίας για τους απλούς πιστούς που φοβούνταν την αλλοίωση της πίστης [4, 5]."
+        },
+        {
+          "id": "d5",
+          "speaker": "symeon",
+          "text": "Διότι ο Θεός γνωρίζεται με 'πράγματα' και όχι με 'ρήματα' [6]."
+        }
+      ]
+    }
+  ]
+}
