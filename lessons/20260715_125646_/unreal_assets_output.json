@@ -1,0 +1,35 @@
+{
+  "rooms": [
+    {
+      "name": "Thabor_room",
+      "mesh": "SM_ThaborRoom",
+      "textures": [
+        "T_ThaborLight"
+      ]
+    },
+    {
+      "name": "Synod_room",
+      "mesh": "SM_SynodRoom",
+      "textures": [
+        "T_SynodScrolls"
+      ]
+    },
+    {
+      "name": "Light_room",
+      "mesh": "SM_LightRoom",
+      "textures": [
+        "T_DivineLight"
+      ]
+    }
+  ],
+  "characters": [
+    "John",
+    "Gregory",
+    "Symeon"
+  ],
+  "objects": [
+    "Gospel",
+    "Cross",
+    "Icon"
+  ]
+}
