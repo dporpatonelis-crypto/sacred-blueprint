@@ -1,79 +1,258 @@
 {
   "characters": [
     {
-      "id": "john",
-      "name": "Άγιος Ιωάννης ο Θεολόγος",
-      "role": "Ευαγγελιστής και μάρτυρας του Λόγου",
-      "description": "Ο δραματοποιημένος διάλογος αντλεί από το Ευαγγέλιό του, ιδίως από τις περικοπές για τον Παράκλητο.",
-      "position_x": -6,
-      "position_y": 0,
-      "position_z": 2,
-      "rotation": 30
+      "id": "socrates",
+      "name": "Ο Φιλόσοφος",
+      "position_x": -3.5,
+      "position_y": 0.05,
+      "position_z": 0.3,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "Ο πατέρας της φιλοσοφίας",
+      "glbModel": " /models/Socrates.glb"
     },
     {
-      "id": "basil",
-      "name": "Μέγας Βασίλειος",
-      "role": "Επίσκοπος Καισαρείας και διδάσκαλος της Πνευματολογίας",
-      "description": "Υπερασπίζεται τη θεότητα και τη λατρευτική τιμή του Αγίου Πνεύματος στον αγώνα του 4ου αιώνα.",
-      "position_x": 6,
-      "position_y": 0,
-      "position_z": 2,
-      "rotation": -30
+      "id": "hypatia",
+      "name": "Υπατία",
+      "position_x": 3.5,
+      "position_y": 0.05,
+      "position_z": 0.3,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "Η φιλόσοφος της Αλεξάνδρειας",
+      "glbModel": "/models/hypatia compress).glb"
     },
     {
-      "id": "gregory",
-      "name": "Γρηγόριος ο Θεολόγος",
-      "role": "Ερμηνευτής της καππαδοκικής θεολογίας",
-      "description": "Παρέχει το ιστορικό πλαίσιο της θεολογικής γλώσσας και της εκκλησιαστικής ομολογίας.",
-      "image": "https://i.ibb.co/kgF5TZTx/The-Sacred-Blueprint-page-0007.jpg",
+      "id": "aristotle",
+      "name": "Αριστοτέλης",
+      "position_x": -8,
+      "position_y": 0.05,
+      "position_z": 0.3,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "Πατέρας της επιστήμης",
+      "glbModel": "/models/Aristotle compressed (2).glb"
+    },
+    {
+      "id": "ancient_tiles.glb",
+      "name": "tree",
+      "position_x": -3.5,
+      "position_y": 0,
+      "position_z": 0.3,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "",
+      "glbModel": "/models/ancient_tiles.glb"
+    },
+    {
+      "id": "Constantine compressed (2).glb",
+      "name": "Μ. Κωνσταντίνος",
+      "position_x": 5.75,
+      "position_y": 0.05,
+      "position_z": 0.3,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "Πρώτος Βυζαντινός Αυτοκράτορας",
+      "glbModel": "/models/Constantine compressed (2).glb"
+    },
+    {
+      "id": "monk compressed.glb",
+      "name": "",
+      "position_x": 8,
+      "position_y": 0.05,
+      "position_z": 0.3,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "Άγιος",
+      "glbModel": "/models/monk compressed.glb"
+    },
+    {
+      "id": "ancient_tiles.glb",
+      "name": "tree",
+      "position_x": 3.5,
+      "position_y": 0,
+      "position_z": 0.3,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "",
+      "glbModel": "/models/ancient_tiles.glb"
+    },
+    {
+      "id": "ancient_tiles.glb",
+      "name": "tree",
+      "position_x": 8,
+      "position_y": 0,
+      "position_z": 0.3,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "",
+      "glbModel": "/models/ancient_tiles.glb"
+    },
+    {
+      "id": "ancient_tiles.glb",
+      "name": "tree",
+      "position_x": 5.75,
+      "position_y": 0,
+      "position_z": 0.3,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "",
+      "glbModel": "/models/ancient_tiles.glb"
+    },
+    {
+      "id": "ancient_tiles.glb",
+      "name": "tree",
+      "position_x": -8,
+      "position_y": 0,
+      "position_z": 0.3,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "",
+      "glbModel": "/models/ancient_tiles.glb"
+    },
+    {
+      "id": "ancient_tiles.glb",
+      "name": "tree",
+      "position_x": -5.75,
+      "position_y": 0,
+      "position_z": 0.3,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "",
+      "glbModel": "/models/ancient_tiles.glb"
+    },
+    {
+      "id": "ψηφιδωτό Πέλλας compressed (2).glb",
+      "name": "tree",
+      "position_x": -5.75,
+      "position_y": 0,
+      "position_z": 2,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "",
+      "glbModel": "/models/ψηφιδωτό Πέλλας compressed (2).glb"
+    },
+    {
+      "id": "Αλεξάνδρεια compressed (1).glb",
+      "name": "tree",
+      "position_x": 3.5,
+      "position_y": 0,
+      "position_z": 2,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "",
+      "glbModel": "/models/Αλεξάνδρεια compressed (1).glb"
+    },
+    {
+      "id": "Λιβελο compressed (2).glb",
+      "name": "tree",
       "position_x": 0,
+      "position_y": 1,
+      "position_z": 0.3,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "",
+      "glbModel": "/models/Λιβελο compressed (2).glb"
+    },
+    {
+      "id": "Αθήνα.glb",
+      "name": "tree",
+      "position_x": -8,
       "position_y": 0,
-      "position_z": -4,
-      "rotation": 0
+      "position_z": 2,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "",
+      "glbModel": "/models/Αθήνα.glb"
+    },
+    {
+      "id": "Valhalla grok compress.glb",
+      "name": "tree",
+      "position_x": 8,
+      "position_y": -0.5,
+      "position_z": 2,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "",
+      "glbModel": "/models/Valhalla grok compress.glb"
+    },
+    {
+      "id": "Alexander.glb",
+      "name": "Μ. Αλέξανδρος",
+      "position_x": -5.75,
+      "position_y": 0.05,
+      "position_z": 0.3,
+      "rotation": 0,
+      "color": "",
+      "robeColor": "",
+      "description": "Βασιλιάς Μακεδονίας",
+      "glbModel": "/models/Alexander.glb"
     }
   ],
   "dialogs": [
     {
-      "character_id": "john",
-      "trigger": "Προσέγγισε τον Ιωάννη",
-      "text": "Ο Παράκλητος είναι το Πνεύμα της Αληθείας, που εκπορεύεται από τον Πατέρα. Η μαρτυρία Του δεν είναι ξένη προς τη ζωή του Υιού.",
-      "response_options": [
-        "Τι σημαίνει «εκπορεύεται»;",
-        "Πώς φανερώνει το Πνεύμα την αλήθεια;"
-      ]
+      "character_id": "socrates",
+      "question": "Πώς παρουσιάζει το Ευαγγέλιο του Ιωάννη το Άγιο Πνεύμα;",
+      "answer": "Ως Παράκλητο και Πνεύμα της Αληθείας, που μαρτυρεί για τον Χριστό και οδηγεί την Εκκλησία στην αλήθεια."
     },
     {
-      "character_id": "basil",
-      "trigger": "Προσέγγισε τον Βασίλειο",
-      "text": "Αν το Πνεύμα αγιάζει, ζωοποιεί και μας ενώνει με τον Θεό, δεν μπορεί να κατατάσσεται ανάμεσα στα κτίσματα.",
-      "response_options": [
-        "Γιατί η δοξολογία έχει δογματική σημασία;",
-        "Πώς απαντάς στους Πνευματομάχους;"
-      ]
+      "character_id": "socrates",
+      "question": "Γιατί η φράση «Κύριον και Ζωοποιόν» είναι σημαντική;",
+      "answer": "Επειδή ομολογεί το Πνεύμα ως πηγή ζωής και ως πρόσωπο που λατρεύεται μαζί με τον Πατέρα και τον Υιό."
+    },
+    {
+      "character_id": "Constantine compressed (2).glb",
+      "question": "Τι διακρίνει την ποιμαντική οικονομία από υποχώρηση στην πίστη;",
+      "answer": "Η οικονομία αφορά τον σοφό τρόπο διδασκαλίας· δεν αφαιρεί την αλήθεια που η Εκκλησία ομολογεί."
+    },
+    {
+      "character_id": "monk compressed.glb",
+      "question": "Πού οδηγεί τελικά η Πνευματολογία;",
+      "answer": "Στη μετοχή στη ζωή του Τριαδικού Θεού, όπως αυτή βιώνεται στη λατρεία και στην αγιότητα."
     }
   ],
   "facts": [
     {
-      "id": "f1",
-      "title": "Ιωάννης 15:26",
-      "content": "Κεντρική ευαγγελική αναφορά για το Πνεύμα της Αληθείας και την εκπόρευσή Του από τον Πατέρα.",
-      "era": "1ος αιώνας"
+      "character_id": "socrates",
+      "fact": "Στο Ιω. 15:26 το Πνεύμα ονομάζεται Πνεύμα της Αληθείας και λέγεται ότι εκπορεύεται από τον Πατέρα."
     },
     {
-      "id": "f2",
-      "title": "Περί του Αγίου Πνεύματος",
-      "content": "Έργο του Μεγάλου Βασιλείου που υπερασπίζεται την τιμή και τη δοξολογία του Αγίου Πνεύματος.",
-      "era": "4ος αιώνας"
+      "character_id": "monk compressed.glb",
+      "fact": "Ο Μέγας Βασίλειος υπερασπίστηκε τη δοξολογική τιμή του Αγίου Πνεύματος στο Περί του Αγίου Πνεύματος."
     },
     {
-      "id": "f3",
-      "title": "Το Σύμβολο του 381",
-      "content": "Η ομολογία για το Άγιο Πνεύμα ολοκληρώνεται με λειτουργική και σωτηριολογική γλώσσα.",
-      "era": "381 μ.Χ."
+      "character_id": "Constantine compressed (2).glb",
+      "fact": "Το Σύμβολο της Κωνσταντινουπόλεως του 381 ομολογεί το Πνεύμα ως «Κύριον και Ζωοποιόν»."
+    },
+    {
+      "character_id": "hypatia",
+      "fact": "Η φράση «συμπροσκυνούμενον και συνδοξαζόμενον» δηλώνει κοινή λατρευτική τιμή με τον Πατέρα και τον Υιό."
+    },
+    {
+      "character_id": "aristotle",
+      "fact": "Η δογματική γλώσσα των Πατέρων υπηρετεί τη μυσταγωγική και λειτουργική ζωή της Εκκλησίας."
     }
   ],
   "screens": {
-    "title": "Η Αίθουσα της Δοξολογίας",
-    "background": ""
+    "right_image_url": "https://i.ibb.co/GQ7P88jD/bg-caseclosed.jpg",
+    "left_image_url": " /models/Judging_Socrates.mp4",
+    "right_label": "Τριαδολογία και Πνευματολογία",
+    "left_label": "Διάλογος για το Πνεύμα της Αληθείας"
   }
 }

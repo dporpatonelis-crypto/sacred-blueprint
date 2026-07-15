@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1778410000001,
+    "year": "185 m.X.",
+    "title": "Gennisi Origen stin Alexandreia",
+    "desc": "O Origen gennietai se christianiki oikogeneia. O pateras tou Leonidis martyrei kata tin diakrisi tou Septimiou Severou, afinontas ton dekapentachrono Origen na anavalei tin oikogeneia.",
+    "img": "",
+    "location": "Alexandreia",
+    "lat": 31.2001,
+    "lng": 29.9187,
+    "zoom": 7,
+    "slides": ""
+  },
+  {
+    "id": 1778410000002,
+    "year": "~203 m.X.",
+    "title": "Kefalaio tis Katacheseos",
+    "desc": "O Origen analamvanei tin dieuthinsi tis kachetikis scholis tis Alexandreias. Didaskei paganous kai christianous, prospatheontas na ermineusei ti Grafi me filosofikousorous.",
+    "img": "",
+    "location": "Alexandreia",
+    "lat": 31.2001,
+    "lng": 29.9187,
+    "zoom": 7,
+    "slides": ""
+  },
+  {
+    "id": 1778410000003,
+    "year": "~230-240 m.X.",
+    "title": "Sygrapsi Peri Archon",
+    "desc": "To magnum opus tou Origen, opou diatyponei tin proyparxi ton psychon, tin ierarchiki alysida ton onto kai tin teliki apokatastasi (apokatastasis). To ergo theoreitai i proti systimatiki christianiki theologos.",
+    "img": "",
+    "location": "Alexandreia / Kaisareia",
+    "lat": 31.2001,
+    "lng": 29.9187,
+    "zoom": 7,
+    "slides": ""
+  },
+  {
+    "id": 1778410000004,
+    "year": "~248 m.X.",
+    "title": "Kata Kelsou",
+    "desc": "O Origen apanta ston pagano filosofo Kelso, yperaspizomenos ton Christianismo me filosofika epicheirimata. Deichnei oti chrisimopoiei ti filosofia os aspida, ochi os xifos kata tis pisteos.",
+    "img": "",
+    "location": "Kaisareia Palaistinis",
+    "lat": 32.5025,
+    "lng": 34.8953,
+    "zoom": 7,
+    "slides": ""
+  },
+  {
+    "id": 1778410000005,
+    "year": "254 m.X.",
+    "title": "Thanatos Origen",
+    "desc": "Meta apo basanistirio kata ton diogmo tou Dekiou, o Origen pethainei stin Kaisareia. Ezie os askitis kai ypesti gia tin pisti tou, gegonos pou oi yperaspistes tou epikaloontai os apodeixi ton protheseon tou.",
+    "img": "",
+    "location": "Kaisareia Palaistinis",
+    "lat": 32.5025,
+    "lng": 34.8953,
+    "zoom": 7,
+    "slides": ""
+  },
+  {
+    "id": 1778410000006,
+    "year": "325 m.X.",
+    "title": "A' Oikoumeniki Synodos - Nikea",
+    "desc": "I Synodos tis Nikeas katadikazei ton Arianismo kai orizei tin omooysio fysei tou Yiou. Oi ides tou Origen peri ypotagis tou Yiou apoteloun istoriko ypovathro tis syzitisis, an kai o idios eiche pethanei 70 chronia noritera.",
+    "img": "",
+    "location": "Nikea",
+    "lat": 40.4286,
+    "lng": 29.7215,
+    "zoom": 7,
+    "slides": ""
+  },
+  {
+    "id": 1778410000007,
+    "year": "553 m.X.",
+    "title": "E' Oikoumeniki Synodos - Konstantinoupoli",
+    "desc": "300 chronia meta ton thanato tou, o Origen katadikazetai apo tin E' Oikoumeniki Synodo me entoli tou Ioustinianou. Oi ides tou peri proyparxis psychon, apokatastasis kai isochristou charaktrizontai airetikes.",
+    "img": "",
+    "location": "Konstantinoupoli",
+    "lat": 41.0082,
+    "lng": 28.9784,
+    "zoom": 7,
+    "slides": ""
+  }
+]

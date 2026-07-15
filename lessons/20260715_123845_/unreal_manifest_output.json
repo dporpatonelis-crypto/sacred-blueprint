@@ -1,0 +1,27 @@
+{
+  "scenario": "trinity_scene",
+  "assets": [
+    "SM_ThaborRoom",
+    "SM_SynodRoom",
+    "SM_LightRoom",
+    "T_ThaborLight",
+    "T_SynodScrolls",
+    "T_DivineLight"
+  ],
+  "dialogues": {
+    "lines": [
+      {
+        "speaker": "John",
+        "text": "Εν αρχή ην ο Λόγος..."
+      },
+      {
+        "speaker": "Gregory",
+        "text": "Ομοούσιος..."
+      },
+      {
+        "speaker": "Symeon",
+        "text": "Φως..."
+      }
+    ]
+  }
+}
