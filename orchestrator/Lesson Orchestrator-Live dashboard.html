@@ -310,17 +310,17 @@
       },
       history3d: {
         root: 'object',
-        summary: 'History Explorer 3D χρειάζεται characters, dialogs, facts και screens.',
+        summary: 'History Explorer 3D: προστατευμένο template χαρακτήρων + dialogs/facts overlay.',
         fields: ['characters[]', 'dialogs[]', 'facts[]', 'screens'],
-        template: () => ({ characters: [], dialogs: [], facts: [], screens: { title: '', background: '' } }),
+        template: () => ({ characters: [], dialogs: [], facts: [], screens: { left_image_url: ' /models/Judging_Socrates.mp4', right_image_url: 'https://i.ibb.co/GQ7P88jD/bg-caseclosed.jpg', left_label: '', right_label: '' } }),
         validate: (json) => json && Array.isArray(json.characters) && Array.isArray(json.dialogs)
       },
       mindpalace: {
         root: 'object',
         summary: 'Mind Palace Debate με investigation_board και mind_palace.',
         fields: ['case_id', 'title', 'investigation_board', 'mind_palace'],
-        template: () => ({ case_id: '', title: '', investigation_board: { figures: [], clues: [] }, mind_palace: { rooms: [], dialogues: [] } }),
-        validate: (json) => json && json.investigation_board
+        template: () => ({ case_id: '', title: '', method: 'comparative', status: 'complete', investigation_board: { image: '', figures: [], concepts: { core: '', image: '' }, clues: [], connections: [] }, mind_palace: { rooms: [], dialogues: [] } }),
+        validate: (json) => json && json.case_id && json.investigation_board && json.mind_palace && Array.isArray(json.mind_palace.rooms)
       },
       anchor: {
         root: 'object',
@@ -459,10 +459,10 @@
             content: f.content || '',
             era: f.era || ''
           })),
-          screens: master.history3d.screens || { title: '', background: '' }
+          screens: master.history3d.screens || { left_image_url: '', right_image_url: '', left_label: '', right_label: '' }
         };
       } else {
-        scenario.appOutputs.history3d = { characters: [], dialogs: [], facts: [], screens: { title: '', background: '' } };
+        scenario.appOutputs.history3d = { characters: [], dialogs: [], facts: [], screens: { left_image_url: '', right_image_url: '', left_label: '', right_label: '' } };
       }
 
       // --- unreal_scenario ---

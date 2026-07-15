@@ -1,0 +1,24 @@
+{
+  "characters": [
+    {"id":"socrates","name":"Ο Φιλόσοφος","position_x":-3.5,"position_y":0.05,"position_z":0.3,"rotation":0,"color":"","robeColor":"","description":"Ο πατέρας της φιλοσοφίας","glbModel":" /models/Socrates.glb"},
+    {"id":"hypatia","name":"Υπατία","position_x":3.5,"position_y":0.05,"position_z":0.3,"rotation":0,"color":"","robeColor":"","description":"Η φιλόσοφος της Αλεξάνδρειας","glbModel":"/models/hypatia compress).glb"},
+    {"id":"aristotle","name":"Αριστοτέλης","position_x":-8,"position_y":0.05,"position_z":0.3,"rotation":0,"color":"","robeColor":"","description":"Πατέρας της επιστήμης","glbModel":"/models/Aristotle compressed (2).glb"},
+    {"id":"ancient_tiles.glb","name":"tree","position_x":-3.5,"position_y":0,"position_z":0.3,"rotation":0,"color":"","robeColor":"","description":"","glbModel":"/models/ancient_tiles.glb"},
+    {"id":"Constantine compressed (2).glb","name":"Μ. Κωνσταντίνος","position_x":5.75,"position_y":0.05,"position_z":0.3,"rotation":0,"color":"","robeColor":"","description":"Πρώτος Βυζαντινός Αυτοκράτορας","glbModel":"/models/Constantine compressed (2).glb"},
+    {"id":"monk compressed.glb","name":"","position_x":8,"position_y":0.05,"position_z":0.3,"rotation":0,"color":"","robeColor":"","description":"Άγιος","glbModel":"/models/monk compressed.glb"},
+    {"id":"ancient_tiles.glb","name":"tree","position_x":3.5,"position_y":0,"position_z":0.3,"rotation":0,"color":"","robeColor":"","description":"","glbModel":"/models/ancient_tiles.glb"},
+    {"id":"ancient_tiles.glb","name":"tree","position_x":8,"position_y":0,"position_z":0.3,"rotation":0,"color":"","robeColor":"","description":"","glbModel":"/models/ancient_tiles.glb"},
+    {"id":"ancient_tiles.glb","name":"tree","position_x":5.75,"position_y":0,"position_z":0.3,"rotation":0,"color":"","robeColor":"","description":"","glbModel":"/models/ancient_tiles.glb"},
+    {"id":"ancient_tiles.glb","name":"tree","position_x":-8,"position_y":0,"position_z":0.3,"rotation":0,"color":"","robeColor":"","description":"","glbModel":"/models/ancient_tiles.glb"},
+    {"id":"ancient_tiles.glb","name":"tree","position_x":-5.75,"position_y":0,"position_z":0.3,"rotation":0,"color":"","robeColor":"","description":"","glbModel":"/models/ancient_tiles.glb"},
+    {"id":"ψηφιδωτό Πέλλας compressed (2).glb","name":"tree","position_x":-5.75,"position_y":0,"position_z":2,"rotation":0,"color":"","robeColor":"","description":"","glbModel":"/models/ψηφιδωτό Πέλλας compressed (2).glb"},
+    {"id":"Αλεξάνδρεια compressed (1).glb","name":"tree","position_x":3.5,"position_y":0,"position_z":2,"rotation":0,"color":"","robeColor":"","description":"","glbModel":"/models/Αλεξάνδρεια compressed (1).glb"},
+    {"id":"Λιβελο compressed (2).glb","name":"tree","position_x":0,"position_y":1,"position_z":0.3,"rotation":0,"color":"","robeColor":"","description":"","glbModel":"/models/Λιβελο compressed (2).glb"},
+    {"id":"Αθήνα.glb","name":"tree","position_x":-8,"position_y":0,"position_z":2,"rotation":0,"color":"","robeColor":"","description":"","glbModel":"/models/Αθήνα.glb"},
+    {"id":"Valhalla grok compress.glb","name":"tree","position_x":8,"position_y":-0.5,"position_z":2,"rotation":0,"color":"","robeColor":"","description":"","glbModel":"/models/Valhalla grok compress.glb"},
+    {"id":"Alexander.glb","name":"Μ. Αλέξανδρος","position_x":-5.75,"position_y":0.05,"position_z":0.3,"rotation":0,"color":"","robeColor":"","description":"Βασιλιάς Μακεδονίας","glbModel":"/models/Alexander.glb"}
+  ],
+  "dialogs": [],
+  "facts": [],
+  "screens": {"left_image_url":" /models/Judging_Socrates.mp4","right_image_url":"https://i.ibb.co/GQ7P88jD/bg-caseclosed.jpg","left_label":"Αρχαία αγορά Αθήνας Δίκη","right_label":"Αρχαία Αθήνα"}
+}

@@ -163,13 +163,30 @@ lesson_path = os.path.expanduser('~/sacred-blueprint/lessons/<case_id>/<case_id>
 with open(lesson_path, 'r', encoding='utf-8') as f:
     lesson = json.load(f)
 
-master['mind_palace']         = lesson.get('mind_palace', {})
-master['investigation_board'] = lesson.get('investigation_board', {})
-master['case_id']             = lesson.get('case_id', '')
+# Το Mind Palace αποθηκεύεται ως ΟΛΟΚΛΗΡΟ case file. Έτσι το distribute.sh
+# γράφει στο mindpalace.json τις δύο απαιτούμενες nested ενότητες.
+master['mind_palace'] = lesson
+
+# Το Investigation Board είναι ξεχωριστή εφαρμογή με δικό της, λιτό schema.
+# Μην αντιγράψεις εδώ figures ή concepts από το Mind Palace case.
+master['investigation_board'] = {
+    'topic': lesson.get('title', ''),
+    'clues': [
+        {
+            'id': clue.get('id', ''),
+            'title': clue.get('title', ''),
+            'description': clue.get('content', ''),
+            'type': clue.get('type', 'evidence'),
+            'image': clue.get('image', '')
+        }
+        for clue in lesson.get('investigation_board', {}).get('clues', [])
+    ],
+    'connections': lesson.get('investigation_board', {}).get('connections', [])
+}
 
 with open(master_path, 'w', encoding='utf-8') as f:
     json.dump(master, f, indent=2, ensure_ascii=False)
-print('master_output.json updated: mind_palace + investigation_board')
+print('master_output.json updated: full Mind Palace case + separate Investigation Board')
 "
 ```
 
@@ -184,6 +201,7 @@ print('master_output.json updated: mind_palace + investigation_board')
   "method": "comparative | chronological | thematic",
   "status": "complete",
   "investigation_board": {
+    "image":"",
     "figures": [{"name":"string","work":"string","era":"string","image":""}],
     "concepts": {"core":"string","image":""},
     "clues": [
@@ -206,6 +224,10 @@ print('master_output.json updated: mind_palace + investigation_board')
   }
 }
 ```
+
+Στο `master_output.json` το παραπάνω αντικείμενο αποθηκεύεται αυτούσιο στο
+`mind_palace`. Δεν flattenάρεις ποτέ τα `figures`, `concepts`, `clues`,
+`rooms` ή `dialogues` στη ρίζα του `mind_palace`.
 
 ---
 

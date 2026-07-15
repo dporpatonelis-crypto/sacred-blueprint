@@ -65,10 +65,9 @@ if 'history3d' in m:
         'dialogs': h.get('dialogs',[]), 'facts': h.get('facts',[]),
         'screens': h.get('screens',{})}
 
-if 'investigation_board' in m and 'mind_palace' in m:
-    out['mindpalace'] = {'case_id': m.get('case_id',''), 'title': m.get('title',''),
-        'investigation_board': m.get('investigation_board',{}),
-        'mind_palace': m.get('mind_palace',{})}
+if 'mind_palace' in m:
+    # mind_palace is already the complete case file consumed by the app.
+    out['mindpalace'] = m['mind_palace']
 
 if 'anchor' in m:
     out['anchor'] = m['anchor']

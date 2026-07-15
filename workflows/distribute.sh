@@ -70,6 +70,21 @@ for KEY in $KEYS; do
     continue
   fi
 
+  # Το Mind Palace δέχεται πλήρες case file. Η εφαρμογή δεν μπορεί να
+  # διαβάσει flattened fields όπως figures, concepts, rooms στη ρίζα.
+  if [ "$KEY" = "mind_palace" ] \
+    && ! echo "$SECTION" | jq -e '
+      (.case_id | type == "string")
+      and (.title | type == "string")
+      and (.investigation_board | type == "object")
+      and (.mind_palace | type == "object")
+      and (.mind_palace.rooms | type == "array")
+      and (.mind_palace.dialogues | type == "array")
+    ' >/dev/null 2>&1; then
+    echo "  ✗ mind_palace έχει μη έγκυρο schema — αναμένονται case_id/title και nested investigation_board + mind_palace.rooms/dialogues" | tee -a "$LOG"
+    continue
+  fi
+
   # 1. Βιβλιοθήκη: μέσα στον φάκελο του μαθήματος
   echo "$SECTION" > "$LESSON_DIR/${KEY}_output.json"
 

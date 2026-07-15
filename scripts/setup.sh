@@ -25,7 +25,7 @@ cat > config/routing.json << 'JSON'
 JSON
 
 cat > orchestrator/master_template.json << 'JSON'
-{ "_comment": "Master Template", "_version": "1.0", "title": "", "subtitle": "", "description": "", "date": "", "era": "", "location": "", "coordinates": { "lat": 0, "lng": 0, "zoom": 7 }, "timeline_item": {}, "investigation_board": {}, "history3d": {}, "mind_palace": {}, "unreal_scenario": {}, "notebook": {}, "personal_page": {} }
+{ "_comment": "Master Template. mind_palace must be a complete Mind Palace case file with nested investigation_board and nested mind_palace (rooms/dialogues); root investigation_board is the separate app schema.", "_version": "1.1", "title": "", "subtitle": "", "description": "", "date": "", "era": "", "location": "", "coordinates": { "lat": 0, "lng": 0, "zoom": 7 }, "timeline_item": {}, "investigation_board": { "topic": "", "clues": [], "connections": [] }, "history3d": {}, "mind_palace": { "case_id": "", "title": "", "method": "comparative", "status": "complete", "investigation_board": { "image": "", "figures": [], "concepts": { "core": "", "image": "" }, "clues": [], "connections": [] }, "mind_palace": { "rooms": [], "dialogues": [] } }, "unreal_scenario": {}, "notebook": {}, "personal_page": {} }
 JSON
 
 echo "✓ Όλα έτοιμα"

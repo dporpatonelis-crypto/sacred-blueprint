@@ -1,189 +1,104 @@
-# SKILL: History Explorer 3D JSON Architect
-## Sub-Skill · Καλείται από `new-lesson-workflow` ή αυτόνομα
+# SKILL: History Explorer 3D — Protected Scene Builder
 
----
+## Σκοπός
 
-## 🎯 CONTEXT
+Δημιουργείς εκπαιδευτικό περιεχόμενο για το History Explorer 3D χωρίς να
+αλλάζεις τη σκηνή. Τα GLB models, τα IDs, τα ονόματα, οι θέσεις, οι
+περιστροφές, τα χρώματα και τα screen URLs είναι **προστατευμένα** στο:
 
-- **Environment:** VS Code + Continue Extension
-- **Workspace:** `~/sacred-blueprint`
-- **App:** History Explorer 3D (React Three Fiber, curved screens, NPC models, Firebase Storage)
-- **Role:** Δημιουργείς JSON με characters, dialogs, facts και screens για το 3D περιβάλλον. Εκτελείς χωρίς άδεια για τεχνικά βήματα.
+`templates/history3d/default.json`
 
----
+Ο χρήστης αλλάζει το template χειροκίνητα μόνο όταν θέλει νέα πρόσωπα ή άλλη
+σκηνοθεσία. Το skill δεν επεξεργάζεται ποτέ αυτό το αρχείο.
 
-## 📥 INPUT
+## Είσοδος
 
-Ένα από τα δύο:
-1. **Κείμενο πηγής** (ιστορικό θέμα με πρόσωπα και γεγονότα)
-2. **Υπάρχον JSON** άλλης εφαρμογής για μετατροπή
+Κείμενο πηγής ή υπάρχον JSON μαθήματος.
 
----
+## Ροή εργασίας
 
-## 🔄 WORKFLOW
+### 1. Εξαγωγή περιεχομένου
 
-### STEP 1 — Extraction
+Εξήγαγε 4 ερωτήσεις/απαντήσεις, έως 5 σύντομα facts και δύο labels για τις
+υπάρχουσες οθόνες. Μην εξάγεις χαρακτήρες ή χωρικές οδηγίες.
 
-Από το κείμενο εξήγαγε:
-- **2 χαρακτήρες** (ιστορικά πρόσωπα που θα είναι NPCs στο 3D περιβάλλον)
-- **2 διαλόγους** (ένας ανά χαρακτήρα) με trigger, κείμενο, επιλογές απάντησης
-- **3 facts** (συνοπτικά ιστορικά στοιχεία για τα panels)
-- **Background** (επιλογή: `bg-agora.jpg` | `bg-library.jpg` | `bg-temple.jpg` | `bg-palace.jpg`)
+Διάβασε τα IDs από `templates/history3d/default.json`. Χρησιμοποίησε μόνο
+υπάρχοντα IDs. Για το τρέχον template είναι προτιμότερα:
 
-Εκτύπωσε σύνοψη.
+- `socrates`
+- `hypatia`
+- `aristotle`
+- `Constantine compressed (2).glb`
+- `monk compressed.glb`
+- `Alexander.glb`
 
----
+Αν το κείμενο αναφέρεται σε πρόσωπο που δεν υπάρχει στη σκηνή, παρουσίασε το
+περιεχόμενο ως ερώτηση/απάντηση από ένα υπάρχον NPC. Μην μετονομάσεις NPC και
+μην επινοήσεις GLB path.
 
-### STEP 2 — JSON Generation
+### 2. Δημιουργία content overlay
+
+Δημιούργησε **μόνο** το ακόλουθο JSON. Τα URLs στις οθόνες αντιγράφονται
+ακριβώς από το template.
 
 ```json
 {
-  "characters": [
-    {
-      "id": "char_1",
-      "name": "<Όνομα χαρακτήρα>",
-      "role": "<ρόλος/τίτλος>",
-      "description": "<σύντομη βιογραφία, 1-2 προτάσεις>",
-      "position_x": 0, "position_y": 0.05, "position_z": 0, "rotation": 0,
-      "color": "",
-      "robeColor": "",
-      "glbModel": "/models/<ΌνομαΧωρίςΚενά>.glb"
-    },
-    {
-      "id": "char_2",
-      "name": "<Όνομα χαρακτήρα>",
-      "role": "<ρόλος/τίτλος>",
-      "description": "<σύντομη βιογραφία>",
-      "position_x": 3, "position_y": 0.05, "position_z": 0, "rotation": 180,
-      "color": "",
-      "robeColor": "",
-      "glbModel": "/models/<ΌνομαΧωρίςΚενά>.glb"
-    }
-  ],
   "dialogs": [
     {
-      "character_id": "char_1",
-      "trigger": "<τι κάνει ο μαθητής για να ξεκινήσει τον διάλογο>",
-      "text": "<ρήση του χαρακτήρα, 2-3 προτάσεις>",
-      "response_options": ["<επιλογή 1>", "<επιλογή 2>"]
-    },
-    {
-      "character_id": "char_2",
-      "trigger": "<trigger για char_2>",
-      "text": "<ρήση char_2>",
-      "response_options": ["<επιλογή 1>", "<επιλογή 2>"]
+      "character_id": "socrates",
+      "question": "<ερώτηση του μαθητή>",
+      "answer": "<σύντομη απάντηση ή πρόσκληση για σκέψη>"
     }
   ],
   "facts": [
-    {"id": "fact_1", "title": "<τίτλος>", "content": "<2-3 προτάσεις>", "era": "<χρονική περίοδος>"},
-    {"id": "fact_2", "title": "<τίτλος>", "content": "<περιεχόμενο>", "era": "<εποχή>"},
-    {"id": "fact_3", "title": "<τίτλος>", "content": "<περιεχόμενο>", "era": "<εποχή>"}
+    {
+      "character_id": "socrates",
+      "fact": "<σύντομο ιστορικό ή θεολογικό στοιχείο>"
+    }
   ],
   "screens": {
-    "title": "<τίτλος σκηνής>",
-    "background": "bg-agora.jpg",
-    "left_image_url": "",
-    "right_image_url": "",
-    "left_label": "<τίτλος αριστερής εικόνας>",
-    "right_label": "<τίτλος δεξιάς εικόνας>"
+    "left_image_url": " /models/Judging_Socrates.mp4",
+    "right_image_url": "https://i.ibb.co/GQ7P88jD/bg-caseclosed.jpg",
+    "left_label": "<τίτλος αριστερής οθόνης>",
+    "right_label": "<τίτλος δεξιάς οθόνης>"
   }
 }
 ```
 
-**Επιλογή background:**
-- `bg-agora.jpg` → Αρχαία Αγορά (φιλοσοφία, δημοκρατία, αρχαιότητα)
-- `bg-library.jpg` → Βιβλιοθήκη (θεολογία, Πατέρες, κείμενα)
-- `bg-temple.jpg` → Ναός (λειτουργία, εικόνες, Βυζάντιο)
-- `bg-palace.jpg` → Παλάτι (αυτοκράτορες, πολιτική ιστορία)
+Μην βάζεις `characters`, `glbModel`, `position_x`, `position_y`,
+`position_z`, `rotation`, `trigger`, `text`, `response_options`, `title` ή
+`background` στο overlay. Αυτά δεν ανήκουν στο schema της εφαρμογής.
 
-Εκτύπωσε σε code block.
+### 3. Παραγωγή τελικού JSON
 
----
-
-### STEP 3 — Write to Workspace
+Αποθήκευσε το overlay ως `data/current/history3d_content.json`, έπειτα τρέξε:
 
 ```bash
-python3 -c "
-import json, os
-data = <GENERATED_JSON>
-path = os.path.expanduser('~/sacred-blueprint/data/current/history3d.json')
-with open(path, 'w', encoding='utf-8') as f:
-    json.dump(data, f, indent=2, ensure_ascii=False)
-print('Written.')
-"
+python3 scripts/build_history3d_from_template.py \
+  templates/history3d/default.json \
+  data/current/history3d_content.json \
+  data/current/history3d.json
 ```
 
----
+Το script αντιγράφει το template και αντικαθιστά μόνο `dialogs`, `facts` και
+`screens`. Αν το validation αποτύχει, διόρθωσε το overlay· μην γράψεις JSON
+χειροκίνητα πάνω στο τελικό αρχείο.
 
-### STEP 4 — Summary Report
-
-```
-[LOG] History Explorer 3D
-  Characters   : N
-  Dialogs      : N
-  Facts        : N
-  Background   : <bg-*.jpg>
-  File         : ~/sacred-blueprint/data/current/history3d.json
-  Status       : complete
-```
-
----
-
-### STEP 5 — Sync to master_output.json
+### 4. Sync στο master_output.json
 
 ```bash
-python3 -c "
-import json, os
-
-master_path = os.path.expanduser('~/sacred-blueprint/data/current/master_output.json')
-try:
-    with open(master_path, 'r', encoding='utf-8') as f:
-        master = json.load(f)
-except:
-    master = {}
-
-section_path = os.path.expanduser('~/sacred-blueprint/data/current/history3d.json')
-with open(section_path, 'r', encoding='utf-8') as f:
-    section = json.load(f)
-
-master['history3d'] = section
-
-with open(master_path, 'w', encoding='utf-8') as f:
-    json.dump(master, f, indent=2, ensure_ascii=False)
-print('master_output.json updated: history3d')
-"
+python3 scripts/sync_history3d_to_master.py \
+  templates/history3d/default.json \
+  data/current/history3d.json \
+  lessons/<lesson-folder>/master_output.json
 ```
 
----
+## Κανόνες
 
-## 📐 JSON SCHEMA
-
-```json
-{
-  "characters": [
-    {"id":"string","name":"string","role":"string","description":"string",
-     "position_x":0,"position_y":0,"position_z":0,"rotation":0}
-  ],
-  "dialogs": [
-    {"character_id":"string","trigger":"string","text":"string",
-     "response_options":["string","string"]}
-  ],
-  "facts": [
-    {"id":"string","title":"string","content":"string","era":"string"}
-  ],
-  "screens": {"title":"string","background":"bg-agora.jpg"}
-}
-```
-
----
-
-## 🚨 RULES
-
-1. **Ακριβώς 2 characters:** Δεν λιγότερο, δεν περισσότερο.
-2. **character_id στα dialogs:** Πρέπει να ταιριάζει με `char_1` / `char_2`.
-3. **Positions:** Οι χαρακτήρες δεν στέκονται στο ίδιο σημείο — `position_x` να διαφέρει.
-4. **Facts max 3:** Συνοπτικά, εκπαιδευτικά, χωρίς Wikipedia-style μήκος.
-5. **Background επιλογή:** Ταίριαξε με τη θεματική του μαθήματος.
-6. **Μόνο από πηγή:** Οι ρήσεις των χαρακτήρων αντικατοπτρίζουν πραγματικές θέσεις τους.
-7. **glbModel:** Χρησιμοποίησε το όνομα του χαρακτήρα χωρίς κενά ως filename (π.χ. `Socrates` → `/models/Socrates.glb`). `color` και `robeColor` μένουν κενά — ορίζονται στην εφαρμογή.
-8. **screens.left/right:** Μένουν κενά URLs — συμπληρώνονται από `skill_media_enrichment`.
+1. Η σκηνή έχει 17 προστατευμένους χαρακτήρες. Δεν προσθέτεις ή αφαιρείς κανέναν.
+2. Δεν αλλάζεις ποτέ GLB model, θέση, περιστροφή, χρώμα, όνομα ή description.
+3. Κάθε `character_id` σε dialog ή fact πρέπει να υπάρχει στο template.
+4. Τα dialogs έχουν ακριβώς: `character_id`, `question`, `answer`.
+5. Τα facts έχουν ακριβώς: `character_id`, `fact`.
+6. Τα screens έχουν ακριβώς: `left_image_url`, `right_image_url`, `left_label`, `right_label`.
+7. Νέα πρόσωπα ή αλλαγές σκηνής γίνονται αποκλειστικά με χειροκίνητη επεξεργασία του template από τον χρήστη.

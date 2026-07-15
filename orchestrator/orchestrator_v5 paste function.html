@@ -593,9 +593,9 @@ function promptText(appId,lesson){
     investigation:`Δημιούργησε JSON για Investigation Board:
 {"topic":"<θέμα>","clues":[{"title":"","description":"","type":"evidence|suspect|note"}]}
 5-7 clues με ποικιλία types. ΜΟΝΟ JSON '{'.`,
-    history3d:`Δημιούργησε JSON για History Explorer 3D:
-{"characters":[{"id":"char_1","name":"","role":"","description":"","position_x":0,"position_y":0,"position_z":0,"rotation":0}],"dialogs":[{"character_id":"char_1","trigger":"","text":"","response_options":["",""]}],"facts":[{"id":"fact_1","title":"","content":"","era":""}],"screens":{"title":"","background":"bg-agora.jpg"}}
-2 characters, 2 dialogs, 3 facts. ΜΟΝΟ JSON '{'.`,
+    history3d:`Δημιούργησε ΜΟΝΟ content overlay για History Explorer 3D. Μην δημιουργήσεις characters, GLB models ή positions: αυτά αντιγράφονται από το προστατευμένο templates/history3d/default.json.
+{"dialogs":[{"character_id":"socrates","question":"","answer":""}],"facts":[{"character_id":"socrates","fact":""}],"screens":{"left_image_url":" /models/Judging_Socrates.mp4","right_image_url":"https://i.ibb.co/GQ7P88jD/bg-caseclosed.jpg","left_label":"","right_label":""}}
+4 dialogs, έως 5 facts, μόνο υπάρχοντα character IDs. ΜΟΝΟ JSON '{'.`,
     mindpalace:`Δημιούργησε JSON για Mind Palace Debate (Η Υπόθεση του Φιλοσόφου).
 Δομή:
 {
@@ -741,7 +741,7 @@ function promptJSON(targetId,srcId,srcJson){
   const tsc={
     timeline:`Εξαγωγή για Timeline: [{"id":${ts},"year":"","title":"","desc":"","img":"","location":"","lat":0,"lng":0,"zoom":7,"slides":""}]`,
     investigation:`Εξαγωγή για Investigation Board: {"topic":"","clues":[{"title":"","description":"","type":"evidence"}]}`,
-    history3d:`Εξαγωγή για History Explorer 3D: {"characters":[],"dialogs":[],"facts":[],"screens":{"title":"","background":"bg-agora.jpg"}}`,
+    history3d:`Εξαγωγή για History Explorer 3D content overlay: {"dialogs":[{"character_id":"socrates","question":"","answer":""}],"facts":[{"character_id":"socrates","fact":""}],"screens":{"left_image_url":" /models/Judging_Socrates.mp4","right_image_url":"https://i.ibb.co/GQ7P88jD/bg-caseclosed.jpg","left_label":"","right_label":""}}. Μην παράγεις characters, GLB ή positions.`,
     mindpalace:`Εξαγωγή για Mind Palace Debate: {"case_id":"","title":"","method":"comparative","status":"complete","investigation_board":{"figures":[],"concepts":{"core":""},"clues":[],"connections":[]},"mind_palace":{"rooms":[],"dialogues":[{"room_id":"r1","greeting":"","questions":[],"suggested_answers":[],"revelation":""}]}}}`,  
     unreal:`Εξαγωγή για Unreal Engine 5 scenario: {"id":"","version":"1.0","title":"","subtitle":"","characters":{},"acts":[]}`,
     anchor:`Εξαγωγή για Living Anchor: {"metadata":{"title":"","source":"","date":"${today}"},"anchors":[{"id":"","phrase":"","layers":{"literal":"","structural":"","critical":""},"causality":{"cause":"","consequence":""}}]}`,

@@ -38,7 +38,7 @@ PROMPT="Δημιούργησε ένα JSON για εκπαιδευτικό μά�
   \"timeline_item\": { \"year\": \"έτος\", \"title\": \"γεγονός\", \"desc\": \"περιγραφή\" },
   \"investigation_board\": { \"topic\": \"θέμα\", \"clues\": [] },
   \"history3d\": { \"characters\": [], \"dialogs\": [], \"facts\": [], \"screens\": { \"title\": \"\", \"background\": \"\" } },
-  \"mind_palace\": { \"case_id\": \"\", \"title\": \"\", \"method\": \"comparative\", \"status\": \"complete\", \"investigation_board\": { \"figures\": [], \"concepts\": { \"core\": \"\" }, \"clues\": [], \"connections\": [] }, \"mind_palace\": { \"rooms\": [], \"dialogues\": [] } },
+  \"mind_palace\": { \"case_id\": \"\", \"title\": \"\", \"method\": \"comparative\", \"status\": \"complete\", \"investigation_board\": { \"image\": \"\", \"figures\": [], \"concepts\": { \"core\": \"\", \"image\": \"\" }, \"clues\": [], \"connections\": [] }, \"mind_palace\": { \"rooms\": [], \"dialogues\": [] } },
   \"notebook\": { \"title\": \"\", \"date\": \"\", \"chapters\": [ { \"index\": 1, \"title\": \"\", \"html\": \"<p></p>\", \"text\": \"\", \"stickies\": [], \"media\": { \"audio\": [], \"slides\": [], \"notebooklm\": [], \"pdf\": [], \"text\": [] } } ] },
   \"personal_page\": { \"title\": \"\", \"chapters\": [] },
   \"unreal_scenario\": { \"id\": \"\", \"version\": \"1.0\", \"title\": \"\", \"subtitle\": \"\", \"characters\": {}, \"acts\": [] }

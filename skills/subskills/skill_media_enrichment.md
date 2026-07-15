@@ -40,11 +40,12 @@ cat ~/sacred-blueprint/lessons/[LESSON_FOLDER]/master_output.json
 - Βασικές θεολογικές/ιστορικές έννοιες
 
 Εντόπισε όλα τα πεδία `"image": ""` (κενά) που χρειάζονται συμπλήρωση σε:
-- `investigation_board.figures[].image`
-- `investigation_board.concepts.image`
-- `investigation_board.clues[].image`
-- `mind_palace.rooms[].image`
-- `mind_palace.dialogues[].image`
+- `mind_palace.investigation_board.figures[].image`
+- `mind_palace.investigation_board.concepts.image`
+- `mind_palace.investigation_board.clues[].image`
+- `mind_palace.mind_palace.rooms[].image`
+- `mind_palace.mind_palace.dialogues[].image`
+- `investigation_board.clues[].image` (μόνο για το ξεχωριστό Investigation Board)
 - `timeline_item.media`
 - `notebook.medias.slides`
 - `personal_page.chapters[].media`
@@ -82,7 +83,7 @@ cat ~/sacred-blueprint/lessons/[LESSON_FOLDER]/master_output.json
       "tags": ["string"],
       "score": 92,
       "category": "Primary | Secondary | Optional",
-      "target_fields": ["investigation_board.figures[0].image"],
+      "target_fields": ["mind_palace.investigation_board.figures[0].image"],
       "justification": "string — θεολογική/ιστορική τεκμηρίωση"
     }
   ]
