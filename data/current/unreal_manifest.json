@@ -1,5 +1,6 @@
 {
   "scenario": "paul_chrysostom_scene",
+  "thumbnail": "paul_chrysostom_scene/thumbnail.jpg",
   "assets": [
     "SM_WildernessRoom",
     "SM_AntiochRoom",
