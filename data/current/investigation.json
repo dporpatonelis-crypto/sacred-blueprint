@@ -2,135 +2,120 @@
   "nodes": [
     {
       "id": "n1",
-      "label": "Απόστολος Παύλος",
+      "label": "Άγιος Ιωάννης ο Θεολόγος",
       "type": "person",
-      "description": "Απόστολος των Εθνών, κήρυκας του Ευαγγελίου εν μέσω διωγμών.",
-      "image": "https://i.ibb.co/4ZmrLG2J/1775331843223.png"
+      "description": "Ευαγγελιστής, 'Υιός της Βροντής', μάρτυρας της θεότητας του Λόγου."
     },
     {
       "id": "n2",
-      "label": "Ιωάννης Χρυσόστομος",
+      "label": "Άγιος Γρηγόριος ο Θεολόγος",
       "type": "person",
-      "description": "Αρχιεπίσκοπος, μέγας ρήτορας, ερμηνευτής των επιστολών του Παύλου.",
-      "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
+      "description": "Πατέρας της Εκκλησίας, υπερασπιστής της Τριαδικής ορολογίας, ποιμαντικός οικονομολόγος."
     },
     {
       "id": "n3",
-      "label": "Ανεξιχνίαστος Πλούτος του Χριστού",
-      "type": "concept",
-      "description": "Το κήρυγμα του Ευαγγελίου στα Έθνη, πέρα από τα τείχη του Νόμου.",
-      "image": "https://i.ibb.co/k28pSzCJ/Digital-Knowledge-Archaeology-pptx-5.jpg"
+      "label": "Άγιος Συμεών ο Νέος Θεολόγος",
+      "type": "person",
+      "description": "Μυστικός διδάσκαλος, μάρτυρας του Ακτίστου Φωτός και της θεοποίησης."
     },
     {
       "id": "n4",
-      "label": "Εξουσία (Ρωμ. 13)",
+      "label": "Λόγος",
       "type": "concept",
-      "description": "'Ουκ έστιν εξουσία ει μη υπό Θεού' — η πολιτική εξουσία ως όργανο θείας τάξης.",
-      "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
+      "description": "Ο Υιός, η Σοφία του Πατρός, 'εν αρχή ην'."
     },
     {
       "id": "n5",
-      "label": "Κένωση / Ταπείνωση (Φιλ. 2)",
+      "label": "Πνεύμα Άγιο",
       "type": "concept",
-      "description": "Η αυτοταπείνωση του Λόγου 'μέχρι θανάτου σταυρού' ως πρότυπο φρονήματος.",
-      "image": "https://i.ibb.co/nMwjVrmC/The-Sacred-Blueprint-page-0001.jpg"
+      "description": "Παράκλητος, εκπορεύεται εκ Πατρός, συμπροσκυνείται."
     },
     {
       "id": "n6",
-      "label": "Ρητορική Δεινότητα",
+      "label": "Ομοούσιος",
       "type": "concept",
-      "description": "Η 'χρυσή' γλώσσα του Χρυσοστόμου στην υπηρεσία του αποστολικού κηρύγματος.",
-      "image": "https://i.ibb.co/cXsZqTDS/Screenshot-2026-05-09-13-31-02-474-com-android-chrome-edit.jpg"
+      "description": "Ταυτότητα ουσίας Πατρός, Υιού και Πνεύματος."
     },
     {
       "id": "n7",
-      "label": "Διωγμός",
+      "label": "Ουσία/Υπόσταση",
       "type": "concept",
-      "description": "Ο διωγμός της αποστολικής εποχής εναντίον μιας νεοσύστατης πίστης.",
-      "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
+      "description": "Η διάκριση μεταξύ κοινής φύσης και προσωπικών ιδιοτήτων."
     },
     {
       "id": "n8",
-      "label": "Αυτοκρατορική Επιρροή",
+      "label": "Άκτιστο Φως",
       "type": "concept",
-      "description": "Ο κίνδυνος αλλοίωσης της πίστης από την κοσμική εξουσία σε μια χριστιανική πλέον αυτοκρατορία.",
-      "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
+      "description": "Η Θεία Ενέργεια, ορατή στους αγίους, που μεταμορφώνει."
     },
     {
       "id": "n9",
-      "label": "Παρρησία",
+      "label": "Θεία Οικονομία",
       "type": "concept",
-      "description": "Η ελεύθερη και τολμηρή ομιλία ενώπιον της εξουσίας.",
-      "image": "https://i.ibb.co/cXsZqTDS/Screenshot-2026-05-09-13-31-02-474-com-android-chrome-edit.jpg"
+      "description": "Η παιδαγωγική της Εκκλησίας στη διατύπωση των δογμάτων."
     },
     {
       "id": "n10",
-      "label": "Ανδριάντες Αντιοχείας",
-      "type": "event",
-      "description": "Η στάση των πολιτών της Αντιόχειας το 387 μ.Χ. και η ποιμαντική απάντηση του Χρυσοστόμου.",
-      "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
+      "label": "Θεοποίηση",
+      "type": "concept",
+      "description": "Η μετοχή του ανθρώπου στη Θεία ζωή, κατ' εικόνα Τριάδος."
     }
   ],
   "edges": [
     {
       "source": "n1",
-      "target": "n3",
-      "label": "κηρύττει"
+      "target": "n4",
+      "label": "μαρτυρεί"
     },
     {
       "source": "n2",
       "target": "n6",
-      "label": "χρησιμοποιεί"
-    },
-    {
-      "source": "n6",
-      "target": "n1",
-      "label": "δίνει φωνή σε"
-    },
-    {
-      "source": "n1",
-      "target": "n4",
-      "label": "διδάσκει"
-    },
-    {
-      "source": "n2",
-      "target": "n4",
-      "label": "ερμηνεύει"
-    },
-    {
-      "source": "n2",
-      "target": "n10",
-      "label": "εφαρμόζει σε"
-    },
-    {
-      "source": "n1",
-      "target": "n5",
-      "label": "διδάσκει"
+      "label": "υπερασπίζεται"
     },
     {
       "source": "n2",
       "target": "n5",
-      "label": "ερμηνεύει ενάντια σε"
-    },
-    {
-      "source": "n2",
-      "target": "n8",
-      "label": "αντιμετωπίζει"
-    },
-    {
-      "source": "n1",
-      "target": "n7",
-      "label": "υφίσταται"
-    },
-    {
-      "source": "n9",
-      "target": "n1",
-      "label": "πηγάζει από"
+      "label": "ορίζει (Σύνοδος 381)"
     },
     {
       "source": "n2",
       "target": "n9",
-      "label": "επικαλείται"
+      "label": "εφαρμόζει"
+    },
+    {
+      "source": "n3",
+      "target": "n8",
+      "label": "βιώνει"
+    },
+    {
+      "source": "n3",
+      "target": "n10",
+      "label": "διδάσκει"
+    },
+    {
+      "source": "n4",
+      "target": "n6",
+      "label": "συνδέεται με"
+    },
+    {
+      "source": "n5",
+      "target": "n6",
+      "label": "συνδέεται με"
+    },
+    {
+      "source": "n7",
+      "target": "n6",
+      "label": "διακρίνει"
+    },
+    {
+      "source": "n8",
+      "target": "n10",
+      "label": "καθιστά"
+    },
+    {
+      "source": "n9",
+      "target": "n6",
+      "label": "οδηγεί στην κατανόηση"
     }
   ]
 }
