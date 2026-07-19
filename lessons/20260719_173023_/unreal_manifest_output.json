@@ -1,0 +1,34 @@
+{
+  "scenario": "paul_chrysostom_scene",
+  "thumbnail": "paul_chrysostom_scene/thumbnail.jpg",
+  "assets": [
+    "SM_WildernessRoom",
+    "SM_AntiochRoom",
+    "SM_ImperialCourtRoom",
+    "SM_PrisonRoom",
+    "T_DesertLight",
+    "T_StatuesRuins",
+    "T_ThroneHall",
+    "T_ChainsStone"
+  ],
+  "dialogues": {
+    "lines": [
+      {
+        "speaker": "Paul",
+        "text": "Ανεξιχνίαστος πλούτος του Χριστού..."
+      },
+      {
+        "speaker": "Chrysostom",
+        "text": "Ουκ έστιν εξουσία ει μη υπό Θεού..."
+      },
+      {
+        "speaker": "Paul",
+        "text": "Εταπείνωσεν εαυτόν μέχρι θανάτου σταυρού..."
+      },
+      {
+        "speaker": "Chrysostom",
+        "text": "Παρρησία..."
+      }
+    ]
+  }
+}

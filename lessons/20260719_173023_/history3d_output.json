@@ -1,0 +1,67 @@
+{
+  "title": "Ιστορικό πλαίσιο: Από τον Διωγμό στην Αυτοκρατορία",
+  "events": [
+    {
+      "date": "64",
+      "name": "Μαρτύριο του Παύλου",
+      "description": "Ο Παύλος φυλακίζεται και μαρτυρεί στη Ρώμη επί Νέρωνος.",
+      "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
+    },
+    {
+      "date": "387",
+      "name": "Στάση των Ανδριάντων",
+      "description": "Η Αντιόχεια εξεγείρεται κατά των φόρων του Θεοδοσίου, καταστρέφοντας αυτοκρατορικούς ανδριάντες· ο Χρυσόστομος ποιμαίνει τον φοβισμένο λαό.",
+      "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
+    },
+    {
+      "date": "404",
+      "name": "Εξορία του Χρυσοστόμου",
+      "description": "Η σύγκρουση με την αυλή του Αρκαδίου οδηγεί στην εξορία και τελικά τον θάνατο του Χρυσοστόμου.",
+      "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
+    }
+  ],
+  "places": [
+    {
+      "name": "Αντιόχεια",
+      "coordinates": "36.2021, 36.1604",
+      "description": "Πόλη όπου ο Χρυσόστομος υπηρέτησε ως πρεσβύτερος και ρήτορας, τόπος της στάσης των Ανδριάντων.",
+      "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
+    },
+    {
+      "name": "Ρώμη",
+      "coordinates": "41.9028, 12.4964",
+      "description": "Τόπος φυλάκισης και μαρτυρίου του Αποστόλου Παύλου.",
+      "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
+    },
+    {
+      "name": "Κωνσταντινούπολη",
+      "coordinates": "41.0086, 28.9802",
+      "description": "Έδρα του Χρυσοστόμου ως Αρχιεπισκόπου, τόπος της σύγκρουσής του με την αυτοκρατορική αυλή.",
+      "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
+    }
+  ],
+  "timeline": [
+    {
+      "id": "h3d1",
+      "date": "64",
+      "event": "Μαρτύριο Παύλου",
+      "location": "Ρώμη"
+    },
+    {
+      "id": "h3d2",
+      "date": "387",
+      "event": "Στάση Ανδριάντων",
+      "location": "Αντιόχεια"
+    },
+    {
+      "id": "h3d3",
+      "date": "404",
+      "event": "Εξορία Χρυσοστόμου",
+      "location": "Κωνσταντινούπολη"
+    }
+  ],
+  "screens": {
+    "title": "Παύλος και Χρυσόστομος — Από τον Διωγμό στην Αυτοκρατορία",
+    "background": "bg-palace.jpg"
+  }
+}
