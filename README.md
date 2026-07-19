@@ -1,64 +1,149 @@
-# Sacred Blueprint — Σύνοψη Συστήματος
+# Sacred Blueprint-LearnFlow AI — Σύνοψη Συστήματος
+
+---
+# LearnFlow AI
+
+**AI-powered, data-driven educational content pipeline built with OpenAI Codex and GPT-5.6**
+
+LearnFlow AI is an experimental platform that transforms structured educational content into reusable interactive learning experiences.
+
+Instead of creating every lesson manually, educators author or organize content in a structured JSON format. An agentic workflow then automates lesson generation, validation, application updates, and deployment.
 
 ---
 
-## Βήματα υλοποίησης distribute.yml
+# Why?
 
-### Βήμα 1 — Δημιουργία PAT (Personal Access Token)
+Traditional educational content is duplicated across multiple formats:
 
-Στο GitHub → Settings → Developer settings → Fine-grained tokens → Generate new token
+* Lesson plans
+* Worksheets
+* Interactive activities
+* AI tutoring
+* Multimedia experiences
 
-- **Name:** `sacred-blueprint-deploy`
-- **Repository access:** Only select repositories → επίλεξε:
-  - `Map-Timeline`
-  - `idea-weaver-board`
-  - `history-explorer-3d`
-  - `mind-palace-cases`
-  - `personal-page`
-- **Permissions → Contents:** Read and write
-- Αντέγραψε το token
-
-### Βήμα 2 — Πρόσθεσε Secret στο sacred-blueprint repo
-
-GitHub → `sacred-blueprint` repo → Settings → Secrets and variables → Actions → New repository secret
-
-- **Name:** `DEPLOY_PAT`
-- **Value:** το token που αντέγραψες
-
-### Βήμα 3 — Πρόσθεσε το workflow αρχείο
-
-```bash
-# Στο Mac mini
-mkdir -p ~/sacred-blueprint/.github/workflows
-cp distribute.yml ~/sacred-blueprint/.github/workflows/distribute.yml
-
-git add .github/
-git commit -m "ci: add distribute workflow"
-git push
-```
-
-### Βήμα 4 — Επιβεβαίωση δομής φακέλων στα app repos
-
-Βεβαιώσου ότι υπάρχουν οι παρακάτω φάκελοι πριν τρέξει το Action:
-
-| Repo | Φάκελος που πρέπει να υπάρχει |
-|---|---|
-| `Map-Timeline` | `data/` (δημιουργείται αυτόματα) |
-| `idea-weaver-board` | `src/data/library/` (δημιούργησέ τον χειροκίνητα αν δεν υπάρχει) |
-| `history-explorer-3d` | `public/data/` (ήδη υπάρχει) |
-| `mind-palace-cases` | `cases/` (δημιουργείται αυτόματα) |
-| `personal-page` | `public/data/lessons/` (δημιούργησέ τον αν δεν υπάρχει) |
-
-### Βήμα 5 — Δοκιμή
-
-```bash
-# Τρέξε ένα publish για να τριγκάρεις το Action
-bash workflows/publish_lesson.sh lessons/ΟΝΟΜΑ_ΦΑΚΕΛΟΥ/ --skip-transform
-```
-
-Μετά: GitHub → `sacred-blueprint` → Actions → Distribute Lesson Data to App Repos → έλεγξε το Summary
+LearnFlow AI introduces a **single source of truth** where structured lesson data can generate multiple educational outputs.
 
 ---
+
+# Features
+
+* JSON-first lesson architecture
+* AI-assisted lesson generation
+* Automatic educational content validation
+* GitHub-based content repository
+* Agentic development workflow
+* Automated application updates
+* Reusable educational templates
+* Future-ready architecture for Web, Mobile and Unreal Engine
+
+---
+
+# Agentic Workflow
+
+The repository is maintained through an AI-assisted workflow.
+
+Typical pipeline:
+
+1. Educational source material
+2. GPT-5.6 generates structured lesson content
+3. Codex validates project structure
+4. Codex updates JSON assets
+5. Codex updates YAML configuration files
+6. Codex applies code improvements
+7. GitHub repository is updated
+8. Web applications immediately consume the new lesson data
+
+This allows educational content and applications to evolve together while minimizing manual work.
+
+---
+
+# How OpenAI was used
+
+## GPT-5.6
+
+GPT-5.6 is used for:
+
+* educational content generation
+* lesson restructuring
+* question generation
+* discussion prompts
+* summaries
+* learning activities
+* educational metadata generation
+
+The model transforms teacher material into structured educational datasets.
+
+---
+
+## Codex
+
+Codex is used as an autonomous development assistant.
+
+Responsibilities include:
+
+* updating JSON lesson files
+* maintaining repository structure
+* editing source code
+* applying bug fixes
+* generating configuration files
+* updating YAML workflows
+* validating project consistency
+* automating repetitive development tasks
+
+Instead of writing isolated code snippets, Codex participates in the continuous maintenance of the project.
+
+---
+
+# Educational Philosophy
+
+The teacher remains the instructional designer.
+
+AI accelerates:
+
+* content creation
+* organization
+* adaptation
+* maintenance
+
+rather than replacing pedagogical decision making.
+
+---
+
+# Future Work
+
+Planned extensions include:
+
+* Adaptive AI tutoring
+* Learning analytics
+* Multi-language support
+* Unreal Engine visualization
+* AI-generated Level Sequences
+* Python automation for immersive educational experiences
+* Dynamic narrative generation based on student interaction
+
+---
+
+# Technologies
+
+* OpenAI GPT-5.6
+* OpenAI Codex
+* JSON
+* GitHub
+* GitHub Actions (YAML)
+* JavaScript
+* HTML/CSS
+* Web Components
+* Unreal Engine (planned integration)
+
+---
+
+# Vision
+
+Create once.
+
+Structure once.
+
+Teach everywhere.
 
 ## Πίνακας Εφαρμογών
 
@@ -80,7 +165,7 @@ bash workflows/publish_lesson.sh lessons/ΟΝΟΜΑ_ΦΑΚΕΛΟΥ/ --skip-trans
 ### Αρχιτεκτονική
 
 ```
-Mac mini (VS Code + Continue + Qwen)
+Mac mini (Codex)
           │
           │ bash workflows/
           ▼
@@ -132,7 +217,7 @@ GitHub Pages / Vercel → Live εφαρμογές
         ↓
    lessons/YYYYMMDD_slug/ + meta.json
 
-2. Skills στο Continue (@skill_*)
+2. Skills (@skill_*)
         ↓
    data/current/<app>.json
    + master_output.json (συσσωρεύεται)
