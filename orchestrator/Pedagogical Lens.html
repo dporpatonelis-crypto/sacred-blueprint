@@ -1,0 +1,1585 @@
+<!doctype html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pedagogical Lens Dashboard</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            background: #f1f5f9;
+            color: #0f172a;
+            padding: 1rem;
+            min-height: 100vh;
+        }
+        button {
+            cursor: pointer;
+            font: inherit;
+            background: none;
+            border: none;
+        }
+        input,
+        select,
+        textarea {
+            font: inherit;
+            border: 1px solid #d1d9e6;
+            border-radius: 8px;
+            padding: 0.4rem 0.7rem;
+            background: white;
+            width: 100%;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+        textarea {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+        }
+        .eyebrow {
+            text-transform: uppercase;
+            font-size: 0.65rem;
+            letter-spacing: 0.06em;
+            color: #64748b;
+            font-weight: 600;
+        }
+        .badge {
+            background: #e2e8f0;
+            padding: 0.1rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #334155;
+            display: inline-block;
+        }
+        .badge-primary {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .badge-warning {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+        .badge-rose {
+            background: #ffe4e6;
+            color: #9f1239;
+        }
+
+        .status-pill {
+            padding: 0.15rem 1rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-draft {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .status-archived {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        .topbar h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .topbar h1 span {
+            color: #6366f1;
+        }
+        .topbar-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .icon-button {
+            width: 2.4rem;
+            height: 2.4rem;
+            border-radius: 40px;
+            background: #f1f5f9;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+            color: #1e293b;
+        }
+        .icon-button:hover {
+            background: #e2e8f0;
+        }
+
+        .shell {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        .workspace {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 1.5rem;
+        }
+        @media (max-width: 900px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 16px;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            max-height: 80vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .search-row {
+            position: relative;
+        }
+        .search-row input {
+            padding-left: 2rem;
+        }
+        .search-row::before {
+            content: '🔍';
+            position: absolute;
+            left: 0.7rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            opacity: 0.5;
+        }
+        .stat-strip {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .stat {
+            display: flex;
+            flex-direction: column;
+            background: #f8fafc;
+            padding: 0.2rem 0.7rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            flex: 1;
+            min-width: 50px;
+        }
+        .stat strong {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .stat-label {
+            color: #64748b;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .lesson-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 50vh;
+        }
+        .lesson-item {
+            text-align: left;
+            padding: 0.6rem 0.8rem;
+            border-radius: 10px;
+            background: transparent;
+            transition: background 0.1s;
+            border: 1px solid transparent;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+        .lesson-item:hover {
+            background: #f1f5f9;
+        }
+        .lesson-item.active {
+            background: #eef2ff;
+            border-color: #c7d2fe;
+        }
+        .lesson-item .title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .lesson-item .meta {
+            display: flex;
+            gap: 0.4rem;
+            font-size: 0.65rem;
+            color: #64748b;
+            flex-wrap: wrap;
+            margin-top: 0.1rem;
+        }
+        .lesson-item .lens-dots {
+            display: flex;
+            gap: 0.2rem;
+            margin-top: 0.2rem;
+        }
+        .lens-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: inline-block;
+        }
+        .lens-dot.filled {
+            background: #6366f1;
+        }
+        .lens-dot.partial {
+            background: #a5b4fc;
+        }
+
+        /* Main Detail */
+        .detail-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .detail-header .title-group h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        .detail-header .title-group .sub {
+            font-size: 0.8rem;
+            color: #64748b;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.1rem;
+        }
+
+        /* Lens Tabs */
+        .lens-tabs {
+            display: flex;
+            gap: 0.3rem;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #eef2f6;
+            padding-bottom: 0.5rem;
+        }
+        .lens-tab {
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: #f1f5f9;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #475569;
+        }
+        .lens-tab:hover {
+            background: #e2e8f0;
+        }
+        .lens-tab.active {
+            background: #1e293b;
+            color: white;
+        }
+        .lens-tab .icon {
+            font-size: 0.9rem;
+        }
+
+        /* Lens Content */
+        .lens-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .lens-content .lens-description {
+            font-size: 0.85rem;
+            color: #475569;
+            padding: 0.5rem 0.75rem;
+            background: #f8fafc;
+            border-radius: 10px;
+            border-left: 3px solid #6366f1;
+        }
+        .lens-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        @media (max-width: 700px) {
+            .lens-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .lens-field {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid #eef2f6;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+        .lens-field label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #64748b;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.1rem;
+        }
+        .lens-field .value {
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+        .lens-field .value .pill {
+            font-size: 0.65rem;
+            font-weight: 500;
+            padding: 0.05rem 0.6rem;
+            border-radius: 20px;
+            background: #e2e8f0;
+        }
+        .lens-field textarea {
+            font-size: 0.8rem;
+            min-height: 40px;
+            background: white;
+            border-color: #d1d9e6;
+            margin-top: 0.2rem;
+        }
+        .lens-field textarea:focus {
+            border-color: #6366f1;
+        }
+        .lens-field .notes-input {
+            font-size: 0.7rem;
+            min-height: 32px;
+            background: #f8fafc;
+            border-color: #e2e8f0;
+            padding: 0.3rem 0.5rem;
+            margin-top: 0.2rem;
+            color: #334155;
+        }
+        .lens-field .notes-input:focus {
+            background: white;
+            border-color: #6366f1;
+        }
+        .lens-field .notes-label {
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            color: #94a3b8;
+            letter-spacing: 0.04em;
+            margin-top: 0.1rem;
+            display: block;
+        }
+
+        /* Special notes field – wider and more prominent */
+        .lens-field.notes-field {
+            grid-column: 1 / -1;
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        .lens-field.notes-field textarea {
+            min-height: 100px;
+            background: white;
+            border-color: #94a3b8;
+        }
+        .lens-field.notes-field label {
+            color: #1e293b;
+            font-weight: 700;
+        }
+
+        .lens-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.3rem;
+        }
+        .lens-actions button {
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.7rem;
+            transition: all 0.1s;
+            background: #eef2f6;
+        }
+        .lens-actions button:hover {
+            background: #d1d9e6;
+        }
+        .lens-actions button.primary {
+            background: #6366f1;
+            color: white;
+        }
+        .lens-actions button.primary:hover {
+            background: #4f46e5;
+        }
+
+        /* Add Lesson Form */
+        .add-lesson-bar {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+            padding-top: 0.5rem;
+            border-top: 1px solid #eef2f6;
+        }
+        .add-lesson-bar input {
+            flex: 1;
+            min-width: 120px;
+        }
+        .add-lesson-bar button {
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.75rem;
+            background: #6366f1;
+            color: white;
+            transition: background 0.1s;
+            white-space: nowrap;
+        }
+        .add-lesson-bar button:hover {
+            background: #4f46e5;
+        }
+
+        /* Meta section */
+        .meta-section {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+        .meta-section .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .meta-section .header h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .meta-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .meta-actions input {
+            width: 220px;
+        }
+        .meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1.25rem;
+        }
+        @media (max-width: 1000px) {
+            .meta-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+        .form-grid label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #475569;
+        }
+        .form-grid label input,
+        .form-grid label select {
+            margin-top: 0.1rem;
+        }
+        .notes-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #475569;
+            margin-top: 0.5rem;
+        }
+        .form-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .form-actions button {
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.75rem;
+            background: #eef2f6;
+            transition: background 0.1s;
+        }
+        .form-actions button:hover {
+            background: #d1d9e6;
+        }
+        .form-actions button.primary {
+            background: #6366f1;
+            color: white;
+        }
+        .form-actions button.primary:hover {
+            background: #4f46e5;
+        }
+
+        .lesson-table-wrap {
+            overflow-x: auto;
+        }
+        .lesson-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+        }
+        .lesson-table th {
+            text-align: left;
+            padding: 0.3rem 0.4rem;
+            color: #64748b;
+            font-weight: 600;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .lesson-table td {
+            padding: 0.3rem 0.4rem;
+            border-bottom: 1px solid #eef2f6;
+            vertical-align: middle;
+        }
+        .lesson-table td small {
+            display: block;
+            color: #94a3b8;
+            font-size: 0.6rem;
+        }
+        .table-actions button {
+            font-size: 0.6rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            background: #eef2f6;
+            margin-right: 0.2rem;
+        }
+        .table-actions button:hover {
+            background: #d1d9e6;
+        }
+        .status-msg {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 8px;
+            background: #f1f5f9;
+        }
+        .status-msg.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .status-msg.ok {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 600px) {
+            .topbar h1 {
+                font-size: 1rem;
+            }
+            .detail-panel {
+                padding: 1rem;
+            }
+            .lens-tabs {
+                gap: 0.2rem;
+            }
+            .lens-tab {
+                font-size: 0.65rem;
+                padding: 0.3rem 0.6rem;
+            }
+            .lens-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sidebar::-webkit-scrollbar,
+        .lesson-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar::-webkit-scrollbar-track,
+        .lesson-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb,
+        .lesson-list::-webkit-scrollbar-thumb {
+            background: #d1d9e6;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="topbar">
+        <div>
+            <p class="eyebrow">Pedagogical Lens</p>
+            <h1>Lens <span>Dashboard</span></h1>
+        </div>
+        <div class="topbar-actions">
+            <button class="icon-button" id="importBtn" title="Εισαγωγή JSON">↥</button>
+            <button class="icon-button" id="exportBtn" title="Εξαγωγή JSON">↧</button>
+            <button class="icon-button" id="resetBtn" title="Επαναφορά δεδομένων">↺</button>
+        </div>
+    </header>
+
+    <main class="shell">
+        <section class="workspace">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="search-row">
+                    <input id="searchInput" type="search" placeholder="Αναζήτηση μαθήματος..." />
+                </div>
+                <div class="stat-strip" id="stats"></div>
+                <div class="lesson-list" id="lessonList"></div>
+                <div class="add-lesson-bar">
+                    <input id="newLessonInput" type="text" placeholder="Νέο μάθημα..." />
+                    <button id="addLessonBtn">+ Προσθήκη</button>
+                </div>
+            </aside>
+
+            <!-- Detail -->
+            <section class="detail-panel">
+                <div class="detail-header">
+                    <div class="title-group">
+                        <p class="eyebrow" id="selectedSubject">Μάθημα</p>
+                        <h2 id="selectedTitle">Επέλεξε ένα μάθημα</h2>
+                        <div class="sub">
+                            <span id="selectedStatus" class="status-pill status-draft">draft</span>
+                            <span id="selectedGrade">Τάξη: —</span>
+                            <span id="selectedUpdated">Ενημερώθηκε: —</span>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="icon-button" id="duplicateLessonBtn" title="Διπλασιασμός">📋</button>
+                        <button class="icon-button" id="deleteLessonBtn" title="Διαγραφή" style="color:#b91c1c;">✕</button>
+                    </div>
+                </div>
+
+                <!-- Lens Tabs -->
+                <div class="lens-tabs" id="lensTabs">
+                    <button class="lens-tab active" data-lens="pedagogy"><span class="icon">📖</span> Παιδαγωγική</button>
+                    <button class="lens-tab" data-lens="psychology"><span class="icon">🧠</span> Ψυχολογία</button>
+                    <button class="lens-tab" data-lens="sociology"><span class="icon">👥</span> Κοινωνιολογία</button>
+                    <button class="lens-tab" data-lens="management"><span class="icon">⚙️</span> Management</button>
+                    <button class="lens-tab" data-lens="ux"><span class="icon">🎨</span> UX / Εμπειρία</button>
+                </div>
+
+                <!-- Lens Content -->
+                <div class="lens-content" id="lensContent">
+                    <!-- Rendered dynamically -->
+                </div>
+            </section>
+        </section>
+
+        <!-- Meta / Lesson Management -->
+        <section class="meta-section">
+            <div class="header">
+                <div>
+                    <p class="eyebrow">Διαχείριση</p>
+                    <h2>Όλα τα μαθήματα</h2>
+                </div>
+                <div class="meta-actions">
+                    <input id="metaSearchInput" type="search" placeholder="Αναζήτηση..." />
+                    <button class="icon-button" id="exportAllBtn" title="Εξαγωγή όλων">⬇</button>
+                </div>
+            </div>
+            <div class="meta-grid">
+                <section class="panel" style="background:#f8fafc;border-radius:12px;padding:1rem;border:1px solid #eef2f6;">
+                    <div class="panel-heading" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                        <h3 style="font-size:0.9rem;font-weight:600;">Γρήγορη επισκόπηση</h3>
+                        <span id="overviewStats" style="font-size:0.7rem;color:#64748b;">0 μαθήματα</span>
+                    </div>
+                    <div id="overviewLensStats" style="display:flex;flex-direction:column;gap:0.3rem;font-size:0.75rem;">
+                        <div><span style="font-weight:500;">📖 Παιδαγωγική</span> <span id="ov-pedagogy">0</span></div>
+                        <div><span style="font-weight:500;">🧠 Ψυχολογία</span> <span id="ov-psychology">0</span></div>
+                        <div><span style="font-weight:500;">👥 Κοινωνιολογία</span> <span id="ov-sociology">0</span></div>
+                        <div><span style="font-weight:500;">⚙️ Management</span> <span id="ov-management">0</span></div>
+                        <div><span style="font-weight:500;">🎨 UX</span> <span id="ov-ux">0</span></div>
+                    </div>
+                </section>
+                <section class="panel" style="background:#f8fafc;border-radius:12px;padding:1rem;border:1px solid #eef2f6;">
+                    <div class="panel-heading" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                        <h3 style="font-size:0.9rem;font-weight:600;">Λίστα μαθημάτων</h3>
+                        <span id="metaCount" style="font-size:0.7rem;color:#64748b;">0</span>
+                    </div>
+                    <div class="lesson-table-wrap">
+                        <table class="lesson-table">
+                            <thead><tr><th>Τίτλος</th><th>Κατάσταση</th><th>Lenses</th><th>Ενέργειες</th></tr></thead>
+                            <tbody id="metaTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="status-msg" id="metaStatusMsg">Έτοιμο.</div>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <input id="fileInput" type="file" accept=".json" hidden />
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ---------- LENS CONFIG ----------
+            const LENSES = {
+                pedagogy: {
+                    label: 'Παιδαγωγική',
+                    icon: '📖',
+                    description: 'Πώς σχεδιάζεται η διδασκαλία; Ποια είναι η παιδαγωγική προσέγγιση, οι στόχοι και οι μέθοδοι;',
+                    fields: [{
+                        id: 'approach',
+                        label: 'Προσέγγιση',
+                        type: 'select',
+                        options: ['Δομημένη', 'Διερευνητική', 'Συνεργατική', 'Βιωματική', 'Μικτή', 'Ανοιχτή']
+                    }, {
+                        id: 'objectives',
+                        label: 'Στόχοι μάθησης',
+                        type: 'text',
+                        placeholder: 'π.χ. Κατανόηση εννοιών, ανάπτυξη δεξιοτήτων...'
+                    }, {
+                        id: 'methods',
+                        label: 'Μέθοδοι',
+                        type: 'text',
+                        placeholder: 'π.χ. Ομαδική εργασία, συζήτηση, project...'
+                    }, {
+                        id: 'notes',
+                        label: '✏️ Γενικές σημειώσεις',
+                        type: 'textarea',
+                        placeholder: 'Γράψτε εδώ συνολικές παρατηρήσεις, ιδέες ή στοιχεία για ολόκληρο το φακό...'
+                    }]
+                },
+                psychology: {
+                    label: 'Ψυχολογία',
+                    icon: '🧠',
+                    description: 'Πώς επηρεάζει η ψυχολογία των μαθητών τη μάθηση; Προσοχή, κίνητρο, αυτονομία, μνήμη, μεταγνώση.',
+                    fields: [{
+                        id: 'attention',
+                        label: 'Προσοχή / Γνωστικό φορτίο',
+                        type: 'select',
+                        options: ['Χαμηλή', 'Μέτρια', 'Υψηλή']
+                    }, {
+                        id: 'motivation',
+                        label: 'Κίνητρο',
+                        type: 'select',
+                        options: ['Εξωτερικό', 'Εσωτερικό', 'Μικτό']
+                    }, {
+                        id: 'autonomy',
+                        label: 'Αυτονομία',
+                        type: 'select',
+                        options: ['Χαμηλή', 'Μέτρια', 'Υψηλή']
+                    }, {
+                        id: 'curiosity',
+                        label: 'Περιέργεια',
+                        type: 'select',
+                        options: ['Χαμηλή', 'Μέτρια', 'Υψηλή']
+                    }, {
+                        id: 'memory',
+                        label: 'Στρατηγικές μνήμης',
+                        type: 'text',
+                        placeholder: 'π.χ. Επανάληψη, οπτικοποίηση...'
+                    }, {
+                        id: 'metacognition',
+                        label: 'Μεταγνωστικές προτροπές',
+                        type: 'text',
+                        placeholder: 'π.χ. Αυτοαξιολόγηση, σκέψη φωναχτά...'
+                    }, {
+                        id: 'notes',
+                        label: '✏️ Γενικές σημειώσεις',
+                        type: 'textarea',
+                        placeholder: 'Συνολικές ψυχολογικές παρατηρήσεις, σχόλια για το κίνητρο, την προσοχή ή άλλες διαστάσεις...'
+                    }]
+                },
+                sociology: {
+                    label: 'Κοινωνιολογία',
+                    icon: '👥',
+                    description: 'Πώς λειτουργεί η ομάδα; Δυναμικές, ρόλοι, επιρροή συνομηλίκων, συμμετοχή, νοηματοδότηση.',
+                    fields: [{
+                        id: 'groupDynamic',
+                        label: 'Δυναμική ομάδας',
+                        type: 'select',
+                        options: ['Ατομική', 'Ζευγάρια', 'Μικρή ομάδα', 'Μεγάλη ομάδα', 'Ολόκληρη τάξη']
+                    }, {
+                        id: 'socialRoles',
+                        label: 'Κοινωνικοί ρόλοι',
+                        type: 'text',
+                        placeholder: 'π.χ. Ηγέτης, παρατηρητής, υποστηρικτής...'
+                    }, {
+                        id: 'peerInfluence',
+                        label: 'Επιρροή συνομηλίκων',
+                        type: 'select',
+                        options: ['Χαμηλή', 'Μέτρια', 'Υψηλή']
+                    }, {
+                        id: 'participation',
+                        label: 'Συμμετοχή',
+                        type: 'select',
+                        options: ['Ισότιμη', 'Άνιση', 'Καθοδηγούμενη']
+                    }, {
+                        id: 'inclusion',
+                        label: 'Στρατηγικές ένταξης',
+                        type: 'text',
+                        placeholder: 'π.χ. Ζευγάρια, διαφοροποίηση...'
+                    }, {
+                        id: 'meaningMaking',
+                        label: 'Νοηματοδότηση',
+                        type: 'text',
+                        placeholder: 'Πώς χτίζεται το νόημα μέσα στην ομάδα;'
+                    }, {
+                        id: 'notes',
+                        label: '✏️ Γενικές σημειώσεις',
+                        type: 'textarea',
+                        placeholder: 'Συνολικές κοινωνιολογικές παρατηρήσεις, δυναμικές ομάδας, ρόλοι, συμμετοχή...'
+                    }]
+                },
+                management: {
+                    label: 'Management',
+                    icon: '⚙️',
+                    description: 'Οργάνωση, χρόνος, πόροι, διαχείριση αλλαγής, βιωσιμότητα. Πώς συντηρείται το σύστημα;',
+                    fields: [{
+                        id: 'timeEstimate',
+                        label: 'Εκτιμώμενος χρόνος',
+                        type: 'text',
+                        placeholder: 'π.χ. 45 λεπτά, 2 ώρες...'
+                    }, {
+                        id: 'resources',
+                        label: 'Πόροι που απαιτούνται',
+                        type: 'text',
+                        placeholder: 'π.χ. Υπολογιστές, φύλλα εργασίας...'
+                    }, {
+                        id: 'changeReadiness',
+                        label: 'Ετοιμότητα για αλλαγή',
+                        type: 'select',
+                        options: ['Χαμηλή', 'Μέτρια', 'Υψηλή']
+                    }, {
+                        id: 'processComplexity',
+                        label: 'Πολυπλοκότητα διαδικασίας',
+                        type: 'select',
+                        options: ['Απλή', 'Μέτρια', 'Πολύπλοκη']
+                    }, {
+                        id: 'sustainability',
+                        label: 'Βιωσιμότητα',
+                        type: 'select',
+                        options: ['Χαμηλή', 'Μέτρια', 'Υψηλή']
+                    }, {
+                        id: 'notes',
+                        label: '✏️ Γενικές σημειώσεις',
+                        type: 'textarea',
+                        placeholder: 'Συνολικές οργανωτικές σκέψεις, διαχείριση πόρων, χρόνου, βιωσιμότητα...'
+                    }]
+                },
+                ux: {
+                    label: 'UX / Εμπειρία',
+                    icon: '🎨',
+                    description: 'Πώς βιώνει ο μαθητής τη διαδικασία; Διαδρομές ανακάλυψης, ροή, ανατροφοδότηση.',
+                    fields: [{
+                        id: 'discoveryPath',
+                        label: 'Τύπος διαδρομής',
+                        type: 'select',
+                        options: ['Γραμμική', 'Διακλαδούμενη', 'Ανοιχτή', 'Κυκλική']
+                    }, {
+                        id: 'studentJourney',
+                        label: 'Ταξίδι του μαθητή',
+                        type: 'text',
+                        placeholder: 'Περιγραφή της εμπειρίας βήμα-βήμα...'
+                    }, {
+                        id: 'interactionFlow',
+                        label: 'Ροή αλληλεπίδρασης',
+                        type: 'text',
+                        placeholder: 'Πώς αλληλεπιδρούν οι μαθητές με το υλικό;'
+                    }, {
+                        id: 'feedback',
+                        label: 'Ανατροφοδότηση',
+                        type: 'select',
+                        options: ['Άμεση', 'Καθυστερημένη', 'Από συνομηλίκους', 'Από εκπαιδευτικό']
+                    }, {
+                        id: 'notes',
+                        label: '✏️ Γενικές σημειώσεις',
+                        type: 'textarea',
+                        placeholder: 'Συνολικές σκέψεις για την εμπειρία του μαθητή, ροή, αλληλεπίδραση...'
+                    }]
+                }
+            };
+
+            const LENS_IDS = Object.keys(LENSES);
+
+            // ---------- DEFAULT DATA ----------
+            function createDefaultLesson(title) {
+                const id = 'lesson_' + Date.now();
+                const lensData = {};
+                LENS_IDS.forEach(lid => {
+                    lensData[lid] = {};
+                    LENSES[lid].fields.forEach(f => {
+                        lensData[lid][f.id] = '';
+                        // Initialize per-field notes for all fields except the general notes field
+                        if (f.id !== 'notes') {
+                            lensData[lid][f.id + '_notes'] = '';
+                        }
+                    });
+                });
+                return {
+                    id: id,
+                    title: title || 'Νέο μάθημα',
+                    subject: 'Γενικό',
+                    gradeLevel: '—',
+                    status: 'draft',
+                    updatedAt: new Date().toISOString().slice(0, 10),
+                    lenses: lensData
+                };
+            }
+
+            const defaultLessons = [
+                createDefaultLesson('Ιστορία: Αρχαία Ελλάδα'),
+                createDefaultLesson('Φυσική: Κινηματική'),
+                createDefaultLesson('Λογοτεχνία: Ποίηση'),
+            ];
+            // Add some sample data
+            defaultLessons[0].subject = 'Ιστορία';
+            defaultLessons[0].gradeLevel = 'Γ Γυμνασίου';
+            defaultLessons[0].status = 'active';
+            defaultLessons[0].lenses.pedagogy.approach = 'Διερευνητική';
+            defaultLessons[0].lenses.pedagogy.objectives = 'Κατανόηση της δημοκρατίας στην Αρχαία Ελλάδα';
+            defaultLessons[0].lenses.psychology.attention = 'Υψηλή';
+            defaultLessons[0].lenses.psychology.motivation = 'Εσωτερικό';
+            defaultLessons[0].lenses.sociology.groupDynamic = 'Μικρή ομάδα';
+            defaultLessons[0].lenses.management.timeEstimate = '2 ώρες';
+            defaultLessons[0].lenses.ux.discoveryPath = 'Διακλαδούμενη';
+
+            defaultLessons[1].subject = 'Φυσική';
+            defaultLessons[1].gradeLevel = 'Α Λυκείου';
+            defaultLessons[1].status = 'active';
+            defaultLessons[1].lenses.pedagogy.approach = 'Δομημένη';
+            defaultLessons[1].lenses.psychology.attention = 'Μέτρια';
+            defaultLessons[1].lenses.management.timeEstimate = '45 λεπτά';
+
+            defaultLessons[2].subject = 'Λογοτεχνία';
+            defaultLessons[2].gradeLevel = 'Β Γυμνασίου';
+            defaultLessons[2].status = 'draft';
+
+            const fallbackData = {
+                lessons: defaultLessons,
+                meta: { lastUpdated: new Date().toISOString().slice(0, 10), version: '1.0' }
+            };
+
+            // ---------- STATE ----------
+            let data = loadData();
+            let selectedId = data.lessons.length > 0 ? data.lessons[0].id : null;
+            let activeLens = 'pedagogy';
+
+            function loadData() {
+                try {
+                    const saved = localStorage.getItem('pedagogical-lens-dashboard');
+                    if (!saved) return JSON.parse(JSON.stringify(fallbackData));
+                    const parsed = JSON.parse(saved);
+                    // Ensure all lessons have all lens fields and notes
+                    if (parsed.lessons) {
+                        parsed.lessons.forEach(lesson => {
+                            if (!lesson.lenses) lesson.lenses = {};
+                            LENS_IDS.forEach(lid => {
+                                if (!lesson.lenses[lid]) lesson.lenses[lid] = {};
+                                LENSES[lid].fields.forEach(f => {
+                                    if (lesson.lenses[lid][f.id] === undefined) lesson.lenses[lid][f
+                                    .id] = '';
+                                    if (f.id !== 'notes') {
+                                        const notesKey = f.id + '_notes';
+                                        if (lesson.lenses[lid][notesKey] === undefined) lesson.lenses[
+                                        lid][notesKey] = '';
+                                    }
+                                });
+                            });
+                            if (!lesson.subject) lesson.subject = 'Γενικό';
+                            if (!lesson.gradeLevel) lesson.gradeLevel = '—';
+                            if (!lesson.status) lesson.status = 'draft';
+                            if (!lesson.updatedAt) lesson.updatedAt = new Date().toISOString().slice(0, 10);
+                        });
+                    }
+                    return parsed;
+                } catch (e) {
+                    console.warn('Load failed, using fallback:', e);
+                    return JSON.parse(JSON.stringify(fallbackData));
+                }
+            }
+
+            function saveData() {
+                try {
+                    data.meta.lastUpdated = new Date().toISOString().slice(0, 10);
+                    localStorage.setItem('pedagogical-lens-dashboard', JSON.stringify(data));
+                } catch (e) {
+                    console.warn('Save failed:', e);
+                }
+            }
+
+            function getSelectedLesson() {
+                return data.lessons.find(l => l.id === selectedId) || data.lessons[0] || null;
+            }
+
+            function getLensData(lesson, lensId) {
+                if (!lesson || !lesson.lenses) return {};
+                return lesson.lenses[lensId] || {};
+            }
+
+            function updateLensField(lessonId, lensId, fieldId, value) {
+                const lesson = data.lessons.find(l => l.id === lessonId);
+                if (!lesson) return;
+                if (!lesson.lenses) lesson.lenses = {};
+                if (!lesson.lenses[lensId]) lesson.lenses[lensId] = {};
+                lesson.lenses[lensId][fieldId] = value;
+                lesson.updatedAt = new Date().toISOString().slice(0, 10);
+                saveData();
+                render();
+            }
+
+            // ---------- DOM REFS ----------
+            const els = {};
+
+            function initEls() {
+                const ids = [
+                    'searchInput', 'stats', 'lessonList',
+                    'selectedSubject', 'selectedTitle', 'selectedStatus', 'selectedGrade', 'selectedUpdated',
+                    'lensTabs', 'lensContent',
+                    'newLessonInput', 'addLessonBtn',
+                    'importBtn', 'exportBtn', 'resetBtn', 'fileInput',
+                    'duplicateLessonBtn', 'deleteLessonBtn',
+                    'metaSearchInput', 'exportAllBtn', 'metaTableBody', 'metaCount', 'metaStatusMsg',
+                    'overviewStats', 'ov-pedagogy', 'ov-psychology', 'ov-sociology', 'ov-management', 'ov-ux'
+                ];
+                ids.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el) console.warn('Element not found:', id);
+                    els[id] = el;
+                });
+            }
+
+            // ---------- RENDER ----------
+            function render() {
+                try {
+                    renderStats();
+                    renderLessonList();
+                    renderDetail();
+                    renderMetaTable();
+                    renderOverview();
+                } catch (e) {
+                    console.error('Render error:', e);
+                }
+            }
+
+            function renderStats() {
+                if (!els.stats) return;
+                const total = data.lessons.length;
+                const active = data.lessons.filter(l => l.status === 'active').length;
+                const draft = data.lessons.filter(l => l.status === 'draft').length;
+                els.stats.innerHTML = `
+                    <div class="stat"><strong>${total}</strong><span class="stat-label">Σύνολο</span></div>
+                    <div class="stat"><strong>${active}</strong><span class="stat-label">Ενεργά</span></div>
+                    <div class="stat"><strong>${draft}</strong><span class="stat-label">Σχέδια</span></div>
+                `;
+            }
+
+            function renderLessonList() {
+                if (!els.lessonList) return;
+                const query = (els.searchInput?.value || '').trim().toLowerCase();
+                const filtered = data.lessons.filter(l => {
+                    const s = (l.title + ' ' + l.subject + ' ' + l.status).toLowerCase();
+                    return s.includes(query);
+                });
+                els.lessonList.innerHTML = filtered.map(l => {
+                    const active = l.id === selectedId;
+                    const lensCount = LENS_IDS.filter(lid => {
+                        const d = getLensData(l, lid);
+                        return Object.values(d).some(v => v && v.toString().trim().length > 0);
+                    }).length;
+                    return `
+                        <button class="lesson-item ${active ? 'active' : ''}" data-id="${l.id}" type="button">
+                            <span class="title">${escHtml(l.title)}</span>
+                            <div class="meta">
+                                <span>${escHtml(l.subject)}</span>
+                                <span class="badge">${escHtml(l.status)}</span>
+                                <span>${escHtml(l.gradeLevel)}</span>
+                            </div>
+                            <div class="lens-dots">
+                                ${LENS_IDS.map(lid => {
+                                    const d = getLensData(l, lid);
+                                    const filled = Object.values(d).some(v => v && v.toString().trim().length > 0);
+                                    return `<span class="lens-dot ${filled ? 'filled' : ''}"></span>`;
+                                }).join('')}
+                            </div>
+                        </button>
+                    `;
+                }).join('');
+            }
+
+            function renderDetail() {
+                const lesson = getSelectedLesson();
+                if (!lesson) {
+                    if (els.selectedTitle) els.selectedTitle.textContent = 'Δεν υπάρχουν μαθήματα';
+                    if (els.lensContent) els.lensContent.innerHTML = '';
+                    return;
+                }
+                if (els.selectedSubject) els.selectedSubject.textContent = lesson.subject || 'Μάθημα';
+                if (els.selectedTitle) els.selectedTitle.textContent = lesson.title;
+                if (els.selectedStatus) {
+                    els.selectedStatus.textContent = lesson.status;
+                    els.selectedStatus.className = `status-pill status-${lesson.status}`;
+                }
+                if (els.selectedGrade) els.selectedGrade.textContent = `Τάξη: ${lesson.gradeLevel || '—'}`;
+                if (els.selectedUpdated) els.selectedUpdated.textContent = `Ενημερώθηκε: ${lesson.updatedAt || '—'}`;
+
+                renderLensTabs();
+                renderLensContent(lesson);
+            }
+
+            function renderLensTabs() {
+                if (!els.lensTabs) return;
+                const lesson = getSelectedLesson();
+                els.lensTabs.innerHTML = LENS_IDS.map(lid => {
+                    const lens = LENSES[lid];
+                    const hasData = lesson ? Object.values(getLensData(lesson, lid)).some(v => v && v.toString().trim()
+                        .length > 0) : false;
+                    const active = lid === activeLens ? 'active' : '';
+                    const dot = hasData ? ' ●' : '';
+                    return `
+                        <button class="lens-tab ${active}" data-lens="${lid}" type="button">
+                            <span class="icon">${lens.icon}</span> ${lens.label}${dot}
+                        </button>
+                    `;
+                }).join('');
+            }
+
+            function renderLensContent(lesson) {
+                if (!els.lensContent) return;
+                const lid = activeLens;
+                const lens = LENSES[lid];
+                const lensData = getLensData(lesson, lid);
+
+                let fieldsHtml = lens.fields.map(f => {
+                    const val = lensData[f.id] || '';
+                    let inputHtml = '';
+                    let extraClass = '';
+                    // Special styling for general notes field
+                    if (f.id === 'notes') {
+                        extraClass = ' notes-field';
+                        // Render only the textarea, no notes sub-field
+                        inputHtml =
+                            `<textarea data-lens="${lid}" data-field="${f.id}" class="lens-input" placeholder="${escAttr(f.placeholder || '')}" rows="4">${escHtml(val)}</textarea>`;
+                    } else {
+                        // Main field input
+                        if (f.type === 'select') {
+                            const opts = (f.options || []).map(o =>
+                                `<option value="${escAttr(o)}" ${val === o ? 'selected' : ''}>${escHtml(o)}</option>`
+                            ).join('');
+                            inputHtml =
+                                `<select data-lens="${lid}" data-field="${f.id}" class="lens-input">${opts}</select>`;
+                        } else {
+                            inputHtml =
+                                `<input type="text" data-lens="${lid}" data-field="${f.id}" class="lens-input" value="${escAttr(val)}" placeholder="${escAttr(f.placeholder || '')}" />`;
+                        }
+                        // Add a notes sub-field
+                        const notesKey = f.id + '_notes';
+                        const notesVal = lensData[notesKey] || '';
+                        inputHtml += `
+                            <span class="notes-label">Σημειώσεις</span>
+                            <textarea data-lens="${lid}" data-field="${notesKey}" class="lens-input notes-input" placeholder="Επιπλέον σχόλια για το πεδίο..." rows="1">${escHtml(notesVal)}</textarea>
+                        `;
+                    }
+                    return `
+                        <div class="lens-field${extraClass}">
+                            <label>${f.label}</label>
+                            <div class="value">${inputHtml}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                els.lensContent.innerHTML = `
+                    <div class="lens-description">${lens.icon} ${lens.description}</div>
+                    <div class="lens-grid">${fieldsHtml}</div>
+                    <div class="lens-actions">
+                        <button class="primary" id="lensSaveBtn" type="button">💾 Αποθήκευση αλλαγών</button>
+                        <button id="lensClearBtn" type="button">✕ Εκκαθάριση πεδίων</button>
+                    </div>
+                `;
+
+                // Bind lens input events
+                document.querySelectorAll('.lens-input').forEach(el => {
+                    const changeHandler = function() {
+                        const lensId = this.dataset.lens;
+                        const fieldId = this.dataset.field;
+                        const value = this.value;
+                        if (lesson) {
+                            updateLensField(lesson.id, lensId, fieldId, value);
+                        }
+                    };
+                    el.addEventListener('change', changeHandler);
+                    // For textarea, save on blur too
+                    if (el.tagName === 'TEXTAREA') {
+                        el.addEventListener('blur', changeHandler);
+                    }
+                });
+
+                // Save button
+                const saveBtn = document.getElementById('lensSaveBtn');
+                if (saveBtn) {
+                    saveBtn.addEventListener('click', function() {
+                        const inputs = document.querySelectorAll('.lens-input');
+                        inputs.forEach(inp => {
+                            const lensId = inp.dataset.lens;
+                            const fieldId = inp.dataset.field;
+                            const value = inp.value;
+                            if (lesson) {
+                                updateLensField(lesson.id, lensId, fieldId, value);
+                            }
+                        });
+                        setMetaStatus('Αποθηκεύτηκαν όλες οι αλλαγές.', 'ok');
+                    });
+                }
+
+                const clearBtn = document.getElementById('lensClearBtn');
+                if (clearBtn) {
+                    clearBtn.addEventListener('click', function() {
+                        if (!confirm('Εκκαθάριση όλων των πεδίων για αυτό το φακό;')) return;
+                        const inputs = document.querySelectorAll('.lens-input');
+                        inputs.forEach(inp => {
+                            const lensId = inp.dataset.lens;
+                            const fieldId = inp.dataset.field;
+                            inp.value = '';
+                            if (lesson) {
+                                updateLensField(lesson.id, lensId, fieldId, '');
+                            }
+                        });
+                        setMetaStatus('Εκκαθαρίστηκαν τα πεδία.', 'ok');
+                    });
+                }
+            }
+
+            function renderMetaTable() {
+                if (!els.metaTableBody) return;
+                const query = (els.metaSearchInput?.value || '').trim().toLowerCase();
+                const filtered = data.lessons.filter(l => {
+                    const s = (l.title + ' ' + l.subject + ' ' + l.status).toLowerCase();
+                    return s.includes(query);
+                });
+                els.metaTableBody.innerHTML = filtered.map(l => {
+                    const lensCount = LENS_IDS.filter(lid => {
+                        const d = getLensData(l, lid);
+                        return Object.values(d).some(v => v && v.toString().trim().length > 0);
+                    }).length;
+                    return `
+                        <tr>
+                            <td><strong>${escHtml(l.title)}</strong> <small>${escHtml(l.subject)}</small></td>
+                            <td><span class="status-pill status-${l.status}" style="font-size:0.6rem;">${escHtml(l.status)}</span></td>
+                            <td>${lensCount}/${LENS_IDS.length}</td>
+                            <td class="table-actions">
+                                <button data-action="select" data-id="${l.id}" type="button">✏️</button>
+                                <button data-action="duplicate" data-id="${l.id}" type="button">📋</button>
+                                <button data-action="delete" data-id="${l.id}" type="button" style="color:#b91c1c;">✕</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+                if (els.metaCount) els.metaCount.textContent = `${filtered.length} μαθήματα`;
+            }
+
+            function renderOverview() {
+                if (!els.overviewStats) return;
+                const total = data.lessons.length;
+                els.overviewStats.textContent = `${total} μαθήματα`;
+
+                LENS_IDS.forEach(lid => {
+                    const count = data.lessons.filter(l => {
+                        const d = getLensData(l, lid);
+                        return Object.values(d).some(v => v && v.toString().trim().length > 0);
+                    }).length;
+                    const el = document.getElementById(`ov-${lid}`);
+                    if (el) el.textContent = `${count}/${total}`;
+                });
+            }
+
+            // ---------- UTILITY ----------
+            function escHtml(s) {
+                return String(s ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+                    .replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+            }
+
+            function escAttr(s) {
+                return String(s ?? '').replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll("'", '&#039;')
+                    .replaceAll('\n', '&#10;');
+            }
+
+            function setMetaStatus(msg, mode = 'ok') {
+                if (els.metaStatusMsg) {
+                    els.metaStatusMsg.textContent = msg;
+                    els.metaStatusMsg.className = `status-msg ${mode === 'error' ? 'error' : 'ok'}`;
+                }
+            }
+
+            function downloadJson(filename, payload) {
+                const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            // ---------- CRUD ----------
+            function addLesson(title) {
+                if (!title || !title.trim()) { setMetaStatus('Δώσε τίτλο.', 'error'); return; }
+                const lesson = createDefaultLesson(title.trim());
+                data.lessons.push(lesson);
+                saveData();
+                selectedId = lesson.id;
+                render();
+                setMetaStatus(`Προστέθηκε το "${lesson.title}".`, 'ok');
+            }
+
+            function deleteLesson(id) {
+                if (!confirm('Σίγουρα θέλεις να διαγράψεις αυτό το μάθημα;')) return;
+                data.lessons = data.lessons.filter(l => l.id !== id);
+                if (selectedId === id) {
+                    selectedId = data.lessons.length > 0 ? data.lessons[0].id : null;
+                }
+                saveData();
+                render();
+                setMetaStatus('Διαγράφηκε.', 'ok');
+            }
+
+            function duplicateLesson(id) {
+                const src = data.lessons.find(l => l.id === id);
+                if (!src) return;
+                const copy = JSON.parse(JSON.stringify(src));
+                copy.id = 'lesson_' + Date.now();
+                copy.title = src.title + ' (αντίγραφο)';
+                copy.status = 'draft';
+                copy.updatedAt = new Date().toISOString().slice(0, 10);
+                data.lessons.push(copy);
+                saveData();
+                selectedId = copy.id;
+                render();
+                setMetaStatus(`Διπλασιάστηκε το "${copy.title}".`, 'ok');
+            }
+
+            function selectLesson(id) {
+                selectedId = id;
+                render();
+            }
+
+            // ---------- IMPORT / EXPORT ----------
+            function importData(payload) {
+                if (!payload || !payload.lessons || !Array.isArray(payload.lessons)) {
+                    setMetaStatus('Μη έγκυρο JSON: απαιτείται "lessons" array.', 'error');
+                    return;
+                }
+                // Ensure all lessons have required fields and notes
+                payload.lessons.forEach(l => {
+                    if (!l.id) l.id = 'lesson_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+                    if (!l.lenses) l.lenses = {};
+                    LENS_IDS.forEach(lid => {
+                        if (!l.lenses[lid]) l.lenses[lid] = {};
+                        LENSES[lid].fields.forEach(f => {
+                            if (l.lenses[lid][f.id] === undefined) l.lenses[lid][f.id] = '';
+                            if (f.id !== 'notes') {
+                                const notesKey = f.id + '_notes';
+                                if (l.lenses[lid][notesKey] === undefined) l.lenses[lid][notesKey] = '';
+                            }
+                        });
+                    });
+                    if (!l.subject) l.subject = 'Γενικό';
+                    if (!l.gradeLevel) l.gradeLevel = '—';
+                    if (!l.status) l.status = 'draft';
+                    if (!l.updatedAt) l.updatedAt = new Date().toISOString().slice(0, 10);
+                });
+                data.lessons = payload.lessons;
+                data.meta = payload.meta || { lastUpdated: new Date().toISOString().slice(0, 10), version: '1.0' };
+                selectedId = data.lessons.length > 0 ? data.lessons[0].id : null;
+                saveData();
+                render();
+                setMetaStatus(`Εισαγωγή ${data.lessons.length} μαθημάτων.`, 'ok');
+            }
+
+            // ---------- EVENTS ----------
+            function bindEvents() {
+                // Lesson list clicks
+                if (els.lessonList) {
+                    els.lessonList.addEventListener('click', (e) => {
+                        const item = e.target.closest('.lesson-item');
+                        if (item) selectLesson(item.dataset.id);
+                    });
+                }
+
+                // Lens tabs
+                if (els.lensTabs) {
+                    els.lensTabs.addEventListener('click', (e) => {
+                        const tab = e.target.closest('.lens-tab');
+                        if (tab) {
+                            activeLens = tab.dataset.lens;
+                            renderDetail();
+                        }
+                    });
+                }
+
+                // Search
+                if (els.searchInput) {
+                    els.searchInput.addEventListener('input', renderLessonList);
+                }
+                if (els.metaSearchInput) {
+                    els.metaSearchInput.addEventListener('input', renderMetaTable);
+                }
+
+                // Add lesson
+                if (els.addLessonBtn && els.newLessonInput) {
+                    els.addLessonBtn.addEventListener('click', () => {
+                        addLesson(els.newLessonInput.value);
+                        els.newLessonInput.value = '';
+                    });
+                    els.newLessonInput.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            addLesson(els.newLessonInput.value);
+                            els.newLessonInput.value = '';
+                        }
+                    });
+                }
+
+                // Duplicate / Delete from detail header
+                if (els.duplicateLessonBtn) {
+                    els.duplicateLessonBtn.addEventListener('click', () => {
+                        const lesson = getSelectedLesson();
+                        if (lesson) duplicateLesson(lesson.id);
+                    });
+                }
+                if (els.deleteLessonBtn) {
+                    els.deleteLessonBtn.addEventListener('click', () => {
+                        const lesson = getSelectedLesson();
+                        if (lesson) deleteLesson(lesson.id);
+                    });
+                }
+
+                // Meta table actions
+                if (els.metaTableBody) {
+                    els.metaTableBody.addEventListener('click', (e) => {
+                        const btn = e.target.closest('[data-action]');
+                        if (!btn) return;
+                        const action = btn.dataset.action;
+                        const id = btn.dataset.id;
+                        if (action === 'select') selectLesson(id);
+                        else if (action === 'duplicate') duplicateLesson(id);
+                        else if (action === 'delete') deleteLesson(id);
+                    });
+                }
+
+                // Import / Export
+                if (els.importBtn) {
+                    els.importBtn.addEventListener('click', () => {
+                        if (els.fileInput) els.fileInput.click();
+                    });
+                }
+                if (els.fileInput) {
+                    els.fileInput.addEventListener('change', async () => {
+                        const file = els.fileInput.files[0];
+                        if (!file) return;
+                        try {
+                            const text = await file.text();
+                            const payload = JSON.parse(text);
+                            importData(payload);
+                        } catch (e) {
+                            setMetaStatus(`Import error: ${e.message}`, 'error');
+                        } finally {
+                            els.fileInput.value = '';
+                        }
+                    });
+                }
+                if (els.exportBtn) {
+                    els.exportBtn.addEventListener('click', () => {
+                        downloadJson(`pedagogical-lenses-${new Date().toISOString().slice(0,10)}.json`, data);
+                        setMetaStatus('Εξαγωγή έγινε.', 'ok');
+                    });
+                }
+                if (els.exportAllBtn) {
+                    els.exportAllBtn.addEventListener('click', () => {
+                        downloadJson(`pedagogical-lenses-all-${new Date().toISOString().slice(0,10)}.json`, data);
+                        setMetaStatus('Εξαγωγή όλων.', 'ok');
+                    });
+                }
+
+                // Reset
+                if (els.resetBtn) {
+                    els.resetBtn.addEventListener('click', () => {
+                        if (!confirm('Επαναφορά στα αρχικά δεδομένα; Θα χαθούν οι αλλαγές.')) return;
+                        data = JSON.parse(JSON.stringify(fallbackData));
+                        selectedId = data.lessons.length > 0 ? data.lessons[0].id : null;
+                        activeLens = 'pedagogy';
+                        saveData();
+                        render();
+                        setMetaStatus('Επαναφορά στα αρχικά δεδομένα.', 'ok');
+                    });
+                }
+            }
+
+            // ---------- BOOT ----------
+            function boot() {
+                console.log('🚀 Pedagogical Lens Dashboard booting...');
+                initEls();
+                bindEvents();
+                saveData();
+                render();
+                console.log('✅ Dashboard ready.');
+            }
+
+            document.addEventListener('DOMContentLoaded', boot);
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="el" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Media Library · Sacred Blueprint</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--tr:background 0.3s,color 0.3s,border-color 0.3s;}
+  [data-theme="dark"]{
+    --bg:#1a1410;--sf:rgba(255,255,255,0.04);--sf2:rgba(0,0,0,0.3);
+    --tx:#f5f0e8;--mu:#6b5d4f;--go:#c4862a;--gd:rgba(196,134,42,0.2);
+    --gm:rgba(196,134,42,0.12);--gh:rgba(196,134,42,0.06);
+    --ru:#8b3a1f;--ru2:#6b2a10;--gr:#4a7c59;--er:#c0392b;
+    --ml-bg:rgba(196,134,42,0.05);
+  }
+  [data-theme="light"]{
+    --bg:#faf7f2;--sf:rgba(0,0,0,0.03);--sf2:rgba(255,255,255,0.88);
+    --tx:#2a1f14;--mu:#8a7560;--go:#9a6318;--gd:rgba(154,99,24,0.18);
+    --gm:rgba(154,99,24,0.1);--gh:rgba(154,99,24,0.05);
+    --ru:#7a3018;--ru2:#5a2010;--gr:#2d6640;--er:#a02020;
+    --ml-bg:rgba(154,99,24,0.04);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Cormorant Garamond',Georgia,serif;background:var(--bg);color:var(--tx);padding:40px 24px;transition:0.3s;}
+  .container{max-width:1400px;margin:0 auto;}
+  .theme-btn{position:fixed;top:20px;right:20px;z-index:100;background:var(--sf);border:1px solid var(--gd);border-radius:24px;padding:7px 14px;cursor:pointer;display:flex;align-items:center;gap:8px;}
+  .trk{width:34px;height:18px;background:#3a2e22;border-radius:9px;position:relative;}
+  .thm{width:12px;height:12px;background:var(--go);border-radius:50%;position:absolute;top:3px;left:3px;transition:transform 0.3s;}
+  [data-theme="light"] .thm{transform:translateX(16px);}
+  h1{font-size:2rem;font-weight:300;margin-bottom:0.5rem;}
+  h1 em{color:var(--go);}
+  .sub{color:var(--mu);margin-bottom:2rem;border-left:3px solid var(--go);padding-left:1rem;}
+  .card{background:var(--sf);border:1px solid var(--gd);border-radius:8px;padding:24px;margin-bottom:24px;}
+  .flex-row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .form-group{flex:1;min-width:150px;}
+  label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);letter-spacing:1px;display:block;margin-bottom:4px;}
+  input,select,textarea{width:100%;background:var(--sf2);border:1px solid var(--gd);border-radius:6px;color:var(--tx);padding:8px 12px;font-family:inherit;font-size:14px;}
+  button{background:var(--gm);border:1px solid var(--go);border-radius:6px;color:var(--go);padding:8px 16px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;}
+  button:hover{background:var(--gd);color:var(--tx);}
+  .btn-primary{background:var(--ru);color:white;border-color:var(--ru2);}
+  .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px;}
+  .media-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .media-table th,.media-table td{border-bottom:1px solid var(--gd);padding:10px 6px;text-align:left;vertical-align:top;}
+  .media-table th{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--go);}
+  .badge{font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 5px;border-radius:10px;background:var(--gh);display:inline-block;margin:1px;}
+  .actions{display:flex;gap:4px;flex-wrap:wrap;}
+  .actions button{background:transparent;padding:3px 6px;font-size:9px;}
+  .status-msg{padding:10px;background:var(--ml-bg);border-radius:6px;margin-top:16px;font-family:monospace;font-size:11px;}
+  .stats{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);}
+  .search-box input{width:200px;}
+  .bulk-panel{background:var(--sf);border:1px solid var(--gd);border-radius:8px;padding:16px;margin-bottom:16px;display:none;}
+  .bulk-panel textarea{font-family:'JetBrains Mono',monospace;font-size:12px;white-space:pre;tab-size:2;}
+  .bulk-example{font-size:11px;color:var(--mu);margin-top:4px;background:var(--sf2);padding:6px 10px;border-radius:4px;border:1px dashed var(--gd);}
+</style>
+</head>
+<body>
+<div class="container">
+  <button class="theme-btn" onclick="toggleTheme()"><div class="trk"><div class="thm"></div></div>Θέμα</button>
+  <h1>📚 Sacred Blueprint <em>Media Library</em></h1>
+  <div class="sub">Μόνο τα media του Sacred Blueprint · Πλήρης διαχείριση · 12 στήλες Excel</div>
+
+  <div class="card">
+    <div class="toolbar">
+      <h3>➕ Προσθήκη / Επεξεργασία</h3>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button onclick="toggleBulkPanel()">📥 Προσθήκη πολλαπλών</button>
+        <button onclick="exportToJSON()">📄 Export JSON</button>
+        <button onclick="exportToExcel()">📊 Export Excel</button>
+        <label class="btn-primary" style="background:var(--gr);">
+          📂 Import JSON <input type="file" id="importJson" accept=".json" style="display:none" onchange="importFromJSON(this)">
+        </label>
+        <label class="btn-primary" style="background:var(--gr);">
+          📎 Import Excel <input type="file" id="importXlsx" accept=".xlsx,.xls, .csv" style="display:none" onchange="importFromExcel(this)">
+        </label>
+        <button onclick="resetToSacredBlueprint()" style="background:#c0392b20; color:var(--er);">⟳ Επαναφορά</button>
+      </div>
+    </div>
+
+    <!-- BULK IMPORT PANEL -->
+    <div id="bulkPanel" class="bulk-panel">
+      <h4>📥 Εισαγωγή πολλαπλών media (JSON, CSV, Excel)</h4>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:8px;">
+        <div style="flex:2; min-width:300px;">
+          <label>Επικόλλησε δεδομένα (JSON array ή CSV με επικεφαλίδες)</label>
+          <textarea id="bulkData" rows="8" placeholder='Π.χ. JSON: [{"media_id":"IMG-999","title":"Νέο","url":"https://..."}]&#10;ή CSV:&#10;media_id,title,url&#10;IMG-999,Νέο,https://...'></textarea>
+          <div class="bulk-example">💡 Το JSON μπορεί να είναι array αντικειμένων ή αντικείμενο με πεδίο "media". Το CSV πρέπει να έχει γραμμή επικεφαλίδων.</div>
+        </div>
+        <div style="flex:1; min-width:180px;">
+          <div class="form-group">
+            <label>Λειτουργία</label>
+            <select id="bulkMode">
+              <option value="merge">Συγχώνευση (update/insert)</option>
+              <option value="replace">Αντικατάσταση</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Τύπος δεδομένων</label>
+            <select id="bulkType">
+              <option value="auto">Αυτόματη ανίχνευση</option>
+              <option value="json">JSON</option>
+              <option value="csv">CSV</option>
+            </select>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+            <button class="btn-primary" onclick="processBulk()">Εισαγωγή</button>
+            <button onclick="toggleBulkPanel()">Κλείσιμο</button>
+            <button class="btn-primary" style="background:var(--gr);" onclick="document.getElementById('bulkFile').click();">📂 Αρχείο</button>
+            <input type="file" id="bulkFile" accept=".json,.csv,.xlsx,.xls" style="display:none" onchange="processBulkFile(this)">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex-row">
+      <div class="form-group"><label>ID</label><input type="text" id="mediaId" placeholder="IMG-xxx"></div>
+      <div class="form-group"><label>Τίτλος</label><input type="text" id="title" placeholder="Όνομα"></div>
+      <div class="form-group"><label>URL</label><input type="text" id="url" placeholder="https://..."></div>
+      <div class="form-group"><label>Τύπος</label><select id="type">
+        <option value="auto">Auto</option>
+        <option value="image">Εικόνα</option>
+        <option value="youtube">YouTube</option>
+        <option value="google_slides">Google Slides</option>
+        <option value="google_drive">Google Drive</option>
+        <option value="notebooklm">NotebookLM</option>
+      </select></div>
+    </div>
+    <div class="flex-row">
+      <div class="form-group"><label>Source Platform</label><input type="text" id="source_platform" placeholder="imgbb / YouTube / Drive / notebooklm"></div>
+      <div class="form-group"><label>App Context ( ; ή  )</label><input type="text" id="app_context" placeholder="Timeline Map; Mind Palace"></div>
+      <div class="form-group"><label>Unit ID</label><input type="text" id="unit_id" placeholder="unit_1"></div>
+    </div>
+    <div class="flex-row">
+      <div class="form-group"><label>Tags (κόμμα)</label><input type="text" id="tags" placeholder="ιστορία, φιλοσοφία"></div>
+      <div class="form-group"><label>Γλώσσα</label><select id="language"><option value="el">Ελληνικά</option><option value="en">English</option></select></div>
+      <div class="form-group"><label>Κατάσταση</label><select id="status"><option value="active">active</option><option value="draft">draft</option></select></div>
+    </div>
+    <div class="form-group"><label>Σημειώσεις</label><textarea id="notes" rows="2" placeholder="οδηγίες"></textarea></div>
+    <div style="display:flex; gap:12px; margin-top:12px;">
+      <button id="btnAdd" class="btn-primary" onclick="addOrUpdateMedia()">+ Προσθήκη / Ενημέρωση</button>
+      <button onclick="clearForm()">Καθαρισμός</button>
+      <button onclick="previewUrl()">🔍 Preview</button>
+    </div>
+    <div id="previewArea" style="margin-top:12px; background:var(--ml-bg); border-radius:6px; padding:10px; display:none;"></div>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <h3>📋 Βιβλιοθήκη</h3>
+      <div class="stats" id="statsInfo"></div>
+      <div class="search-box"><input type="text" id="searchInput" placeholder="Αναζήτηση..." onkeyup="filterLibrary()"></div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="media-table" id="mediaTable">
+        <thead><tr><th>ID</th><th>Τύπος</th><th>Τίτλος</th><th>Tags</th><th>App Context</th><th>URL</th><th>Ενέργειες</th></tr></thead>
+        <tbody id="mediaTableBody"></tbody>
+      </table>
+    </div>
+    <div id="statusMsg" class="status-msg">✅ Έτοιμο. Τα δεδομένα αποθηκεύονται αυτόματα.</div>
+  </div>
+</div>
+
+<script>
+  // ========== SACRED BLUEPRINT ENTRIES ==========
+  const SACRED_BLUEPRINT = [
+    {"media_id":"IMG-011","type":"image","title":"Εισαγωγή — Sacred Blueprint","url":"https://i.ibb.co/nMwjVrmC/The-Sacred-Blueprint-page-0001.jpg","source_platform":"imgbb","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"unit_id":"intro","tags":["μετοχή","θείο","Sacred Blueprint","εισαγωγή"],"language":"el","notes":"","date_added":"2026-05-09","status":"active"},
+    {"media_id":"IMG-012","type":"image","title":"Σταθμός 1 — Πλάτων","url":"https://i.ibb.co/LDN0sWGp/The-Sacred-Blueprint-page-0002.jpg","source_platform":"imgbb","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"unit_id":"station_1","tags":["Πλάτων","μετοχή","ιδέες","Αθήνα","427 π.Χ."],"language":"el","notes":"","date_added":"2026-05-09","status":"active"},
+    {"media_id":"IMG-013","type":"image","title":"Σταθμός 2 — Αριστοτέλης","url":"https://i.ibb.co/PGmWDBjt/The-Sacred-Blueprint-page-0014.jpg","source_platform":"imgbb","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"unit_id":"station_2","tags":["Αριστοτέλης","τελεολογία","Αθήνα","384 π.Χ."],"language":"el","notes":"","date_added":"2026-05-09","status":"active"},
+    {"media_id":"IMG-014","type":"image","title":"Σταθμός 3 — Στωικισμός","url":"https://i.ibb.co/q3Ty33Vq/The-Sacred-Blueprint-page-0005.jpg","source_platform":"imgbb","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"unit_id":"station_3","tags":["Στωικισμός","Λόγος","σπερματικοί λόγοι","3ος αιώνας π.Χ."],"language":"el","notes":"","date_added":"2026-05-09","status":"active"},
+    {"media_id":"IMG-015","type":"image","title":"Σταθμός 4 — Ιωάννης Θεολόγος","url":"https://i.ibb.co/6RDfMcx1/The-Sacred-Blueprint-page-0013.jpg","source_platform":"imgbb","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"unit_id":"station_4","tags":["Ιωάννης","Λόγος","ενανθρώπηση","Έφεσος","1ος αιώνας"],"language":"el","notes":"","date_added":"2026-05-09","status":"active"},
+    {"media_id":"IMG-016","type":"image","title":"Σταθμός 5 — Ωριγένης","url":"https://i.ibb.co/V0S43ngy/The-Sacred-Blueprint-page-0012.jpg","source_platform":"imgbb","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"unit_id":"station_5","tags":["Ωριγένης","Αλεξάνδρεια","ψυχές","185 μ.Χ."],"language":"el","notes":"","date_added":"2026-05-09","status":"active"},
+    {"media_id":"IMG-017","type":"image","title":"Σταθμός 6 — Γρηγόριος Θεολόγος","url":"https://i.ibb.co/twQyyfQP/The-Sacred-Blueprint-page-0011.jpg","source_platform":"imgbb","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"unit_id":"station_6","tags":["Γρηγόριος Θεολόγος","αποφατισμός","φως","329 μ.Χ."],"language":"el","notes":"","date_added":"2026-05-09","status":"active"},
+    {"media_id":"IMG-018","type":"image","title":"Σταθμός 7 — Γρηγόριος Νύσσης","url":"https://i.ibb.co/nNYp6P4B/The-Sacred-Blueprint-page-0006.jpg","source_platform":"imgbb","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"unit_id":"station_7","tags":["Γρηγόριος Νύσσης","επέκταση","άπειρο","335 μ.Χ."],"language":"el","notes":"","date_added":"2026-05-09","status":"active"},
+    {"media_id":"IMG-019","type":"image","title":"Σταθμός 8 — Διονύσιος Αρεοπαγίτης","url":"https://i.ibb.co/n861J2T2/The-Sacred-Blueprint-page-0003.jpg","source_platform":"imgbb","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book","UE5"],"unit_id":"station_8","tags":["Διονύσιος","ιεραρχία","απορροές","5ος αιώνας"],"language":"el","notes":"","date_added":"2026-05-09","status":"active"},
+    {"media_id":"IMG-020","type":"image","title":"Σταθμός 9 — Μάξιμος Ομολογητής","url":"https://i.ibb.co/8nJp0wwB/The-Sacred-Blueprint-page-0015.jpg","source_platform":"imgbb","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"unit_id":"station_9","tags":["Μάξιμος","λόγοι όντων","θέληση","580 μ.Χ."],"language":"el","notes":"","date_added":"2026-05-09","status":"active"},
+    {"media_id":"IMG-021","type":"image","title":"Σταθμός 10 — Συμεών Νέος Θεολόγος","url":"https://i.ibb.co/TqcDJYxK/The-Sacred-Blueprint-page-0008.jpg","source_platform":"imgbb","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"unit_id":"station_10","tags":["Συμεών","άκτιστο φως","εμπειρία","949 μ.Χ."],"language":"el","notes":"","date_added":"2026-05-09","status":"active"},
+    {"media_id":"IMG-022","type":"image","title":"Σταθμός 11 — Γρηγόριος Παλαμάς","url":"https://i.ibb.co/F49ZXsfF/The-Sacred-Blueprint-page-0009.jpg","source_platform":"imgbb","app_context":["Timeline Map","Mind Palace Debate","Explorer History","Interactive Book"],"unit_id":"station_11","tags":["Παλαμάς","ησυχασμός","ουσία","ενέργεια","1296 μ.Χ."],"language":"el","notes":"","date_added":"2026-05-09","status":"active"}
+  ];
+
+  let mediaLibrary = [];
+  let editId = null;
+
+  // ======================================================================
+  // ΒΕΛΤΙΩΜΕΝΗ ΑΝΙΧΝΕΥΣΗ ΕΠΙΚΕΦΑΛΙΔΩΝ
+  // ======================================================================
+  const FIELD_SYNONYMS = {
+    media_id: ['media_id', 'id', 'mediaid', 'κωδικός', 'αριθμός', 'code', 'media id'],
+    title: ['title', 'τίτλος', 'ονομα', 'name', 'όνομα', 'header'],
+    url: ['url', 'link', 'διεύθυνση', 'σύνδεσμος', 'web', 'address', 'source url', 'asset reference', 'source', 'reference', 'source url / asset reference'],
+    source_platform: ['source_platform', 'sourceplatform', 'πηγή', 'platform', 'πλατφόρμα'],
+    app_context: ['app_context', 'appcontext', 'context', 'περιβάλλον', 'application context'],
+    unit_id: ['unit_id', 'unitid', 'ενότητα', 'unit', 'module'],
+    tags: ['tags', 'ετικέτες', 'tag', 'labels', 'description', 'tags/description'],
+    language: ['language', 'γλώσσα', 'lang'],
+    notes: ['notes', 'σημειώσεις', 'note', 'remarks'],
+    date_added: ['date_added', 'dateadded', 'ημερομηνία', 'date', 'added'],
+    status: ['status', 'κατάσταση', 'state'],
+    type: ['type', 'asset type', 'asset', 'format', 'media type', 'τύπος']
+  };
+
+  function matchField(cellText) {
+    if (!cellText) return null;
+    const t = String(cellText).trim();
+    const lower = t.toLowerCase();
+    for (const [field, synonyms] of Object.entries(FIELD_SYNONYMS)) {
+      for (const syn of synonyms) {
+        const synLower = syn.toLowerCase();
+        const regex = new RegExp('\\b' + synLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+        if (regex.test(t)) return field;
+      }
+    }
+    return null;
+  }
+
+  function findHeaderRow(rows) {
+    let bestRow = -1, bestScore = -1, bestHasBoth = false;
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      if (!row || row.length === 0) continue;
+      const fields = new Set();
+      let hasTitle = false, hasUrl = false;
+      for (const cell of row) {
+        if (typeof cell !== 'string' && typeof cell !== 'number') continue;
+        const f = matchField(String(cell));
+        if (f) {
+          fields.add(f);
+          if (f === 'title') hasTitle = true;
+          if (f === 'url') hasUrl = true;
+        }
+      }
+      const score = fields.size;
+      const hasBoth = hasTitle && hasUrl;
+      if (score > bestScore || (score === bestScore && hasBoth && !bestHasBoth)) {
+        bestScore = score;
+        bestRow = i;
+        bestHasBoth = hasBoth;
+      }
+    }
+    if (bestRow === -1) {
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        if (row && row.some(cell => String(cell).trim() !== '')) {
+          bestRow = i;
+          break;
+        }
+      }
+    }
+    return bestRow;
+  }
+
+  function buildColumnMap(headerRow) {
+    const colMap = {}, used = new Set();
+    if (!headerRow) return colMap;
+    headerRow.forEach((cell, idx) => {
+      if (!cell) return;
+      const field = matchField(String(cell));
+      if (field && !used.has(field)) {
+        colMap[idx] = field;
+        used.add(field);
+      }
+    });
+    return colMap;
+  }
+
+  // ========== ΒΑΣΙΚΕΣ ΛΕΙΤΟΥΡΓΙΕΣ ==========
+  function loadLibrary() {
+    const stored = localStorage.getItem('sacredBlueprintLib');
+    if (stored) {
+      try { 
+        mediaLibrary = JSON.parse(stored); 
+        if (!mediaLibrary || !mediaLibrary.length) mediaLibrary = [...SACRED_BLUEPRINT]; 
+      }
+      catch(e) { mediaLibrary = [...SACRED_BLUEPRINT]; }
+    } else { 
+      mediaLibrary = [...SACRED_BLUEPRINT]; 
+    }
+    renderTable();
+    updateStats();
+  }
+
+  function resetToSacredBlueprint() {
+    if (confirm('Επαναφορά στα αρχικά 12 media του Sacred Blueprint;')) {
+      mediaLibrary = JSON.parse(JSON.stringify(SACRED_BLUEPRINT));
+      saveToLocal();
+      renderTable();
+      updateStats();
+      showStatus(`Επαναφορά σε ${mediaLibrary.length} media`, 'ok');
+    }
+  }
+
+  function saveToLocal() { localStorage.setItem('sacredBlueprintLib', JSON.stringify(mediaLibrary)); }
+
+  function updateStats() { document.getElementById('statsInfo').innerHTML = `📊 Σύνολο: ${mediaLibrary.length} media`; }
+
+  function renderTable(filter = '') {
+    const tbody = document.getElementById('mediaTableBody');
+    let filtered = mediaLibrary;
+    if (filter) {
+      const f = filter.toLowerCase();
+      filtered = mediaLibrary.filter(m => (m.title||'').toLowerCase().includes(f) || (m.tags||[]).join(' ').toLowerCase().includes(f) || (m.media_id||'').toLowerCase().includes(f));
+    }
+    if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="7">Δεν βρέθηκαν media</td></tr>'; return; }
+    tbody.innerHTML = filtered.map(m => `
+      <tr>
+        <td><code>${escapeHtml(m.media_id)}</code></td>
+        <td><span class="badge">${escapeHtml(m.type)}</span></td>
+        <td><strong>${escapeHtml(m.title)}</strong><br><small>${m.date_added||''}</small></td>
+        <td>${(m.tags||[]).map(t => `<span class="badge">${escapeHtml(t)}</span>`).join(' ')}</td>
+        <td>${(m.app_context||[]).map(a => `<span class="badge">${escapeHtml(a)}</span>`).join(' ')}</td>
+        <td><a href="${escapeHtml(m.url)}" target="_blank" style="color:var(--go);">link</a></td>
+        <td class="actions"><button onclick="editMedia('${escapeHtml(m.media_id)}')">✏️</button><button onclick="deleteMedia('${escapeHtml(m.media_id)}')">🗑️</button><button onclick="copyUrl('${escapeHtml(m.media_id)}')">📋</button></td>
+      </tr>
+    `).join('');
+  }
+
+  function filterLibrary() { renderTable(document.getElementById('searchInput').value); }
+
+  function detectType(url) {
+    const u = url.toLowerCase();
+    if (u.includes('youtube.com/watch') || u.includes('youtu.be')) return 'youtube';
+    if (u.includes('docs.google.com/presentation')) return 'google_slides';
+    if (u.includes('drive.google.com/file/d/') || u.includes('drive.google.com/uc')) return 'google_drive';
+    if (u.includes('notebooklm.google.com') || u.includes('notebooklm.') || u.includes('notebooklm')) return 'notebooklm';
+    return 'image';
+  }
+
+  function convertUrl(raw, type) {
+    if (!raw) return raw;
+    let url = raw.trim();
+    if (type === 'youtube') {
+      let m = url.match(/youtube\.com\/watch\?v=([\w-]+)/) || url.match(/youtu\.be\/([\w-]+)/);
+      if (m) return 'https://www.youtube.com/embed/' + m[1];
+      return url;
+    }
+    if (type === 'google_slides') {
+      let m = url.match(/\/presentation\/d\/([\w-]+)/);
+      if (m && !url.includes('/pubembed')) 
+        return `https://docs.google.com/presentation/d/${m[1]}/pubembed?start=false&loop=false&delayms=3000`;
+      return url;
+    }
+    if (type === 'google_drive') {
+      let m = url.match(/\/file\/d\/([\w-]+)/);
+      if (m) return `https://drive.google.com/uc?export=download&id=${m[1]}`;
+      return url;
+    }
+    return url;
+  }
+
+  function addOrUpdateMedia() {
+    const id = document.getElementById('mediaId').value.trim();
+    const title = document.getElementById('title').value.trim();
+    let url = document.getElementById('url').value.trim();
+    let type = document.getElementById('type').value;
+    if (!id || !title || !url) { showStatus('Συμπληρώστε ID, Τίτλο, URL', 'error'); return; }
+    if (type === 'auto') type = detectType(url);
+    url = convertUrl(url, type);
+    let source_platform = document.getElementById('source_platform').value.trim();
+    if (!source_platform) {
+      if (type === 'youtube') source_platform = 'youtube';
+      else if (type === 'google_slides') source_platform = 'google_slides';
+      else if (type === 'google_drive') source_platform = 'google_drive';
+      else if (type === 'notebooklm') source_platform = 'notebooklm';
+      else source_platform = '';
+    }
+    const rawAppContext = document.getElementById('app_context').value;
+    const appContextArray = rawAppContext.split(/[;；]+/).map(a => a.trim()).filter(Boolean);
+    const newMedia = {
+      media_id: id, type, title, url,
+      source_platform: source_platform,
+      app_context: appContextArray,
+      unit_id: document.getElementById('unit_id').value.trim(),
+      tags: document.getElementById('tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+      language: document.getElementById('language').value,
+      notes: document.getElementById('notes').value,
+      date_added: new Date().toISOString().slice(0,10),
+      status: document.getElementById('status').value
+    };
+    const idx = mediaLibrary.findIndex(m => m.media_id === id);
+    if (idx !== -1 && editId === id) mediaLibrary[idx] = newMedia;
+    else if (idx !== -1) { showStatus(`ID ${id} υπάρχει`, 'error'); return; }
+    else mediaLibrary.push(newMedia);
+    saveToLocal(); clearForm(); renderTable(); updateStats();
+    showStatus(`${editId===id ? 'Ενημερώθηκε' : 'Προστέθηκε'} το ${id}`, 'ok');
+    editId = null;
+  }
+
+  function editMedia(id) {
+    const m = mediaLibrary.find(x => x.media_id === id);
+    if (!m) return;
+    document.getElementById('mediaId').value = m.media_id;
+    document.getElementById('title').value = m.title;
+    document.getElementById('url').value = m.url;
+    document.getElementById('type').value = m.type;
+    document.getElementById('source_platform').value = m.source_platform || '';
+    document.getElementById('app_context').value = (m.app_context||[]).join('; ');
+    document.getElementById('unit_id').value = m.unit_id || '';
+    document.getElementById('tags').value = (m.tags||[]).join(', ');
+    document.getElementById('language').value = m.language || 'el';
+    document.getElementById('notes').value = m.notes || '';
+    document.getElementById('status').value = m.status || 'active';
+    editId = id;
+    document.getElementById('btnAdd').innerHTML = '✏️ Ενημέρωση';
+  }
+
+  function deleteMedia(id) { if(confirm(`Διαγραφή ${id}?`)) { mediaLibrary = mediaLibrary.filter(m=>m.media_id!==id); saveToLocal(); renderTable(); updateStats(); if(editId===id) clearForm(); showStatus(`Διαγράφηκε ${id}`,'ok'); } }
+  
+  function clearForm() {
+    document.getElementById('mediaId').value = '';
+    document.getElementById('title').value = '';
+    document.getElementById('url').value = '';
+    document.getElementById('type').value = 'auto';
+    document.getElementById('source_platform').value = '';
+    document.getElementById('app_context').value = '';
+    document.getElementById('unit_id').value = '';
+    document.getElementById('tags').value = '';
+    document.getElementById('language').value = 'el';
+    document.getElementById('notes').value = '';
+    document.getElementById('status').value = 'active';
+    editId = null;
+    document.getElementById('btnAdd').innerHTML = '+ Προσθήκη / Ενημέρωση';
+  }
+  
+  function copyUrl(id) { const m=mediaLibrary.find(x=>x.media_id===id); if(m){ navigator.clipboard.writeText(m.url); showStatus(`URL αντιγράφηκε`,'ok'); } }
+
+  function previewUrl() {
+    let url = document.getElementById('url').value.trim();
+    let type = document.getElementById('type').value;
+    if (!url) { showStatus('Δώστε URL','error'); return; }
+    if (type === 'auto') type = detectType(url);
+    const embed = convertUrl(url, type);
+    const div = document.getElementById('previewArea');
+    let html = '';
+    if (type === 'image') html = `<img src="${embed}" style="max-width:100%; max-height:200px;" onerror="this.style.display='none'">`;
+    else if (type === 'youtube') html = `<iframe width="100%" height="200" src="${embed}" frameborder="0" allowfullscreen></iframe>`;
+    else if (type === 'google_slides') html = `<iframe src="${embed}" width="100%" height="250"></iframe>`;
+    else if (type === 'google_drive') html = `<iframe src="${embed}" width="100%" height="250" style="border:none;"></iframe><br><small>Drive preview (αν δεν φαίνεται, χρησιμοποίησε το link)</small>`;
+    else if (type === 'notebooklm') html = `<a href="${embed}" target="_blank">Άνοιγμα NotebookLM</a> (παραμένει αυτούσιο URL)`;
+    else html = `<a href="${embed}" target="_blank">Άνοιγμα</a>`;
+    div.innerHTML = `<strong>Preview:</strong><br>${html}<br><button onclick="document.getElementById('previewArea').style.display='none'">Κλείσιμο</button>`;
+    div.style.display = 'block';
+  }
+
+  // ========== BULK IMPORT ==========
+  function toggleBulkPanel() {
+    const p = document.getElementById('bulkPanel');
+    p.style.display = p.style.display === 'block' ? 'none' : 'block';
+  }
+
+  function processBulk() {
+    const raw = document.getElementById('bulkData').value.trim();
+    if (!raw) { showStatus('Παρακαλώ επικόλλησε δεδομένα', 'error'); return; }
+    const mode = document.getElementById('bulkMode').value;
+    const typeHint = document.getElementById('bulkType').value;
+    let parsed;
+    try {
+      parsed = parseBulkData(raw, typeHint);
+    } catch(e) {
+      showStatus('Σφάλμα ανάλυσης: ' + e.message, 'error');
+      return;
+    }
+    if (!parsed || !parsed.length) { showStatus('Δεν βρέθηκαν έγκυρα media', 'error'); return; }
+    applyBulkImport(parsed, mode);
+    document.getElementById('bulkData').value = '';
+    toggleBulkPanel();
+  }
+
+  // Νέο: processBulkFile υποστηρίζει JSON, CSV, XLSX, XLS
+  function processBulkFile(input) {
+    const file = input.files[0];
+    if (!file) { showStatus('Δεν επιλέχθηκε αρχείο', 'error'); return; }
+    const ext = file.name.split('.').pop().toLowerCase();
+    const isExcel = ['xlsx', 'xls'].includes(ext);
+    const isJson = ext === 'json';
+    const isCsv = ext === 'csv';
+
+    // Αν είναι Excel, διαβάζουμε ως ArrayBuffer
+    if (isExcel) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: '' });
+          if (!rows || rows.length < 2) {
+            showStatus('Το Excel αρχείο είναι άδειο ή δεν έχει δεδομένα', 'error');
+            return;
+          }
+          // Χρησιμοποιούμε την parseBulkData με rows και typeHint='excel'
+          const parsed = parseBulkData(rows, 'excel');
+          if (!parsed || !parsed.length) {
+            showStatus('Δεν βρέθηκαν έγκυρα media στο Excel', 'error');
+            return;
+          }
+          const mode = document.getElementById('bulkMode').value;
+          applyBulkImport(parsed, mode);
+          showStatus(`Εισήχθησαν ${parsed.length} media από Excel`, 'ok');
+        } catch(err) {
+          showStatus('Σφάλμα ανάγνωσης Excel: ' + err.message, 'error');
+        }
+        input.value = '';
+      };
+      reader.onerror = function() { showStatus('Αποτυχία ανάγνωσης Excel', 'error'); input.value = ''; };
+      reader.readAsArrayBuffer(file);
+      return;
+    }
+
+    // Για JSON / CSV διαβάζουμε ως text
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const content = e.target.result;
+        let typeHint = 'auto';
+        if (isJson) typeHint = 'json';
+        else if (isCsv) typeHint = 'csv';
+        const parsed = parseBulkData(content, typeHint);
+        if (!parsed || !parsed.length) { showStatus('Δεν βρέθηκαν έγκυρα media στο αρχείο', 'error'); return; }
+        const mode = document.getElementById('bulkMode').value;
+        applyBulkImport(parsed, mode);
+        showStatus(`Εισήχθησαν ${parsed.length} media από ${isJson ? 'JSON' : 'CSV'}`, 'ok');
+      } catch(err) {
+        showStatus('Σφάλμα ανάγνωσης αρχείου: ' + err.message, 'error');
+      }
+      input.value = '';
+    };
+    reader.onerror = function() { showStatus('Αποτυχία ανάγνωσης αρχείου', 'error'); input.value = ''; };
+    reader.readAsText(file);
+  }
+
+  // Ενιαία συνάρτηση parse – δέχεται είτε string (JSON/CSV) είτε array (rows από Excel)
+  function parseBulkData(data, typeHint) {
+    // Αν το data είναι array, το θεωρούμε rows από Excel
+    if (Array.isArray(data)) {
+      const rows = data;
+      if (rows.length < 2) throw new Error('Το Excel πρέπει να έχει επικεφαλίδες και τουλάχιστον μία γραμμή δεδομένων');
+      const headerIdx = findHeaderRow(rows);
+      if (headerIdx === -1) throw new Error('Δεν βρέθηκε γραμμή επικεφαλίδων');
+      const headerRow = rows[headerIdx];
+      const columnMap = buildColumnMap(headerRow);
+      const foundFields = Object.values(columnMap);
+      const hasTitle = foundFields.includes('title');
+      const hasUrl = foundFields.includes('url');
+      if (!hasTitle || !hasUrl) {
+        throw new Error(`Δεν βρέθηκαν οι απαραίτητες στήλες (Title και URL). Βρέθηκαν: ${foundFields.join(', ') || 'καμία'}`);
+      }
+      const result = [];
+      const existingIds = mediaLibrary.map(m => m.media_id);
+      let autoCounter = existingIds.filter(id => id.startsWith('AUTO-')).length;
+      for (let i = headerIdx + 1; i < rows.length; i++) {
+        const row = rows[i];
+        if (!row || row.every(c => !c || String(c).trim() === '')) continue;
+        let media = {};
+        for (const [colIdx, field] of Object.entries(columnMap)) {
+          let val = row[parseInt(colIdx)] || '';
+          if (typeof val === 'string') val = val.trim();
+          media[field] = val;
+        }
+        if (!media.title || !media.url) continue;
+        if (!media.media_id) {
+          autoCounter++;
+          media.media_id = 'AUTO-' + String(autoCounter).padStart(4, '0');
+        }
+        media.type = media.type || 'image';
+        media.source_platform = media.source_platform || '';
+        media.app_context = media.app_context ? String(media.app_context).split(/[;；]+/).map(s=>s.trim()).filter(Boolean) : [];
+        media.unit_id = media.unit_id || '';
+        media.tags = media.tags ? String(media.tags).split(',').map(s=>s.trim()).filter(Boolean) : [];
+        media.language = media.language || 'el';
+        media.notes = media.notes || '';
+        media.date_added = media.date_added ? String(media.date_added).slice(0,10) : new Date().toISOString().slice(0,10);
+        media.status = media.status || 'active';
+        result.push(media);
+      }
+      return result;
+    }
+
+    // Διαφορετικά, data είναι string (JSON ή CSV)
+    let raw = data.trim();
+    if (typeHint === 'auto') {
+      if (raw.startsWith('[') || raw.startsWith('{')) typeHint = 'json';
+      else typeHint = 'csv';
+    }
+    if (typeHint === 'json') {
+      let json = JSON.parse(raw);
+      if (json.media && Array.isArray(json.media)) json = json.media;
+      else if (!Array.isArray(json)) json = [json];
+      return json.filter(item => item.title && item.url);
+    } else { // CSV
+      const workbook = XLSX.read(raw, { type: 'string' });
+      const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: '' });
+      if (!rows || rows.length < 2) throw new Error('Το CSV πρέπει να έχει επικεφαλίδες και τουλάχιστον μία γραμμή δεδομένων');
+      // Χρησιμοποιούμε την ίδια λογική με το Excel
+      return parseBulkData(rows, 'excel');
+    }
+  }
+
+  function applyBulkImport(imported, mode) {
+    if (mode === 'replace') {
+      mediaLibrary = imported;
+      saveToLocal();
+      renderTable();
+      updateStats();
+      showStatus(`Αντικαταστάθηκε η βιβλιοθήκη με ${imported.length} media`, 'ok');
+    } else {
+      let added = 0, updated = 0;
+      imported.forEach(newMedia => {
+        const idx = mediaLibrary.findIndex(m => m.media_id === newMedia.media_id);
+        if (idx !== -1) {
+          mediaLibrary[idx] = newMedia;
+          updated++;
+        } else {
+          mediaLibrary.push(newMedia);
+          added++;
+        }
+      });
+      saveToLocal();
+      renderTable();
+      updateStats();
+      showStatus(`Συγχώνευση: ${added} νέα, ${updated} ενημερώθηκαν`, 'ok');
+    }
+  }
+
+  // ========== EXPORT (JSON & EXCEL) ==========
+  function exportToJSON() {
+    const data = JSON.stringify(mediaLibrary, null, 2);
+    const blob = new Blob([data], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sacred_blueprint_library.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showStatus('Εξαγωγή JSON ολοκληρώθηκε', 'ok');
+  }
+
+  function exportToExcel() {
+    if (typeof XLSX === 'undefined') { showStatus('Βιβλιοθήκη Excel δεν φορτώθηκε', 'error'); return; }
+    const dataToExport = mediaLibrary.map(m => ({
+      media_id: m.media_id,
+      type: m.type,
+      title: m.title,
+      url: m.url,
+      source_platform: m.source_platform || '',
+      app_context: (m.app_context || []).join('; '),
+      unit_id: m.unit_id || '',
+      tags: (m.tags || []).join(', '),
+      language: m.language || 'el',
+      notes: m.notes || '',
+      date_added: m.date_added || '',
+      status: m.status || 'active'
+    }));
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Media');
+    const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'array'});
+    const blob = new Blob([wbout], {type: 'application/octet-stream'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sacred_blueprint_library.xlsx';
+    a.click();
+    URL.revokeObjectURL(url);
+    showStatus('Εξαγωγή Excel ολοκληρώθηκε', 'ok');
+  }
+
+  // ========== IMPORT (JSON & EXCEL) ==========
+  function importFromJSON(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        const imported = data.media || (Array.isArray(data) ? data : []);
+        if (imported.length) { 
+          mediaLibrary = imported.filter(m => m.title && m.url); 
+          saveToLocal(); renderTable(); updateStats(); showStatus(`Εισήχθησαν ${mediaLibrary.length} media`,'ok');
+        }
+        else throw new Error('No valid media');
+      } catch(err) { showStatus('JSON error: '+err.message,'error'); }
+      input.value = '';
+    };
+    reader.readAsText(file);
+  }
+
+  function importFromExcel(input) {
+    if (typeof XLSX === 'undefined') { showStatus('Βιβλιοθήκη Excel δεν φορτώθηκε', 'error'); return; }
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: "" });
+        if (!rows || rows.length === 0) { showStatus('Το αρχείο Excel είναι άδειο', 'error'); input.value = ''; return; }
+
+        const headerIdx = findHeaderRow(rows);
+        if (headerIdx === -1) {
+          showStatus('Δεν βρέθηκε γραμμή επικεφαλίδων με αναγνωρίσιμες στήλες', 'error');
+          input.value = '';
+          return;
+        }
+        const headerRow = rows[headerIdx];
+        const columnMap = buildColumnMap(headerRow);
+        const foundFields = Object.values(columnMap);
+        const hasTitle = foundFields.includes('title');
+        const hasUrl = foundFields.includes('url');
+        if (!hasTitle || !hasUrl) {
+          showStatus(`Δεν βρέθηκαν οι απαραίτητες στήλες (Title και URL). Βρέθηκαν: ${foundFields.join(', ') || 'καμία'}`, 'error');
+          input.value = '';
+          return;
+        }
+
+        const imported = [];
+        const existingIds = mediaLibrary.map(m => m.media_id);
+        let autoCounter = existingIds.filter(id => id.startsWith('AUTO-')).length;
+
+        for (let i = headerIdx + 1; i < rows.length; i++) {
+          const row = rows[i];
+          if (!row || row.length === 0) continue;
+          if (row.every(cell => !cell || String(cell).trim() === "")) continue;
+          let media = {};
+          for (const [colIdx, field] of Object.entries(columnMap)) {
+            let value = row[parseInt(colIdx)] || "";
+            if (typeof value === 'string') value = value.trim();
+            media[field] = value;
+          }
+          if (!media.title || !media.url) continue;
+          
+          if (!media.media_id) {
+            autoCounter++;
+            media.media_id = 'AUTO-' + String(autoCounter).padStart(4, '0');
+          }
+
+          media.type = media.type || 'image';
+          media.source_platform = media.source_platform || '';
+          media.app_context = media.app_context ? String(media.app_context).split(/[;；]+/).map(s=>s.trim()).filter(Boolean) : [];
+          media.unit_id = media.unit_id || '';
+          media.tags = media.tags ? String(media.tags).split(',').map(s=>s.trim()).filter(Boolean) : [];
+          media.language = media.language || 'el';
+          media.notes = media.notes || '';
+          media.date_added = media.date_added ? String(media.date_added).slice(0,10) : new Date().toISOString().slice(0,10);
+          media.status = media.status || 'active';
+          imported.push(media);
+        }
+
+        if (imported.length === 0) {
+          showStatus('Δεν βρέθηκαν έγκυρες γραμμές δεδομένων', 'error');
+        } else {
+          mediaLibrary = imported;
+          saveToLocal(); renderTable(); updateStats();
+          showStatus(`Εισήχθησαν ${mediaLibrary.length} media από Excel`, 'ok');
+        }
+      } catch(err) {
+        showStatus('Σφάλμα ανάγνωσης Excel: ' + err.message, 'error');
+      }
+      input.value = '';
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function showStatus(msg, type='ok') { 
+    const d=document.getElementById('statusMsg'); 
+    d.innerHTML=(type==='ok'?'✅ ':'⚠️ ')+msg; 
+    d.style.color=type==='ok'?'var(--gr)':'var(--er)'; 
+    setTimeout(()=>d.style.color='',3000); 
+  }
+  
+  function escapeHtml(s) { if(!s) return ''; return String(s).replace(/[&<>]/g, m=> m==='&'?'&amp;': m==='<'?'&lt;':'&gt;'); }
+  
+  function toggleTheme() { 
+    const h=document.documentElement; 
+    h.dataset.theme=h.dataset.theme==='dark'?'light':'dark'; 
+    localStorage.setItem('sb-theme',h.dataset.theme); 
+  }
+  
+  (function(){ 
+    const s=localStorage.getItem('sb-theme'); 
+    if(s) document.documentElement.dataset.theme=s; 
+    loadLibrary(); 
+  })();
+</script>
+</body>
+</html>

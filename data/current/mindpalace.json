@@ -1,229 +1,158 @@
 {
-  "case_id": "origen-enigma-full",
-  "title": "To Ainigma tou Origen",
-  "method": "comparative",
-  "status": "complete",
+  "case_id": "paul_chrysostom_dialogue_001",
+  "title": "Ο Απόστολος των Εθνών και το Στόμα της Εκκλησίας",
   "investigation_board": {
-    "figures": [
+    "nodes": [
       {
-        "name": "Origen Alexandreus",
-        "work": "Peri Archon, Kata Kelsou, Ekapla",
-        "era": "185-254 m.X.",
-        "image": ""
+        "id": "mp_n1",
+        "label": "Παύλος",
+        "type": "person",
+        "desc": "Απόστολος των Εθνών"
       },
       {
-        "name": "Ioustinianos A'",
-        "work": "Kata Origenous (E' Oikoumeniki Synodos)",
-        "era": "483-565 m.X.",
-        "image": ""
+        "id": "mp_n2",
+        "label": "Χρυσόστομος",
+        "type": "person",
+        "desc": "Ρήτορας, Αρχιεπίσκοπος"
       },
       {
-        "name": "Grigorios Nyssis",
-        "work": "Chrisi Origenikon ergaleion gia Orthodoxi Triada",
-        "era": "~335-394 m.X.",
-        "image": ""
+        "id": "mp_n3",
+        "label": "Εξουσία",
+        "type": "concept"
+      },
+      {
+        "id": "mp_n4",
+        "label": "Κένωση",
+        "type": "concept"
+      },
+      {
+        "id": "mp_n5",
+        "label": "Ρητορική",
+        "type": "concept"
+      },
+      {
+        "id": "mp_n6",
+        "label": "Αυτοκρατορική Επιρροή",
+        "type": "concept"
       }
     ],
-    "concepts": {
-      "core": "proyparxi psychon, subordinationism, apokatastasis, eleftheria voulisis, skalosia filosofias",
-      "image": ""
-    },
-    "clues": [
+    "edges": [
       {
-        "id": "c1",
-        "title": "Proyparxi ton psychon (noes)",
-        "content": "O Origen daneizetai tin platoniki/plotiniki idea oti oi psyches proyparchoun aionia se pneumatiki katastasi prin pesoun ston yliko kosmo.",
-        "source": "Fakelos A, Stoicheio 1",
-        "type": "argument",
-        "difficulty": 1,
-        "image": ""
+        "source": "mp_n1",
+        "target": "mp_n3",
+        "label": "διδάσκει"
       },
       {
-        "id": "c2",
-        "title": "Ierarchiki alysida (ypotagi Yiou)",
-        "content": "Yiothetite ti neoplatoniki antilipsi oti o Yios einai ypodeesteros tou Patros (subordinationism) gia na diasfalistei i monarcheia tou Theou.",
-        "source": "Fakelos A, Stoicheio 2",
-        "type": "contradiction",
-        "difficulty": 2,
-        "image": ""
+        "source": "mp_n2",
+        "target": "mp_n3",
+        "label": "ερμηνεύει"
       },
       {
-        "id": "c3",
-        "title": "Apokatastasi ton panton (apokatastasis)",
-        "content": "Chrsimopoiei to filosofiko schima proodou-epistrofis, ypostirizontas tin teliki sotiria akoma kai ton daimonon.",
-        "source": "Fakelos A, Stoicheio 3",
-        "type": "evidence",
-        "difficulty": 2,
-        "image": ""
+        "source": "mp_n1",
+        "target": "mp_n4",
+        "label": "διδάσκει"
       },
       {
-        "id": "c4",
-        "title": "Amyna kata ton Gnostikon",
-        "content": "Chrisimopoise ti filosofia os oplo enantion Gnostikon (Valentinos, Markion), tonizontas tin enotita Palais kai Kainis Diathikis.",
-        "source": "Fakelos B, Stoicheio 1",
-        "type": "argument",
-        "difficulty": 3,
-        "image": ""
+        "source": "mp_n2",
+        "target": "mp_n4",
+        "label": "ερμηνεύει"
       },
       {
-        "id": "c5",
-        "title": "Anthropos tis Ekklisias kai Grafis",
-        "content": "Para ti filosofiki glossa, theoroise ton eauto tou protistos erminefti ton Grafo. Afierose ti zoi tou stin ermineia tis Vibloy (Ekapla).",
-        "source": "Fakelos B, Stoicheio 2",
-        "type": "argument",
-        "difficulty": 2,
-        "image": ""
+        "source": "mp_n2",
+        "target": "mp_n5",
+        "label": "χρησιμοποιεί"
       },
       {
-        "id": "c6",
-        "title": "Eleftheria voulisis kata eimarmenis",
-        "content": "I theoria tou gia tin ptisi ton psychon den einai ylistiki, alla tonizei tin eleftheria ton logikon onto enanti tis moiras.",
-        "source": "Fakelos B, Stoicheio 3",
-        "type": "synthesis",
-        "difficulty": 3,
-        "image": ""
+        "source": "mp_n1",
+        "target": "mp_n2",
+        "label": "εμπνέει"
       },
       {
-        "id": "c7",
-        "title": "Martyriko phronima kai basanistiria",
-        "content": "Ezise os askitis kai ypesti basanistiria gia tin pisti kata ton diogmo tou Dekiou. O skopos tou itan o Christos.",
-        "source": "Viografia",
-        "type": "evidence",
-        "difficulty": 1,
-        "image": ""
+        "source": "mp_n2",
+        "target": "mp_n6",
+        "label": "αντιμετωπίζει"
       }
-    ],
-    "connections": [
-      {
-        "from": "c1",
-        "to": "c2",
-        "type": "contrast",
-        "description": "I proyparxi (c1) einai platoniki, alla i ypotagi tou Yiou (c2) eisagei diavathmisi pou apoklinei apo ton Platona kai odigei se subordinationism."
-      },
-      {
-        "from": "c2",
-        "to": "c3",
-        "type": "development",
-        "description": "I ypotagi tou Yiou (c2) syndeetai logika me tin apokatastasi (c3): enas mi anotatos Yios tha mporese na synchoresei ta panta."
-      },
-      {
-        "from": "c3",
-        "to": "c4",
-        "type": "contrast",
-        "description": "I apokatastasi (c3) yperbainei tin amyna kata Gnostikon (c4) kai odigei se akraia oikoumenikotita pou anisychi tin Ekklisia."
-      },
-      {
-        "from": "c4",
-        "to": "c5",
-        "type": "agreement",
-        "description": "I ermineia tis Grafis (c5) enischyei tin antignostiki thesi (c4): i enotita ton Diathikon einai kentriki."
-      },
-      {
-        "from": "c5",
-        "to": "c6",
-        "type": "agreement",
-        "description": "I Grafi (c5) ypostirizei tin eleftheria voulisis (c6) enanti tis eimarmenis pou presvevoun oi Gnostikoi."
-      },
-      {
-        "from": "c6",
-        "to": "c1",
-        "type": "development",
-        "description": "I eleftheria (c6) apaiti tin proyparxi (c1): oi psyches prepei na yparchoun prin tin ptosi gia na echoun eleftheria epilogis."
-      },
-      {
-        "from": "c7",
-        "to": "c4",
-        "type": "agreement",
-        "description": "To martyriko phronima (c7) epivevaionei tin eilikrineia tis amynas kata Gnostikon (c4): o skopos tou itan o Christos."
-      }
-    ],
-    "image": ""
+    ]
   },
   "mind_palace": {
     "rooms": [
       {
-        "id": "r1",
-        "name": "I Stoa ton Filosofikon Ergaleion",
-        "theme": "library",
-        "unlock_requirements": [
-          "c1",
-          "c2"
-        ],
-        "central_question": "Mporoun ta platonika ergaleia (proyparxi, ierarchia) na yperetisoun tin christianiki apokalypsi, i tin allioynanepanorthota?",
-        "image": ""
+        "id": "room_1",
+        "name": "Η Δύναμη του Ανοίγματος",
+        "description": "Από την Ιουδαία στα Έθνη — η σύνδεση του αποστολικού κηρύγματος με τη ρητορική δεινότητα του Χρυσοστόμου.",
+        "objects": [
+          "Επιστολές Παύλου",
+          "Άμβωνας"
+        ]
       },
       {
-        "id": "r2",
-        "name": "To Dikastirio tis E' Oikoumenikis",
-        "theme": "temple",
-        "unlock_requirements": [
-          "c3",
-          "c4",
-          "c5"
-        ],
-        "central_question": "Giati i Ekklisia katadikase ton Origen 300 chronia meta ton thanato tou? Itan oi ides tou epikindynes i oi parerminies ton 'Origeniston'?",
-        "image": ""
+        "id": "room_2",
+        "name": "Η Εξουσία ως Όργανο Τάξης",
+        "description": "Η ερμηνεία του Ρωμ. 13 στο φως της στάσης των Ανδριάντων στην Αντιόχεια.",
+        "objects": [
+          "Κείμενο Ρωμ. 13",
+          "Ανδριάντες Θεοδοσίου"
+        ]
       },
       {
-        "id": "r3",
-        "name": "I Aithousa tis Eleftherias kai tou Martyriou",
-        "theme": "chamber",
-        "unlock_requirements": [
-          "c6",
-          "c7"
-        ],
-        "central_question": "Mporei i eleftheria tis voulisis kai to martyriko phronima na dikaiosoun enan theologo pou chrisimopoiise lathos ergaleia?",
-        "image": ""
+        "id": "room_3",
+        "name": "Η Κένωση και η Ταπείνωση",
+        "description": "Ο ύμνος της κενώσεως (Φιλ. 2) ως στήριγμα απέναντι στην αυτοκρατορική αυλή.",
+        "objects": [
+          "Ύμνος Κενώσεως",
+          "Αυτοκρατορικός Θρόνος"
+        ]
+      },
+      {
+        "id": "room_4",
+        "name": "Διωγμός εναντίον Σταθερότητας",
+        "description": "Σύγκριση δύο εποχών — ο φανερός διωγμός του Παύλου και ο ύπουλος κίνδυνος της αυτοκρατορικής επιρροής.",
+        "objects": [
+          "Αλυσίδα Φυλακής",
+          "Παρρησία"
+        ]
       }
     ],
     "dialogues": [
       {
-        "room_id": "r1",
-        "greeting": "Ioustinianos (Katigoros)",
-        "questions": [
-          "I proyparxi ton psychon - ergaleio katanoisis i platoniki plani pou katargei tin anastasi?",
-          "An o Yios einai ypodeesteros tou Patros, pos diasfalizetai i Triada?",
-          "Mporei i skalosia tis filosofias na afairethei choris na katarreysei to dogma?"
-        ],
-        "suggested_answers": [
-          "I proyparxi einai ermineytiko ergaleio gia na exigisei o Origen tin proeleysi tou kakou kai tin anthropini eleftheria - den anirei tin anastasi, alla tithetai to erotima ti akrivos anistatai.",
-          "O Origen grafei prin tin Nikea; i 'ypotagi' tou Yiou antaklai mia anepexergasti triadologia, ochi airesis. Oi Kappadokes chrisimopoiisan to idio leksilogio gia na orisoun argotera tin orthodoxia.",
-          "I skalosia mporei na afairethei efoson to ktirima tou dogmatos exei oloklirothei; o Origen edose ta ylika, ochi ton teliko schediasmo."
-        ],
-        "revelation": "O Origen chrisimopoiei ti filosofia gia na apantisei se erotimata pou i apli pisti den eiche akomi diatyposei. Ta ergaleia den einai to idio to themelio.",
-        "image": ""
+        "room_id": "room_1",
+        "character": "Παύλος",
+        "text": "Ιωάννη, εγώ κλήθηκα να σπάσω τα τείχη του Νόμου και να κηρύξω τον 'ανεξιχνίαστο πλούτο του Χριστού' στα Έθνη. Η διακονία μου ήταν μια συνεχής πορεία μέσα σε διωγμούς, 'εν κόπω και μόχθω', για να γίνει η Εκκλησία το Σώμα του Χριστού σε κάθε γωνιά της οικουμένης."
       },
       {
-        "room_id": "r2",
-        "greeting": "Kappadokis Pateras (Yperaspistis)",
-        "questions": [
-          "I apokatastasi ton panton - akraia elpida i logiki katalexi tis eleftherias?",
-          "Giati i E' Oikoumeniki ton katadikase, eno oi Kappadokes ton axiopoiisan?",
-          "Einai o Origen tragikos iroas i airetikos protoporos?"
-        ],
-        "suggested_answers": [
-          "An i eleftheria voulisis einai apolyti kai o Theos apeiros stin agapi, i apokatastasi fainetai logiki katalexi - o Origen akolouthei ti logiki os to telos tis, me kindyno na yponomefsei tin euthyni kai tin teliki krisi.",
-          "I katadikosti stoichheuse tous 'Origenistous' tou 6ou aiona pou othisan tis ides tou se akraies morfes; oi Kappadokes anelavan ta theologika epitevgnata tou eno aporripsan tis ypervolies.",
-          "O Origen einai kai ta dyo: tragikos giati i epirroi tou parerminefthike, protoporos giati charaxe to dromo gia tin christianiki theologos. I katadiki tou einai en meri adikia tis istorias."
-        ],
-        "revelation": "Choris ton Origen, oi Kappadokes den tha eichan to leksilogio gia na orisoun tin Triada. I katadiki tou afora kyrios tous akraious opadous tou, ochi ton idio.",
-        "image": ""
+        "room_id": "room_1",
+        "character": "Χρυσόστομος",
+        "text": "Διδάσκαλε, η δική μου δεινότητα στον άμβωνα δεν ήταν παρά μια προσπάθεια να δώσω φωνή στις δικές σου επιστολές μέσα στις πολύβουες πόλεις της αυτοκρατορίας. Εσύ έσπειρες τον Λόγο σε έναν κόσμο εχθρικό, και εγώ κλήθηκα να τον καλλιεργήσω σε έναν κόσμο που πλέον ονομάζεται 'χριστιανικός', αλλά συχνά 'την δύναμιν της ευσεβείας αρνείται'. Η ρητορική μου υπηρετούσε τη δική σου δύναμη, ώστε η πίστη να μη μείνει θεωρία, αλλά να γίνει πράξη ζωής."
       },
       {
-        "room_id": "r3",
-        "greeting": "Mathitis tou Origen (Martyras)",
-        "questions": [
-          "Mporei enas anthropos pou ypesti basanistiria gia ton Christo na eiche os skopo tin allioysi tis pisteos?",
-          "I eleftheria tis voulisis pou ypostirixe o Origen - itan amyntiko oplo kata tis eimarmenis i themelio mias anexartitis anthropologias?",
-          "Ti menei otan afairesoyme ti skalosia tis filosofias apo to ikodomima tou Origen?"
-        ],
-        "suggested_answers": [
-          "Enas anthropos pou ezise os askitis kai anechthike basanistiria den mporei na eiche os skopo tin katastrofi tis Ekklisias. O skopos tou itan i yperaspisi tou Christou me ta ergaleia pou gnorize.",
-          "I eleftheria itan kai ta dyo: amyntiko oplo kata tis gnostikis eimarmenis kai themelio mias theologias pou sevotan tin anthropini axioprepeia. Auto ton ksechorizei apo tous Gnostikous.",
-          "Menei i Grafi, i ermineia, i proseychi kai i agapi gia ton Christo. I filosofia itan to ochima, ochi o proorismos."
-        ],
-        "revelation": "I periptosi tou Origen didaskei oti o skopos (i agapi gia Christo) mporei na dikaiosei ta ergaleia, alla ta ergaleia den mporei na antikatastisoun to themelio. To provlima ton 'Origeniston' itan oti perasan ti skalosia gia themelio.",
-        "image": ""
+        "room_id": "room_2",
+        "character": "Παύλος",
+        "text": "Όταν έγραφα στους Ρωμαίους ότι 'ουκ έστιν εξουσία ει μη υπό Θεού', το έκανα για να διασφαλίσω την ευταξία σε έναν κόσμο που μας θεωρούσε επαναστάτες. Ήθελα οι πιστοί να καταλάβουν ότι ο χριστιανισμός δεν καταλύει την κοινωνία, αλλά την αγιάζει."
+      },
+      {
+        "room_id": "room_2",
+        "character": "Χρυσόστομος",
+        "text": "Αυτή τη διδασκαλία σου χρησιμοποίησα, Παύλε, όταν η Αντιόχεια συγκλονιζόταν από την καταστροφή των Ανδριάντων του Θεοδοσίου. Ερμήνευσα τον λόγο σου για να δείξω ότι η εξουσία είναι όργανο της αγαθότητας του Θεού για την αποφυγή της αναρχίας, παραλληλίζοντάς την με τις 'ιμαντώσεις' που κρατούν όρθια μια οικία. Σε μια εποχή εκκλησιαστικής σταθερότητας, έπρεπε να θυμίσω στους πιστούς ότι ο φόβος των αρχόντων είναι παιδαγωγικός, ώστε να μη λησμονούμε την πνευματική εγρήγορση."
+      },
+      {
+        "room_id": "room_3",
+        "character": "Παύλος",
+        "text": "Στην επιστολή προς Φιλιππησίους περιέγραψα την 'κένωση' του Λόγου, που 'εταπείνωσεν εαυτόν μέχρι θανάτου σταυρού'. Ήθελα να δείξω ότι ο χριστιανός οφείλει να έχει το ίδιο φρόνημα με τον Χριστό, απορρίπτοντας κάθε ανθρώπινη δόξα."
+      },
+      {
+        "room_id": "room_3",
+        "character": "Χρυσόστομος",
+        "text": "Αυτός ο ύμνος της ταπεινώσεως υπήρξε το στήριγμά μου όταν ο αυτοκράτορας και η αυλή του προσπαθούσαν να επιβάλουν τη θέλησή τους στα θέματα της πίστης. Ερμήνευσα την 'κένωση' όχι μόνο ως δόγμα, αλλά ως τον τρόπο που ο επίσκοπος οφείλει να στέκεται απέναντι στην κοσμική ισχύ. Ακόμα και όταν ο Θεοδόσιος ή ο Αρκάδιος ευεργετούσαν την Εκκλησία, τους υπενθύμιζα, μέσω του δικού σου λόγου, ότι η αληθινή εξουσία ανήκει στον Χριστό και ότι η σωτηρία βρίσκεται στα 'πράγματα' της μετοχής και όχι στα 'ρήματα' των αυτοκρατορικών διαταγμάτων."
+      },
+      {
+        "room_id": "room_4",
+        "character": "Παύλος",
+        "text": "Εγώ αντιμετώπισα το θηρίο των ειδωλολατρικών διωγμών και την αλυσίδα της φυλακής. Η δική μου εποχή δεν είχε την πολυτέλεια της εκκλησιαστικής σταθερότητας· ήταν μια εποχή θεμελίωσης μέσα στο αίμα."
+      },
+      {
+        "room_id": "room_4",
+        "character": "Χρυσόστομος",
+        "text": "Και η δική μου εποχή, Παύλε, αν και φαινομενικά σταθερή, έκρυβε άλλους κινδύνους. Η επιρροή του αυτοκράτορα στο δόγμα με ανάγκασε να γίνω 'άλλος Ιωάννης Πρόδρομος' και 'νέος Παύλος' για να ελέγξω την αδικία και την ηθική έκπτωση της αυλής. Ο διωγμός στην εποχή μου ήταν πιο ύπουλος, γιατί προερχόταν από ανθρώπους που έφεραν το όνομα του Χριστού. Η σταθερότητα της Εκκλησίας συχνά γινόταν παγίδα πολιτικής σκοπιμότητας, και μόνο η δική σου 'παρρησία' μπορούσε να μας κρατήσει όρθιους απέναντι στις αξιώσεις των βασιλέων που ήθελαν να νομοθετούν για την Εκκλησία."
       }
     ]
   }

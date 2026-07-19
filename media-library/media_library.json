@@ -2,8 +2,8 @@
   "meta": {
     "description": "Media Library — Κεντρική Βιβλιοθήκη Πολυμέσων",
     "version": "1.0",
-    "last_updated": "2026-05-10",
-    "total": 29
+    "last_updated": "2026-07-16",
+    "total": 42
   },
   "media": [
     {
@@ -713,6 +713,300 @@
       "language": "el",
       "notes": "Sacred Blueprint series — Μετοχή στο Θείο Ον",
       "date_added": "2026-05-09",
+      "status": "active"
+    },
+    {
+      "media_id": "VID-003",
+      "type": "youtube",
+      "title": "Εισαγωγή στην Πατερική Θεολογία",
+      "url": "https://www.youtube.com/watch?v=example1",
+      "source_platform": "YouTube",
+      "app_context": [],
+      "unit_id": "unit_01",
+      "tags": [
+        "πατερική",
+        "θεολογία",
+        "εισαγωγή",
+        "βίντεο"
+      ],
+      "language": "el",
+      "notes": "",
+      "date_added": "2026-05-26",
+      "status": "active"
+    },
+    {
+      "media_id": "SLD-002",
+      "type": "google_slides",
+      "title": "Φιλοσοφία και Χριστιανισμός",
+      "url": "https://docs.google.com/presentation/d/example2",
+      "source_platform": "Google Drive",
+      "app_context": [],
+      "unit_id": "unit_02",
+      "tags": [
+        "φιλοσοφία",
+        "χριστιανισμός",
+        "ύστερη αρχαιότητα",
+        "slides"
+      ],
+      "language": "el",
+      "notes": "",
+      "date_added": "2026-05-26",
+      "status": "active"
+    },
+    {
+      "media_id": "IMG-027",
+      "type": "image",
+      "title": "Investigation Board — Το Αίνιγμα του Ωριγένη",
+      "url": "https://i.ibb.co/r26FVk0c/Gemini-Generated-Image-dvxkpydvxkpydvxk.png",
+      "source_platform": "imgbb",
+      "app_context": [
+        "Investigation Board",
+        "Mind Palace"
+      ],
+      "unit_id": "",
+      "tags": [
+        "investigation board",
+        "info design",
+        "εννοιολογική μεταφορά",
+        "εκπαιδευτικό infographic",
+        "νεοβυζαντινή αφήγηση",
+        "αισθητική case file",
+        "γραμμές σύνδεσης",
+        "Ωριγένης Αλεξανδρείας",
+        "Ιουστινιανός"
+      ],
+      "language": "el",
+      "notes": "Board οπτικοποίηση για το σενάριο «Η Υπόθεση του Ωριγένη» (Mind Palace)",
+      "date_added": "2026-07-16",
+      "status": "active"
+    },
+    {
+      "media_id": "IMG-028",
+      "type": "image",
+      "title": "Δωμάτιο 1 — Η Στοά των Φιλοσοφικών Εργαλείων",
+      "url": "https://i.ibb.co/rfNFMYRp/Gemini-Generated-Image-dvxkpydvxkpydvxk-1.png",
+      "source_platform": "imgbb",
+      "app_context": [
+        "Mind Palace"
+      ],
+      "unit_id": "",
+      "tags": [
+        "mind palace δωμάτιο",
+        "βιβλιοθήκη",
+        "πλατωνικά εργαλεία",
+        "μεταφορά σκαλωσιάς",
+        "προΰπαρξη ψυχής",
+        "υποταγητισμός",
+        "Αλεξάνδρεια",
+        "φιλοσοφική διαμάχη"
+      ],
+      "language": "el",
+      "notes": "Σκηνικό Δωματίου 1 στο σενάριο «Η Υπόθεση του Ωριγένη»",
+      "date_added": "2026-07-16",
+      "status": "active"
+    },
+    {
+      "media_id": "IMG-029",
+      "type": "image",
+      "title": "Δωμάτιο 2 — Το Δικαστήριο της Ε΄ Οικουμενικής Συνόδου",
+      "url": "https://i.ibb.co/Cs8tFB8b/Gemini-Generated-Image-dvxkpydvxkpydvxk-2.png",
+      "source_platform": "imgbb",
+      "app_context": [
+        "Mind Palace"
+      ],
+      "unit_id": "",
+      "tags": [
+        "εκκλησιαστική σύνοδος",
+        "ιστορική καταδίκη",
+        "αποκατάσταση των πάντων",
+        "αντιγνωστική ασπίδα",
+        "Γρηγόριος Νύσσης",
+        "διάταγμα Ιουστινιανού"
+      ],
+      "language": "el",
+      "notes": "Σκηνικό Δωματίου 2 στο σενάριο «Η Υπόθεση του Ωριγένη»",
+      "date_added": "2026-07-16",
+      "status": "active"
+    },
+    {
+      "media_id": "IMG-030",
+      "type": "image",
+      "title": "Δωμάτιο 3 — Η Αίθουσα της Ελευθερίας και του Μαρτυρίου",
+      "url": "https://i.ibb.co/Gfqgsvt9/Gemini-Generated-Image-dvxkpydvxkpydvxk-3.png",
+      "source_platform": "imgbb",
+      "app_context": [
+        "Mind Palace"
+      ],
+      "unit_id": "",
+      "tags": [
+        "split-screen σκηνικό",
+        "παιδική εικονογράφηση",
+        "περιστέρι ελεύθερης βούλησης",
+        "κελιά φυλακής",
+        "διωγμός Δεκίου",
+        "μαρτυρικό φρόνημα"
+      ],
+      "language": "el",
+      "notes": "Σκηνικό Δωματίου 3 στο σενάριο «Η Υπόθεση του Ωριγένη»",
+      "date_added": "2026-07-16",
+      "status": "active"
+    },
+    {
+      "media_id": "IMG-031",
+      "type": "image",
+      "title": "Διαφάνεια 1 — Επισκόπηση & Εισαγωγή",
+      "url": "https://i.ibb.co/6cBTPdDB/Slide-01.png",
+      "source_platform": "imgbb",
+      "app_context": [
+        "Interactive Book",
+        "Timeline Map",
+        "Explorer History"
+      ],
+      "unit_id": "",
+      "tags": [
+        "ιστορικές διαφάνειες",
+        "vintage αισθητική",
+        "The Origen Enigma"
+      ],
+      "language": "el",
+      "notes": "1/4 — μέρος του σετ «The Origen Enigma» (ίδιο θέμα με IMG-032/033/034)",
+      "date_added": "2026-07-16",
+      "status": "active"
+    },
+    {
+      "media_id": "IMG-032",
+      "type": "image",
+      "title": "Διαφάνεια 2 — Πλαίσιο & Επιχειρήματα",
+      "url": "https://i.ibb.co/CKNpPtnf/Slide-02.png",
+      "source_platform": "imgbb",
+      "app_context": [
+        "Interactive Book",
+        "Timeline Map",
+        "Explorer History"
+      ],
+      "unit_id": "",
+      "tags": [
+        "ιστορικές διαφάνειες",
+        "δόγμα ως εργαλείο",
+        "φιλοσοφία",
+        "The Origen Enigma"
+      ],
+      "language": "el",
+      "notes": "2/4 — μέρος του σετ «The Origen Enigma»",
+      "date_added": "2026-07-16",
+      "status": "active"
+    },
+    {
+      "media_id": "IMG-033",
+      "type": "image",
+      "title": "Διαφάνεια 3 — Πνευματική Διαμάχη",
+      "url": "https://i.ibb.co/Zz3dw8LJ/Slide-03.png",
+      "source_platform": "imgbb",
+      "app_context": [
+        "Interactive Book",
+        "Timeline Map",
+        "Explorer History"
+      ],
+      "unit_id": "",
+      "tags": [
+        "ιστορικές διαφάνειες",
+        "ακαδημαϊκή παρουσίαση",
+        "διάταγμα Ιουστινιανού",
+        "The Origen Enigma"
+      ],
+      "language": "el",
+      "notes": "3/4 — μέρος του σετ «The Origen Enigma»",
+      "date_added": "2026-07-16",
+      "status": "active"
+    },
+    {
+      "media_id": "IMG-034",
+      "type": "image",
+      "title": "Διαφάνεια 4 — Συμπέρασμα & Κληρονομιά",
+      "url": "https://i.ibb.co/Y7bgxDsj/Slide-04.png",
+      "source_platform": "imgbb",
+      "app_context": [
+        "Interactive Book",
+        "Timeline Map",
+        "Explorer History"
+      ],
+      "unit_id": "",
+      "tags": [
+        "ιστορικές διαφάνειες",
+        "κατακλείδα",
+        "The Origen Enigma"
+      ],
+      "language": "el",
+      "notes": "4/4 — τελευταία διαφάνεια του σετ «The Origen Enigma»",
+      "date_added": "2026-07-16",
+      "status": "active"
+    },
+    {
+      "media_id": "AUD-001",
+      "type": "audio",
+      "title": "Why Origen of Alexandria Was Condemned",
+      "url": "https://notebooklm.google.com/notebook/56574c20-6c04-42fa-9eb7-c3baf573d34d/artifact/e5524042-1711-4243-9cd4-046a25a910fb",
+      "source_platform": "NotebookLM (Google)",
+      "app_context": [
+        "Notebook Media"
+      ],
+      "unit_id": "",
+      "tags": [
+        "Origen",
+        "church history",
+        "theology",
+        "pedagogy",
+        "heresy",
+        "ecumenical councils"
+      ],
+      "language": "en",
+      "notes": "NotebookLM audio artifact — αγγλική εκδοχή, αδελφό αρχείο με AUD-002",
+      "date_added": "2026-07-16",
+      "status": "active"
+    },
+    {
+      "media_id": "AUD-002",
+      "type": "audio",
+      "title": "Γιατί ο Ωριγένης καταδικάστηκε ως αιρετικός",
+      "url": "https://notebooklm.google.com/notebook/56574c20-6c04-42fa-9eb7-c3baf573d34d/artifact/87536108-e007-463d-b273-e19502716afb",
+      "source_platform": "NotebookLM (Google)",
+      "app_context": [
+        "Notebook Media"
+      ],
+      "unit_id": "",
+      "tags": [
+        "Ωριγένης",
+        "εκκλησιαστική ιστορία",
+        "Ε΄ Οικουμενική Σύνοδος",
+        "παιδαγωγικοί σκοποί",
+        "λήψη αποφάσεων"
+      ],
+      "language": "el",
+      "notes": "NotebookLM audio artifact — ελληνική εκδοχή, αδελφό αρχείο με AUD-001",
+      "date_added": "2026-07-16",
+      "status": "active"
+    },
+    {
+      "media_id": "VID-004",
+      "type": "video",
+      "title": "Το Αίνιγμα του Ωριγένη",
+      "url": "https://notebooklm.google.com/notebook/56574c20-6c04-42fa-9eb7-c3baf573d34d/artifact/c17e0cd5-3d65-4d7e-9a86-9b2888dcbb1a",
+      "source_platform": "NotebookLM (Google)",
+      "app_context": [
+        "Notebook Media",
+        "Mind Palace"
+      ],
+      "unit_id": "",
+      "tags": [
+        "Ωριγένης",
+        "εκπαιδευτικό σενάριο",
+        "παιδαγωγική πλοκή",
+        "φιλοσοφία και θεολογία",
+        "διδασκαλία σε τάξη"
+      ],
+      "language": "el",
+      "notes": "NotebookLM video artifact — νέος τύπος «video», χρειάζεται προσθήκη στο Lookups sheet",
+      "date_added": "2026-07-16",
       "status": "active"
     }
   ]
