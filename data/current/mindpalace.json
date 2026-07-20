@@ -9,18 +9,18 @@
         "name": "Απόστολος Παύλος",
         "work": "Επιστολή προς Ρωμαίους, Επιστολή προς Φιλιππησίους",
         "era": "~5–67 μ.Χ.",
-        "image": ""
+        "image": "https://i.ibb.co/4ZmrLG2J/1775331843223.png"
       },
       {
         "name": "Ιωάννης Χρυσόστομος",
         "work": "Ομιλίαι εις τους Ανδριάντας",
         "era": "~349–407 μ.Χ.",
-        "image": ""
+        "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
       }
     ],
     "concepts": {
       "core": "αποστολική παρρησία · ρητορική δεινότητα · εξουσία ως θεία τάξη · κένωσις · ερμηνευτική συνέχεια",
-      "image": ""
+      "image": "https://i.ibb.co/k28pSzCJ/Digital-Knowledge-Archaeology-pptx-5.jpg"
     },
     "clues": [
       {
@@ -30,7 +30,7 @@
         "source": "Πράξη Α΄",
         "type": "argument",
         "difficulty": 1,
-        "image": ""
+        "image": "https://i.ibb.co/cXsZqTDS/Screenshot-2026-05-09-13-31-02-474-com-android-chrome-edit.jpg"
       },
       {
         "id": "c2",
@@ -48,7 +48,7 @@
         "source": "Πράξη Β΄",
         "type": "evidence",
         "difficulty": 2,
-        "image": ""
+        "image": "https://i.ibb.co/KjgH0PWm/Screenshot-2026-05-09-14-13-53-871-com-android-chrome-edit.jpg"
       },
       {
         "id": "c4",
@@ -57,7 +57,7 @@
         "source": "Πράξη Γ΄",
         "type": "argument",
         "difficulty": 2,
-        "image": ""
+        "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
       },
       {
         "id": "c5",
@@ -104,7 +104,7 @@
         "description": "Η επισκοπική στάση που θεμελιώνεται στην κένωση (c4) ωριμάζει στο ερμηνευτικό «εργαστήριο» της Αντιόχειας (c5)."
       }
     ],
-    "image": ""
+    "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
   },
   "mind_palace": {
     "rooms": [
@@ -117,7 +117,7 @@
           "c3"
         ],
         "central_question": "Είναι η ρητορική του Χρυσοστόμου πιστή υπηρεσία στον λόγο του Παύλου ή αυτόνομη τέχνη που τον υπερκαλύπτει;",
-        "image": ""
+        "image": "https://i.ibb.co/cXsZqTDS/Screenshot-2026-05-09-13-31-02-474-com-android-chrome-edit.jpg"
       },
       {
         "id": "r2",
@@ -129,7 +129,7 @@
           "c6"
         ],
         "central_question": "Πόσο επικίνδυνος είναι ένας διωγμός που φέρει το όνομα του Χριστού, και πώς αντιστέκεται σε αυτόν η παρρησία;",
-        "image": ""
+        "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
       }
     ],
     "dialogues": [
@@ -147,7 +147,7 @@
           "Κερδίζεται προσβασιμότητα σε ευρύτερο κοινό· κινδυνεύει να χαθεί η άμεση, ακατέργαστη δύναμη της αρχικής παρρησίας."
         ],
         "revelation": "Η ρητορική του Χρυσοστόμου δεν αντικαθιστά τον Παύλο — τον καθιστά ακουστό σε έναν κόσμο που άλλαξε γλώσσα, όχι ουσία.",
-        "image": ""
+        "image": "https://i.ibb.co/4ZmrLG2J/1775331843223.png"
       },
       {
         "room_id": "r2",
@@ -163,7 +163,7 @@
           "Το πρόσωπο — η παρρησία δεν είναι θεσμικό προνόμιο, αλλά προσωπική στάση απέναντι στην αλήθεια, όπως έδειξαν και οι δύο άνδρες."
         ],
         "revelation": "Η σταθερότητα της Εκκλησίας, όταν παύει να συνοδεύεται από παρρησία, γίνεται η ίδια παγίδα εξουσίας.",
-        "image": ""
+        "image": "https://i.ibb.co/8n5GgsCV/Two-Millennia-of-Church-History-pptx.jpg"
       }
     ]
   }
