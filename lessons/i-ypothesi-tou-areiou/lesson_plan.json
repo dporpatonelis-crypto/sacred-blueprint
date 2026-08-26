@@ -23,7 +23,8 @@
     "Ο Μαρκιωνισμός και ο Μοντανισμός παρουσιάζονται ως κρίσεις ενότητας, Γραφής και εκκλησιαστικής αυθεντίας, όχι ως άμεσες τριαδολογικές πηγές του Αρείου.",
     "Ο Σαβελλιανισμός παρουσιάζεται ως ώριμη μορφή τροπικού μοναρχιανισμού και όχι ως ανεξάρτητη τρίτη οικογένεια.",
     "Τα δύο NotebookLM URLs είναι εξωτερικά media που επέλεξε ρητά ο εκπαιδευτικός και παραμένουν σε manualMedia.",
-    "Το NotebookLM slides URL δόθηκε ρητά από τον εκπαιδευτικό και παραμένει στο manualMedia του Personal Page."
+    "Το NotebookLM slides URL δόθηκε ρητά από τον εκπαιδευτικό και παραμένει στο manualMedia του Personal Page.",
+    "Το NotebookLM Slide Deck «The Arius Dossier» καταχωρίζεται ως manualMedia του History Explorer· δεν αποτελεί άμεσο screen texture URL και οι δύο οθόνες παραμένουν κενές μέχρι την εξαγωγή επιλεγμένων slides σε άμεσα image/video URLs."
   ],
   "modules": {
     "timeline": {
@@ -632,6 +633,12 @@
                   "label": "NotebookLM — Συνοδευτικό υλικό για την υπόθεση του Αρείου",
                   "url": "https://notebook.google.com/notebook/03a7f421-addd-4494-b879-cd380a4d4316/artifact/272500d6-ec2b-4cf0-8b7b-12c4f753e088?utm_source=nlm_web_share&utm_medium=google_oo&utm_campaign=art_share_1&utm_content=&utm_smc=nlm_web_share_google_oo_art_share_1_",
                   "notes": "Ρητά επιλεγμένο από τον εκπαιδευτικό ως προαιρετική προετοιμασία και συμπληρωματική διερεύνηση."
+                },
+                {
+                  "id": "pp_nlm_arius_2",
+                  "label": "NotebookLM — Πρόσθετο κοινόχρηστο artifact για την υπόθεση του Αρείου",
+                  "url": "https://notebook.google.com/notebook/26623781-5795-43c8-8320-c956be0e4c66/artifact/2c3584bf-d0ed-4bcd-8cd8-fdb1c0b21709?utm_source=nlm_web_share&utm_medium=google_oo&utm_campaign=art_share_1&utm_content=&utm_smc=nlm_web_share_google_oo_art_share_1_",
+                  "notes": "URL που καταχώρισε ρητά ο εκπαιδευτικός στις 2026-08-25. Παραμένει NotebookLM link και δεν χρησιμοποιείται ως image URL των History 3D screens."
                 }
               ],
               "pdf": [],
@@ -708,6 +715,19 @@
           "notes": "Ο εκπαιδευτικός ενέκρινε ρητά την προσθήκη στο Personal Page."
         },
         {
+          "media_id": "USER-NLM-ARIUS-002",
+          "type": "notebooklm",
+          "title": "NotebookLM — Πρόσθετο κοινόχρηστο artifact για την υπόθεση του Αρείου",
+          "url": "https://notebook.google.com/notebook/26623781-5795-43c8-8320-c956be0e4c66/artifact/2c3584bf-d0ed-4bcd-8cd8-fdb1c0b21709?utm_source=nlm_web_share&utm_medium=google_oo&utm_campaign=art_share_1&utm_content=&utm_smc=nlm_web_share_google_oo_art_share_1_",
+          "status": "active",
+          "source_platform": "NotebookLM (user-selected)",
+          "app_context": [
+            "Personal Page"
+          ],
+          "language": "el",
+          "notes": "Καταχωρίστηκε ρητά από τον εκπαιδευτικό. Δεν είναι direct image asset για History 3D screens."
+        },
+        {
           "media_id": "USER-AUDIO-ARIUS-001",
           "type": "audio",
           "title": "NotebookLM Audio — Η υπόθεση του Αρείου",
@@ -758,111 +778,380 @@
     },
     "history3d": {
       "appId": "history3d",
-      "title": "Πειραματική τρισδιάστατη αίθουσα της υπόθεσης",
+      "title": "Τέσσερις σταθεροί σταθμοί εξέτασης της υπόθεσης του Αρείου",
       "status": "experimental",
-      "include": false,
+      "include": true,
       "publishable": false,
-      "rationale": "Μια τρισδιάστατη αίθουσα με Άρειο και Αθανάσιο θα μπορούσε να χωροποιήσει τη σύγκρουση, αλλά θα επαναλάμβανε τη λειτουργία του Mind Palace χωρίς ανάλογο παιδαγωγικό κέρδος. Επιπλέον το History 3D παραμένει τεχνικά experimental και το μάθημα δεν εξαρτάται από ιστορική ανακατασκευή.",
-      "pedagogy": "Ως μελλοντική δοκιμή, ο μαθητής θα πλησίαζε τις δύο μορφές, θα άκουγε σύντομες θέσεις και θα συνέδεε τρία facts με τη σωτηρία, το τρεπτόν και τη λατρεία. Η πρόταση είναι πλήρης για αναφορά αλλά δεν επιλέγεται στο master.",
+      "rationale": "Το History Explorer 3D χρησιμοποιεί την υπάρχουσα, προστατευμένη σκηνή ως τέσσερις ερμηνευτικούς σταθμούς και δεν αναθέτει στα μοντέλα την ταυτότητα του Αρείου ή του Αθανασίου. Ο Αριστοτέλης υποστηρίζει τον λογικό έλεγχο, ο Άγιος το σωτηριολογικό κριτήριο, ο Μέγας Κωνσταντίνος το συνοδικό πλαίσιο και ο Φιλόσοφος τη σύνθεση της ετυμηγορίας. Έτσι το module συμπληρώνει το Investigation Board με χωρική πλοήγηση, χωρίς καμία αλλαγή σε models, IDs, ονόματα, θέσεις ή props.",
+      "pedagogy": "Ο μαθητής επισκέπτεται τέσσερις σταθερούς σταθμούς και σε κάθε σταθμό εξετάζει δύο ερωτήσεις και δύο σύντομα facts. Η ακολουθία λογική δομή → σωτηριολογικές συνέπειες → ιστορική απόφαση → τεκμηριωμένη σύνθεση μετατρέπει τη σκηνή σε μαθησιακό χάρτη. Οι δύο οθόνες προορίζονται για πειστήριο/ερμηνεία και Νίκαια/ετυμηγορία, αλλά τα media URLs μένουν κενά μέχρι την επιλογή του εκπαιδευτικού στο Approval B.",
       "payload": {
         "characters": [
           {
-            "id": "char_1",
-            "name": "Άρειος",
-            "role": "Πρεσβύτερος Αλεξανδρείας",
-            "description": "Παρουσιάζει τη βιβλική και λογική υπεράσπιση της μίας αγέννητης αρχής.",
-            "position_x": -2,
-            "position_y": 0,
-            "position_z": 0,
-            "rotation": 25
+            "id": "socrates",
+            "name": "Ο Φιλόσοφος",
+            "position_x": -3.5,
+            "position_y": 0.05,
+            "position_z": 0.3,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "Ο πατέρας της φιλοσοφίας",
+            "glbModel": "/models/Socrates.glb"
           },
           {
-            "id": "char_2",
-            "name": "Μέγας Αθανάσιος",
-            "role": "Πατερική φωνή του σωτηριολογικού ελέγχου",
-            "description": "Εξετάζει αν η κτιστότητα του Λόγου είναι συμβατή με θέωση, αμεταβλητότητα και προσκύνηση.",
-            "position_x": 2,
+            "id": "hypatia",
+            "name": "Υπατία",
+            "position_x": 3.5,
+            "position_y": 0.05,
+            "position_z": 0.3,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "Η φιλόσοφος της Αλεξάνδρειας",
+            "glbModel": "/models/hypatia.glb"
+          },
+          {
+            "id": "aristotle",
+            "name": "Αριστοτέλης",
+            "position_x": -8,
+            "position_y": 0.05,
+            "position_z": 0.3,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "Πατέρας της επιστήμης",
+            "glbModel": "/models/aristotle.glb"
+          },
+          {
+            "id": "ancient_tiles.glb",
+            "name": "tree",
+            "position_x": -3.5,
             "position_y": 0,
-            "position_z": 0,
-            "rotation": 335
+            "position_z": 0.3,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "",
+            "glbModel": "/models/ancient_tiles.glb"
+          },
+          {
+            "id": "Constantine compressed (2).glb",
+            "name": "Μ. Κωνσταντίνος",
+            "position_x": 5.75,
+            "position_y": 0.05,
+            "position_z": 0.3,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "Πρώτος Βυζαντινός Αυτοκράτορας",
+            "glbModel": "/models/constantine.glb"
+          },
+          {
+            "id": "monk compressed.glb",
+            "name": "Άγιος",
+            "position_x": 8,
+            "position_y": 0.05,
+            "position_z": 0.3,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "Άγιος",
+            "glbModel": "/models/monk.glb"
+          },
+          {
+            "id": "ancient_tiles.glb",
+            "name": "tree",
+            "position_x": 3.5,
+            "position_y": 0,
+            "position_z": 0.3,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "",
+            "glbModel": "/models/ancient_tiles.glb"
+          },
+          {
+            "id": "ancient_tiles.glb",
+            "name": "tree",
+            "position_x": 8,
+            "position_y": 0,
+            "position_z": 0.3,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "",
+            "glbModel": "/models/ancient_tiles.glb"
+          },
+          {
+            "id": "ancient_tiles.glb",
+            "name": "tree",
+            "position_x": 5.75,
+            "position_y": 0,
+            "position_z": 0.3,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "",
+            "glbModel": "/models/ancient_tiles.glb"
+          },
+          {
+            "id": "ancient_tiles.glb",
+            "name": "tree",
+            "position_x": -8,
+            "position_y": 0,
+            "position_z": 0.3,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "",
+            "glbModel": "/models/ancient_tiles.glb"
+          },
+          {
+            "id": "ancient_tiles.glb",
+            "name": "tree",
+            "position_x": -5.75,
+            "position_y": 0,
+            "position_z": 0.3,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "",
+            "glbModel": "/models/ancient_tiles.glb"
+          },
+          {
+            "id": "ψηφιδωτό Πέλλας compressed (2).glb",
+            "name": "tree",
+            "position_x": -5.75,
+            "position_y": 0,
+            "position_z": 2,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "",
+            "glbModel": "/models/pella_mosaic.glb"
+          },
+          {
+            "id": "Αλεξάνδρεια compressed (1).glb",
+            "name": "tree",
+            "position_x": 3.5,
+            "position_y": 0,
+            "position_z": 2,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "",
+            "glbModel": "/models/alexandria.glb"
+          },
+          {
+            "id": "Λιβελο compressed (2).glb",
+            "name": "tree",
+            "position_x": 0,
+            "position_y": 1,
+            "position_z": 0.3,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "",
+            "glbModel": "/models/libelo.glb"
+          },
+          {
+            "id": "Αθήνα.glb",
+            "name": "tree",
+            "position_x": -8,
+            "position_y": 0,
+            "position_z": 2,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "",
+            "glbModel": "/models/athina.glb"
+          },
+          {
+            "id": "Valhalla grok compress.glb",
+            "name": "tree",
+            "position_x": 8,
+            "position_y": -0.5,
+            "position_z": 2,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "",
+            "glbModel": "/models/valhalla.glb"
+          },
+          {
+            "id": "Alexander.glb",
+            "name": "Μ. Αλέξανδρος",
+            "position_x": -5.75,
+            "position_y": 0.05,
+            "position_z": 0.3,
+            "rotation": 0,
+            "color": "",
+            "robeColor": "",
+            "description": "Βασιλιάς Μακεδονίας",
+            "glbModel": "/models/Alexander.glb"
           }
         ],
         "dialogs": [
           {
-            "character_id": "char_1",
-            "trigger": "Ο μαθητής πλησιάζει τον Άρειο και ζητά την ισχυρότερη υπεράσπιση",
-            "text": "Η μία αγέννητη αρχή προστατεύει τη θεία μοναρχία, ενώ η διάκριση του Υιού αποτρέπει τη σύγχυση των υποστάσεων.",
-            "response_options": [
-              "Πώς διαβάζεις το Παροιμιών 8,22;",
-              "Τι φοβάσαι στον Σαβελλιανισμό;"
-            ]
+            "character_id": "aristotle",
+            "question": "Ποια είναι η λογική δομή του επιχειρήματος του Αρείου για το αγέννητον;",
+            "answer": "Η υπεράσπιση ξεκινά από την προϋπόθεση ότι μόνο ο Πατήρ είναι αγέννητος, συνδέει το αγέννητον με την πλήρη θεότητα και συμπεραίνει ότι ο Υιός πρέπει να έχει αρχή. Το κρίσιμο ερώτημα είναι αν η διάκριση Πατρός και Υιού απαιτεί πράγματι διαφορά ουσίας."
           },
           {
-            "character_id": "char_2",
-            "trigger": "Ο μαθητής πλησιάζει τον Αθανάσιο και ζητά το κριτήριο κρίσης",
-            "text": "Η θέση για τον Χριστό πρέπει να εξηγεί πώς ο άνθρωπος ενώνεται πραγματικά με τον Θεό και γιατί η Εκκλησία Τον προσκυνά.",
-            "response_options": [
-              "Γιατί δεν αρκεί ένας κτιστός μεσίτης;",
-              "Πώς συνδέεται η λατρεία με τη φύση Του;"
-            ]
+            "character_id": "aristotle",
+            "question": "Πού βρίσκεται το πιθανό λογικό άλμα στην αρειανική θέση;",
+            "answer": "Το άλμα εμφανίζεται όταν ένας τρόπος προσωπικής διάκρισης μετατρέπεται χωρίς πρόσθετη απόδειξη σε οντολογική κατωτερότητα. Ο μαθητής πρέπει να ξεχωρίσει την πρόθεση προστασίας της θείας μοναρχίας από τη συνέπεια ότι ο Λόγος γίνεται κτίσμα."
+          },
+          {
+            "character_id": "monk compressed.glb",
+            "question": "Γιατί η κτιστότητα του Λόγου δημιουργεί σωτηριολογικό πρόβλημα;",
+            "answer": "Στο πλαίσιο του μαθήματος, ένας κτιστός μεσίτης παραμένει στην πλευρά της δημιουργίας που χρειάζεται σωτηρία. Η πατερική αντίκρουση εξετάζει αν μόνο ο αληθινός Θεός μπορεί να ενώσει πραγματικά τον άνθρωπο με την άκτιστη ζωή."
+          },
+          {
+            "character_id": "monk compressed.glb",
+            "question": "Πώς συνδέονται η λατρεία και το τρεπτόν με την κρίση της διδασκαλίας;",
+            "answer": "Αν ο Χριστός είναι κτίσμα, η προσκύνησή Του γεννά πρόβλημα λατρείας της δημιουργίας· αν είναι τρεπτός, η σωτηρία εξαρτάται από μια μεταβλητή ύπαρξη. Τα δύο κριτήρια ελέγχουν τις συνέπειες της θέσης και όχι μόνο τη λεκτική της συνοχή."
+          },
+          {
+            "character_id": "Constantine compressed (2).glb",
+            "question": "Ποιο ιστορικό πρόβλημα έφθασε στη Νίκαια το 325;",
+            "answer": "Η διαμάχη που ξέσπασε στην Αλεξάνδρεια αφορούσε τη σχέση του Υιού με τον Πατέρα και τις συνέπειες της θέσης ότι υπήρξε χρόνος κατά τον οποίο ο Υιός δεν υπήρχε. Η Σύνοδος κλήθηκε να ορίσει ένα κοινό εκκλησιαστικό όριο."
+          },
+          {
+            "character_id": "Constantine compressed (2).glb",
+            "question": "Τι λειτουργία έχει ο όρος ομοούσιος στην ετυμηγορία της Συνόδου;",
+            "answer": "Ο όρος λειτουργεί ως όριο που αποκλείει την κατάταξη του Υιού στα κτίσματα και διασφαλίζει την πλήρη θεότητά Του. Δεν εξαντλεί το μυστήριο της Τριάδας· δηλώνει τι δεν μπορεί να χαθεί χωρίς να αλλάξει το νόημα της σωτηρίας."
+          },
+          {
+            "character_id": "socrates",
+            "question": "Πώς πρέπει να εξετάσουμε το Παροιμιών 8,22 ως πειστήριο;",
+            "answer": "Πρώτα διακρίνουμε τι λέει το κείμενο, ποιο πρόσωπο ταυτίζεται με τη Σοφία και ποια ερμηνευτική προϋπόθεση οδηγεί από τη λέξη «έκτισέ» στο συμπέρασμα περί κτιστού Λόγου. Το πειστήριο και η ερμηνεία του δεν είναι το ίδιο πράγμα."
+          },
+          {
+            "character_id": "socrates",
+            "question": "Με ποια κριτήρια θα διατυπώσεις τελική ετυμηγορία;",
+            "answer": "Σύνδεσε τρία επίπεδα: βιβλικό πειστήριο, λογική συνοχή και σωτηριολογικές ή λατρευτικές συνέπειες. Η τελική κρίση πρέπει να αναγνωρίζει την πρόθεση του επιχειρήματος, αλλά και να εξηγεί τεκμηριωμένα γιατί το αποτέλεσμά του γίνεται αποδεκτό ή απορρίπτεται."
           }
         ],
         "facts": [
           {
-            "id": "fact_1",
-            "title": "Παροιμίες 8,22 ως πειστήριο",
-            "content": "Η λέξη «έκτισέ» αποτελεί το βασικό βιβλικό σημείο της αρειανικής υπεράσπισης.",
-            "era": "Βιβλικό πειστήριο στην έριδα του 4ου αιώνα"
+            "character_id": "aristotle",
+            "fact": "Η φράση «ἦν ποτε ὅτε οὐκ ἦν» συνοψίζει την αρειανική άρνηση της συναιωνιότητας του Υιού."
           },
           {
-            "id": "fact_2",
-            "title": "Κτιστό και Άκτιστο ως σωτηριολογικό όριο",
-            "content": "Η πατερική αντίκρουση υποστηρίζει ότι μόνο ο Θεός μπορεί να ενώσει τον άνθρωπο με την άκτιστη ζωή.",
-            "era": "Θεολογική εξέταση του 4ου αιώνα"
+            "character_id": "aristotle",
+            "fact": "Το αγέννητον χρησιμοποιείται στην υπεράσπιση ως γνώρισμα που ανήκει αποκλειστικά στον Πατέρα."
           },
           {
-            "id": "fact_3",
-            "title": "Η συνοδική ετυμηγορία του 325",
-            "content": "Το μάθημα συνδέει την απόφαση της Α΄ Οικουμενικής Συνόδου με την αποφυγή ενός χριστολογικού σχήματος που ακυρώνει τη σωτηρία.",
-            "era": "325 μ.Χ."
+            "character_id": "monk compressed.glb",
+            "fact": "Η πατερική αντίκρουση συνδέει άμεσα την ταυτότητα του Χριστού με τη δυνατότητα θέωσης και νίκης κατά του θανάτου."
+          },
+          {
+            "character_id": "monk compressed.glb",
+            "fact": "Η λατρεία του Χριστού λειτουργεί στο μάθημα ως έλεγχος συνέπειας: η Εκκλησία δεν μπορεί να προσκυνά ένα κτίσμα ως Θεό."
+          },
+          {
+            "character_id": "Constantine compressed (2).glb",
+            "fact": "Η Α΄ Οικουμενική Σύνοδος συγκλήθηκε στη Νίκαια το 325 μ.Χ."
+          },
+          {
+            "character_id": "Constantine compressed (2).glb",
+            "fact": "Το ομοούσιο αποκλείει την ιδέα ότι ο Υιός ανήκει στην τάξη των δημιουργημάτων."
+          },
+          {
+            "character_id": "socrates",
+            "fact": "Το Παροιμιών 8,22 είναι βασικό βιβλικό πειστήριο της αρειανικής επιχειρηματολογίας, αλλά η χρήση του προϋποθέτει συγκεκριμένη χριστολογική ερμηνεία της Σοφίας."
+          },
+          {
+            "character_id": "socrates",
+            "fact": "Ο φόβος σύγχυσης Πατρός και Υιού με τον Σαβελλιανισμό εξηγεί μέρος της πρόθεσης του Αρείου, χωρίς να δικαιώνει αναγκαστικά το συμπέρασμά του."
           }
         ],
         "screens": {
-          "title": "Η υπόθεση του Αρείου",
-          "background": "bg-court-placeholder.jpg"
-        }
+          "right_label": "Νίκαια 325 — από το επιχείρημα στην ετυμηγορία",
+          "right_image_url": "",
+          "left_label": "Παροιμίες 8,22 — πειστήριο και ερμηνεία",
+          "left_image_url": ""
+        },
+        "props": [
+          {
+            "id": "dimitris",
+            "glbModel": "/models/Dimitris.glb",
+            "position_x": 0,
+            "position_y": 0,
+            "position_z": 3,
+            "rotation": 0,
+            "scale": 1,
+            "idle": false,
+            "welcome": "Καλώς ήρθες στην Αρχαία Αγορά. Είμαι ο Δημήτρης και θα σε ξεναγήσω.",
+            "welcome_voice": "Melina",
+            "welcome_trigger": "both",
+            "welcome_delay_ms": 2500,
+            "welcome_radius": 2.5,
+            "welcome_audio": "/audio/dimitris.wav"
+          }
+        ]
       },
       "mediaCandidates": [],
-      "manualMedia": [],
+      "manualMedia": [
+        {
+          "media_id": "USER-SLIDES-ARIUS-HISTORY-001",
+          "type": "google_slides",
+          "title": "NotebookLM Slide Deck — The Arius Dossier",
+          "url": "https://notebook.google.com/notebook/26623781-5795-43c8-8320-c956be0e4c66/artifact/2c3584bf-d0ed-4bcd-8cd8-fdb1c0b21709",
+          "status": "active",
+          "source_platform": "NotebookLM (user-selected)",
+          "app_context": [
+            "History Explorer 3D"
+          ],
+          "language": "el",
+          "notes": "Εγκεκριμένη πηγή 13 διαφανειών για τις οθόνες του History Explorer. Το share URL είναι HTML artifact και όχι άμεσο image/video URL· απαιτείται εξαγωγή επιλεγμένων slides πριν από αντιστοίχιση στα screens.left_image_url/right_image_url."
+        }
+      ],
       "imageSpecs": [
         {
-          "target": "history3d:concept-room",
-          "promptEl": "Πειραματική τρισδιάστατη νεοβυζαντινή αίθουσα με δύο σοβαρές μορφές σε αντίθετες πλευρές και τρεις κεντρικούς σταθμούς τεκμηρίων, κατάλληλη ως concept art και όχι ως αρχαιολογική ανακατασκευή.",
-          "promptEn": "Experimental 3D Neo-Byzantine chamber with two serious figures on opposing sides and three central evidence stations, intended as concept art rather than archaeological reconstruction. Neo-Byzantine educational graphic novel, semi-realistic stylized realism, clean line art, soft warm ambient shadows, gold ochre warm wood purple and deep green palette, diffuse historical interior light, serious expressive faces, infographic callouts and restrained HUD elements, no cartoon styling.",
-          "composition": "Ευρεία συμμετρική αίθουσα 16:9 με καθαρή διαδρομή κίνησης και τρεις σταθμούς στο κέντρο.",
+          "target": "history3d:left-screen-proverbs-8-22",
+          "promptEl": "Διπλή εκπαιδευτική σύνθεση για το Παροιμιών 8,22: αριστερά σεβαστική απεικόνιση αρχαίου ελληνικού χειρογράφου χωρίς επινοημένο αναγνώσιμο κείμενο, δεξιά καθαρός εννοιολογικός διαχωρισμός «πειστήριο / ερμηνεία» με δύο διακριτές χρωματικές ζώνες. Νεοβυζαντινή γραφιστική αισθητική, χρυσό, ώχρα, πορφυρό και βαθύ πράσινο, σοβαρό θεολογικό ύφος.",
+          "promptEn": "Split educational composition for Proverbs 8:22: on the left, a respectful ancient Greek manuscript impression without fabricated readable text; on the right, a clear conceptual separation between evidence and interpretation using two distinct color zones. Neo-Byzantine graphic aesthetic, gold, ochre, purple, and deep green, serious theological tone.",
+          "composition": "Οριζόντιο 16:9, δύο ισόρροπες ζώνες, ασφαλή περιθώρια για labels της εφαρμογής, χωρίς ενσωματωμένη τυπογραφία.",
           "historicalConstraints": [
-            "Να δηλώνεται ως εκπαιδευτική σύνθεση και όχι ως αυθεντικό εσωτερικό της Συνόδου.",
-            "Χωρίς αναχρονιστικά έπιπλα ή σύγχρονα μέσα παρουσίασης.",
-            "Χωρίς καρικατούρα ή ηθική κωδικοποίηση των δύο μορφών."
+            "Να μην επινοηθεί αυτούσιο χειρόγραφο ή παλαιογραφική μαρτυρία.",
+            "Να μη συγχέεται το βιβλικό κείμενο με τη μεταγενέστερη αρειανική ερμηνεία.",
+            "Χωρίς καρικατούρα ή δαιμονοποίηση."
           ],
           "aspectRatio": "16:9",
-          "altText": "Πειραματικό concept τρισδιάστατης νεοβυζαντινής αίθουσας θεολογικής εξέτασης.",
+          "altText": "Διπλή οπτική σύνθεση που διακρίνει το βιβλικό πειστήριο από την ερμηνεία του.",
+          "url": null
+        },
+        {
+          "target": "history3d:right-screen-nicaea-verdict",
+          "promptEl": "Εκπαιδευτική νεοβυζαντινή σύνθεση της Νίκαιας του 325 ως συνοδικής διαβούλευσης: ημικύκλιο επισκόπων, κεντρός φωτεινός άξονας και αφηρημένη οπτική γέφυρα από το επιχείρημα προς τη σωτηριολογική ετυμηγορία. Ιστορικός σεβασμός, χωρίς φωτορεαλιστική δήλωση ανακατασκευής και χωρίς ενσωματωμένο κείμενο.",
+          "promptEn": "Educational Neo-Byzantine composition of Nicaea in 325 as conciliar deliberation: a semicircle of bishops, a central luminous axis, and an abstract visual bridge from argument to soteriological verdict. Historically respectful, not presented as a photoreal reconstruction, with no embedded text.",
+          "composition": "Οριζόντιο 16:9, συμμετρική συνοδική διάταξη με καθαρό κεντρικό χώρο και ασφαλή περιθώρια για UI.",
+          "historicalConstraints": [
+            "Να δηλώνεται ως εκπαιδευτική σύνθεση και όχι ως πιστή ανακατασκευή της αίθουσας.",
+            "Χωρίς μεταγενέστερα δυτικά άμφια, αναχρονιστικό εξοπλισμό ή φωτογραφική βεβαιότητα προσώπων.",
+            "Το ομοούσιο να αποδίδεται ως εννοιολογικό όριο και όχι ως μαγικό σύμβολο."
+          ],
+          "aspectRatio": "16:9",
+          "altText": "Νεοβυζαντινή εκπαιδευτική σύνθεση της συνοδικής κρίσης στη Νίκαια.",
           "url": null
         }
       ],
       "warnings": [
-        "Experimental: το runtime schema και τα διαθέσιμα GLB models παραμένουν μερικώς ασύμβατα.",
-        "Η πρόταση μένει include=false και δεν πρέπει να παρουσιαστεί ως Browser-validated ιστορική ανακατασκευή."
+        "Experimental: χρησιμοποιεί το ακριβές προστατευμένο template 17 χαρακτήρων και το σταθερό Dimitris prop· οποιαδήποτε διαφορά σε models ή props μπλοκάρεται.",
+        "Τα δύο screen media URLs παραμένουν κενά μέχρι ο εκπαιδευτικός να επιλέξει reuse/manual/agent στο Approval B.",
+        "Οι σταθερές μορφές λειτουργούν ως ερμηνευτικοί σταθμοί και όχι ως ιστορικές προσωποποιήσεις του Αρείου ή του Αθανασίου."
       ]
     },
     "sculpture": {
       "appId": "sculpture",
       "title": "Πειραματική γλυπτική του οντολογικού κενού",
       "status": "experimental",
-      "include": false,
+      "include": true,
       "publishable": false,
-      "rationale": "Η αντίθεση κτιστού και Ακτίστου προσφέρεται για ισχυρή χωρική μεταφορά, όμως ένα διαδραστικό γλυπτό θα αφαιρούσε ιστορική και βιβλική λεπτομέρεια από το κύριο επιχείρημα. Παραμένει πειραματική εναλλακτική για μεταγλωσσική σύνθεση, όχι επιλεγμένη εφαρμογή.",
-      "pedagogy": "Σε πιθανή μελλοντική χρήση οι μαθητές θα τοποθετούν πειστήρια και συνέπειες σε τέσσερις περιοχές, έπειτα θα προσπαθούν να γεφυρώσουν το κενό μόνο με όσα επιτρέπει κάθε θέση. Η δραστηριότητα θα ελέγχει τη συνοχή των εννοιών, όχι την απομνημόνευση.",
+      "rationale": "Το διαδραστικό γλυπτό προσθέτει έναν μεταγλωσσικό σταθμό σύνθεσης: το βιβλικό πειστήριο, η λογική προϋπόθεση, το οντολογικό κενό και η ετυμηγορία αποκτούν διακριτές φωτιζόμενες περιοχές. Έτσι ο μαθητής βλέπει αν η αλυσίδα του επιχειρήματος είναι πλήρης, χωρίς το γλυπτό να υποκαθιστά την ιστορική ή βιβλική τεκμηρίωση των άλλων εφαρμογών. Επιλέγεται ρητά ως experimental, χωριστό output.",
+      "pedagogy": "Οι τέσσερις contributions ακολουθούν τη σειρά πειστήριο → λογική πρόθεση → έλεγχος της γέφυρας κτιστού/Ακτίστου → σύνθεση ετυμηγορίας. Ο φωτισμός λειτουργεί ως ορατή ανατροφοδότηση ολοκλήρωσης και η αντιστοίχιση στις σταθερές γεωμετρικές επιφάνειες παραμένει deterministic. Η δραστηριότητα αξιολογεί εννοιολογική συνοχή και όχι απομνημόνευση.",
       "payload": {
         "template": {
           "id": "ontological-gap",
@@ -872,7 +1161,8 @@
         "instance": {
           "lesson_id": "i-ypothesi-tou-areiou",
           "interaction": "Οι μαθητές τοποθετούν πειστήρια, προϋποθέσεις και συνέπειες στις περιοχές και εξηγούν αν υπάρχει πραγματική γέφυρα σωτηρίας.",
-          "default_focus": "bridge"
+          "default_focus": "bridge",
+          "title": "Η υπόθεση του Αρείου"
         },
         "regions": {
           "scripture": {
@@ -943,121 +1233,169 @@
         }
       ],
       "warnings": [
-        "Experimental: το Sculpture αποθηκεύεται χωριστά σε sculpture_output.json και δεν ανήκει στο κύριο master.",
-        "Η πρόταση παραμένει include=false και publishable=false."
+        "Experimental: αποθηκεύεται και δημοσιεύεται μόνο ως ξεχωριστό sculpture_output.json, ποτέ ως Sacred master key.",
+        "Οι τέσσερις σημασιολογικές περιοχές προσαρμόζονται deterministic στις έξι σταθερές επιφάνειες του runtime· η μεταφορά δεν αποτελεί υλική απεικόνιση της θείας φύσης."
       ]
     }
   },
   "validations": [
     {
-      "draftHash": "fd608345c2d6f8dc02702da688d8dd2c373660c5642956eb6bcab8e3272797fa",
-      "appId": "investigation",
-      "timestamp": "2026-08-20T06:08:14.799Z",
-      "status": "warning",
-      "expected": {
-        "clues": 9,
-        "connections": 10,
-        "keyTexts": [
-          "Ο Άρειος υπερασπίζεται τη θεία μοναρχία",
-          "Η Νίκαια απορρίπτει το οντολογικό κενό"
-        ]
-      },
-      "observed": {
-        "cluesRendered": 9,
-        "connectionLegendRendered": true,
-        "keyTextsRendered": true,
-        "runtimeLoaded": true
-      },
-      "warnings": [
-        "Το runtime header παραμένει hard-coded ως «Πίνακας Έρευνας — Υπόθεση Φιλοσόφου» αντί να εμφανίζει τον τίτλο του lesson.",
-        "Δύο React Router future-flag warnings εμφανίζονται στην κονσόλα χωρίς runtime failure."
-      ],
-      "consoleErrors": [],
-      "previewUrl": "http://127.0.0.1:43132/?dataUrl=http%3A%2F%2F127.0.0.1%3A43117%2Fpreview%2Ffd608345c2d6f8dc02702da688d8dd2c373660c5642956eb6bcab8e3272797fa%2Finvestigation.json"
-    },
-    {
       "draftHash": "8896f07af722cf2feeeeee80376728a01be4449961319958af7b75a952ab6f49",
       "appId": "mindpalace",
-      "timestamp": "2026-08-20T06:08:14.799Z",
+      "timestamp": "2026-08-25T08:25:45.011Z",
       "status": "warning",
       "expected": {
-        "clues": 7,
         "rooms": 2,
-        "title": "Δύο αίθουσες κρίσης: λογική πρόθεση και εμπειρία σωτηρίας"
+        "clues": 7,
+        "runtime": "local"
       },
       "observed": {
-        "cluesRendered": 7,
         "roomsRendered": 2,
-        "roomNames": [
-          "Η Αίθουσα της Υπεράσπισης",
-          "Η Αίθουσα της Σωτηρίας"
-        ],
-        "titleRendered": true,
-        "runtimeLoaded": true
+        "cluesRendered": 7,
+        "runtimeLoaded": true,
+        "fallbackRepliesVisible": true,
+        "fatalConsoleErrors": 0
       },
       "warnings": [
-        "Δεν υπάρχει Gemini key στο local preview, επομένως ο NPC δηλώνει ότι θα χρησιμοποιήσει fallback replies.",
-        "Οι δύο αίθουσες φορτώνουν σωστά αλλά παραμένουν κλειδωμένες έως την προβλεπόμενη συλλογή clues."
+        "No Gemini key in local preview; fallback replies remain active until a runtime key is supplied."
       ],
       "consoleErrors": [],
-      "previewUrl": "http://127.0.0.1:43133/?dataUrl=http%3A%2F%2F127.0.0.1%3A43117%2Fpreview%2F8896f07af722cf2feeeeee80376728a01be4449961319958af7b75a952ab6f49%2Fmindpalace.json"
+      "previewUrl": "http://127.0.0.1:43133"
     },
     {
       "draftHash": "1db7384fd0e76b8bf823942fdea81158fbaf13eb0e712d20c4f6d22ce3283134",
       "appId": "timeline",
-      "timestamp": "2026-08-20T06:47:14.932Z",
+      "timestamp": "2026-08-25T08:25:45.031Z",
       "status": "passed",
       "expected": {
         "events": 8,
-        "geoComplete": true,
-        "first": "Γνωστικά συστήματα ιεραρχούν το θείο και τη δημιουργία",
-        "last": "Ο Άρειος αποφεύγει τον Σαβελλιανισμό αλλά κτίζει τον Υιό"
+        "runtime": "local"
       },
       "observed": {
         "eventsRendered": 8,
-        "allTitlesRendered": true,
-        "selectionInteractionPassed": true,
-        "selectedMarcionLocation": "Ρώμη",
-        "runtimeLoaded": true
+        "runtimeLoaded": true,
+        "fatalConsoleErrors": 0
       },
       "warnings": [],
       "consoleErrors": [],
-      "previewUrl": "http://127.0.0.1:43131/?dataUrl=http%3A%2F%2F127.0.0.1%3A43117%2Fpreview%2F1db7384fd0e76b8bf823942fdea81158fbaf13eb0e712d20c4f6d22ce3283134%2Ftimeline.json"
+      "previewUrl": "http://127.0.0.1:43131"
     },
     {
-      "draftHash": "d4d174ed118e61d956210ba883b5eef8828fb46588c4c1905e9852aeed5c91f4",
+      "draftHash": "fd608345c2d6f8dc02702da688d8dd2c373660c5642956eb6bcab8e3272797fa",
+      "appId": "investigation",
+      "timestamp": "2026-08-25T08:25:45.043Z",
+      "status": "warning",
+      "expected": {
+        "clues": 9,
+        "connections": 10,
+        "runtime": "local"
+      },
+      "observed": {
+        "cluesRendered": 9,
+        "connectionLegendRendered": true,
+        "runtimeLoaded": true,
+        "fatalConsoleErrors": 0
+      },
+      "warnings": [
+        "Runtime header remains hard-coded; React Router future warnings are non-fatal."
+      ],
+      "consoleErrors": [],
+      "previewUrl": "http://127.0.0.1:43132"
+    },
+    {
+      "draftHash": "35044bd33d5dc22e84c594d84cc837a32baa06aafebafac08a0ad2af1a4015fb",
       "appId": "personalpage",
-      "timestamp": "2026-08-20T07:00:00.000Z",
+      "timestamp": "2026-08-25T08:25:45.054Z",
       "status": "warning",
       "expected": {
         "chapters": 3,
-        "notebooklm": 1,
-        "audio": 1,
-        "slides": 1,
-        "slidesUrlExact": true
+        "notebooklm": 2,
+        "totalItems": 16,
+        "runtime": "local"
       },
       "observed": {
         "chaptersRendered": 3,
-        "totalItems": 15,
-        "notebooklmLinkRendered": true,
-        "audioLinkRendered": true,
-        "slidesCardRendered": true,
-        "slidesCategoryRendered": "Slides (1)",
-        "exactSlidesUrlPreserved": true,
-        "runtimeLoaded": true
+        "notebooklmLinksRendered": 2,
+        "totalItems": 16,
+        "exactNewArtifactUrlPreserved": true,
+        "runtimeLoaded": true,
+        "fatalConsoleErrors": 0
       },
       "warnings": [
-        "Το Personal Page runtime ομαδοποιεί το γενικό NotebookLM artifact κάτω από το label «Audio», παρότι η κάρτα αναγνωρίζεται ως «NotebookLM AI».",
-        "Δύο React Router future-flag warnings είχαν ήδη παρατηρηθεί στο runtime χωρίς λειτουργική αστοχία."
+        "NotebookLM cards are grouped under the runtime Audio label; React Router warnings are non-fatal."
       ],
       "consoleErrors": [],
-      "previewUrl": "http://127.0.0.1:43134/media?dataUrl=http%3A%2F%2F127.0.0.1%3A43117%2Fpreview%2Fd4d174ed118e61d956210ba883b5eef8828fb46588c4c1905e9852aeed5c91f4%2Fpersonalpage.json"
+      "previewUrl": "http://127.0.0.1:43134/media"
+    },
+    {
+      "draftHash": "cb37e9fa8e62f1d5769d76da43ebf05f58a6affc266cce67b2f594024b5bfd16",
+      "appId": "history3d",
+      "timestamp": "2026-08-25T08:25:45.064Z",
+      "status": "warning",
+      "expected": {
+        "protectedCharacters": 17,
+        "protectedProps": 1,
+        "runtime": "local",
+        "modelsMayChange": false
+      },
+      "observed": {
+        "protectedSceneVisible": true,
+        "dialogsRendered": 8,
+        "factsRendered": 8,
+        "runtimeLoaded": true,
+        "fatalConsoleErrors": 0
+      },
+      "warnings": [
+        "Experimental module; protected template keeps the pre-existing duplicate key ancient_tiles.glb."
+      ],
+      "consoleErrors": [],
+      "previewUrl": "http://127.0.0.1:43135"
+    },
+    {
+      "draftHash": "67bede7eb6c49ee19f1433c0612230c2b42a2b28b5ddc01c3e94b66f098bd38a",
+      "appId": "sculpture",
+      "timestamp": "2026-08-25T08:25:45.078Z",
+      "status": "warning",
+      "expected": {
+        "semanticRegions": 4,
+        "contributions": 4,
+        "runtime": "local",
+        "publicClassroomApp": false
+      },
+      "observed": {
+        "mappedRegions": 4,
+        "contributionsRendered": 4,
+        "fixedEmptyRegions": [
+          "arms",
+          "periphery"
+        ],
+        "runtimeLoaded": true,
+        "fatalConsoleErrors": 0
+      },
+      "warnings": [
+        "Experimental standalone Light Up Legacy output; fixed unused surfaces remain dark by design."
+      ],
+      "consoleErrors": [],
+      "previewUrl": "http://127.0.0.1:43136"
     }
   ],
   "quality": {
-    "score": 100,
+    "score": 92,
     "grade": "ready",
-    "issues": [],
+    "issues": [
+      {
+        "code": "history-experimental-selected",
+        "severity": "warning",
+        "message": "Το History 3D είναι experimental και δεν πρέπει να επιλέγεται χωρίς συνειδητή απόφαση.",
+        "appId": "history3d"
+      },
+      {
+        "code": "sculpture-experimental-selected",
+        "severity": "warning",
+        "message": "Το Sculpture είναι experimental και εξάγεται χωριστά από το master.",
+        "appId": "sculpture"
+      }
+    ],
     "metrics": {
       "moduleCount": 6,
       "timelineEvents": 8,
@@ -1066,15 +1404,15 @@
       "mindPalaceRooms": 2,
       "mindPalaceClues": 7,
       "personalPageChapters": 3,
-      "historyCharacters": 2,
-      "historyFacts": 3,
+      "historyCharacters": 17,
+      "historyFacts": 8,
       "sculptureRegions": 4,
       "sculptureContributions": 4,
       "criticalIssues": 0,
-      "warningIssues": 0
+      "warningIssues": 2
     },
-    "evaluatedAt": "2026-08-20T06:58:12.302Z"
+    "evaluatedAt": "2026-08-25T08:25:45.081Z"
   },
   "createdAt": "2026-08-20T05:48:01.061Z",
-  "updatedAt": "2026-08-20T06:58:12.302Z"
+  "updatedAt": "2026-08-25T08:25:45.080Z"
 }
