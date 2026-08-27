@@ -27,6 +27,7 @@ jobs:
           echo "timeline=$(echo "$CHANGED"      | grep -c 'timeline.json'      || true)" >> $GITHUB_OUTPUT
           echo "investigation=$(echo "$CHANGED" | grep -c 'investigation.json' || true)" >> $GITHUB_OUTPUT
           echo "history3d=$(echo "$CHANGED"     | grep -c 'history3d.json'     || true)" >> $GITHUB_OUTPUT
+          echo "sculpture=$(echo "$CHANGED"     | grep -c 'sculpture.json'     || true)" >> $GITHUB_OUTPUT
           echo "mindpalace=$(echo "$CHANGED"    | grep -c 'mindpalace.json'    || true)" >> $GITHUB_OUTPUT
           echo "notebook=$(echo "$CHANGED"      | grep -c 'notebook.json'      || true)" >> $GITHUB_OUTPUT
           echo "personalpage=$(echo "$CHANGED"  | grep -c 'personalpage.json'  || true)" >> $GITHUB_OUTPUT
@@ -89,6 +90,12 @@ jobs:
           git push
           echo "✅ history-explorer-3d updated"
 
+      - name: Validate Interactive Sculpture (separate output)
+        if: steps.changed.outputs.sculpture != '0'
+        run: |
+          python3 scripts/validate_sculpture.py templates/sculpture/default.json data/current/sculpture.json
+          echo "✅ Interactive Sculpture snapshot validated (local app distribution remains offline)"
+
       - name: Push to mind-palace-cases
         if: steps.changed.outputs.mindpalace != '0'
         env:
@@ -141,5 +148,6 @@ jobs:
           echo "| 🗺️ Timeline   | Map-Timeline        | ${{ steps.changed.outputs.timeline != '0' && '✅ pushed' || '⏭️ skipped' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| 🕵️ Investigation | idea-weaver-board   | ${{ steps.changed.outputs.investigation != '0' && '✅ pushed' || '⏭️ skipped' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| 🏛️ History 3D | history-explorer-3d | ${{ steps.changed.outputs.history3d != '0' && '✅ pushed' || '⏭️ skipped' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🗿 Interactive Sculpture | local app (separate output) | ${{ steps.changed.outputs.sculpture != '0' && '✅ validated' || '⏭️ skipped' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| 🧠 Mind Palace | mind-palace-cases   | ${{ steps.changed.outputs.mindpalace != '0' && '✅ pushed' || '⏭️ skipped' }} |" >> $GITHUB_STEP_SUMMARY
           echo "| 🌐 Personal Page | personal-page     | ${{ (steps.changed.outputs.personalpage != '0' || steps.changed.outputs.notebook != '0') && '✅ pushed' || '⏭️ skipped' }} |" >> $GITHUB_STEP_SUMMARY

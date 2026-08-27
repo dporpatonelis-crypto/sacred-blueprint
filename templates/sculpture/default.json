@@ -1,0 +1,99 @@
+{
+  "template": {
+    "version": "1.0",
+    "regions": [
+      "base",
+      "trunk",
+      "arms",
+      "head",
+      "periphery",
+      "core"
+    ],
+    "visualRules": {
+      "lighting": "intensity_per_contributions",
+      "color": "category_mapping",
+      "glow": "documentation_threshold",
+      "inscriptions": "primary_source_text"
+    }
+  },
+  "instance": {
+    "class": "B2",
+    "subject": "Μέγας Βασίλειος",
+    "year": 2026,
+    "createdAt": "2026-07-17T08:38:50.093Z"
+  },
+  "regions": {
+    "base": {
+      "name": "Βάση",
+      "contributions": 1,
+      "docStrength": 3.2,
+      "category": "ethical",
+      "label": "Τα θεμέλια της έννοιας"
+    },
+    "trunk": {
+      "name": "Κορμός",
+      "contributions": 0,
+      "docStrength": 0,
+      "category": null,
+      "label": "Το κύριο σώμα δεδομένων"
+    },
+    "arms": {
+      "name": "Χέρια",
+      "contributions": 1,
+      "docStrength": 4.9,
+      "category": "ethical",
+      "label": "Η δράση και η εφαρμογή"
+    },
+    "head": {
+      "name": "Κεφαλή",
+      "contributions": 1,
+      "docStrength": 3.8,
+      "category": "theological",
+      "label": "Το ανώτερο νόημα (Θεολογία)"
+    },
+    "periphery": {
+      "name": "Περιφέρεια",
+      "contributions": 0,
+      "docStrength": 0,
+      "category": null,
+      "label": "Το ιστορικό πλαίσιο"
+    },
+    "core": {
+      "name": "Εσωτ. Πυρήνας",
+      "contributions": 0,
+      "docStrength": 0,
+      "category": null,
+      "label": "Η ουσία και η κινητήριος δύναμη"
+    }
+  },
+  "contributions": [
+    {
+      "id": 1784276627614,
+      "region": "head",
+      "text": "Η Θεολογία ως επιστήμη του Θεού",
+      "source": "Μέγας Βασίλειος, Εἰς τὸ Ἅγιον Βάπτισμα",
+      "category": "theological",
+      "docScore": 3.8,
+      "timestamp": "2026-07-17T08:23:47.614Z"
+    },
+    {
+      "id": 1784276627615,
+      "region": "base",
+      "text": "Η παιδεία ως θεμέλιο κάθε αρετής",
+      "source": "Μέγας Βασίλειος, Πρὸς τοὺς Νέους",
+      "category": "ethical",
+      "docScore": 3.2,
+      "timestamp": "2026-07-17T08:23:47.614Z"
+    },
+    {
+      "id": 1784276627616,
+      "region": "arms",
+      "text": "Η Βασιλειάδα — έμπρακτη φιλανθρωπία",
+      "source": "Γρηγόριος Θεολόγος, Ἐπιτάφιος εἰς Μέγαν Βασίλειον",
+      "category": "ethical",
+      "docScore": 4.9,
+      "timestamp": "2026-07-17T08:23:47.614Z"
+    }
+  ],
+  "assets": []
+}

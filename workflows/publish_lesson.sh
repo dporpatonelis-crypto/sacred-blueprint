@@ -116,7 +116,7 @@ echo ""
 # ── 5. GitHub push ────────────────────────────────────────
 echo "☁️  Βήμα 4/4: GitHub push..."
 COMMIT_MSG="lesson: $TOPIC ($(date +%Y-%m-%d))"
-if bash workflows/sync_github.sh "$COMMIT_MSG"; then
+if bash workflows/sync_github.sh "$COMMIT_MSG" "$LESSON_DIR"; then
   echo "  ✅ Push ολοκληρώθηκε — GitHub Action ξεκίνησε."
 else
   echo "  ✗ Push απέτυχε — τα αρχεία αποθηκεύτηκαν τοπικά."
