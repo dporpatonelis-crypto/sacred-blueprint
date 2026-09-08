@@ -551,18 +551,6 @@
         "glbModel": "/models/aristotle.glb"
       },
       {
-        "id": "acropolis",
-        "name": "tree",
-        "position_x": -3.5,
-        "position_y": 0,
-        "position_z": 2,
-        "rotation": 0,
-        "color": "",
-        "robeColor": "",
-        "description": "",
-        "glbModel": "/models/acropolis_optimized_v1.glb"
-      },
-      {
         "id": "ancient_tiles.glb",
         "name": "tree",
         "position_x": -3.5,
