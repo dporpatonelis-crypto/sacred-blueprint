@@ -324,7 +324,7 @@
     },
     {
       "id": "bishop",
-      "glbModel": "/models/vasileios_verified_v7_compact.glb",
+      "glbModel": "/models/bishop_face_lipsync_optimized_v5.glb",
       "position_x": 6.875,
       "position_y": 0.05,
       "position_z": 0.3,
