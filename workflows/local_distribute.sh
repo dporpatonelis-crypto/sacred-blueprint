@@ -132,7 +132,8 @@ chars = [xchar(c) for c in src.get("characters",[])]
 result = {"characters": chars,
           "dialogs":   [xdialog(d) for d in src.get("dialogs",[])],
           "facts":     [xfact(f,chars) for f in src.get("facts",[])],
-          "screens":   xscreens(src.get("screens",{}))}
+          "screens":   xscreens(src.get("screens",{})),
+          "props":     src.get("props",[])}
 json.dump(result, open(os.path.join(out_dir, lesson_id+".json"), "w", encoding="utf-8"), indent=2, ensure_ascii=False)
 
 manifest_path = os.path.join(out_dir, "manifest.json")
