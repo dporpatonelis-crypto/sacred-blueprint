@@ -11,6 +11,7 @@
 set -e
 
 LESSON_DIR="${1:?Χρήση: bash workflows/distribute.sh lessons/ΟΝΟΜΑ_ΦΑΚΕΛΟΥ/}"
+LESSON_DIR="${LESSON_DIR%/}"
 BASE="$(pwd)"
 MASTER="$LESSON_DIR/master_output.json"
 CURRENT="$BASE/data/current"
@@ -31,8 +32,25 @@ fi
 mkdir -p "$CURRENT"
 mkdir -p "$CURRENT/ue5"
 
-TOPIC=$(jq -r '.title' "$MASTER" 2>/dev/null || echo "Untitled")
+# The master title can name a module/case. The lesson title is the stable
+# catalogue identity used by manifests and downstream applications.
+TOPIC=""
+if [ -f "$LESSON_DIR/lesson_plan.json" ]; then
+  TOPIC=$(jq -r '.lesson.title // empty' "$LESSON_DIR/lesson_plan.json" 2>/dev/null || true)
+fi
+if [ -z "$TOPIC" ] && [ -f "$LESSON_DIR/meta.json" ]; then
+  TOPIC=$(jq -r '.topic // empty' "$LESSON_DIR/meta.json" 2>/dev/null || true)
+fi
+if [ -z "$TOPIC" ]; then
+  TOPIC=$(jq -r '.title // "Untitled"' "$MASTER" 2>/dev/null || echo "Untitled")
+fi
+
 LESSON_ID=$(basename "$LESSON_DIR")
+LESSON_SOURCE="$LESSON_DIR/master_output.json"
+case "$LESSON_SOURCE" in
+  "$BASE"/*) LESSON_SOURCE="${LESSON_SOURCE#"$BASE"/}" ;;
+  ./*)       LESSON_SOURCE="${LESSON_SOURCE#./}" ;;
+esac
 
 echo "╔══════════════════════════════════════╗" | tee "$LOG"
 echo "║   Sacred Blueprint — Distribute     ║" | tee -a "$LOG"
@@ -127,7 +145,7 @@ cat > "$CURRENT/active_lesson.json" << EOF
 {
   "lesson_id":  "$LESSON_ID",
   "title":      "$TOPIC",
-  "source":     "$LESSON_DIR/master_output.json",
+  "source":     "$LESSON_SOURCE",
   "activated":  "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 }
 EOF
