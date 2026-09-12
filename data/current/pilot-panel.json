@@ -1,0 +1,10 @@
+{
+  "document_type": "sacred_blueprint.pilot_panel_pointer",
+  "schema_version": "1.0.0",
+  "mode": "lesson_selector",
+  "dashboard": "PILOT_PANEL.html",
+  "catalog": "pilot-panel.catalog.json",
+  "drive_content": "pilot-panel.drive-content.json",
+  "activation_service": "scripts/pilot_panel_server.py",
+  "updated_utc": "2026-09-12T09:13:16Z"
+}

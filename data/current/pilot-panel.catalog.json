@@ -1,0 +1,407 @@
+{
+  "document_type": "sacred_blueprint.pilot_lesson_catalog",
+  "schema_version": "1.0.0",
+  "generated_utc": "2026-09-12T15:20:52.276779Z",
+  "active_lesson_id": "to-schedio-tis-theias-oikonomias",
+  "drive_content": {
+    "available": true,
+    "refreshed_utc": "2026-09-12T09:13:16Z",
+    "source_folder": {
+      "title": "Current Lesson Library / Quiz",
+      "id": "1y9uBbawDYXfBXoLAF22EhTL45DUD-scK",
+      "url": "https://drive.google.com/drive/folders/1y9uBbawDYXfBXoLAF22EhTL45DUD-scK"
+    }
+  },
+  "library": {
+    "local_count": 8,
+    "github_count": 8,
+    "exact_match": true,
+    "local_only": [],
+    "github_only": []
+  },
+  "lessons": [
+    {
+      "id": "20260702_091526_the-triple-testimony-of-the-one-god",
+      "title": "The Triple Testimony of the One God",
+      "active": false,
+      "quiz": [],
+      "slides": [],
+      "assistant": null,
+      "available_outputs": [
+        "history3d_output.json",
+        "investigation_board_output.json",
+        "master_output.json",
+        "mind_palace_output.json",
+        "notebook_output.json",
+        "personal_page_output.json",
+        "timeline_item_output.json",
+        "unreal_scenario_output.json"
+      ],
+      "ready": true
+    },
+    {
+      "id": "20260702_174242_participation",
+      "title": "participation",
+      "active": false,
+      "quiz": [],
+      "slides": [],
+      "assistant": null,
+      "available_outputs": [
+        "history3d_output.json",
+        "investigation_output.json",
+        "master_output.json",
+        "mindpalace_output.json",
+        "notebook_output.json",
+        "personalpage_output.json",
+        "timeline_output.json",
+        "unreal_output.json"
+      ],
+      "ready": true
+    },
+    {
+      "id": "20260720_143615_",
+      "title": "Ιωάννης ο Χρυσόστομος - Θεολογικά Περιεχόμενα",
+      "active": false,
+      "quiz": [],
+      "slides": [],
+      "assistant": null,
+      "available_outputs": [
+        "anchor_output.json",
+        "books_output.json",
+        "history3d_output.json",
+        "investigation_output.json",
+        "master_output.json",
+        "mindpalace_output.json",
+        "notebook_output.json",
+        "personalpage_output.json",
+        "timeline_output.json",
+        "unreal_output.json"
+      ],
+      "ready": true
+    },
+    {
+      "id": "20260816_080042_three-theologians",
+      "title": "Three Theologians",
+      "active": false,
+      "quiz": [],
+      "slides": [],
+      "assistant": null,
+      "available_outputs": [
+        "history3d_output.json",
+        "investigation_board_output.json",
+        "master_output.json",
+        "mind_palace_output.json",
+        "notebook_output.json",
+        "personal_page_output.json",
+        "timeline_item_output.json",
+        "unreal_scenario_output.json"
+      ],
+      "ready": true
+    },
+    {
+      "id": "20260825_093143_lesson",
+      "title": "Η υπόθεση του Αρείου",
+      "active": false,
+      "quiz": [],
+      "slides": [],
+      "assistant": null,
+      "available_outputs": [
+        "history3d_output.json",
+        "investigation_output.json",
+        "master_output.json",
+        "mindpalace_output.json",
+        "personalpage_output.json",
+        "sculpture_output.json",
+        "timeline_output.json"
+      ],
+      "ready": true
+    },
+    {
+      "id": "eleftheria-kai-dogmatiki-syneidisi",
+      "title": "Ελευθερία και δογματική συνείδηση",
+      "active": false,
+      "quiz": [],
+      "slides": [
+        {
+          "title": "Lovable 1st slide dynamic Template",
+          "source": "google_drive",
+          "path": "",
+          "url": "https://docs.google.com/presentation/d/1JOuvpoACUR5JpgLpPFAv5dHMsY4kJTVqhpXPqlH-nfw/edit",
+          "role": "template"
+        },
+        {
+          "title": "δόγμα και βίωμα",
+          "source": "google_drive",
+          "path": "",
+          "url": "https://docs.google.com/presentation/d/1kmnmtbIiGHRrPHlaKNaJ_QJPtuPZXSzGALTppAGILY0/edit",
+          "role": "content_reference"
+        }
+      ],
+      "assistant": {
+        "summary": "Το μάθημα συνδέει τη δογματική αλήθεια με τον τρόπο ζωής: η Τριαδική κοινωνία ως σχέση χωρίς επιβολή, η συνέργεια έργων και χάριτος, η εσωτερική και εξωτερική ελευθερία, η θεραπεία των παθών και η μετάβαση από τη θεωρητική γνώση στη βιωμένη θεοκοινωνία.",
+        "focus": [
+          "δογματική συνείδηση",
+          "ελευθερία",
+          "έργα και χάρη",
+          "θεραπεία παθών",
+          "θεωρία και βίωμα"
+        ],
+        "flows": [
+          {
+            "title": "Ροή 1 · Από το δόγμα στη ζωή",
+            "steps": [
+              "Timeline: Α΄–Β΄ Οικουμενική και το ομοούσιο",
+              "Investigation Board: έργα, χάρη και συνέργεια",
+              "Sculpture: σώμα, πάθη και αρετές",
+              "Mind Palace ή History Explorer: θεωρία και βιωμένη θεοκοινωνία"
+            ],
+            "outcome": "Οι μαθητές συνθέτουν πώς η δογματική ομολογία μεταμορφώνει τις σχέσεις και την καθημερινή πράξη."
+          },
+          {
+            "title": "Ροή 2 · Έρευνα και ετυμηγορία",
+            "steps": [
+              "Πρόβλεψη: εξωτερική ή εσωτερική ελευθερία;",
+              "History Explorer: συλλογή ιστορικών και φιλοσοφικών μαρτυριών",
+              "Mind Palace: διάλογος Παύλου και Γέροντα Σωφρονίου",
+              "Σύντομη τεκμηριωμένη ετυμηγορία"
+            ],
+            "outcome": "Η αρχική πρόβλεψη ελέγχεται και μετατρέπεται σε τεκμηριωμένη σύνθεση."
+          }
+        ],
+        "missions": [
+          {
+            "title": "Η δογματική ομολογία στην καθημερινή πράξη",
+            "prompt": "Βρείτε τρία τεκμήρια που δείχνουν πώς η πίστη στον Τριαδικό Θεό και το ομοούσιο αντιστρέφουν την κυριαρχία, την απομόνωση και τον εξαναγκασμό.",
+            "deliverable": "Σύντομη σύνθεση για μια κοινότητα χωρίς επιβολή.",
+            "tools": "Timeline · Investigation Board"
+          },
+          {
+            "title": "Το δίλημμα των έργων και της χάριτος",
+            "prompt": "Διερευνήστε τα δύο άκρα: ηθικισμός και φαρισαϊσμός από τη μία, παθητικότητα και αμετανοησία από την άλλη. Εντοπίστε τη συνέργεια ως χρυσή τομή.",
+            "deliverable": "Αιτιολογημένη ανάλυση με βιβλικά ή ιστορικά στοιχεία.",
+            "tools": "Investigation Board · clues c5, c7, c8"
+          },
+          {
+            "title": "Πρόβλεψη, παρατήρηση και επαλήθευση",
+            "prompt": "Προβλέψτε αν η πνευματική ελευθερία κρίνεται κυρίως κοινωνικά ή εσωτερικά και ελέγξτε την πρόβλεψη με στοιχεία από την εξερεύνηση.",
+            "deliverable": "Αρχική πρόβλεψη και τελική τεκμηριωμένη κρίση.",
+            "tools": "Timeline · Mind Palace"
+          },
+          {
+            "title": "Η χαρτογράφηση της ελευθερίας στο σώμα",
+            "prompt": "Συνδέστε πόδια, κορμό, χέρια, κεφαλή και καρδιά με μετάνοια, εγκράτεια, διακονία, ταπείνωση και ευχαριστία.",
+            "deliverable": "Πρόταση που εξηγεί πώς η ελεύθερη συνέργεια θεραπεύει συγκεκριμένα πάθη.",
+            "tools": "Sculpture · Light Up Legacy"
+          },
+          {
+            "title": "Τα όρια της θεολογικής γνώσης",
+            "prompt": "Κρίνετε αν αρκεί η διανοητική κατανόηση των δογμάτων ή αν απαιτούνται εντολές, σταυρικός αγώνας και βίωση του Ακτίστου Φωτός.",
+            "deliverable": "Κριτική διάκριση ανάμεσα στα «ρήματα» και στα βιωμένα «πράγματα».",
+            "tools": "Mind Palace · History Explorer"
+          }
+        ],
+        "materials": [
+          {
+            "title": "Dogma kai vioma missions workbook",
+            "role": "Κύριο φύλλο αποστολών",
+            "id": "1Ge3ywY9L0nmMmoGYnqfiT__fhMrI4ij-IGj9s7G5pwQ",
+            "mime_type": "application/vnd.google-apps.document",
+            "modified_time": "2026-09-08T07:33:06.050Z",
+            "url": "https://docs.google.com/document/d/1Ge3ywY9L0nmMmoGYnqfiT__fhMrI4ij-IGj9s7G5pwQ/edit",
+            "companion_url": "https://drive.google.com/file/d/1y5yHpSfWQ3B3j051Gn7ILf-vQ2xghqQl/view"
+          },
+          {
+            "title": "Δόγμα και βίωμα",
+            "role": "Χάρτης περιεχομένου και εφαρμογών",
+            "id": "1ie5EoNlDFGFQwYn64RPoKhvJtwS7FKaKRT2aT9huG8w",
+            "mime_type": "application/vnd.google-apps.document",
+            "modified_time": "2026-09-07T15:00:50.985Z",
+            "url": "https://docs.google.com/document/d/1ie5EoNlDFGFQwYn64RPoKhvJtwS7FKaKRT2aT9huG8w/edit"
+          },
+          {
+            "title": "History Explorer 3D missions",
+            "role": "Αποστολές ιστορικών και φιλοσοφικών προτύπων",
+            "id": "1daTYyKgSwYZxyEoyX_ZXlcVWJmw--4dmwnpU_St2juo",
+            "mime_type": "application/vnd.google-apps.document",
+            "modified_time": "2026-09-08T07:50:22.771Z",
+            "url": "https://docs.google.com/document/d/1daTYyKgSwYZxyEoyX_ZXlcVWJmw--4dmwnpU_St2juo/edit",
+            "companion_url": "https://drive.google.com/file/d/1OemeDfOapGHVHUWt0rNWOje5qdCv-p3B/view"
+          },
+          {
+            "title": "Φύλλο αποστολών History 3D",
+            "role": "Αναλυτικές ερωτήσεις ανά χαρακτήρα και VR σταθμό",
+            "id": "1HKeXLffstOUSjsmmXpoI3pUnTdqHCerWTqce2WrFT54",
+            "mime_type": "application/vnd.google-apps.document",
+            "modified_time": "2026-09-10T06:58:06.430Z",
+            "url": "https://docs.google.com/document/d/1HKeXLffstOUSjsmmXpoI3pUnTdqHCerWTqce2WrFT54/edit",
+            "companion_url": "https://drive.google.com/file/d/1Enb-EPbscZhxOwb2OvPPdbWhCj47NwOa/view"
+          },
+          {
+            "title": "Φύλλο missions · 3 χαρακτήρες",
+            "role": "Συνθετική διερεύνηση Αγίου, Αυτοκράτορα και Φιλοσόφου",
+            "id": "1OyfeY0TeDkQXQKy4LxRQWHj2Q4vxxW46ARzItTJY4Iw",
+            "mime_type": "application/vnd.google-apps.document",
+            "modified_time": "2026-09-10T07:13:36.361Z",
+            "url": "https://docs.google.com/document/d/1OyfeY0TeDkQXQKy4LxRQWHj2Q4vxxW46ARzItTJY4Iw/edit",
+            "companion_url": "https://drive.google.com/file/d/1iFqPjrmUgw8FsAU31Z6H5XDwjlU7POGQ/view"
+          },
+          {
+            "title": "Οδηγός ερωτήσεων ερμηνείας",
+            "role": "Θεολογικό, ιστορικό και φιλοσοφικό πλαίσιο",
+            "id": "1B2hxA5rcnssBqTxQBjwdZ4AwwzBFSg4t7khB9wq1wqc",
+            "mime_type": "application/vnd.google-apps.document",
+            "modified_time": "2026-09-10T06:35:18.689Z",
+            "url": "https://docs.google.com/document/d/1B2hxA5rcnssBqTxQBjwdZ4AwwzBFSg4t7khB9wq1wqc/edit",
+            "companion_url": "https://drive.google.com/file/d/1lBwk-NIz4tDFiBmyrjcV96NnrTMrcGbv/view"
+          }
+        ]
+      },
+      "available_outputs": [
+        "history3d_output.json",
+        "investigation_output.json",
+        "master_output.json",
+        "mindpalace_output.json",
+        "personalpage_output.json",
+        "sculpture_output.json",
+        "timeline_output.json"
+      ],
+      "ready": true
+    },
+    {
+      "id": "i-ypothesi-tou-areiou",
+      "title": "Η υπόθεση του Αρείου",
+      "active": false,
+      "quiz": [],
+      "slides": [],
+      "assistant": null,
+      "available_outputs": [
+        "investigation_output.json",
+        "master_output.json",
+        "mindpalace_output.json",
+        "personalpage_output.json",
+        "timeline_output.json"
+      ],
+      "ready": true
+    },
+    {
+      "id": "to-schedio-tis-theias-oikonomias",
+      "title": "Το Σχέδιο της Θείας Οικονομίας",
+      "active": true,
+      "quiz": [
+        {
+          "title": "theia-oikonomia-History-explorer",
+          "source": "local",
+          "path": "Quiz/theia-oikonomia-History-explorer.docx",
+          "url": "../../lessons/to-schedio-tis-theias-oikonomias/Quiz/theia-oikonomia-History-explorer.docx"
+        },
+        {
+          "title": "theia-oikonomia-holistic-worksheet",
+          "source": "local",
+          "path": "Quiz/theia-oikonomia-holistic-worksheet.docx",
+          "url": "../../lessons/to-schedio-tis-theias-oikonomias/Quiz/theia-oikonomia-holistic-worksheet.docx"
+        },
+        {
+          "title": "theia-oikonomia-worksheet",
+          "source": "local",
+          "path": "Quiz/theia-oikonomia-worksheet.docx",
+          "url": "../../lessons/to-schedio-tis-theias-oikonomias/Quiz/theia-oikonomia-worksheet.docx"
+        },
+        {
+          "title": "therapeia-patron-worksheet",
+          "source": "local",
+          "path": "Quiz/therapeia-patron-worksheet.docx",
+          "url": "../../lessons/to-schedio-tis-theias-oikonomias/Quiz/therapeia-patron-worksheet.docx"
+        },
+        {
+          "title": "Έρευνα-υλικού-σε-Πατρολογία-βασικά-συγγράμματα",
+          "source": "local",
+          "path": "Quiz/Έρευνα-υλικού-σε-Πατρολογία-βασικά-συγγράμματα.docx",
+          "url": "../../lessons/to-schedio-tis-theias-oikonomias/Quiz/Έρευνα-υλικού-σε-Πατρολογία-βασικά-συγγράμματα.docx"
+        }
+      ],
+      "slides": [],
+      "assistant": {
+        "summary": "Το μάθημα εξετάζει πώς η ηθική αναζήτηση, η ελληνική σκέψη και γλώσσα, η πολιτισμική ενοποίηση και η νέα πολιτική συνθήκη προετοιμάζουν ιστορικά τη διάδοση του χριστιανικού μηνύματος.",
+        "focus": [
+          "ιστορική προετοιμασία",
+          "ελληνική σκέψη",
+          "κοινή γλώσσα",
+          "θρησκευτική ελευθερία",
+          "σύνθεση τεκμηρίων"
+        ],
+        "flows": [
+          {
+            "title": "Ροή 1 · Τρία τεκμήρια",
+            "steps": [
+              "Δώσε την αποστολή πριν ανοίξει η εφαρμογή",
+              "History Explorer: στοιχεία από τρεις διαφορετικούς σταθμούς ή μορφές",
+              "Σύντομη παρουσίαση που συνδέει ηθική αναζήτηση, κοινή γλώσσα και ιστορικό πλαίσιο"
+            ],
+            "outcome": "Οι μαθητές εξηγούν τη Θεία Οικονομία με διαφορετικά αλλά συνδεδεμένα ιστορικά τεκμήρια."
+          },
+          {
+            "title": "Ροή 2 · Πρόβλεψη και έλεγχος",
+            "steps": [
+              "Πρόβλεψη: σκέψη, γλώσσα ή πολιτική αλλαγή;",
+              "Έλεγχος με Σωκράτη/Αριστοτέλη, Αλέξανδρο και Κωνσταντίνο",
+              "Τελική κρίση: επιβεβαίωση, αλλαγή ή συνδυασμός παραγόντων"
+            ],
+            "outcome": "Η εξερεύνηση λειτουργεί ως έλεγχος μιας αρχικής ιστορικής υπόθεσης."
+          }
+        ],
+        "missions": [
+          {
+            "title": "Τρία τεκμήρια για τη Θεία Οικονομία",
+            "prompt": "Βρείτε τρία διαφορετικά στοιχεία που δείχνουν πώς προετοιμάζεται ιστορικά ο κόσμος για τη διάδοση του χριστιανικού μηνύματος.",
+            "deliverable": "Σύνθεση που συνδέει ηθική αναζήτηση, κοινή γλώσσα και νέο ιστορικό πλαίσιο.",
+            "tools": "History Explorer 3D"
+          },
+          {
+            "title": "Η σημαντικότερη ιστορική προετοιμασία",
+            "prompt": "Επιλέξτε τη μορφή που συνέβαλε περισσότερο και συγκρίνετέ την με μία δεύτερη μορφή.",
+            "deliverable": "Αιτιολογημένη επιλογή με δύο κύρια και ένα συγκριτικό στοιχείο.",
+            "tools": "History Explorer 3D"
+          },
+          {
+            "title": "Πρόβλεψη και έλεγχος",
+            "prompt": "Προβλέψτε αν σημαντικότερη ήταν η ελληνική σκέψη, η κοινή γλώσσα ή η πολιτική αλλαγή και ελέγξτε την πρόβλεψη.",
+            "deliverable": "Αρχική πρόβλεψη και τελική κρίση.",
+            "tools": "Σωκράτης/Αριστοτέλης · Αλέξανδρος · Κωνσταντίνος"
+          },
+          {
+            "title": "Βρείτε τη σύνδεση",
+            "prompt": "Επιλέξτε δύο φαινομενικά άσχετα πρόσωπα και συνδέστε τη συμβολή τους στο σχέδιο της Θείας Οικονομίας.",
+            "deliverable": "Μία σαφής πρόταση σύνδεσης με τεκμήριο από κάθε πρόσωπο.",
+            "tools": "History Explorer 3D"
+          },
+          {
+            "title": "Τι λείπει από την εξήγηση;",
+            "prompt": "Εντοπίστε έναν παράγοντα που δεν αναπτύσσεται αρκετά και προτείνετε μία επιπλέον προσωπικότητα για το panel.",
+            "deliverable": "Τεκμηριωμένη διαπίστωση για τα όρια της εφαρμογής και πρόταση συμπλήρωσης.",
+            "tools": "History Explorer 3D"
+          }
+        ],
+        "materials": [
+          {
+            "title": "Αποστολές Θείας Οικονομίας",
+            "role": "Πέντε αποστολές εξερεύνησης",
+            "id": "1ogWoQ6pxOpp7LCKHLfC4eJfc8CBfFaMK",
+            "mime_type": "application/pdf",
+            "modified_time": "2026-09-02T22:02:29.755Z",
+            "url": "https://drive.google.com/file/d/1ogWoQ6pxOpp7LCKHLfC4eJfc8CBfFaMK/view"
+          }
+        ]
+      },
+      "available_outputs": [
+        "history3d_output.json",
+        "investigation_output.json",
+        "master_output.json",
+        "mindpalace_output.json",
+        "personalpage_output.json",
+        "sculpture_output.json",
+        "timeline_output.json"
+      ],
+      "ready": true
+    }
+  ]
+}
