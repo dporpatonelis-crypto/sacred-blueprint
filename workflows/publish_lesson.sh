@@ -7,6 +7,7 @@
 
 BASE="$(pwd)"
 LESSON_DIR="${1:?Χρήση: bash workflows/publish_lesson.sh lessons/ΟΝΟΜΑ_ΦΑΚΕΛΟΥ/}"
+LESSON_DIR="${LESSON_DIR%/}"
 MASTER="$LESSON_DIR/master_output.json"
 ROUTING="$BASE/config/routing.json"
 ERRORS=0
@@ -34,7 +35,16 @@ if ! command -v jq &>/dev/null; then
   exit 1
 fi
 
-TOPIC=$(jq -r '.title // "Μάθημα"' "$MASTER" 2>/dev/null || echo "Μάθημα")
+TOPIC=""
+if [ -f "$LESSON_DIR/lesson_plan.json" ]; then
+  TOPIC=$(jq -r '.lesson.title // empty' "$LESSON_DIR/lesson_plan.json" 2>/dev/null || true)
+fi
+if [ -z "$TOPIC" ] && [ -f "$LESSON_DIR/meta.json" ]; then
+  TOPIC=$(jq -r '.topic // empty' "$LESSON_DIR/meta.json" 2>/dev/null || true)
+fi
+if [ -z "$TOPIC" ]; then
+  TOPIC=$(jq -r '.title // "Μάθημα"' "$MASTER" 2>/dev/null || echo "Μάθημα")
+fi
 echo "📚 Μάθημα: $TOPIC"
 echo "📁 Φάκελος: $LESSON_DIR"
 echo ""

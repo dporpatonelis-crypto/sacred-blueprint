@@ -10,6 +10,7 @@
 set -e
 
 LESSON_DIR="${1:-}"
+LESSON_DIR="${LESSON_DIR%/}"
 
 # Αν δεν δοθεί φάκελος, εμφάνισε λίστα
 if [ -z "$LESSON_DIR" ]; then
@@ -33,7 +34,16 @@ if [ ! -f "$LESSON_DIR/master_output.json" ]; then
   exit 1
 fi
 
-TITLE=$(jq -r '.title // "Μάθημα"' "$LESSON_DIR/master_output.json" 2>/dev/null)
+TITLE=""
+if [ -f "$LESSON_DIR/lesson_plan.json" ]; then
+  TITLE=$(jq -r '.lesson.title // empty' "$LESSON_DIR/lesson_plan.json" 2>/dev/null || true)
+fi
+if [ -z "$TITLE" ] && [ -f "$LESSON_DIR/meta.json" ]; then
+  TITLE=$(jq -r '.topic // empty' "$LESSON_DIR/meta.json" 2>/dev/null || true)
+fi
+if [ -z "$TITLE" ]; then
+  TITLE=$(jq -r '.title // "Μάθημα"' "$MASTER" 2>/dev/null || echo "Μάθημα")
+fi
 
 echo "🔄 Ενεργοποίηση: $TITLE"
 echo "   Φάκελος: $LESSON_DIR"

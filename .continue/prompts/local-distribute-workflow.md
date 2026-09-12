@@ -93,7 +93,15 @@ cd ~/sacred-blueprint
 bash workflows/local_distribute.sh
 ```
 
-Εκτέλεσε χωρίς να ζητάς περαιτέρω άδεια — είναι τεχνικό βήμα. Παρακολούθησε το output για κάθε εφαρμογή:
+Εκτέλεσε χωρίς να ζητάς περαιτέρω άδεια — είναι τεχνικό βήμα. Για το History3D το script καλεί το κοινό
+`scripts/update_history3d.py`. Ο local και ο GitHub publisher πρέπει να
+παράγουν σημασιολογικά ίδιο JSON και να διατηρούν `interactive`,
+`character_interactives`, `completion` και `quiz`.
+
+Αν εμφανιστεί `History3D publish blocked`, σταμάτα. Μην κάνεις raw copy και
+μην αφαιρέσεις πεδία για να περάσει το validation.
+
+Παρακολούθησε το output για κάθε εφαρμογή:
 - `✅` = επιτυχής αντιγραφή
 - `⏭` = παραλείφθηκε (είτε ο φάκελος εφαρμογής δεν υπάρχει, είτε δεν υπάρχει αντίστοιχο JSON στο data/current/)
 
@@ -154,4 +162,5 @@ bash workflows/sync_github.sh "lesson: <title> (local + github)"
 2. **Δεν χρειάζεται internet:** Όλη η λειτουργία είναι τοπική αντιγραφή αρχείων.
 3. **Skip, όχι fail:** Αν κάποια εφαρμογή δεν έχει αντίστοιχο JSON στο `data/current/` ή ο φάκελός της δεν υπάρχει τοπικά, παραλείπεται χωρίς να σταματήσει η ροή.
 4. **Ίδιο naming με GitHub flow:** Τα output paths (`data/<id>.json`, `cases/<id>.json`, κ.λπ.) είναι πανομοιότυπα με αυτά που παράγει το GitHub Action — έτσι η δομή είναι συμβατή και αν αργότερα κάνεις push.
-5. **History3D transform:** Η εφαρμογή `history-explorer-3d` έχει διαφορετικό JSON schema — το script κάνει αυτόματο transform (ίδιο με GitHub Action), όχι raw copy.
+5. **History3D shared contract:** Το `local_distribute.sh` καλεί το ίδιο `scripts/update_history3d.py` με το GitHub Action. Η διανομή είναι validated και lossless· δεν αφαιρεί optional enrichments.
+6. **Canonical metadata:** Ο τίτλος έρχεται από `lesson_plan.lesson.title` → `meta.topic` → `master_output.title`, και το `active_lesson.source` παραμένει repository-relative.

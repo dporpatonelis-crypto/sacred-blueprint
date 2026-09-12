@@ -5,30 +5,27 @@ import json
 import sys
 from pathlib import Path
 
-
-def load(path: Path):
-    with path.open(encoding="utf-8") as source:
-        return json.load(source)
+from history3d_contract import load_json, validate_full_scenario, write_json
 
 
 if len(sys.argv) != 4:
-    raise SystemExit("usage: sync_history3d_to_master.py TEMPLATE HISTORY MASTER")
+    raise SystemExit(
+        "usage: sync_history3d_to_master.py TEMPLATE HISTORY MASTER"
+    )
 
 template_path, history_path, master_path = map(Path, sys.argv[1:])
-template = load(template_path)
-history = load(history_path)
-master = load(master_path)
 
-if history.get("characters") != template.get("characters"):
-    raise SystemExit("Refusing sync: protected History3D characters differ from the template.")
+try:
+    template = load_json(template_path)
+    history = load_json(history_path)
+    master = load_json(master_path)
+    validate_full_scenario(history, template)
+except (OSError, json.JSONDecodeError, ValueError) as error:
+    raise SystemExit(f"Refusing History3D sync: {error}") from error
 
-for key in ("dialogs", "facts", "screens"):
-    if key not in history:
-        raise SystemExit(f"Refusing sync: missing history3d.{key}")
+if not isinstance(master, dict):
+    raise SystemExit("Refusing History3D sync: master_output.json must be an object")
 
 master["history3d"] = history
-with master_path.open("w", encoding="utf-8") as destination:
-    json.dump(master, destination, ensure_ascii=False, indent=2)
-    destination.write("\n")
-
+write_json(master_path, master)
 print(f"Synced protected History3D scene to: {master_path}")

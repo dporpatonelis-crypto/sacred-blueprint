@@ -3,80 +3,120 @@
 ## Σκοπός
 
 Δημιουργείς εκπαιδευτικό περιεχόμενο για το History Explorer 3D χωρίς να
-αλλάζεις τη σκηνή. Τα GLB models, τα IDs, τα ονόματα, οι θέσεις, οι
-περιστροφές, τα χρώματα και τα screen URLs είναι **προστατευμένα** στο:
+αλλάζεις την κοινή σκηνή. Η μοναδική πηγή αλήθειας για χαρακτήρες, GLB,
+θέσεις, χρώματα, ονόματα και μόνιμα props είναι:
 
 `templates/history3d/default.json`
 
-Ο χρήστης αλλάζει το template χειροκίνητα μόνο όταν θέλει νέα πρόσωπα ή άλλη
-σκηνοθεσία. Το skill δεν επεξεργάζεται ποτέ αυτό το αρχείο.
+Το template έχει 18 προστατευμένους χαρακτήρες και 3 μόνιμα props:
+`dimitris`, `bishop`, `agia_sophia`. Δεν επεξεργάζεσαι το template
+χωρίς ρητή εντολή του χρήστη.
 
-Το τρέχον template περιλαμβάνει 18 προστατευμένους χαρακτήρες και 3 μόνιμα props:
-`dimitris`, `bishop` (Ιεράρχης) και `agia_sophia` (Αγία Σοφία). Τα props αποτελούν
-μέρος της κοινής σκηνής και αντιγράφονται μαζί με το template σε κάθε πλήρες
-History3D JSON· δεν τα ξαναγράφει το lesson content.
+## Είσοδος και έξοδος
 
-## Είσοδος
+Είσοδος: κείμενο πηγής ή υπάρχον JSON μαθήματος.
 
-Κείμενο πηγής ή υπάρχον JSON μαθήματος.
+Υποχρεωτικά outputs:
 
-## Ροή εργασίας
+- `data/current/history3d_content.json`: lesson content overlay.
+- `data/current/history3d.json`: πλήρες validated scenario.
+- `lessons/<lesson-folder>/history3d_output.json`: αντίγραφο βιβλιοθήκης.
+- `lessons/<lesson-folder>/master_output.json.history3d`: το ίδιο πλήρες scenario.
 
-### 1. Εξαγωγή περιεχομένου
+## 1. Content overlay
 
-Εξήγαγε 4 ερωτήσεις/απαντήσεις, έως 5 σύντομα facts και δύο labels για τις
-υπάρχουσες οθόνες. Μην εξάγεις χαρακτήρες ή χωρικές οδηγίες.
+Το overlay περιέχει υποχρεωτικά μόνο:
 
-Διάβασε τα IDs από `templates/history3d/default.json`. Χρησιμοποίησε μόνο
-υπάρχοντα IDs. Για το τρέχον template είναι προτιμότερα:
+- `dialogs`
+- `facts`
+- `screens`
 
-- `socrates`
-- `hypatia`
-- `aristotle`
-- `Constantine compressed (2).glb`
-- `monk compressed.glb`
-- `Alexander.glb`
+Μπορεί επιπλέον να περιέχει:
 
-Αν το κείμενο αναφέρεται σε πρόσωπο που δεν υπάρχει στη σκηνή, παρουσίασε το
-περιεχόμενο ως ερώτηση/απάντηση από ένα υπάρχον NPC. Μην μετονομάσεις NPC και
-μην επινοήσεις GLB path.
+- `interactive`
+- `character_interactives`
+- `completion`
+- `quiz`
 
-### 2. Δημιουργία content overlay
+Δεν περιέχει ποτέ `characters` ή `props`. Αυτά αντιγράφονται αποκλειστικά
+από το protected template.
 
-Δημιούργησε **μόνο** το ακόλουθο JSON. Τα URLs στις οθόνες αντιγράφονται
-ακριβώς από το template.
+### Βασική δομή
 
 ```json
 {
   "dialogs": [
     {
       "character_id": "socrates",
-      "question": "<ερώτηση του μαθητή>",
-      "answer": "<σύντομη απάντηση ή πρόσκληση για σκέψη>"
+      "question": "<ερώτηση>",
+      "answer": "<απάντηση>"
     }
   ],
   "facts": [
     {
       "character_id": "socrates",
-      "fact": "<σύντομο ιστορικό ή θεολογικό στοιχείο>"
+      "fact": "<ιστορικό ή θεολογικό στοιχείο>"
     }
   ],
   "screens": {
-    "left_image_url": " /models/Judging_Socrates.mp4",
-    "right_image_url": "https://i.ibb.co/GQ7P88jD/bg-caseclosed.jpg",
-    "left_label": "<τίτλος αριστερής οθόνης>",
-    "right_label": "<τίτλος δεξιάς οθόνης>"
+    "left_image_url": "<http(s) URL, /media path ή κενό>",
+    "right_image_url": "<http(s) URL, /media path ή κενό>",
+    "left_label": "<label>",
+    "right_label": "<label>"
   }
 }
 ```
 
-Μην βάζεις `characters`, `glbModel`, `position_x`, `position_y`,
-`position_z`, `rotation`, `trigger`, `text`, `response_options`, `title` ή
-`background` στο overlay. Αυτά δεν ανήκουν στο schema της εφαρμογής.
+### Προαιρετικός εμπλουτισμός
 
-### 3. Παραγωγή τελικού JSON
+```json
+{
+  "interactive": {
+    "video_url": "/media/lesson-reward.mp4",
+    "target_screen": "right",
+    "label": "<label>"
+  },
+  "character_interactives": {
+    "Alexander.glb": {
+      "video_url": "/media/alexander.mp4",
+      "target_screen": "right",
+      "label": "<label>"
+    }
+  },
+  "completion": {
+    "required_character_ids": ["socrates", "Alexander.glb"],
+    "reward_interactive": {
+      "video_url": "/media/reward.mp4",
+      "target_screen": "right",
+      "label": "<label>"
+    }
+  },
+  "quiz": {
+    "id": "lesson-understanding",
+    "host_prop_id": "dimitris",
+    "host_name": "Δημήτρης",
+    "host_title": "Συντονιστής κατανόησης",
+    "intro": "<εισαγωγή>",
+    "pass_score": 2,
+    "reward_text": "<μήνυμα επιτυχίας>",
+    "questions": [
+      {
+        "id": "q1",
+        "prompt": "<ερώτηση>",
+        "options": ["<Α>", "<Β>", "<Γ>"],
+        "correct_index": 0,
+        "explanation": "<εξήγηση>"
+      }
+    ]
+  }
+}
+```
 
-Αποθήκευσε το overlay ως `data/current/history3d_content.json`, έπειτα τρέξε:
+Κάθε media URL αρχίζει με `http://`, `https://` ή `/`.
+Το `target_screen` είναι `left` ή `right`. Τα character IDs και το
+`host_prop_id` πρέπει να υπάρχουν στο template.
+
+## 2. Παραγωγή πλήρους scenario
 
 ```bash
 python3 scripts/build_history3d_from_template.py \
@@ -85,28 +125,45 @@ python3 scripts/build_history3d_from_template.py \
   data/current/history3d.json
 ```
 
-Το script αντιγράφει το template και αντικαθιστά μόνο `dialogs`, `facts` και
-`screens`. Έτσι το πλήρες output παίρνει αυτόματα την τρέχουσα λίστα χαρακτήρων,
-τα GLB paths και τα μόνιμα props του template. Αν το validation αποτύχει, διόρθωσε
-το overlay· μην γράψεις JSON χειροκίνητα πάνω στο τελικό αρχείο.
+Το builder χρησιμοποιεί το κοινό
+`scripts/history3d_contract.py`, αντιγράφει χαρακτήρες/props από το
+template και διατηρεί χωρίς απώλεια τα τέσσερα προαιρετικά πεδία.
 
-### 4. Sync στο master_output.json
+## 3. Υποχρεωτικός συγχρονισμός βιβλιοθήκης
 
 ```bash
+cp data/current/history3d.json \
+  lessons/<lesson-folder>/history3d_output.json
+
 python3 scripts/sync_history3d_to_master.py \
   templates/history3d/default.json \
   data/current/history3d.json \
   lessons/<lesson-folder>/master_output.json
 ```
 
-## Κανόνες
+Μην ολοκληρώνεις το skill αν τα τρία πλήρη αντίγραφα
+(`current`, `history3d_output`, `master_output.history3d`) δεν είναι
+σημασιολογικά ίδια.
 
-1. Η σκηνή έχει 18 προστατευμένους χαρακτήρες και 3 μόνιμα props. Δεν προσθέτεις
-   ή αφαιρείς κανέναν και δεν παραλείπεις τα props από το πλήρες output.
-2. Δεν αλλάζεις ποτέ GLB model, θέση, περιστροφή, χρώμα, όνομα ή description,
-   ούτε τις ρυθμίσεις των μόνιμων props.
-3. Κάθε `character_id` σε dialog ή fact πρέπει να υπάρχει στο template.
-4. Τα dialogs έχουν ακριβώς: `character_id`, `question`, `answer`.
-5. Τα facts έχουν ακριβώς: `character_id`, `fact`.
-6. Τα screens έχουν ακριβώς: `left_image_url`, `right_image_url`, `left_label`, `right_label`.
-7. Νέα πρόσωπα ή αλλαγές σκηνής γίνονται αποκλειστικά με χειροκίνητη επεξεργασία του template από τον χρήστη.
+## 4. Validation
+
+Πριν από local ή GitHub distribution έλεγξε:
+
+1. Οι `characters` και `props` είναι ακριβώς ίδιοι με το template.
+2. Υπάρχουν μόνο τα 5 βασικά και τα 4 προαιρετικά top-level keys.
+3. Dialogs/facts αναφέρονται σε υπαρκτά character IDs.
+4. Completion και character interactives αναφέρονται σε υπαρκτά IDs.
+5. Το quiz χρησιμοποιεί υπαρκτό permanent prop ως host.
+6. Κανένα optional enrichment δεν αφαιρείται κατά build ή distribution.
+
+Το `workflows/local_distribute.sh` και το GitHub Action καλούν πλέον τον
+ίδιο lossless publisher: `scripts/update_history3d.py`.
+
+## Κανόνες ασφαλείας
+
+1. Μην αλλάζεις ποτέ protected χαρακτήρα, GLB, θέση ή prop μέσα σε lesson JSON.
+2. Νέα πρόσωπα ή αλλαγές σκηνής γίνονται μόνο στο template με ρητή εντολή.
+3. Μην κάνεις raw copy προς History Explorer χωρίς contract validation.
+4. Μην χρησιμοποιείς app-level τίτλο ως lesson title. Η σειρά προτεραιότητας
+   είναι `lesson_plan.lesson.title` → `meta.topic` → `master_output.title`.
+5. Το `active_lesson.source` είναι repository-relative, ποτέ απόλυτο Mac path.
