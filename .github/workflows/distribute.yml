@@ -81,7 +81,8 @@ jobs:
           git clone https://x-access-token:${PAT}@github.com/dporpatonelis-crypto/history-explorer-3d.git /tmp/history-explorer-3d
           LESSON_ID=$(jq -r '.lesson_id // "lesson"' data/current/active_lesson.json 2>/dev/null || echo "lesson")
           TITLE=$(jq -r '.title // "Μάθημα"' data/current/active_lesson.json 2>/dev/null || echo "Μάθημα")
-          TODAY=$(date +%Y-%m-%d)
+          TODAY=$(jq -r '(.activated // "") | split("T")[0]' data/current/active_lesson.json 2>/dev/null || true)
+          case "$TODAY" in ????-??-??) ;; *) TODAY=$(date +%Y-%m-%d) ;; esac
           python3 scripts/update_history3d.py "$LESSON_ID" "$TITLE" "$TODAY"
           cd /tmp/history-explorer-3d
           git add public/data/

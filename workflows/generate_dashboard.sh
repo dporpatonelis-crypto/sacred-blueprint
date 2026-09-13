@@ -60,10 +60,8 @@ if 'investigation_board' in m:
             'type': c.get('type','evidence')} for c in ib.get('clues',[])]}
 
 if 'history3d' in m:
-    h = m['history3d']
-    out['history3d'] = {'characters': h.get('characters',[]),
-        'dialogs': h.get('dialogs',[]), 'facts': h.get('facts',[]),
-        'screens': h.get('screens',{})}
+    # Keep the complete scenario lossless, including optional lesson interactions.
+    out['history3d'] = m['history3d']
 
 if 'mind_palace' in m:
     # mind_palace is already the complete case file consumed by the app.
@@ -177,7 +175,7 @@ cat > "$TMPJS" << JSEOF
   const SCHEMAS = {
     timeline:      { root:'array',  summary:'Array χρονολογικών εγγραφών.',           fields:['year','title','desc','location','lat','lng'] },
     investigation: { root:'object', summary:'Topic + clues (evidence/suspect/note).',  fields:['topic','clues[].title','clues[].type'] },
-    history3d:     { root:'object', summary:'Characters, dialogs, facts, screens.',    fields:['characters[]','dialogs[]','facts[]','screens'] },
+    history3d:     { root:'object', summary:'Complete lossless History Explorer scenario.', fields:['characters[]','props[]','dialogs[]','facts[]','screens','interactive','character_interactives','completion','quiz'] },
     mindpalace:    { root:'object', summary:'Investigation Board + Mind Palace.',      fields:['case_id','investigation_board','mind_palace'] },
     anchor:        { root:'object', summary:'Metadata + anchors με 3 layers.',         fields:['metadata','anchors[].phrase','anchors[].layers'] },
     books:         { root:'object', summary:'Σελίδες βιβλίου.',                        fields:['pages[].number','pages[].type','pages[].title'] },

@@ -1,17 +1,28 @@
 #!/bin/bash
 # ============================================================
 # local_distribute.sh — Τοπική διανομή σε app φακέλους
-# Χρήση: bash workflows/local_distribute.sh
+# Χρήση: bash workflows/local_distribute.sh [--only history3d]
 #
 # Αντιγράφει από data/current/ στους τοπικούς φακέλους
 # των εφαρμογών. Δεν χρειάζεται internet.
 # ============================================================
 
-set -e
+set -euo pipefail
 
 BASE="$(pwd)"
 CURRENT="$BASE/data/current"
-APPS_DIR="$HOME/apps"   # ← άλλαξε αν οι εφαρμογές είναι αλλού
+APPS_DIR="${SACRED_BLUEPRINT_APPS_DIR:-$HOME/apps}"   # ← override για διαφορετικό local path
+ONLY_TARGET=""
+if [ "${1:-}" = "--only" ]; then
+  ONLY_TARGET="${2:-}"
+  if [ "$ONLY_TARGET" != "history3d" ] || [ "$#" -ne 2 ]; then
+    echo "✗ Χρήση: bash workflows/local_distribute.sh [--only history3d]"
+    exit 2
+  fi
+elif [ "$#" -ne 0 ]; then
+  echo "✗ Χρήση: bash workflows/local_distribute.sh [--only history3d]"
+  exit 2
+fi
 
 # Χρώματα για output
 GREEN='\033[0;32m'
@@ -22,6 +33,25 @@ NC='\033[0m'
 ok()   { echo -e "${GREEN}  ✅ $1${NC}"; }
 skip() { echo -e "${SKIP}  ⏭  $1${NC}"; }
 warn() { echo -e "${YELLOW}  ⚠  $1${NC}"; }
+
+distribute_history3d() {
+  local dest="$APPS_DIR/history-explorer-3d"
+  if [ ! -f "$CURRENT/history3d.json" ]; then
+    skip "history3d.json: δεν υπάρχει στο data/current/"
+    return
+  fi
+  if [ ! -d "$dest" ]; then
+    skip "history-explorer-3d: φάκελος δεν βρέθηκε ($dest)"
+    return
+  fi
+
+  # The local path and GitHub Action share one validator/publisher.
+  python3 "$BASE/scripts/update_history3d.py" \
+    "$LESSON_ID" "$TITLE" "$TODAY" \
+    "$CURRENT/history3d.json" "$dest/public/data" \
+    "$BASE/templates/history3d/default.json"
+  ok "history-explorer-3d → public/data/${LESSON_ID}.json (validated, lossless) + manifest.json"
+}
 
 echo ""
 echo "╔══════════════════════════════════════════╗"
@@ -37,11 +67,27 @@ fi
 
 LESSON_ID=$(jq -r '.lesson_id // "lesson"' "$CURRENT/active_lesson.json" 2>/dev/null || echo "lesson")
 TITLE=$(jq -r '.title // "Μάθημα"' "$CURRENT/active_lesson.json" 2>/dev/null || echo "Μάθημα")
-TODAY=$(date +%Y-%m-%d)
+TODAY=$(jq -r '(.activated // "") | split("T")[0]' "$CURRENT/active_lesson.json" 2>/dev/null || true)
+case "$TODAY" in
+  ????-??-??) ;;
+  *) TODAY=$(date +%Y-%m-%d) ;;
+esac
 
 echo "📚 Μάθημα : $TITLE"
 echo "🔑 ID     : $LESSON_ID"
 echo ""
+
+if [ "$ONLY_TARGET" = "history3d" ]; then
+  distribute_history3d
+  echo ""
+  echo "══════════════════════════════════════════"
+  echo "✅ Τοπική διανομή History 3D ολοκληρώθηκε"
+  echo "   Μάθημα: $TITLE"
+  echo "   Apps  : $APPS_DIR"
+  echo "══════════════════════════════════════════"
+  echo ""
+  exit 0
+fi
 
 # ── 1. Timeline → Map-Timeline ───────────────────────────────
 DEST="$APPS_DIR/Map-Timeline"
@@ -92,21 +138,7 @@ else
 fi
 
 # ── 3. History 3D → history-explorer-3d ─────────────────────
-DEST="$APPS_DIR/history-explorer-3d"
-if [ -f "$CURRENT/history3d.json" ]; then
-  if [ -d "$DEST" ]; then
-    # Use the same lossless validator/publisher as the GitHub Action.
-    python3 "$BASE/scripts/update_history3d.py" \
-      "$LESSON_ID" "$TITLE" "$TODAY" \
-      "$CURRENT/history3d.json" "$DEST/public/data" \
-      "$BASE/templates/history3d/default.json"
-    ok "history-explorer-3d → public/data/${LESSON_ID}.json (validated, lossless) + manifest.json"
-  else
-    skip "history-explorer-3d: φάκελος δεν βρέθηκε ($DEST)"
-  fi
-else
-  skip "history3d.json: δεν υπάρχει στο data/current/"
-fi
+distribute_history3d
 
 # ── 4. Mind Palace → mind-palace-cases ───────────────────────
 DEST="$APPS_DIR/mind-palace-cases"

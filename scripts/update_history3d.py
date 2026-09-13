@@ -47,6 +47,8 @@ except (OSError, json.JSONDecodeError, ValueError) as error:
 out_dir.mkdir(parents=True, exist_ok=True)
 scenario_path = out_dir / f"{lesson_id}.json"
 write_json(scenario_path, src)
+if load_json(scenario_path) != src:
+    raise SystemExit("History3D publish blocked: output is not lossless")
 print(f"  -> public/data/{lesson_id}.json (validated, lossless)")
 
 manifest_path = out_dir / "manifest.json"
