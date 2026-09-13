@@ -30,6 +30,9 @@ QUESTION_KEYS = {
     "explanation",
     "audio_url",
 }
+# Scene geometry and model bindings remain protected. These two dialog-facing
+# strings are lesson content and may be customized without changing the scene.
+EDITABLE_PROP_FIELDS = {"dialog_label", "dialog_title"}
 
 
 def fail(message: str):
@@ -94,6 +97,36 @@ def validate_screens(screens):
             fail(f"screens.{key} must be a string")
 
 
+def protected_props(props):
+    """Return props with lesson-editable dialog strings removed."""
+    if not isinstance(props, list):
+        return props
+    result = []
+    for prop in props:
+        if not isinstance(prop, dict):
+            result.append(prop)
+            continue
+        result.append(
+            {
+                key: value
+                for key, value in prop.items()
+                if key not in EDITABLE_PROP_FIELDS
+            }
+        )
+    return result
+
+
+def validate_prop_dialog_fields(props):
+    if not isinstance(props, list):
+        fail("props must be an array")
+    for index, prop in enumerate(props):
+        if not isinstance(prop, dict):
+            fail(f"props[{index}] must be an object")
+        for key in EDITABLE_PROP_FIELDS:
+            if key in prop and not isinstance(prop[key], str):
+                fail(f"props[{index}].{key} must be a string")
+
+
 def validate_full_scenario(candidate, template):
     if not isinstance(candidate, dict) or not isinstance(template, dict):
         fail("scenario and template must be objects")
@@ -108,7 +141,8 @@ def validate_full_scenario(candidate, template):
 
     if candidate.get("characters") != template.get("characters"):
         fail("protected characters/models differ from templates/history3d/default.json")
-    if candidate.get("props") != template.get("props"):
+    validate_prop_dialog_fields(candidate.get("props"))
+    if protected_props(candidate.get("props")) != protected_props(template.get("props")):
         fail("protected props differ from templates/history3d/default.json")
 
     allowed_ids = {
