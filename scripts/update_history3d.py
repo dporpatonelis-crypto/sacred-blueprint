@@ -86,3 +86,7 @@ else:
 
 write_json(manifest_path, manifest)
 print("manifest.json written.")
+
+active_scenario_path = out_dir / "active-scenario.json"
+write_json(active_scenario_path, {"file": f"{lesson_id}.json"})
+print(f"active-scenario.json written: {lesson_id}.json")
