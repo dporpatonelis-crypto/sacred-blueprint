@@ -1,0 +1,46 @@
+{
+  "generator": "built-in image_gen",
+  "status": "pending-image-approval",
+  "prompts": [
+    {
+      "id": "01-abraham-sarah",
+      "title": "Η κλήση του Αβραάμ και η πορεία της υποσχέσεως",
+      "targets": [
+        "timeline.[0].img"
+      ],
+      "prompt": "Create one finished educational theological illustration, widescreen 16:9, mature visual language suitable for Greek secondary education from Gymnasium through final Lyceum. Neo-Byzantine painted illustration: disciplined clear forms, dignified faces, luminous gold and warm earth pigments, deep blue accents, subtle mineral-pigment texture, sophisticated balanced composition. Full bleed, no border, no written words, no labels, no lettering, no watermark. Carefully distinguish all people and limbs. The scene must communicate the specified lesson concept and stand alone at small screen size. Use case: historical-scene. Main request: Abraham and Sarah begin their journey of trust in God's promise, walking together from their homeland toward the land of Canaan. Two mature ancient Near Eastern adults wearing modest ancient robes, carrying simple travel bundles, leading a single pack animal on a winding path across an expansive ancient Near Eastern landscape. Sarah is equally visible beside Abraham. The path leads toward a broad luminous horizon; a spreading tree in the distance hints at hospitality. Three-quarter wide view, figures clearly readable, no representation of God as a human figure, no modern buildings, no armor, no ethnic caricatures. Convey a free step of faith and a promise that opens toward all peoples."
+    },
+    {
+      "id": "02-apostolic-council",
+      "title": "Η Αποστολική Σύνοδος και το άνοιγμα στα έθνη",
+      "targets": [
+        "timeline.[5].img"
+      ],
+      "prompt": "Create one finished educational theological illustration, widescreen 16:9, mature visual language suitable for Greek secondary education from Gymnasium through final Lyceum. Neo-Byzantine painted illustration: disciplined clear forms, dignified faces, luminous gold and warm earth pigments, deep blue accents, subtle mineral-pigment texture, sophisticated balanced composition. Full bleed, no border, no written words, no labels, no lettering, no watermark. Carefully distinguish all people and limbs. The scene must communicate the specified lesson concept and stand alone at small screen size. Use case: historical-scene. Main request: the Apostolic Council in Jerusalem, around the middle of the first century AD, showing Peter, James, Paul and Barnabas among a small assembly of apostles, elders and believers listening and deliberating about the reception of Gentile believers. An austere limestone courtyard or room in first-century Jerusalem, simple ancient robes, diverse adult faces from the eastern Mediterranean, dignified engaged expressions. One speaker gently gestures while others listen; an open unmarked scroll rests on a simple table. Welcoming, thoughtful common discernment, not confrontation. No imperial court, no medieval episcopal crowns, no modern furniture or clothing, no surgical depiction, no writing on the scroll, no invented modern national flags."
+    },
+    {
+      "id": "03-transfiguration",
+      "title": "Η Μεταμόρφωση: Νόμος, Προφήτες και πλήρωση",
+      "targets": [
+        "investigation.clues[5].image"
+      ],
+      "prompt": "Create one finished educational theological illustration, widescreen 16:9, mature visual language suitable for Greek secondary education from Gymnasium through final Lyceum. Neo-Byzantine painted illustration: disciplined clear forms, dignified faces, luminous gold and warm earth pigments, deep blue accents, subtle mineral-pigment texture, sophisticated balanced composition. Full bleed, no border, no written words, no labels, no lettering, no watermark. Carefully distinguish all people and limbs. The scene must communicate the specified lesson concept and stand alone at small screen size. Use case: historical-scene with Byzantine iconographic composition. Main request: the Transfiguration of Christ on Mount Tabor, faithful to traditional Orthodox composition. Exactly SIX people total: Christ standing at upper center within a luminous blue-white mandorla, Moses at upper viewer-right holding closed tablets without lettering, Elijah at upper viewer-left; at the lower foreground exactly three apostles, Peter, James and John, reacting in awe, kneeling or prostrate on rocky slopes. Christ in brilliant white robes; radiant light connects the upper and lower registers. Christ's halo contains no letters. Moses and Elijah are distinct dignified elders. Preserve Orthodox theological visual order: Christ is the center and fulfillment of Law and Prophets, prophets stand beside Him, apostles below. Ensure six clearly distinct bodies, two arms and two legs per person, no extra people, no wings, no angel substitutions, no written inscriptions."
+    },
+    {
+      "id": "04-room-fulfilment",
+      "title": "Η αίθουσα της Πληρώσεως",
+      "targets": [
+        "mindpalace.mind_palace.rooms[0].image"
+      ],
+      "prompt": "Create one finished educational theological illustration, widescreen 16:9, mature visual language suitable for Greek secondary education from Gymnasium through final Lyceum. Neo-Byzantine painted illustration: disciplined clear forms, dignified faces, luminous gold and warm earth pigments, deep blue accents, subtle mineral-pigment texture, sophisticated balanced composition. Full bleed, no border, no written words, no labels, no lettering, no watermark. Carefully distinguish all people and limbs. The scene must communicate the specified lesson concept and stand alone at small screen size. Use case: stylized-concept. Main request: a symbolic learning chamber for the unity and fulfillment of Old and New Testaments. An austere contemplative stone study room, a simple reading table with two distinct ancient rolled scrolls beside one open book. The book's pages are entirely blank: NO letters or illegible faux-script. Soft luminous light falls across the scrolls and the open book together, joining them in one visual field. No human figures. Wide composition, coherent scale, modest unornamented setting, gentle arch in background, no fantasy magical effects, no modern library, no false archaeological assertion. The central objects remain clear in thumbnail, visually communicate preparation and fulfillment belonging to one sacred history."
+    },
+    {
+      "id": "05-room-oikoumene",
+      "title": "Η αίθουσα της Οικουμένης",
+      "targets": [
+        "mindpalace.mind_palace.rooms[1].image"
+      ],
+      "prompt": "Create one finished educational theological illustration, widescreen 16:9, mature visual language suitable for Greek secondary education from Gymnasium through final Lyceum. Neo-Byzantine painted illustration: disciplined clear forms, dignified faces, luminous gold and warm earth pigments, deep blue accents, subtle mineral-pigment texture, sophisticated balanced composition. Full bleed, no border, no written words, no labels, no lettering, no watermark. Carefully distinguish all people and limbs. The scene must communicate the specified lesson concept and stand alone at small screen size. Use case: stylized-concept. Main request: a symbolic council chamber of universal communion and welcome. A modest round wooden discussion table with seven empty stools arranged around it, one unobstructed empty place toward the viewer inviting entry. Behind the table an open stone doorway leads toward a luminous horizon. The room is calm and dignified, no people. Wide interior composition, table and doorway are both clear, modest ancient Mediterranean architectural vocabulary. Light touches all seats equally. Convey communion of persons, hospitality and a place for the other. No modern conference equipment, no thrones, no national emblems, no text, no ornate royal spectacle."
+    }
+  ]
+}

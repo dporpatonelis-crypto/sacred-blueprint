@@ -1,0 +1,43 @@
+--- a/src/pages/Media.tsx
++++ b/src/pages/Media.tsx
+@@ -194,6 +194,16 @@
+   useEffect(() => {
+     (async () => {
+       try {
++        const previewUrl = new URLSearchParams(window.location.search).get("dataUrl");
++        if (previewUrl) {
++          const response = await fetch(previewUrl, { cache: "no-store" });
++          if (!response.ok) throw new Error(`HTTP ${response.status}`);
++          const data = await response.json();
++          const converted = convertNotebookToLessons(data.personalpage ?? data);
++          setRemoteLessons(converted.map((lesson, index) => ({ ...lesson, id: `preview_${index}`, remote: true })));
++          setExpanded(Object.fromEntries(converted.map((_, index) => [`preview_${index}`, true])));
++          return;
++        }
+         const res = await fetch(`${PUBLIC_BASE_URL}data/lessons/index.json`, { cache: "no-cache" });
+         if (!res.ok) return;
+         const files: string[] = await res.json();
+@@ -212,7 +222,12 @@
+           } catch (e) { console.warn("Failed to load lesson", f, e); }
+         }
+         setRemoteLessons(out);
+-      } catch (e) { /* no manifest, ignore */ }
++      } catch (e) {
++        if (new URLSearchParams(window.location.search).has("dataUrl")) {
++          console.error("Personal Page preview failed:", e);
++          setStatus({ type: "err", msg: "Σφάλμα φόρτωσης προεπισκόπησης." });
++        }
++      }
+     })();
+   }, []);
+ 
+@@ -470,7 +485,8 @@
+   const onDrop = (e: React.DragEvent) => { e.preventDefault(); handleFiles(e.dataTransfer.files); };
+   const onDragOver = (e: React.DragEvent) => e.preventDefault();
+ 
+-  const displayedLessons = useMemo(() => [...remoteLessons, ...lessons], [remoteLessons, lessons]);
++  const displayedLessons = useMemo(() => new URLSearchParams(window.location.search).has("dataUrl")
++    ? remoteLessons : [...remoteLessons, ...lessons], [remoteLessons, lessons]);
+   const totalCount = useMemo(
+     () => displayedLessons.reduce((s, l) => s + l.media.audio.length + l.media.slides.length + l.media.pdf.length + l.media.text.length, 0),
+     [displayedLessons]

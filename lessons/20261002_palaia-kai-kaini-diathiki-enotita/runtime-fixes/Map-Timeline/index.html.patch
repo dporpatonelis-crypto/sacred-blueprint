@@ -1,0 +1,27 @@
+--- a/index.html
++++ b/index.html
+@@ -779,6 +779,24 @@
+ 
+ // ── CATALOG FUNCTIONS ─────────────────────────────────────────────────────
+ async function initApp() {
++  const previewUrl = new URLSearchParams(window.location.search).get('dataUrl');
++  if (previewUrl) {
++    try {
++      const response = await fetch(previewUrl, {cache:'no-store'});
++      if (!response.ok) throw new Error('HTTP ' + response.status);
++      const data = await response.json();
++      const events = Array.isArray(data) ? data : data.timeline;
++      if (!Array.isArray(events) || !events.length) throw new Error('Invalid timeline preview');
++      timelineData = events;
++      initMap(); renderTimeline(); renderItemList(); renderScenarioList(); updateActiveBar();
++      selectItem(timelineData[0].id);
++    } catch (error) {
++      console.error('Timeline preview failed:', error);
++      document.getElementById('ab-title').textContent = 'Σφάλμα φόρτωσης προεπισκόπησης';
++      document.getElementById('active-bar').style.display = 'flex';
++    }
++    return;
++  }
+   // 1. Φόρτωσε catalog
+   try {
+     const cr = await fetch(REPO_BASE + 'catalog.json', {cache:'no-store'});

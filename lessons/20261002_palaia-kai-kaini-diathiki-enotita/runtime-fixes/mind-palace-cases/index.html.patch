@@ -1,0 +1,18 @@
+--- a/index.html
++++ b/index.html
+@@ -1018,12 +1018,13 @@
+   const img=new Image();
+   img.onload=()=>{
+     console.log('✅ BG loaded:',th.bg);
+-    bg.style.backgroundImage="url('"+th.bg+"')";
++    if (S.curRoom !== roomId) return;
++    bg.style.backgroundImage="url('"+img.src+"')";
+     bg.style.backgroundSize='cover';
+     bg.style.backgroundPosition='center 20%';
+   };
+   img.onerror=()=>console.warn('❌ BG 404:',th.bg,' — using gradient fallback');
+-  img.src=th.bg;
++  img.src=room.image || th.bg;
+   // NPC scene image — always the debate scene
+   // Reload NPC scene image
+   const npcImg=document.getElementById('npc-img');

@@ -1,0 +1,10 @@
+--- a/src/components/ConnectionLines.tsx
++++ b/src/components/ConnectionLines.tsx
+@@ -55,6 +55,7 @@
+ 
+         return (
+           <g key={conn.id} className="connection-string">
++            <title>{conn.label || typeLabels[conn.type]}</title>
+             {/* String line */}
+             <path
+               d={`M ${from.x} ${from.y} Q ${cx} ${cy} ${to.x} ${to.y}`}

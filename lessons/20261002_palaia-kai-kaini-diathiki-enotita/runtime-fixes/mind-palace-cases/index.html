@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mind Palace — Η Υπόθεση του Φιλοσόφου</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* CONFIG — αλλάξτε μόνο εδώ */
+window.MP_CONFIG = {
+  REPO_BASE  : 'https://raw.githubusercontent.com/dporpatonelis-crypto/mind-palace-cases/main/cases/'
+};
+</script>
+<style>
+:root {
+  --gold:#c9a84c; --gold-lt:#e8c97a; --gold-dim:#6a5228;
+  --parch:#f2e4c4; --ink:#180e00; --ink2:#3a2208;
+  --blood:#7a1515; --bloodbr:#c0392b;
+  --wood:#1c0e06; --woodm:#2c1810;
+  --npc:#c9a84c; --npcg:rgba(201,168,76,.5);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{background:var(--wood);color:var(--parch);font-family:'Crimson Text',Georgia,serif}
+
+/* ── SPLASH ── */
+#splash{position:fixed;inset:0;z-index:1000;background:radial-gradient(ellipse at 50% 40%,#1a0800,#000);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s ease;overflow-y:auto;padding:2rem 1rem}
+#splash.out{opacity:0;pointer-events:none}
+.s-orb{width:100px;height:100px;border-radius:50%;border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;margin-bottom:1.8rem;position:relative;animation:orb 3s ease-in-out infinite;flex-shrink:0}
+.s-orb::before{content:'';position:absolute;inset:8px;border-radius:50%;border:1px solid rgba(201,168,76,.2)}
+.s-orb::after{content:'Φ';font-family:'Cinzel Decorative',serif;font-size:2.4rem;color:var(--gold);text-shadow:0 0 30px var(--gold)}
+@keyframes orb{0%,100%{box-shadow:0 0 20px rgba(201,168,76,.2)}50%{box-shadow:0 0 55px rgba(201,168,76,.5)}}
+.s-title{font-family:'Cinzel Decorative',serif;font-size:clamp(1.4rem,4vw,2.2rem);color:var(--gold);letter-spacing:.2em;text-shadow:0 0 40px rgba(201,168,76,.4)}
+.s-sub{font-family:'Cinzel',serif;font-size:.62rem;color:var(--gold-dim);letter-spacing:.45em;text-transform:uppercase;margin:.4rem 0 2rem}
+/* Catalog grid */
+.s-catalog{width:min(640px,92vw);display:flex;flex-direction:column;gap:.6rem}
+.s-catalog-title{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.28em;color:var(--gold-dim);text-transform:uppercase;text-align:center;margin-bottom:.4rem}
+.cat-loading{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.18em;color:rgba(201,168,76,.4);text-align:center;padding:1.2rem;animation:blink 1.5s ease-in-out infinite}
+.cat-item{display:flex;align-items:center;gap:.8rem;background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.12);padding:.7rem 1rem;cursor:pointer;transition:all .25s;position:relative}
+.cat-item:hover{background:rgba(201,168,76,.09);border-color:rgba(201,168,76,.35)}
+.cat-item.is-active{border-color:var(--gold);background:rgba(201,168,76,.1)}
+.cat-active-badge{font-family:'Cinzel',serif;font-size:.44rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink);background:var(--gold);padding:.08rem .35rem;flex-shrink:0}
+.cat-title{font-family:'Cinzel',serif;font-size:.78rem;color:var(--parch);flex:1;line-height:1.3}
+.cat-meta{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.1em;color:var(--gold-dim);flex-shrink:0}
+.cat-arrow{color:var(--gold-dim);font-size:.8rem;flex-shrink:0;transition:color .2s}
+.cat-item:hover .cat-arrow{color:var(--gold)}
+.s-catalog-sep{display:flex;align-items:center;gap:.7rem;margin:.2rem 0}
+.s-catalog-sep::before,.s-catalog-sep::after{content:'';flex:1;height:1px;background:var(--gold-dim);opacity:.15}
+.s-catalog-sep span{font-family:'Cinzel',serif;font-size:.5rem;color:rgba(201,168,76,.3);letter-spacing:.15em}
+.btn-g{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ink);background:linear-gradient(135deg,var(--gold-lt),var(--gold));border:none;padding:.82rem;cursor:pointer;width:100%;margin-top:.3rem;transition:all .3s}
+.btn-g:hover{box-shadow:0 0 28px rgba(201,168,76,.5);transform:translateY(-1px)}
+.btn-o{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);background:transparent;border:1px solid var(--gold-dim);padding:.65rem;cursor:pointer;width:100%;transition:all .3s}
+.btn-o:hover{border-color:var(--gold);color:var(--gold)}
+/* Library modal */
+#lib-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:6000;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+#lib-modal.on{display:flex}
+.lib-box{background:#0e0600;border:1px solid rgba(201,168,76,.2);width:min(600px,94vw);max-height:80vh;display:flex;flex-direction:column;box-shadow:0 0 80px rgba(0,0,0,.9);animation:pop .25s ease}
+.lib-head{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.2rem;border-bottom:1px solid rgba(201,168,76,.1)}
+.lib-head-title{font-family:'Cinzel Decorative',serif;font-size:.82rem;color:var(--gold);letter-spacing:.12em}
+.lib-close{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.15em;color:var(--gold-dim);background:none;border:1px solid rgba(201,168,76,.2);padding:.22rem .6rem;cursor:pointer;transition:all .2s}
+.lib-close:hover{border-color:var(--gold);color:var(--gold)}
+.lib-list{flex:1;overflow-y:auto;padding:.8rem 1.2rem;display:flex;flex-direction:column;gap:.45rem}
+.lib-item{display:flex;align-items:center;gap:.8rem;padding:.65rem .9rem;border:1px solid rgba(201,168,76,.1);cursor:pointer;transition:all .2s;background:rgba(255,255,255,.01)}
+.lib-item:hover{background:rgba(201,168,76,.07);border-color:rgba(201,168,76,.3)}
+.lib-item.is-active{border-color:var(--gold);background:rgba(201,168,76,.08)}
+.lib-item-title{font-family:'Cinzel',serif;font-size:.75rem;color:var(--parch);flex:1;line-height:1.3}
+.lib-item-meta{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.1em;color:var(--gold-dim);flex-shrink:0}
+.lib-badge{font-family:'Cinzel',serif;font-size:.42rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);background:var(--gold);padding:.06rem .3rem;flex-shrink:0}
+.lib-empty{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.18em;color:rgba(201,168,76,.3);text-align:center;padding:2rem}
+
+/* ── LOADING ── */
+#loading{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.85);align-items:center;justify-content:center;flex-direction:column;gap:1.4rem}
+#loading.on{display:flex}
+.spin{width:44px;height:44px;border:2px solid rgba(201,168,76,.15);border-top-color:var(--gold);border-radius:50%;animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-txt{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;animation:blink 1.5s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ── APP ── */
+#app{display:none;height:100vh;width:100vw;flex-direction:column}
+#app.on{display:flex}
+#hdr{height:48px;flex-shrink:0;background:linear-gradient(180deg,#000,var(--wood));border-bottom:1px solid rgba(201,168,76,.12);display:flex;align-items:center;padding:0 1.2rem;gap:1rem;z-index:50}
+.hbrand{display:flex;align-items:center;gap:.6rem;flex-shrink:0}
+.hicon{width:28px;height:28px;border:1px solid var(--gold-dim);display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.hname{font-family:'Cinzel Decorative',serif;font-size:.78rem;color:var(--gold)}
+.hcase{font-family:'Cinzel',serif;font-size:.64rem;color:rgba(242,228,196,.6);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hright{display:flex;align-items:center;gap:.7rem;flex-shrink:0}
+.prog-wrap{width:100px;height:2px;background:rgba(201,168,76,.1)}
+.prog-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));box-shadow:0 0 7px var(--gold);transition:width .6s ease}
+.prog-pct{font-family:'Cinzel',serif;font-size:.58rem;color:var(--gold-dim)}
+
+/* ── TABS ── */
+#tabs{height:36px;flex-shrink:0;background:var(--woodm);border-bottom:1px solid rgba(201,168,76,.08);display:flex;padding:0 1rem;overflow-x:auto}
+.tab{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.13em;text-transform:uppercase;color:var(--gold-dim);padding:0 1rem;cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:.3rem;transition:color .2s,border-color .2s}
+.tab:hover{color:var(--gold)}
+.tab.on{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* ── PANELS ── */
+#content{flex:1;overflow:hidden;position:relative;min-height:0}
+.panel{display:none;width:100%;height:100%;position:absolute;inset:0;overflow:auto}
+.panel.on{display:block}
+
+/* ═══════════════════════════════════
+   BOARD — cork board with draggable cards + SVG strings
+═══════════════════════════════════ */
+#board-panel{
+  overflow:hidden;
+  background:radial-gradient(ellipse 55% 45% at 22% 30%,rgba(100,55,15,.15),transparent 60%),
+             radial-gradient(ellipse 50% 60% at 78% 68%,rgba(80,40,8,.12),transparent 60%),
+             #221208;
+}
+/* SVG ABOVE cards for string visibility */
+#bsvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:10}
+
+.cc{
+  position:absolute;width:168px;
+  background:var(--parch);color:var(--ink);
+  padding:.9rem .8rem .7rem;
+  cursor:grab;z-index:5;user-select:none;
+  box-shadow:4px 5px 16px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.4);
+  transition:box-shadow .15s;
+  border-top:3px solid var(--gold-dim);
+}
+.cc:active{cursor:grabbing;z-index:20}
+.cc.lk{filter:brightness(.45) saturate(.2);cursor:not-allowed}
+.cc:not(.lk):hover{box-shadow:7px 9px 28px rgba(0,0,0,.8),0 0 22px rgba(201,168,76,.15);z-index:15}
+.pin{position:absolute;top:-12px;left:50%;transform:translateX(-50%);width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e84040,#8b1a1a);box-shadow:0 2px 7px rgba(0,0,0,.6);z-index:6}
+.pin::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);width:2px;height:8px;background:rgba(110,20,20,.4)}
+.ctype{font-family:'Cinzel',serif;font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blood);margin-bottom:.2rem}
+.ctitle{font-family:'Cinzel',serif;font-size:.72rem;color:var(--ink);margin-bottom:.28rem;line-height:1.25;font-weight:600}
+.cbody{font-size:.67rem;color:var(--ink2);line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cfoot{display:flex;align-items:center;justify-content:space-between;margin-top:.4rem;padding-top:.32rem;border-top:1px solid rgba(0,0,0,.1)}
+.csrc{font-family:'Cinzel',serif;font-size:.44rem;color:var(--gold-dim);letter-spacing:.06em}
+.cdots{display:flex;gap:2px}
+.dot{width:5px;height:5px;border-radius:50%;background:rgba(0,0,0,.12)}
+.dot.on{background:var(--gold)}
+/* String mode: click card to start string */
+.cc.string-start{box-shadow:0 0 0 2px var(--bloodbr),7px 9px 28px rgba(0,0,0,.8)!important;z-index:15}
+
+#blegend{position:absolute;bottom:1rem;right:1rem;z-index:20;background:rgba(10,4,0,.85);border:1px solid rgba(201,168,76,.15);padding:.65rem .9rem;backdrop-filter:blur(4px)}
+.ltitle{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.2em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:.4rem}
+.litem{display:flex;align-items:center;gap:.5rem;font-family:'Cinzel',serif;font-size:.52rem;color:var(--parch);margin-bottom:.2rem}
+.lline{width:26px;height:2px}
+
+#board-hint{position:absolute;top:.7rem;left:50%;transform:translateX(-50%);z-index:20;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.15em;color:rgba(201,168,76,.4);background:rgba(0,0,0,.6);padding:.2rem .6rem;pointer-events:none;transition:opacity .5s}
+
+/* ── PALACE ── */
+#palace-panel{position:relative;overflow:hidden;background:#000}
+#pal-bg{position:absolute;inset:0;z-index:0;background-image:url('assets/bg-library.jpg');background-size:cover;background-position:center;filter:brightness(.35) saturate(.7);}
+#pal-canvas{width:100%;height:100%;display:block;cursor:grab}
+#pal-canvas:active{cursor:grabbing}
+#pal-hud{position:absolute;top:1rem;left:1rem;z-index:10;pointer-events:none}
+.hudname{font-family:'Cinzel Decorative',serif;font-size:.9rem;color:var(--gold);text-shadow:0 0 22px rgba(201,168,76,.6);margin-bottom:.2rem}
+.hudq{font-family:'Cinzel',serif;font-size:.58rem;color:rgba(201,168,76,.5);letter-spacing:.09em;max-width:260px;line-height:1.45}
+#pal-rooms{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);display:flex;gap:.6rem;z-index:10;flex-wrap:wrap;justify-content:center}
+.rbtn{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:.48rem .9rem;border:1px solid var(--gold-dim);background:rgba(5,2,0,.85);color:var(--gold-dim);cursor:pointer;transition:all .3s;backdrop-filter:blur(4px)}
+.rbtn.open{border-color:var(--gold);color:var(--gold)}
+.rbtn.open:hover{background:var(--gold);color:var(--ink);box-shadow:0 0 20px rgba(201,168,76,.4)}
+.rbtn.locked{opacity:.32;cursor:not-allowed}
+
+/* ═══════════════════════════════════
+   DIALOGUE — cinematic NPC scene
+═══════════════════════════════════ */
+#dial-panel{display:none;flex-direction:column;position:relative;overflow:hidden;background:#060300}
+#dial-panel.on{display:flex}
+
+#scene-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center 20%;filter:brightness(.78) saturate(.88);transition:background 1s ease;background-image:url('assets/bg-debate.jpg')}
+#scene-grad{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,transparent 15%,transparent 68%,rgba(0,0,0,.95) 100%),linear-gradient(90deg,rgba(0,0,0,.15) 0%,transparent 12%,transparent 88%,rgba(0,0,0,.15) 100%)}
+#mood-layer{position:absolute;inset:0;z-index:2;pointer-events:none;transition:background .8s ease}
+.rays{position:absolute;top:0;left:50%;transform:translateX(-50%);width:70%;height:55%;z-index:2;pointer-events:none;opacity:0;transition:opacity 1.2s ease;background:radial-gradient(ellipse 35% 100% at 35% 0%,rgba(255,215,100,.08),transparent 70%),radial-gradient(ellipse 35% 100% at 65% 0%,rgba(255,200,80,.06),transparent 70%)}
+.rays.on{opacity:1}
+#mood-badge{position:absolute;top:.75rem;right:.9rem;z-index:20;font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;padding:.18rem .5rem;border:1px solid rgba(201,168,76,.18);color:rgba(201,168,76,.4);background:rgba(0,0,0,.55);backdrop-filter:blur(6px);transition:all .5s}
+
+/* ── NPC Scene — static image + dynamic overlays ── */
+.npc-scene{
+  flex-shrink:0;height:45%;min-height:220px;
+  position:relative;z-index:5;overflow:hidden;
+  background:#0a0500;
+}
+#npc-img-wrap{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+#npc-img{
+  width:100%;height:100%;object-fit:cover;object-position:center 15%;
+  filter:brightness(.78) saturate(.85);
+  transition:filter 1s ease;
+}
+/* Gradient fade at bottom into chat */
+.npc-scene::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:32%;
+  background:linear-gradient(0deg,rgba(6,3,0,1) 0%,transparent 100%);
+  z-index:10;pointer-events:none;
+}
+/* Mood light overlay */
+#npc-light{
+  position:absolute;inset:0;z-index:6;
+  background:rgba(0,0,0,0);
+  mix-blend-mode:soft-light;
+  transition:background 1.2s ease;
+  pointer-events:none;
+}
+/* Name labels */
+.fig-names{
+  position:absolute;bottom:18px;left:0;right:0;
+  display:flex;justify-content:space-between;
+  padding:0 10%;z-index:11;pointer-events:none;
+}
+.fig-label-l,.fig-label-r{
+  font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.2em;
+  color:var(--npc);text-shadow:0 0 18px var(--npcg),0 2px 6px rgba(0,0,0,1);
+  transition:color .6s,text-shadow .6s;
+}
+.fig-label-l::before,.fig-label-r::before{
+  content:'';display:block;width:28px;height:1px;margin:0 auto .3rem;
+  background:linear-gradient(90deg,transparent,var(--npc),transparent);opacity:.6;
+}
+/* Halos for temple theme */
+.halo{
+  position:absolute;width:80px;height:80px;border-radius:50%;
+  border:1px solid rgba(201,168,76,0);
+  z-index:8;pointer-events:none;
+  transition:all .8s ease;top:18%;
+}
+.halo-l{left:18%;}
+.halo-r{right:18%;}
+.halo.on{border-color:rgba(201,168,76,.5);box-shadow:0 0 25px rgba(201,168,76,.4),0 0 50px rgba(201,168,76,.15);animation:halo-pulse 3s ease-in-out infinite}
+@keyframes halo-pulse{0%,100%{opacity:.5}50%{opacity:1}}
+@keyframes breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+
+/* ── Chat ── */
+.chat-wrap{flex:1;display:flex;flex-direction:column;position:relative;z-index:10;min-height:0;background:linear-gradient(180deg,rgba(6,3,0,0) 0%,rgba(6,3,0,.95) 8%)}
+.chat-area{flex:1;overflow-y:auto;padding:.9rem 1.2rem;display:flex;flex-direction:column;gap:.65rem;scroll-behavior:smooth;min-height:0}
+.msg{max-width:70%;animation:msgin .3s ease}
+@keyframes msgin{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.msg.npc{align-self:flex-start}
+.msg.usr{align-self:flex-end}
+.mwho{font-family:'Cinzel',serif;font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.2rem}
+.msg.npc .mwho{color:var(--npc)}
+.msg.usr .mwho{color:var(--gold-dim);text-align:right}
+.mbody{padding:.65rem .9rem;font-size:.9rem;line-height:1.7}
+.msg.npc .mbody{background:rgba(0,0,0,.52);border:1px solid rgba(255,255,255,.06);border-left:2px solid var(--npc);color:var(--parch);font-style:italic;backdrop-filter:blur(8px)}
+.msg.usr .mbody{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.14);color:var(--parch);backdrop-filter:blur(6px)}
+.typing{display:none;align-self:flex-start}
+.typing.on{display:flex}
+.tybubble{background:rgba(0,0,0,.52);border:1px solid rgba(255,255,255,.06);border-left:2px solid var(--npc);padding:.65rem 1rem;display:flex;gap:4px;align-items:center;backdrop-filter:blur(8px)}
+.tydot{width:6px;height:6px;border-radius:50%;background:var(--npc);opacity:.4;animation:ty 1.2s ease-in-out infinite}
+.tydot:nth-child(2){animation-delay:.2s}.tydot:nth-child(3){animation-delay:.4s}
+@keyframes ty{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+.sugs{padding:.45rem 1.2rem;display:flex;gap:.4rem;flex-wrap:wrap;border-top:1px solid rgba(201,168,76,.06);flex-shrink:0;background:rgba(0,0,0,.58)}
+.sug{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.08em;color:rgba(201,168,76,.5);border:1px solid rgba(201,168,76,.14);padding:.25rem .6rem;cursor:pointer;transition:all .2s;background:transparent}
+.sug:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06)}
+.scripted-note{border-top:1px solid rgba(201,168,76,.08);flex-shrink:0;background:rgba(0,0,0,.78);padding:.65rem 1.1rem;color:rgba(201,168,76,.32);font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.1em;text-align:center}
+.no-room-msg{padding:3rem 2rem;text-align:center;font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.2em;color:rgba(201,168,76,.3);line-height:2}
+@keyframes rf{0%{background:rgba(201,168,76,0)}25%{background:rgba(201,168,76,.08)}100%{background:rgba(201,168,76,0)}}
+.rflash{animation:rf 2s ease forwards}
+
+/* ── VERDICT ── */
+#verd-panel{padding:2rem;max-width:720px;margin:0 auto;overflow:auto;position:relative}
+#verd-panel::before{content:'';position:fixed;inset:0;z-index:-1;background-image:url('assets/bg-caseclosed.jpg');background-size:cover;background-position:center;filter:brightness(.25) saturate(.6)}
+.vseal{width:72px;height:72px;border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:1rem auto 1.3rem;box-shadow:0 0 28px rgba(201,168,76,.22)}
+.vtitle{font-family:'Cinzel Decorative',serif;font-size:clamp(1rem,3vw,1.6rem);color:var(--gold);text-align:center;letter-spacing:.1em}
+.vstamp{display:none;margin:.8rem auto;font-family:'Cinzel',serif;font-size:.88rem;letter-spacing:.32em;text-transform:uppercase;border:3px solid var(--bloodbr);color:var(--bloodbr);padding:.36rem 1.5rem;transform:rotate(-2.5deg);box-shadow:0 0 14px rgba(192,57,43,.2);transition:all .5s}
+.vstamp.done{display:table;border-color:#4a9a4a;color:#4a9a4a;box-shadow:0 0 18px rgba(74,154,74,.22)}
+.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;margin-top:1.3rem}
+.vcard{border:1px solid rgba(201,168,76,.14);padding:.85rem;background:rgba(0,0,0,.22)}
+.vrole{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.18em;color:var(--gold-dim);text-transform:uppercase;margin-bottom:.22rem}
+.vname{font-size:.95rem;font-weight:600;margin-bottom:.16rem}
+.vwork{font-size:.78rem;color:var(--gold-dim);font-style:italic}
+.vsyn{margin-top:1.3rem;border:1px solid rgba(201,168,76,.17);padding:1.3rem;background:rgba(0,0,0,.18);position:relative}
+.vsyn::before{content:'ΤΕΛΙΚΗ ΣΥΝΘΕΣΗ';position:absolute;top:-.55rem;left:.85rem;background:var(--wood);padding:0 .4rem;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.22em;color:var(--gold)}
+.vsyn p{font-size:.9rem;line-height:1.8}
+
+/* ── MODAL ── */
+#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:5000;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+#modal.on{display:flex}
+.mbox{background:var(--parch);color:var(--ink);width:min(540px,92vw);max-height:80vh;overflow-y:auto;padding:2.2rem;position:relative;box-shadow:0 0 80px rgba(0,0,0,.85);animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:scale(.9) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.mstamp{position:absolute;top:1.3rem;right:1.3rem;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.18em;border:2px solid var(--blood);color:var(--blood);padding:.12rem .4rem;transform:rotate(6deg);text-transform:uppercase}
+.mtype{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.22em;color:var(--blood);text-transform:uppercase;margin-bottom:.5rem}
+.mtitle{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--ink);margin-bottom:.7rem;line-height:1.3}
+.mhr{height:1px;background:linear-gradient(90deg,var(--gold-dim),transparent);margin-bottom:.7rem}
+.mbodytxt{font-size:.95rem;line-height:1.75;font-style:italic;color:var(--ink2);margin-bottom:1rem}
+.mfoot{font-family:'Cinzel',serif;font-size:.58rem;color:var(--gold-dim);letter-spacing:.08em;border-top:1px solid rgba(0,0,0,.07);padding-top:.7rem}
+.mclose{position:absolute;top:.85rem;left:.85rem;background:none;border:none;font-size:1rem;color:var(--ink2);cursor:pointer}
+.mclose:hover{color:var(--blood)}
+#mchat{margin-top:.85rem;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;color:#4a9a8a;border:1px solid rgba(74,154,138,.35);background:transparent;padding:.44rem .85rem;cursor:pointer;transition:all .2s}
+#mchat:hover{background:rgba(74,154,138,.09)}
+
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--wood)}
+::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:var(--gold)}
+@media(max-width:480px){.cc{width:140px}.vgrid{grid-template-columns:1fr}.fig-left{left:calc(50% - 130px)}.fig-right{right:calc(50% - 130px)}}
+</style>
+</head>
+<body>
+
+<!-- SPLASH — Catalog Menu -->
+<div id="splash">
+  <div class="s-orb"></div>
+  <div class="s-title">Mind Palace</div>
+  <div class="s-sub">Επίλεξε Υπόθεση</div>
+  <div class="s-catalog">
+    <div class="s-catalog-title">Διαθέσιμα Μαθήματα</div>
+    <div id="cat-list"><div class="cat-loading">Φορτώνει βιβλιοθήκη…</div></div>
+    <div class="s-catalog-sep"><span>ή άμεση είσοδος</span></div>
+    <div style="display:flex;gap:.4rem">
+      <input type="text" id="inp-url"
+        style="background:rgba(201,168,76,.04);border:1px solid var(--gold-dim);color:var(--parch);font-family:'Crimson Text',serif;font-size:.9rem;padding:.5rem .8rem;outline:none;flex:1;transition:border-color .3s"
+        placeholder="GitHub raw URL ή case ID (π.χ. origen-enigma)"
+        onfocus="this.style.borderColor='var(--gold)'"
+        onblur="this.style.borderColor='var(--gold-dim)'"
+        onkeydown="if(event.key==='Enter')doLoad()" />
+      <button class="btn-g" onclick="doLoad()" style="width:auto;padding:.5rem 1rem;margin:0;white-space:nowrap">→</button>
+    </div>
+    <button class="btn-o" onclick="loadDemo()">→ Demo (χωρίς σύνδεση)</button>
+  </div>
+</div>
+
+<!-- LIBRARY MODAL -->
+<div id="lib-modal">
+  <div class="lib-box">
+    <div class="lib-head">
+      <span class="lib-head-title">Βιβλιοθήκη Μαθημάτων</span>
+      <button class="lib-close" onclick="closeLib()">✕ Κλείσιμο</button>
+    </div>
+    <div class="lib-list" id="lib-list">
+      <div class="lib-empty">Φορτώνει…</div>
+    </div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div id="loading"><div class="spin"></div><div class="load-txt">Φορτώνει...</div></div>
+
+<!-- APP -->
+<div id="app">
+  <div id="hdr">
+    <div class="hbrand"><div class="hicon">🏛</div><div class="hname">Mind Palace</div></div>
+    <div class="hcase" id="hcase">—</div>
+    <div class="hright">
+      <div class="prog-wrap"><div class="prog-fill" id="prog"></div></div>
+      <div class="prog-pct" id="pct">0%</div>
+      <button onclick="openLib()" style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dim);background:none;border:1px solid rgba(201,168,76,.2);padding:.2rem .6rem;cursor:pointer;transition:all .2s;margin-left:.4rem" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='rgba(201,168,76,.2)';this.style.color='var(--gold-dim)'">📚 Βιβλιοθήκη</button>
+    </div>
+  </div>
+  <div id="tabs">
+    <button class="tab on" onclick="goTab('board',this)">🔍 Πίνακας Έρευνας</button>
+    <button class="tab" onclick="goTab('palace',this)">🏛 Mind Palace 3D</button>
+    <button class="tab" id="tdial" onclick="goTab('dial',this)">💬 Διάλογος</button>
+    <button class="tab" onclick="goTab('verd',this)">⚖ Σύνθεση</button>
+  </div>
+  <div id="content">
+
+    <!-- BOARD -->
+    <div class="panel on" id="board-panel">
+      <div id="board-hint">Κλικ → άνοιγμα · Σύρε → μετακίνηση · Δεξί κλικ → σύνδεση κλωστή</div>
+      <svg id="bsvg"></svg>
+      <div id="blegend">
+        <div class="ltitle">Σύνδεσμοι</div>
+        <div class="litem"><div class="lline" style="background:#c0392b"></div>Αντίθεση</div>
+        <div class="litem"><div class="lline" style="background:#4a9a4a"></div>Συμφωνία</div>
+        <div class="litem"><div class="lline" style="background:#c9a84c;border-top:2px dashed #c9a84c;height:0"></div>Εξέλιξη</div>
+      </div>
+    </div>
+
+    <!-- PALACE -->
+    <div class="panel" id="palace-panel">
+      <div id="pal-bg"></div>
+      <div id="pal-hud">
+        <div class="hudname" id="hudname">Εξερευνήστε το Palace</div>
+        <div class="hudq" id="hudq">Σύρετε για περιστροφή · Επιλέξτε δωμάτιο παρακάτω</div>
+      </div>
+      <canvas id="pal-canvas"></canvas>
+      <div id="pal-rooms"></div>
+    </div>
+
+    <!-- DIALOGUE -->
+    <div class="panel" id="dial-panel">
+      <div id="scene-bg"></div>
+      <div id="scene-grad"></div>
+      <div id="mood-layer"></div>
+      <div class="rays" id="rays"></div>
+      <div id="mood-badge">● Αναμονή</div>
+
+      <!-- NPC Scene: static image as background, dynamic overlays on top -->
+      <div class="npc-scene" id="npc-scene">
+        <div id="npc-img-wrap">
+          <img id="npc-img" src="assets/bg-debate.jpg" alt="" onerror="this.src='assets/bg-library.jpg';this.onerror=null"/>
+        </div>
+        <!-- Dynamic light overlay (mood) -->
+        <div id="npc-light"></div>
+        <!-- Name labels at bottom of scene -->
+        <div class="fig-names">
+          <div class="fig-label-l" id="label-left">—</div>
+          <div class="fig-label-r" id="label-right">—</div>
+        </div>
+        <!-- Halos for temple theme -->
+        <div class="halo halo-l" id="halo-left"></div>
+        <div class="halo halo-r" id="halo-right"></div>
+      </div>
+
+      <div class="chat-wrap">
+        <div class="chat-area" id="chat">
+          <div class="no-room-msg" id="noroom">Ανοίξτε ένα δωμάτιο<br>από το Mind Palace 3D<br>για να ξεκινήσει ο διάλογος</div>
+          <div class="typing" id="typing"><div class="tybubble"><div class="tydot"></div><div class="tydot"></div><div class="tydot"></div></div></div>
+        </div>
+        <div class="sugs" id="sugs"></div>
+        <div class="scripted-note" id="scripted-note">Επιλέξτε μία ερώτηση του σεναρίου</div>
+      </div>
+    </div>
+
+    <!-- VERDICT -->
+    <div class="panel" id="verd-panel">
+      <div class="vseal">⚖</div>
+      <div class="vtitle" id="vtitle">Τελική Σύνθεση</div>
+      <div class="vstamp" id="vstamp">Υπόθεση Εκκρεμεί</div>
+      <div class="vgrid" id="vgrid"></div>
+      <div class="vsyn"><p id="vsynp">Ολοκληρώστε τους διαλόγους για να αποκαλυφθεί η φιλοσοφική σύνθεση.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal">
+  <div class="mbox">
+    <button class="mclose" onclick="closeModal()">✕</button>
+    <div class="mstamp" id="mstamp">Πειστήριο</div>
+    <div class="mtype" id="mtype"></div>
+    <div class="mtitle" id="mtitle"></div>
+    <div class="mhr"></div>
+    <div class="mbodytxt" id="mbodytxt"></div>
+    <div class="mfoot" id="mfoot"></div>
+    <button id="mchat" onclick="chatClue()">💬 Μετάβαση στον διάλογο →</button>
+  </div>
+</div>
+
+<script>
+/* ── CONFIG ── */
+const REPO = (window.MP_CONFIG||{}).REPO_BASE   || '';
+
+/* ── CATALOG & ACTIVE LESSON ── */
+let CATALOG = [];
+let ACTIVE_ID = null;
+
+async function doLoad() {
+  const val = (document.getElementById('inp-url').value || '').trim();
+  if (!val) return;
+
+  // Αν είναι πλήρες URL, χρησιμοποίησέ το απευθείας
+  const url = val.startsWith('http')
+    ? val
+    : REPO + val + (val.endsWith('.json') ? '' : '.json');
+
+  showLoad(true);
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    boot(await r.json());
+  } catch(e) {
+    showLoad(false);
+    alert('Σφάλμα φόρτωσης: ' + e.message + '\n\nURL: ' + url);
+  }
+}
+
+async function initCatalog() {
+  const catList = document.getElementById('cat-list');
+  try {
+    // Φόρτωσε active_lesson.json
+    try {
+      const ar = await fetch(REPO + '../active_lesson.json', {cache:'no-store'});
+      if (ar.ok) { const a = await ar.json(); ACTIVE_ID = a.lesson_id || null; }
+    } catch(e) {}
+
+    // Φόρτωσε catalog.json
+    const cr = await fetch(REPO + '../catalog.json', {cache:'no-store'});
+    if (!cr.ok) throw new Error('HTTP ' + cr.status);
+    const cat = await cr.json();
+    CATALOG = Array.isArray(cat) ? cat : (cat.scenarios || cat.cases || []);
+
+    if (!CATALOG.length) {
+      catList.innerHTML = '<div class="cat-loading">Δεν βρέθηκαν μαθήματα.</div>';
+      return;
+    }
+
+    renderCatalog(catList);
+  } catch(e) {
+    // Αν δεν υπάρχει catalog, δείξε μήνυμα
+    catList.innerHTML =
+      '<div class="cat-loading" style="color:rgba(201,168,76,.3)">Δεν βρέθηκε catalog.json<br><span style="font-size:.5rem;opacity:.6">Βεβαιώσου ότι το REPO_BASE είναι σωστό</span></div>';
+  }
+}
+
+function renderCatalog(container) {
+  container.innerHTML = CATALOG.map(function(c) {
+    const isActive = c.id === ACTIVE_ID;
+    return '<div class="cat-item' + (isActive ? ' is-active' : '') + '" onclick="loadFromCatalog(\'' + c.id + '\')">' +
+      (isActive ? '<span class="cat-active-badge">ΕΝΕΡΓΟ</span>' : '') +
+      '<div class="cat-title">' + (c.title || c.id) + '</div>' +
+      '<div class="cat-meta">' + (c.type || c.lesson_type || '') + '</div>' +
+      '<span class="cat-arrow">→</span>' +
+    '</div>';
+  }).join('');
+}
+
+async function loadFromCatalog(caseId) {
+  const entry = CATALOG.find(function(c) { return c.id === caseId; });
+  if (!entry) { alert('Δεν βρέθηκε το μάθημα: ' + caseId); return; }
+
+  // Δοκίμασε: scenarioFile, caseFile, ή id+'.json' κάτω από REPO
+  const url = entry.scenarioFile
+    ? (REPO.replace(/cases\/?$/, '') + entry.scenarioFile)
+    : (REPO + caseId + '.json');
+
+  showLoad(true);
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    closeLib();
+    boot(await r.json());
+  } catch(e) {
+    showLoad(false);
+    alert('Σφάλμα φόρτωσης: ' + e.message + '\n\nURL: ' + url);
+  }
+}
+
+/* ── LIBRARY MODAL ── */
+function openLib() {
+  const list = document.getElementById('lib-list');
+  if (!CATALOG.length) {
+    list.innerHTML = '<div class="lib-empty">Δεν βρέθηκε βιβλιοθήκη.</div>';
+  } else {
+    list.innerHTML = CATALOG.map(function(c) {
+      const isActive = c.id === ACTIVE_ID;
+      return '<div class="lib-item' + (isActive ? ' is-active' : '') + '" onclick="loadFromCatalog(\'' + c.id + '\')">' +
+        (isActive ? '<span class="lib-badge">ΕΝΕΡΓΟ</span>' : '') +
+        '<div class="lib-item-title">' + (c.title || c.id) + '</div>' +
+        '<div class="lib-item-meta">' + (c.type || c.lesson_type || '') + '</div>' +
+      '</div>';
+    }).join('');
+  }
+  document.getElementById('lib-modal').classList.add('on');
+}
+function closeLib() { document.getElementById('lib-modal').classList.remove('on'); }
+document.getElementById('lib-modal').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('lib-modal')) closeLib();
+});
+
+function loadDemo(){boot(DEMO);}
+
+function normalizeCaseData(input){
+  const data=(input&&typeof input==='object')?input:{};
+  const rawBoard=(data.investigation_board&&typeof data.investigation_board==='object')?data.investigation_board:{};
+  const rawPalace=(data.mind_palace&&typeof data.mind_palace==='object')?data.mind_palace:{};
+  const clues=(Array.isArray(rawBoard.clues)?rawBoard.clues:[]).map(function(clue,index){
+    const item=(clue&&typeof clue==='object')?clue:{};
+    const difficulty=Number(item.difficulty);
+    return Object.assign({},item,{
+      id:String(item.id||('clue-'+(index+1))),
+      type:item.type||'evidence',
+      title:String(item.title||('Στοιχείο '+(index+1))),
+      content:String(item.content||item.description||''),
+      source:String(item.source||'Κείμενο μαθήματος'),
+      difficulty:Number.isFinite(difficulty)?Math.max(1,Math.min(3,difficulty)):1
+    });
+  });
+  if(!clues.length){
+    clues.push({id:'clue-1',type:'evidence',title:'Δεν υπάρχουν ακόμη clues',content:'Συμπληρώστε το lesson JSON.',source:'Studio validation',difficulty:1});
+  }
+  const rooms=(Array.isArray(rawPalace.rooms)?rawPalace.rooms:[]).map(function(room,index){
+    const item=(room&&typeof room==='object')?room:{};
+    return Object.assign({},item,{
+      id:String(item.id||('room-'+(index+1))),
+      name:String(item.name||('Δωμάτιο '+(index+1))),
+      theme:item.theme||'library',
+      central_question:String(item.central_question||'Ποιο συγκεκριμένο ερώτημα εξετάζει αυτό το δωμάτιο;'),
+      unlock_requirements:Array.isArray(item.unlock_requirements)?item.unlock_requirements:[]
+    });
+  });
+  return Object.assign({},data,{
+    title:String(data.title||'Μάθημα Sacred Blueprint'),
+    investigation_board:Object.assign({},rawBoard,{
+      clues:clues,
+      connections:Array.isArray(rawBoard.connections)?rawBoard.connections:[],
+      figures:Array.isArray(rawBoard.figures)?rawBoard.figures:[],
+      concepts:(rawBoard.concepts&&typeof rawBoard.concepts==='object')?rawBoard.concepts:{core:''}
+    }),
+    mind_palace:Object.assign({},rawPalace,{
+      rooms:rooms,
+      dialogues:Array.isArray(rawPalace.dialogues)?rawPalace.dialogues:[]
+    })
+  });
+}
+
+function boot(data){
+  data=normalizeCaseData(data);
+  S.d=data;
+  S.unlocked.add(data.investigation_board.clues[0].id);
+  document.getElementById('hcase').textContent=data.title;
+  document.getElementById('splash').classList.add('out');
+  setTimeout(()=>{
+    document.getElementById('splash').style.display='none';
+    document.getElementById('app').classList.add('on');
+    showLoad(false);
+    renderBoard(); initThree(); renderVerdict(); updProg();
+  },1100);
+}
+
+// Εκκίνηση catalog κατά το load
+document.addEventListener('DOMContentLoaded', function() {
+  const previewDataUrl = new URLSearchParams(window.location.search).get('dataUrl');
+  if (previewDataUrl) {
+    showLoad(true);
+    fetch(previewDataUrl, {cache:'no-store'})
+      .then(function(response) { if (!response.ok) throw new Error('HTTP ' + response.status); return response.json(); })
+      .then(function(data) { boot(data); })
+      .catch(function(error) { showLoad(false); console.error('Mind Palace preview failed:', error); });
+  } else if (REPO) initCatalog();
+  else {
+    document.getElementById('cat-list').innerHTML =
+      '<div class="cat-loading" style="color:rgba(201,168,76,.3)">Ρύθμισε το REPO_BASE στο MP_CONFIG</div>';
+  }
+});
+
+/* ── STATE ── */
+const S={d:null,unlocked:new Set(),rooms:new Set(),revelations:new Set(),curRoom:null,curClue:null,hist:[],mood:'neutral',mem:{},three:null};
+
+/* ── THEMES ── */
+const TH={
+  library:{col:'#c9a84c',glow:'rgba(201,168,76,.5)',bg:'assets/bg-library.jpg',grad:'linear-gradient(160deg,#1a0e04,#2d1a08 50%,#1a0e04)',rays:false,badge:'📚 Βιβλιοθήκη'},
+  temple: {col:'#b8d0ee',glow:'rgba(184,208,238,.5)',bg:'assets/bg-library.jpg',grad:'linear-gradient(160deg,#060a14,#0e1a2e 50%,#060a14)',rays:true, badge:'🏛 Ναός'},
+  cave:   {col:'#9a7acc',glow:'rgba(154,122,204,.5)',bg:'assets/bg-library.jpg',grad:'linear-gradient(160deg,#090612,#160e25 50%,#090612)',rays:false,badge:'🌑 Σπήλαιο'},
+  agora:  {col:'#9aad7a',glow:'rgba(154,173,122,.5)',bg:'assets/bg-library.jpg',grad:'linear-gradient(160deg,#0a1205,#162012 50%,#0a1205)',rays:false,badge:'🌿 Αγορά'}
+};
+const MOODS={
+  neutral:    {col:'#c9a84c',glow:'rgba(201,168,76,.45)', ov:'rgba(0,0,0,0)',      badge:'● Μελέτη'},
+  tense:      {col:'#c0392b',glow:'rgba(192,57,43,.4)',   ov:'rgba(80,10,10,.1)',  badge:'⚡ Αντιπαράθεση'},
+  enlightened:{col:'#e8c97a',glow:'rgba(232,201,122,.55)',ov:'rgba(40,30,0,.05)', badge:'✦ Φωτισμός'},
+  dark:       {col:'#7a6aaa',glow:'rgba(122,106,170,.45)',ov:'rgba(10,5,30,.15)', badge:'◆ Σκοτάδι'}
+};
+const TLABELS={argument:'Επιχείρημα',contradiction:'Αντίφαση',evidence:'Τεκμήριο',synthesis:'Σύνθεση'};
+
+/* FIG_STYLES removed — using image-based scene */
+
+/* ── LOAD ── */
+async function doLoad(){
+  const url=document.getElementById('inp-url').value.trim();
+  const id=document.getElementById('inp-id').value.trim();
+  const target=url||(id?(REPO?REPO+id+'.json':id+'.json'):'');
+  if(!target){alert('Βάλε URL ή Case ID');return;}
+  showLoad(true);
+  try{const r=await fetch(target);if(!r.ok)throw new Error('HTTP '+r.status);boot(await r.json());}
+  catch(e){showLoad(false);alert('Σφάλμα: '+e.message);}
+}
+function loadDemo(){boot(DEMO);}
+
+function boot(data){
+  data=normalizeCaseData(data);
+  S.d=data;
+  S.unlocked.add(data.investigation_board.clues[0].id);
+  document.getElementById('hcase').textContent=data.title;
+  document.getElementById('splash').classList.add('out');
+  setTimeout(()=>{
+    document.getElementById('splash').style.display='none';
+    document.getElementById('app').classList.add('on');
+    showLoad(false);
+    renderBoard(); initThree(); renderVerdict(); updProg();
+  },1100);
+}
+
+/* ═══════════════════════════════════
+   BOARD — draggable cards + SVG strings
+   FIX: SVG z-index above cards
+        strings redraw correctly during drag
+        click vs drag properly distinguished
+═══════════════════════════════════ */
+const EM={}; // element map for string drawing
+
+function renderBoard(){
+  const panel=document.getElementById('board-panel');
+  panel.querySelectorAll('.cc').forEach(e=>e.remove());
+  Object.keys(EM).forEach(k=>delete EM[k]);
+  const svg=document.getElementById('bsvg');
+  const clues=S.d.investigation_board.clues;
+  const W=panel.offsetWidth||window.innerWidth;
+  const H=panel.offsetHeight||(window.innerHeight-84);
+  const pos=layoutCards(clues.length,W,H);
+
+  clues.forEach((cl,i)=>{
+    const ok=S.unlocked.has(cl.id);
+    const el=document.createElement('div');
+    el.className='cc'+(ok?'':' lk');
+    el.id='cc-'+cl.id;
+    el.style.cssText='left:'+pos[i].x+'px;top:'+pos[i].y+'px;transform:rotate('+pos[i].r+'deg)';
+    const dots=[1,2,3].map(n=>'<div class="dot'+(n<=cl.difficulty?' on':'')+'"></div>').join('');
+    el.innerHTML='<div class="pin"></div><div class="ctype">'+(TLABELS[cl.type]||cl.type)+'</div><div class="ctitle">'+cl.title+'</div><div class="cbody">'+(ok?cl.content:'🔒 Κλειδωμένο')+'</div><div class="cfoot"><div class="csrc">'+cl.source+'</div><div class="cdots">'+dots+'</div></div>';
+    if(ok){
+      makeDrag(el,()=>{
+        if(_connectFrom&&_connectFrom!==cl.id){startConnect(cl.id);}
+        else{openModal(cl);}
+      });
+      // Right-click = start/end connect mode
+      el.addEventListener('contextmenu',e=>{e.preventDefault();startConnect(cl.id);});
+    }
+    panel.appendChild(el);
+    EM[cl.id]={el};
+  });
+
+  setTimeout(()=>drawStrings(),80);
+}
+
+function layoutCards(n,W,H){
+  const CW=168,CH=140,M=50;
+  const cols=Math.ceil(Math.sqrt(n*1.7)),rows=Math.ceil(n/cols);
+  const cw=(W-M*2)/cols,ch=(H-M*2)/rows;
+  return Array.from({length:n},(_,i)=>({
+    x:Math.max(M,Math.min(W-CW-M,M+(i%cols)*cw+(Math.random()*(Math.max(0,cw-CW-10))))),
+    y:Math.max(M+14,Math.min(H-CH-M,M+Math.floor(i/cols)*ch+(Math.random()*(Math.max(0,ch-CH-10))))),
+    r:(Math.random()-.5)*9
+  }));
+}
+
+function makeDrag(el,onClick){
+  let ox,oy,moved=false;
+  el.addEventListener('mousedown',e=>{
+    if(el.classList.contains('lk'))return;
+    moved=false; ox=e.clientX-el.offsetLeft; oy=e.clientY-el.offsetTop;
+    el.style.zIndex=20; el.style.transition='none'; el.style.transform='rotate(0deg)';
+    const mm=ev=>{
+      moved=true;
+      el.style.left=(ev.clientX-ox)+'px';
+      el.style.top=(ev.clientY-oy)+'px';
+      drawStrings(); // redraw strings live during drag
+    };
+    const mu=()=>{
+      el.style.zIndex=''; el.style.transition='';
+      document.removeEventListener('mousemove',mm);
+      document.removeEventListener('mouseup',mu);
+      if(!moved) onClick();
+    };
+    document.addEventListener('mousemove',mm);
+    document.addEventListener('mouseup',mu);
+    e.preventDefault();
+  });
+  // Touch support
+  el.addEventListener('touchstart',e=>{
+    if(el.classList.contains('lk'))return;
+    moved=false;
+    const t=e.touches[0];
+    ox=t.clientX-el.offsetLeft; oy=t.clientY-el.offsetTop;
+    el.style.zIndex=20; el.style.transition='none'; el.style.transform='rotate(0deg)';
+  },{passive:true});
+  el.addEventListener('touchmove',e=>{
+    moved=true;
+    const t=e.touches[0];
+    el.style.left=(t.clientX-ox)+'px';
+    el.style.top=(t.clientY-oy)+'px';
+    drawStrings();
+    e.preventDefault();
+  },{passive:false});
+  el.addEventListener('touchend',()=>{
+    el.style.zIndex=''; el.style.transition='';
+    if(!moved) onClick();
+  });
+}
+
+function drawStrings(){
+  const svg=document.getElementById('bsvg');
+  svg.innerHTML='';
+  if(!S.d) return;
+  const cc={contrast:'#c0392b',agreement:'#4a9a4a',development:'#c9a84c'};
+  S.d.investigation_board.connections.forEach(c=>{
+    const f=EM[c.from],t=EM[c.to]; if(!f||!t) return;
+    if(!S.unlocked.has(c.from)||!S.unlocked.has(c.to)) return;
+    const fe=f.el,te=t.el;
+    const x1=fe.offsetLeft+fe.offsetWidth/2;
+    const y1=fe.offsetTop+fe.offsetHeight/2;
+    const x2=te.offsetLeft+te.offsetWidth/2;
+    const y2=te.offsetTop+te.offsetHeight/2;
+    if(isNaN(x1)||isNaN(y1)||isNaN(x2)||isNaN(y2)) return;
+    if(x1===0&&y1===0&&x2===0&&y2===0) return;
+    const dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy)||1;
+    const curve=Math.min(60,len*.25);
+    const side=(c.from+c.to).length%2===0?1:-1;
+    const cx=(x1+x2)/2+(-dy/len)*curve*side;
+    const cy=(y1+y2)/2+(dx/len)*curve*side;
+    const col=cc[c.type]||'#c0392b';
+    const d='M'+x1+','+y1+' Q'+cx+','+cy+' '+x2+','+y2;
+    const sh=document.createElementNS('http://www.w3.org/2000/svg','path');
+    sh.setAttribute('d',d); sh.setAttribute('stroke','rgba(0,0,0,.65)');
+    sh.setAttribute('stroke-width','4'); sh.setAttribute('fill','none');
+    svg.appendChild(sh);
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',d); p.setAttribute('stroke',col);
+    p.setAttribute('stroke-width','2.2'); p.setAttribute('fill','none');
+    p.setAttribute('stroke-opacity','0.92');
+    if(c.type!=='contrast') p.setAttribute('stroke-dasharray','7,4');
+    const ti=document.createElementNS('http://www.w3.org/2000/svg','title');
+    ti.textContent=(c.description||c.type); p.appendChild(ti);
+    svg.appendChild(p);
+    [[x1,y1],[x2,y2]].forEach(function(pt){
+      const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      dot.setAttribute('cx',pt[0]); dot.setAttribute('cy',pt[1]);
+      dot.setAttribute('r','5'); dot.setAttribute('fill',col);
+      dot.setAttribute('opacity','0.75'); svg.appendChild(dot);
+    });
+  });
+}
+
+// ── DRAG-TO-CONNECT: δεξί κλικ σε κάρτα → επιλογή, δεξί κλικ σε άλλη → σύνδεση ──
+let _connectFrom=null;
+function startConnect(clueId){
+  if(_connectFrom===clueId){
+    _connectFrom=null;
+    document.querySelectorAll('.cc').forEach(function(e){e.classList.remove('string-start');});
+    return;
+  }
+  if(_connectFrom){
+    const exists=S.d.investigation_board.connections.find(function(c){
+      return (c.from===_connectFrom&&c.to===clueId)||(c.from===clueId&&c.to===_connectFrom);
+    });
+    if(!exists){
+      S.d.investigation_board.connections.push({from:_connectFrom,to:clueId,type:'contrast',description:'Χειροκίνητη σύνδεση'});
+    }
+    _connectFrom=null;
+    document.querySelectorAll('.cc').forEach(function(e){e.classList.remove('string-start');});
+    drawStrings();
+  } else {
+    _connectFrom=clueId;
+    document.querySelectorAll('.cc').forEach(function(e){e.classList.remove('string-start');});
+    document.getElementById('cc-'+clueId).classList.add('string-start');
+  }
+}
+window.addEventListener('resize',()=>{if(S.d)renderBoard();});
+
+/* ── MODAL ── */
+function openModal(cl){
+  S.curClue=cl;
+  document.getElementById('mtype').textContent=TLABELS[cl.type]||cl.type;
+  document.getElementById('mtitle').textContent=cl.title;
+  document.getElementById('mbodytxt').textContent=cl.content;
+  document.getElementById('mfoot').textContent='📜 '+cl.source+' · '+'★'.repeat(cl.difficulty)+'☆'.repeat(3-cl.difficulty);
+  document.getElementById('mstamp').textContent=cl.id.toUpperCase();
+  document.getElementById('modal').classList.add('on');
+  const all=S.d.investigation_board.clues,idx=all.findIndex(c=>c.id===cl.id);
+  if(idx>=0&&idx+1<all.length) S.unlocked.add(all[idx+1].id);
+  checkUnlocks(); updProg();
+}
+function closeModal(){document.getElementById('modal').classList.remove('on');renderBoard();}
+function chatClue(){
+  closeModal();
+  const open=S.d.mind_palace.rooms.find(r=>S.rooms.has(r.id));
+  if(!open){alert('Ανοίξτε πρώτα ένα δωμάτιο!');return;}
+  if(!S.curRoom) startRoom(open.id);
+  setTimeout(()=>goTab('dial',document.getElementById('tdial')),200);
+}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+/* ── UNLOCKS ── */
+function checkUnlocks(){
+  S.d.mind_palace.rooms.forEach(r=>{if(r.unlock_requirements.every(id=>S.unlocked.has(id)))S.rooms.add(r.id);});
+  updPalBtns();
+}
+
+/* ── THREE.JS ── */
+function initThree(){
+  const canvas=document.getElementById('pal-canvas');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.shadowMap.enabled=true; renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=0.75;
+  const scene=new THREE.Scene();
+  scene.background=new THREE.Color(0x04020a); scene.fog=new THREE.FogExp2(0x04020a,0.022);
+  const camera=new THREE.PerspectiveCamera(55,1,0.1,200);
+  camera.position.set(0,5,18); camera.lookAt(0,1,0);
+  scene.add(new THREE.AmbientLight(0x1a0a05,0.6));
+  const ml=new THREE.DirectionalLight(0x3a2a5a,.4); ml.position.set(5,20,10); scene.add(ml);
+  const sp=new THREE.SpotLight(0xc9a84c,3,40,Math.PI/5,.6,1.5); sp.position.set(0,18,8); sp.castShadow=true; scene.add(sp);
+  const floor=new THREE.Mesh(new THREE.PlaneGeometry(50,50),new THREE.MeshStandardMaterial({color:0x120800,roughness:.7,metalness:.2}));
+  floor.rotation.x=-Math.PI/2; floor.position.y=-.5; floor.receiveShadow=true; scene.add(floor);
+  for(let x=-5;x<=5;x++) for(let z=-4;z<=4;z++){
+    const t=new THREE.Mesh(new THREE.BoxGeometry(1.95,.06,1.95),new THREE.MeshStandardMaterial({color:(x+z)%2===0?0x1e0e06:0x0e0602,roughness:.5,metalness:.3}));
+    t.position.set(x*2,-.47,z*2); t.receiveShadow=true; scene.add(t);
+  }
+  const rooms=S.d.mind_palace.rooms,sp2=14,sx=-(rooms.length-1)*sp2/2;
+  rooms.forEach((r,i)=>buildRoom(scene,r,sx+i*sp2,0));
+  const pc=300,pg=new THREE.BufferGeometry(),pp=new Float32Array(pc*3);
+  for(let i=0;i<pc;i++){pp[i*3]=(Math.random()-.5)*42;pp[i*3+1]=Math.random()*14;pp[i*3+2]=(Math.random()-.5)*32;}
+  pg.setAttribute('position',new THREE.BufferAttribute(pp,3));
+  scene.add(new THREE.Points(pg,new THREE.PointsMaterial({color:0xc9a84c,size:.055,transparent:true,opacity:.5})));
+  // torch point lights removed
+  let drag=false,prev={x:0,y:0},theta=0,phi=.28; const R=18;
+  canvas.addEventListener('mousedown',e=>{drag=true;prev={x:e.clientX,y:e.clientY};});
+  window.addEventListener('mouseup',()=>drag=false);
+  window.addEventListener('mousemove',e=>{
+    if(!drag)return;
+    theta-=(e.clientX-prev.x)*.004; phi=Math.max(.08,Math.min(1.1,phi-(e.clientY-prev.y)*.004));
+    prev={x:e.clientX,y:e.clientY};
+    camera.position.set(R*Math.sin(theta)*Math.cos(phi),R*Math.sin(phi)+2,R*Math.cos(theta)*Math.cos(phi));
+    camera.lookAt(0,1,0);
+  });
+  function rsz(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+  window.addEventListener('resize',rsz);
+  S.three={renderer,scene,camera,pg,pc};
+  let tk=0;
+  (function anim(){
+    requestAnimationFrame(anim); tk+=.008;
+    // (torch animation removed)
+    const pa=pg.attributes.position;
+    for(let i=0;i<pc;i++){pa.array[i*3+1]+=.005;if(pa.array[i*3+1]>14)pa.array[i*3+1]=0;}
+    pa.needsUpdate=true; renderer.render(scene,camera);
+  })();
+  rsz(); updPalBtns();
+}
+
+function buildRoom(scene,room,x,z){
+  const isTp=room.theme==='temple',isCv=room.theme==='cave';
+  const sc=isTp?0x3a2810:isCv?0x1a1228:0x2a1808;
+  const mat=new THREE.MeshStandardMaterial({color:sc,roughness:.85,metalness:.08});
+  const gm=new THREE.MeshStandardMaterial({color:0xc9a84c,metalness:.85,roughness:.2,emissive:0x3a2800,emissiveIntensity:.6});
+  const th=TH[room.theme]||TH.library;
+  const nc=parseInt(th.col.replace('#',''),16);
+  const nm=new THREE.MeshStandardMaterial({color:nc,emissive:new THREE.Color(nc).multiplyScalar(.3),roughness:.7});
+  const base=new THREE.Mesh(new THREE.BoxGeometry(9,.35,6.5),mat); base.position.set(x,-.33,z); base.receiveShadow=true; scene.add(base);
+  const cp=isTp?[[-3.8,-2.5],[-1.3,-2.5],[1.3,-2.5],[3.8,-2.5],[-3.8,2.5],[-1.3,2.5],[1.3,2.5],[3.8,2.5]]:[[-3.2,-2.3],[3.2,-2.3],[-3.2,2.3],[3.2,2.3]];
+  cp.forEach(([cx,cz])=>{
+    const col=new THREE.Mesh(new THREE.CylinderGeometry(.16,.2,4.5,10),mat); col.position.set(x+cx,1.9,z+cz); col.castShadow=true; scene.add(col);
+    const cap=new THREE.Mesh(new THREE.BoxGeometry(.5,.22,.5),mat); cap.position.set(x+cx,4.2,z+cz); scene.add(cap);
+    const bas=new THREE.Mesh(new THREE.BoxGeometry(.44,.18,.44),mat); bas.position.set(x+cx,-.1,z+cz); scene.add(bas);
+  });
+  const rf=new THREE.Mesh(new THREE.BoxGeometry(9.5,.32,7),mat); rf.position.set(x,4.36,z); rf.castShadow=true; scene.add(rf);
+  if(isTp){
+    const sh=new THREE.Shape([new THREE.Vector2(-4.5,0),new THREE.Vector2(4.5,0),new THREE.Vector2(0,1.6)]);
+    const ped=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:.22,bevelEnabled:false}),mat); ped.position.set(x,4.68,z-3.2); ped.rotation.x=-Math.PI/2; scene.add(ped);
+    const tr=new THREE.Mesh(new THREE.BoxGeometry(9.6,.06,7.1),gm); tr.position.set(x,4.53,z); scene.add(tr);
+  } else if(!isCv){
+    const wall=new THREE.Mesh(new THREE.BoxGeometry(8.5,5,.25),mat); wall.position.set(x,2.15,z-3); scene.add(wall);
+    for(let r=0;r<5;r++) for(let c=0;c<11;c++){
+      const bk=new THREE.Mesh(new THREE.BoxGeometry(.28+Math.random()*.18,.3+Math.random()*.14,.18),new THREE.MeshStandardMaterial({color:new THREE.Color().setHSL(Math.random(),.5,.18),roughness:.9}));
+      bk.position.set(x-3.8+c*.7,-.08+r*.46,z-2.85); scene.add(bk);
+    }
+  } else {
+    for(let i=0;i<12;i++){const rk=new THREE.Mesh(new THREE.SphereGeometry(.4+Math.random()*.6,6,5),mat);rk.position.set(x+(Math.random()-.5)*8,(Math.random()-.5)*2,z+(Math.random()-.5)*5.5);rk.scale.set(1,.6+Math.random()*.5,.7+Math.random()*.4);scene.add(rk);}
+  }
+  const nh=new THREE.Mesh(new THREE.SphereGeometry(.3,12,10),nm); nh.position.set(x,1.85,z); nh.castShadow=true; scene.add(nh);
+  const nb=new THREE.Mesh(new THREE.CylinderGeometry(.22,.36,1.7,8),nm); nb.position.set(x,.65,z); nb.castShadow=true; scene.add(nb);
+  const nr=new THREE.Mesh(new THREE.ConeGeometry(.52,1.9,8),nm); nr.position.set(x,-.04,z); scene.add(nr);
+  // temple halo torus removed
+  const alt=new THREE.Mesh(new THREE.BoxGeometry(1.2,.72,.9),gm); alt.position.set(x+2,.07,z); scene.add(alt);
+  // flame material removed
+  // flame sphere removed
+  const fl=new THREE.PointLight(0xff6600,2,7); fl.position.set(x+2,1,z); scene.add(fl);
+  const nl=new THREE.PointLight(nc,.6,8); nl.position.set(x,3,z); scene.add(nl);
+}
+
+function updPalBtns(){
+  const el=document.getElementById('pal-rooms'); if(!el||!S.d) return;
+  el.innerHTML='';
+  S.d.mind_palace.rooms.forEach(room=>{
+    const open=S.rooms.has(room.id);
+    const btn=document.createElement('button');
+    btn.className='rbtn '+(open?'open':'locked');
+    btn.textContent=(open?'🏛 ':'🔒 ')+room.name;
+    if(open){btn.onclick=()=>{document.getElementById('hudname').textContent=room.name;document.getElementById('hudq').textContent=room.central_question;startRoom(room.id);goTab('dial',document.getElementById('tdial'));};}
+    else{btn.title='Χρειάζεστε: '+room.unlock_requirements.filter(id=>!S.unlocked.has(id)).join(', ');}
+    el.appendChild(btn);
+  });
+}
+
+/* ═══════════════════════════════════
+   NPC SCENE — image-based with dynamic lighting
+═══════════════════════════════════ */
+function setSceneColors(npcColor, npcGlow, moodOverlay){
+  document.documentElement.style.setProperty('--npc', npcColor);
+  document.documentElement.style.setProperty('--npcg', npcGlow);
+  const ll=document.getElementById('label-left'),lr=document.getElementById('label-right');
+  const sh='0 0 18px '+npcGlow+',0 2px 6px rgba(0,0,0,1)';
+  if(ll){ll.style.color=npcColor;ll.style.textShadow=sh;}
+  if(lr){lr.style.color=npcColor;lr.style.textShadow=sh;}
+  // Mood light tint on image
+  const nl=document.getElementById('npc-light');
+  if(nl) nl.style.background=moodOverlay||'rgba(0,0,0,0)';
+}
+
+function setHalos(on){
+  ['halo-left','halo-right'].forEach(id=>{
+    const h=document.getElementById(id);
+    if(h) h.classList.toggle('on',on);
+  });
+}
+
+function setSpeaker(side){
+  // Brighten the image slightly when NPC speaks
+  const img=document.getElementById('npc-img');
+  if(!img) return;
+  // subtle flash
+  img.style.filter='brightness(.75) saturate(.9)';
+  setTimeout(()=>img.style.filter='brightness(.55) saturate(.85)',600);
+}
+
+function startRoom(roomId){
+  const room=S.d.mind_palace.rooms.find(r=>r.id===roomId);
+  const dial=S.d.mind_palace.dialogues.find(d=>d.room_id===roomId);
+  if(!room||!dial) return;
+  S.curRoom=roomId; S.hist=[]; S.mood='neutral';
+
+  // ── Background ──
+  const th=TH[room.theme]||TH.library;
+  const bg=document.getElementById('scene-bg');
+  bg.style.background=th.grad;
+  bg.style.backgroundImage='none';
+  // Try loading background image — log result for debugging
+  const img=new Image();
+  img.onload=()=>{
+    console.log('✅ BG loaded:',th.bg);
+    if (S.curRoom !== roomId) return;
+    bg.style.backgroundImage="url('"+img.src+"')";
+    bg.style.backgroundSize='cover';
+    bg.style.backgroundPosition='center 20%';
+  };
+  img.onerror=()=>console.warn('❌ BG 404:',th.bg,' — using gradient fallback');
+  img.src=room.image || th.bg;
+  // NPC scene image — always the debate scene
+  // Reload NPC scene image
+  const npcImg=document.getElementById('npc-img');
+  if(npcImg){
+    npcImg.onerror=()=>{npcImg.src='assets/bg-library.jpg';npcImg.onerror=null;};
+    npcImg.src='assets/bg-debate.jpg';
+  }
+
+  document.getElementById('mood-layer').style.background='rgba(0,0,0,0)';
+  document.getElementById('rays').classList.toggle('on',th.rays);
+  document.getElementById('mood-badge').textContent=th.badge;
+
+  // ── Scene colors + figure names ──
+  const figs=S.d.investigation_board.figures;
+  setSceneColors(th.col, th.glow, 'rgba(0,0,0,0)');
+  setHalos(room.theme==='temple');
+  const ll=document.getElementById('label-left'),lr=document.getElementById('label-right');
+  if(ll) ll.textContent=figs[0]?figs[0].name:'—';
+  if(lr) lr.textContent=figs[1]?figs[1].name:'—';
+
+  // ── Chat reset ──
+  const area=document.getElementById('chat');
+  area.innerHTML='<div class="typing" id="typing"><div class="tybubble"><div class="tydot"></div><div class="tydot"></div><div class="tydot"></div></div></div>';
+  const nr=document.getElementById('noroom'); if(nr) nr.remove();
+  addNPC(dial.greeting+' σας καλωσορίζει.\n\n'+room.central_question, 'left');
+  showSugs(dial);
+}
+
+function applyMood(mood){
+  if(mood===S.mood) return;
+  S.mood=mood;
+  const mc=MOODS[mood]||MOODS.neutral;
+  document.getElementById('mood-layer').style.background=mc.ov;
+  document.getElementById('rays').classList.toggle('on',mood==='enlightened');
+  document.getElementById('mood-badge').textContent=mc.badge;
+  setSceneColors(mc.col, mc.glow, mc.ov);
+  if(mood==='enlightened') setHalos(true);
+  if(!S.mem[S.curRoom]) S.mem[S.curRoom]={moods:[]};
+  S.mem[S.curRoom].moods.push(mood);
+}
+
+function addNPC(txt, side='left'){
+  const area=document.getElementById('chat'),ty=document.getElementById('typing');
+  const dial=S.d.mind_palace.dialogues.find(d=>d.room_id===S.curRoom);
+  const nm=dial?dial.greeting:'Φιλόσοφος';
+  const d=document.createElement('div'); d.className='msg npc';
+  d.innerHTML='<div class="mwho">'+nm+'</div><div class="mbody">'+txt.replace(/\n/g,'<br>')+'</div>';
+  area.insertBefore(d,ty); area.scrollTop=area.scrollHeight;
+  setSpeaker(side);
+}
+function addUsr(txt){
+  const area=document.getElementById('chat'),ty=document.getElementById('typing');
+  const d=document.createElement('div'); d.className='msg usr';
+  d.innerHTML='<div class="mwho">Εσείς</div><div class="mbody">'+txt+'</div>';
+  area.insertBefore(d,ty); area.scrollTop=area.scrollHeight;
+  setSpeaker('right'); // user = right figure reacts
+}
+function showSugs(dial){
+  const el=document.getElementById('sugs'); el.innerHTML='';
+  const note=document.getElementById('scripted-note');
+  const questions=Array.isArray(dial?.questions)?dial.questions:[];
+  const answers=Array.isArray(dial?.suggested_answers)?dial.suggested_answers:[];
+  const asked=new Set(S.hist.filter(h=>h.role==='user').map(h=>h.parts?.[0]?.text));
+  let validCount=0;
+  questions.forEach((question,index)=>{
+    const q=String(question||'').trim();
+    const answer=typeof answers[index]==='string'?answers[index].trim():'';
+    if(!q||!answer) return;
+    validCount++;
+    if(asked.has(q)) return;
+    const b=document.createElement('button');
+    b.className='sug'; b.textContent=q; b.onclick=()=>sendSuggested(index);
+    el.appendChild(b);
+  });
+  if(note){
+    note.textContent=el.childElementCount
+      ? 'Επιλέξτε μία ερώτηση του σεναρίου'
+      : (validCount?'Ολοκληρώθηκαν οι ερωτήσεις του σεναρίου':'Το JSON δεν περιέχει έγκυρα suggested_answers');
+  }
+}
+
+/* ═══════════════════════════════════
+   SCRIPTED DIALOGUE — questions and answers come only from JSON
+═══════════════════════════════════ */
+async function sendSuggested(questionIndex){
+  if(!S.curRoom) return;
+  const dial=S.d.mind_palace.dialogues.find(d=>d.room_id===S.curRoom);
+  const question=Array.isArray(dial?.questions)?String(dial.questions[questionIndex]||'').trim():'';
+  const reply=Array.isArray(dial?.suggested_answers)&&typeof dial.suggested_answers[questionIndex]==='string'
+    ? dial.suggested_answers[questionIndex].trim()
+    : '';
+  if(!question||!reply) return;
+
+  addUsr(question); document.getElementById('sugs').innerHTML='';
+  const ty=document.getElementById('typing'); ty.classList.add('on');
+  S.hist.push({role:'user',parts:[{text:question}]});
+  await new Promise(resolve=>setTimeout(resolve,350));
+  ty.classList.remove('on');
+
+  S.hist.push({role:'model',parts:[{text:reply}]});
+  addNPC(reply,'left');
+  applyMood('neutral');
+  if(S.hist.length>=4&&!S.revelations.has(S.curRoom)){
+    S.revelations.add(S.curRoom);
+    updProg(); updateVerdict(); applyMood('enlightened');
+    document.querySelector('.chat-wrap').classList.add('rflash');
+    setTimeout(()=>document.querySelector('.chat-wrap').classList.remove('rflash'),2000);
+    setTimeout(()=>addNPC('✦ Αποκάλυψη: '+dial.revelation,'left'),900);
+  }
+  showSugs(dial);
+}
+/* ── VERDICT ── */
+function renderVerdict(){
+  document.getElementById('vtitle').textContent=S.d.title;
+  const figs=S.d.investigation_board.figures;
+  document.getElementById('vgrid').innerHTML=
+    figs.map(f=>'<div class="vcard"><div class="vrole">Φιλόσοφος</div><div class="vname">'+f.name+'</div><div class="vwork">📜 '+f.work+' · '+f.era+'</div></div>').join('')+
+    '<div class="vcard" style="grid-column:1/-1"><div class="vrole">Κεντρική Έννοια</div><div class="vname">'+S.d.investigation_board.concepts.core+'</div></div>';
+  updateVerdict();
+}
+function updateVerdict(){
+  const rm=S.d.mind_palace.rooms,done=rm.filter(r=>S.revelations.has(r.id)).length;
+  const st=document.getElementById('vstamp');
+  const revDials=S.d.mind_palace.dialogues.filter(d=>S.revelations.has(d.room_id));
+  if(revDials.length>0) document.getElementById('vsynp').textContent=revDials.map(d=>d.revelation).join(' — ');
+  if(done===rm.length){st.textContent='CASE CLOSED';st.classList.add('done');}
+  else st.textContent=done===0?'Υπόθεση Εκκρεμεί':done+'/'+rm.length+' Αποκαλύψεις';
+}
+
+/* ── PROGRESS ── */
+function updProg(){
+  if(!S.d) return;
+  const cl=S.d.investigation_board.clues,rm=S.d.mind_palace.rooms;
+  const pct=Math.round(S.unlocked.size/cl.length*35+S.rooms.size/rm.length*30+S.revelations.size/rm.length*35);
+  document.getElementById('prog').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+}
+
+/* ── TABS ── */
+function goTab(name,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.getElementById(name+'-panel').classList.add('on'); btn.classList.add('on');
+  if(name==='palace'&&S.three){setTimeout(()=>{const c=document.getElementById('pal-canvas');S.three.renderer.setSize(c.clientWidth,c.clientHeight,false);S.three.camera.aspect=c.clientWidth/c.clientHeight;S.three.camera.updateProjectionMatrix();},50);}
+  if(name==='board') drawStrings(); // redraw strings when switching to board
+}
+function showLoad(on){document.getElementById('loading').classList.toggle('on',on);}
+
+/* ── DEMO ── */
+const DEMO={
+  case_id:'demo',title:'Κοινή Γλώσσα, Ριζικά Διαφορετικό Νόημα',method:'comparative',status:'complete',
+  investigation_board:{
+    figures:[{name:'Πλάτων',work:'Φαίδρος',era:'4ος π.Χ.'},{name:'Ωριγένης',work:'Περί Αρχών',era:'3ος μ.Χ.'}],
+    concepts:{core:'Ψυχή & Αθανασία'},
+    clues:[
+      {id:'c1',title:'Η Θεωρία της Ανάμνησης',content:'Ο Πλάτων υποστηρίζει ότι η μάθηση δεν είναι παρά ανάμνηση αιώνιων αληθειών. Η ψυχή γνώριζε την αλήθεια πριν ενσαρκωθεί.',source:'Πλάτων',type:'argument',difficulty:1},
+      {id:'c2',title:'Η Προΰπαρξη της Ψυχής',content:'Ο Ωριγένης δέχεται την προΰπαρξη των ψυχών, αλλά ως ελεύθερα λογικά όντα που απομακρύνθηκαν από τον Θεό.',source:'Ωριγένης',type:'contradiction',difficulty:2},
+      {id:'c3',title:'Ο Κόσμος ως Παιδαγωγία',content:'Για τον Ωριγένη, η υλική ύπαρξη είναι παιδαγωγικό μέσο εξαγνισμού — δεν είναι δεσμωτήριο όπως για τον Πλάτωνα.',source:'Ωριγένης',type:'evidence',difficulty:2},
+      {id:'c4',title:'Πηγή Γνώσης: Λόγος vs Αποκάλυψη',content:'Η ελληνική φιλοσοφία θεμελιώνει τη γνώση στον ανθρώπινο λόγο. Το χριστιανικό δόγμα απαιτεί θεία αποκάλυψη.',source:'Σύνθεση',type:'argument',difficulty:3},
+      {id:'c5',title:'Η Κοινή Κληρονομιά',content:'Και οι δύο μοιράζονται την ελληνική γλώσσα, αλλά γεμίζουν τις ίδιες λέξεις με ριζικά διαφορετικό νόημα.',source:'Σύνθεση',type:'synthesis',difficulty:3}
+    ],
+    connections:[
+      {from:'c1',to:'c2',type:'contrast',description:'Διαφορετική αιτία προΰπαρξης'},
+      {from:'c2',to:'c3',type:'development',description:'Από προΰπαρξη στον σκοπό κόσμου'},
+      {from:'c3',to:'c4',type:'contrast',description:'Λόγος vs Αποκάλυψη'},
+      {from:'c4',to:'c5',type:'agreement',description:'Κοινή γλωσσική κληρονομιά'}
+    ]
+  },
+  mind_palace:{
+    rooms:[
+      {id:'r1',name:'Βιβλιοθήκη Ανάμνησης',theme:'library',unlock_requirements:['c1','c2'],central_question:'Πώς γνωρίζει η ψυχή αυτό που δεν έχει διδαχτεί;'},
+      {id:'r2',name:'Ναός Αποκάλυψης',theme:'temple',unlock_requirements:['c3','c4','c5'],central_question:'Μπορεί ο λόγος να φτάσει εκεί που η αποκάλυψη ξεκινά;'}
+    ],
+    dialogues:[
+      {room_id:'r1',greeting:'Σωκράτης',questions:['Τι εννοεί ο Πλάτων ότι η μάθηση είναι ανάμνηση;','Πώς διαφέρει η ψυχή του Πλάτωνα από αυτή του Ωριγένη;','Μπορεί ο κόσμος να είναι ταυτόχρονα δεσμωτήριο και σχολείο;'],suggested_answers:['Για τον Πλάτωνα, η ψυχή έχει θεαθεί τις αιώνιες αλήθειες πριν από την ενσάρκωση· η μάθηση ξυπνά μία γνώση που ήδη υπάρχει μέσα της.','Στον Πλάτωνα η ψυχή επιστρέφει σε μία αλήθεια που ήδη γνώριζε· στον Ωριγένη είναι ελεύθερο λογικό ον που απομακρύνθηκε από τον Θεό και χρειάζεται θεραπεία.','Ναι· ως δεσμωτήριο περιορίζει την ψυχή, ενώ ως σχολείο την παιδαγωγεί προς την επιστροφή και την κάθαρση.'],revelation:'Η γνώση δεν εισέρχεται απ᾽ έξω. Είτε ως ανάμνηση είτε ως χάρη, αναδύεται εκ των έσω. Η διαφορά είναι ποιος την τοποθέτησε εκεί.'},
+      {room_id:'r2',greeting:'Ωριγένης',questions:['Γιατί ο Θεός επέτρεψε στις ψυχές να πέσουν;','Ποια η διαφορά της σωτηρίας από την απελευθέρωση;','Μπορεί ο λόγος να συνυπάρξει με την πίστη;'],suggested_answers:['Η πτώση δεν επιβλήθηκε από τον Θεό· έγινε δυνατή επειδή η αγάπη απαιτεί ελευθερία, και η ελευθερία περιλαμβάνει τη δυνατότητα απομάκρυνσης.','Η απελευθέρωση αφαιρεί έναν περιορισμό· η σωτηρία θεραπεύει τη σχέση με τον Θεό και οδηγεί το πρόσωπο σε μία νέα μορφή ζωής.','Μπορούν να συνυπάρξουν όταν ο λόγος ελέγχει και διευκρινίζει, χωρίς να προσποιείται ότι αντικαθιστά την αποκάλυψη.'],revelation:'Ελληνική φιλοσοφία και χριστιανικό δόγμα μοιράζονται γλώσσα αλλά όχι κατεύθυνση. Ο ένας επιστρέφει στον εαυτό, ο άλλος κινείται προς τον Άλλο.'}
+    ]
+  }
+};
+</script>
+</body>
+</html>

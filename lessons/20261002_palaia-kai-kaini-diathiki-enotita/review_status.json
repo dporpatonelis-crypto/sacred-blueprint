@@ -1,0 +1,58 @@
+{
+  "lessonId": "20261002_palaia-kai-kaini-diathiki-enotita",
+  "draftId": "draft-1790963272381",
+  "quality": {
+    "score": 100,
+    "grade": "ready",
+    "issues": [],
+    "metrics": {
+      "moduleCount": 6,
+      "timelineEvents": 6,
+      "investigationClues": 8,
+      "investigationConnections": 9,
+      "mindPalaceRooms": 2,
+      "mindPalaceClues": 6,
+      "personalPageChapters": 4,
+      "historyCharacters": 18,
+      "historyDialogs": 3,
+      "historyFacts": 4,
+      "historyProps": 3,
+      "sculptureRegions": 3,
+      "sculptureContributions": 3,
+      "criticalIssues": 0,
+      "warningIssues": 0
+    },
+    "evaluatedAt": "2026-10-02T18:02:04.009Z"
+  },
+  "selectedMasterModules": [
+    "timeline",
+    "investigation",
+    "mindpalace",
+    "personalpage"
+  ],
+  "authoredProposals": [
+    "timeline",
+    "investigation",
+    "mindpalace",
+    "personalpage",
+    "history3d",
+    "sculpture"
+  ],
+  "pendingLocalPreview": [],
+  "experimentalExcluded": [
+    "history3d",
+    "sculpture"
+  ],
+  "published": false,
+  "imageReview": {
+    "status": "approved-urls-registered",
+    "assetCount": 5,
+    "manifest": "/Users/dimitriosporpatonelis/sacred-blueprint/lessons/20261002_palaia-kai-kaini-diathiki-enotita/images/manifest.json",
+    "publicUrlsAssigned": true
+  },
+  "publicationApproval": "explicit-master-hash-confirmed-by-user",
+  "publicationHash": "85153cb579ab9899ecc550999253175f9f0bedf1a048758fa7cee91a27ae8a9b",
+  "localValidation": "passed-all-four",
+  "publicationReview": "/Users/dimitriosporpatonelis/sacred-blueprint/lessons/20261002_palaia-kai-kaini-diathiki-enotita/publication-review.md",
+  "runtimeDeployment": "verified-all-four-repos"
+}

@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="el">
+  <script>window.TL_CONFIG = { REPO_BASE: 'https://raw.githubusercontent.com/dporpatonelis-crypto/Map-Timeline/refs/heads/main/' };</script>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timeline Explorer</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a28;
+    --accent: #c8a96e;
+    --accent2: #7c6bc4;
+    --text: #e8e4dc;
+    --text-dim: #7a7a8a;
+    --timeline-h: 140px;
+    --map-w: 340px;
+    --map-h: 260px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── TOP SECTION ── */
+  #top-section {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  /* Image display */
+  #image-display {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .scene-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+
+  .scene-image.active {
+    opacity: 1;
+  }
+
+  /* Video support — same behaviour as image */
+  .scene-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .scene-video.active { opacity: 1; }
+
+  /* iframe embed (YouTube / Google Slides) */
+  .scene-iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    background: #000;
+  }
+  .scene-iframe.active { opacity: 1; }
+
+  /* Media-type badge */
+  #media-badge {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 15;
+    background: rgba(10,10,15,0.75);
+    border: 1px solid rgba(200,169,110,0.35);
+    color: var(--accent);
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    padding: 4px 10px;
+    border-radius: 2px;
+    display: none;
+    pointer-events: none;
+  }
+
+  /* Google Slides launch button (shown when slides URL exists) */
+  #slides-btn {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 15;
+    background: rgba(10,10,15,0.82);
+    border: 1px solid rgba(200,169,110,0.5);
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    padding: 7px 16px;
+    cursor: pointer;
+    border-radius: 2px;
+    display: none;
+    transition: background 0.2s;
+  }
+  #slides-btn:hover { background: rgba(200,169,110,0.18); }
+
+  .image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      transparent 40%,
+      rgba(10,10,15,0.6) 70%,
+      var(--bg) 100%
+    );
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Empty state */
+  .no-image {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--text-dim);
+  }
+  .no-image .icon { font-size: 3rem; opacity: 0.3; }
+
+  /* Info panel (bottom-left of image area) */
+  #info-panel {
+    position: absolute;
+    bottom: 24px;
+    left: 28px;
+    z-index: 10;
+    max-width: 500px;
+    pointer-events: none;
+  }
+
+  #info-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  #info-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text);
+    text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+    margin-bottom: 8px;
+  }
+
+  #info-desc {
+    font-size: 0.78rem;
+    color: rgba(232,228,220,0.8);
+    line-height: 1.6;
+    font-weight: 300;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.9);
+  }
+
+  /* ── MAP ── */
+  #map-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: var(--map-w);
+    height: var(--map-h);
+    z-index: 20;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px var(--accent), 0 8px 40px rgba(0,0,0,0.7);
+  }
+
+  #map {
+    width: 100%;
+    height: 100%;
+    filter: grayscale(0.15) contrast(1.05) brightness(1.0);
+  }
+
+  .map-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 6px 10px;
+    background: rgba(10,10,15,0.80);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    z-index: 30;
+    pointer-events: none;
+    border-bottom: 1px solid rgba(200,169,110,0.3);
+  }
+
+  #map-city-name {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 6px 10px;
+    background: rgba(10,10,15,0.85);
+    font-size: 0.7rem;
+    color: var(--text);
+    z-index: 30;
+    pointer-events: none;
+    border-top: 1px solid rgba(200,169,110,0.2);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+  }
+
+  /* ── TIMELINE ── */
+  #timeline-section {
+    height: var(--timeline-h);
+    background: var(--surface);
+    border-top: 1px solid rgba(200,169,110,0.25);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  #timeline-track {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 80px;
+    gap: 0;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+    scroll-behavior: smooth;
+  }
+
+  #timeline-track::-webkit-scrollbar { height: 3px; }
+  #timeline-track::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+  #timeline-track::-webkit-scrollbar-track { background: transparent; }
+
+  /* Horizontal line */
+  #timeline-track::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 60px;
+    right: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(200,169,110,0.4) 10%, rgba(200,169,110,0.4) 90%, transparent);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .timeline-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    min-width: 120px;
+    position: relative;
+    padding: 0 10px;
+    transition: transform 0.2s ease;
+    z-index: 1;
+  }
+
+  .timeline-item:hover { transform: translateY(-3px); }
+
+  .timeline-item.active .tl-dot {
+    background: var(--accent);
+    box-shadow: 0 0 0 4px rgba(200,169,110,0.2), 0 0 20px rgba(200,169,110,0.4);
+    transform: scale(1.3);
+  }
+
+  .timeline-item.active .tl-year { color: var(--accent); }
+  .timeline-item.active .tl-label { color: var(--text); }
+
+  .tl-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .tl-year {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+    transition: color 0.3s;
+  }
+
+  .tl-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1.5px solid rgba(200,169,110,0.5);
+    transition: all 0.3s ease;
+  }
+
+  .tl-label {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    text-align: center;
+    max-width: 100px;
+    line-height: 1.3;
+    transition: color 0.3s;
+    margin-top: 10px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+  }
+
+  /* Nav arrows */
+  .tl-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: var(--surface);
+    border: 1px solid rgba(200,169,110,0.3);
+    color: var(--accent);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 2px;
+    font-size: 1rem;
+    transition: all 0.2s;
+    user-select: none;
+  }
+  .tl-arrow:hover { background: rgba(200,169,110,0.15); border-color: var(--accent); }
+  #arrow-left { left: 12px; }
+  #arrow-right { right: 12px; }
+
+  /* Edit panel */
+  #edit-toggle {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 30;
+    background: rgba(18,18,26,0.9);
+    border: 1px solid rgba(200,169,110,0.4);
+    color: var(--accent);
+    padding: 8px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    border-radius: 2px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  #edit-toggle:hover { background: rgba(200,169,110,0.15); }
+
+  #edit-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 380px;
+    background: var(--surface);
+    border-right: 1px solid rgba(200,169,110,0.2);
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.35s ease;
+    overflow-y: auto;
+    padding: 24px;
+  }
+
+  #edit-panel.open { transform: translateX(0); }
+
+  #edit-panel h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--accent);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(200,169,110,0.2);
+  }
+
+  .ep-section {
+    margin-bottom: 24px;
+  }
+
+  .ep-section h3 {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .ep-field {
+    margin-bottom: 10px;
+  }
+
+  .ep-field label {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+
+  .ep-field input, .ep-field textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid rgba(200,169,110,0.2);
+    color: var(--text);
+    padding: 7px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    border-radius: 2px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .ep-field input:focus, .ep-field textarea:focus {
+    border-color: var(--accent);
+  }
+
+  .ep-field textarea { resize: vertical; min-height: 60px; }
+
+  .ep-btn {
+    background: rgba(200,169,110,0.15);
+    border: 1px solid rgba(200,169,110,0.4);
+    color: var(--accent);
+    padding: 8px 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    border-radius: 2px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    width: 100%;
+    margin-top: 6px;
+  }
+  .ep-btn:hover { background: rgba(200,169,110,0.25); }
+  .ep-btn.danger { border-color: rgba(220,80,80,0.4); color: #e07070; background: rgba(220,80,80,0.1); }
+  .ep-btn.danger:hover { background: rgba(220,80,80,0.2); }
+
+  .item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .item-chip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    background: var(--surface2);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    font-size: 0.68rem;
+  }
+
+  .item-chip:hover { border-color: rgba(200,169,110,0.3); }
+  .item-chip.selected { border-color: var(--accent); color: var(--accent); }
+
+  .chip-actions { display: flex; gap: 6px; }
+  .chip-btn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 0.75rem;
+    padding: 2px 4px;
+    transition: color 0.2s;
+  }
+  .chip-btn:hover { color: var(--text); }
+
+  #close-panel {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  #close-panel:hover { color: var(--text); }
+
+  .divider { height: 1px; background: rgba(200,169,110,0.15); margin: 16px 0; }
+
+  /* ── CATALOG MODAL ── */
+  #cat-modal {
+    display: none; position: fixed; inset: 0; z-index: 9000;
+    background: rgba(0,0,0,0.88); backdrop-filter: blur(8px);
+    align-items: center; justify-content: center;
+  }
+  #cat-modal.on { display: flex; }
+  .cat-box {
+    background: #0e0e18; border: 1px solid rgba(200,169,110,0.2);
+    width: min(580px,94vw); max-height: 80vh; display: flex;
+    flex-direction: column; box-shadow: 0 0 80px rgba(0,0,0,0.9);
+  }
+  .cat-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .8rem 1.2rem; border-bottom: 1px solid rgba(200,169,110,0.12);
+  }
+  .cat-head-title {
+    font-family: 'Playfair Display', serif; font-size: .95rem;
+    color: var(--accent); letter-spacing: .05em;
+  }
+  .cat-close {
+    font-size: .65rem; letter-spacing: .12em; color: var(--text-dim);
+    background: none; border: 1px solid rgba(200,169,110,0.2);
+    padding: .18rem .55rem; cursor: pointer; font-family: 'DM Mono',monospace;
+    transition: all .2s;
+  }
+  .cat-close:hover { border-color: var(--accent); color: var(--accent); }
+  .cat-list {
+    flex: 1; overflow-y: auto; padding: .8rem 1.2rem;
+    display: flex; flex-direction: column; gap: .4rem;
+  }
+  .cat-item {
+    display: flex; align-items: center; gap: .8rem; padding: .6rem .9rem;
+    border: 1px solid rgba(200,169,110,0.1); cursor: pointer;
+    transition: all .2s; background: rgba(255,255,255,.01);
+  }
+  .cat-item:hover { background: rgba(200,169,110,.07); border-color: rgba(200,169,110,.3); }
+  .cat-item.is-active { border-color: var(--accent); background: rgba(200,169,110,.07); }
+  .cat-item-title { font-family: 'Playfair Display',serif; font-size: .82rem; color: var(--text); flex: 1; }
+  .cat-item-meta  { font-family: 'DM Mono',monospace; font-size: .6rem; color: var(--text-dim); flex-shrink: 0; }
+  .cat-badge {
+    font-family: 'DM Mono',monospace; font-size: .5rem; letter-spacing: .1em;
+    text-transform: uppercase; color: #0a0a0f; background: var(--accent);
+    padding: .05rem .3rem; flex-shrink: 0;
+  }
+  .cat-empty { font-family: 'DM Mono',monospace; font-size: .65rem; color: var(--text-dim); text-align: center; padding: 2rem; }
+  .cat-footer {
+    padding: .7rem 1.2rem; border-top: 1px solid rgba(200,169,110,.1);
+    display: flex; gap: .5rem;
+  }
+  .cat-footer input {
+    flex: 1; background: rgba(200,169,110,.04); border: 1px solid rgba(200,169,110,.2);
+    color: var(--text); font-family: 'DM Mono',monospace; font-size: .7rem;
+    padding: .4rem .7rem; outline: none;
+  }
+  .cat-footer input:focus { border-color: var(--accent); }
+  .cat-footer button {
+    background: rgba(200,169,110,.15); border: 1px solid rgba(200,169,110,.4);
+    color: var(--accent); font-family: 'DM Mono',monospace; font-size: .65rem;
+    padding: .4rem .9rem; cursor: pointer; white-space: nowrap; transition: all .2s;
+  }
+  .cat-footer button:hover { background: rgba(200,169,110,.25); }
+  /* Active lesson indicator top bar */
+  #active-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 800;
+    background: rgba(10,10,15,.92); border-bottom: 1px solid rgba(200,169,110,.12);
+    display: flex; align-items: center; gap: .8rem; padding: .3rem 1rem;
+    font-family: 'DM Mono',monospace; font-size: .62rem; color: var(--text-dim);
+  }
+  #active-bar .ab-label { color: var(--accent); font-size: .55rem; letter-spacing: .15em; text-transform: uppercase; }
+  #active-bar .ab-title { color: var(--text); }
+  #active-bar button {
+    margin-left: auto; background: rgba(200,169,110,.1); border: 1px solid rgba(200,169,110,.3);
+    color: var(--accent); font-family: 'DM Mono',monospace; font-size: .58rem;
+    padding: .18rem .6rem; cursor: pointer; transition: all .2s; letter-spacing: .08em;
+  }
+  #active-bar button:hover { background: rgba(200,169,110,.2); }
+  #puzzle-link {
+    background: rgba(124,107,196,.15); border: 1px solid rgba(124,107,196,.35);
+    color: var(--accent2); font-family: 'DM Mono',monospace; font-size: .58rem;
+    padding: .18rem .6rem; cursor: pointer; transition: all .2s; text-decoration: none;
+    letter-spacing: .08em;
+  }
+  #puzzle-link:hover { background: rgba(124,107,196,.25); }
+</style>
+</head>
+<body>
+
+<!-- ACTIVE LESSON BAR -->
+<div id="active-bar" style="display:none">
+  <span class="ab-label">Ενεργό</span>
+  <span class="ab-title" id="ab-title">—</span>
+  <a id="puzzle-link" href="puzzle.html">🧩 Puzzle Mode</a>
+  <button onclick="openCatalog()">📚 Βιβλιοθήκη</button>
+</div>
+
+<!-- CATALOG MODAL -->
+<div id="cat-modal">
+  <div class="cat-box">
+    <div class="cat-head">
+      <span class="cat-head-title">Βιβλιοθήκη Μαθημάτων</span>
+      <button class="cat-close" onclick="closeCatalog()">✕ Κλείσιμο</button>
+    </div>
+    <div class="cat-list" id="cat-list">
+      <div class="cat-empty">Φορτώνει…</div>
+    </div>
+    <div class="cat-footer">
+      <input type="text" id="cat-url-input" placeholder="GitHub raw URL ή lesson ID" />
+      <button onclick="loadFromUrl()">→ Φόρτωση</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOP SECTION -->
+<div id="top-section">
+  <div id="image-display">
+    <!-- Images injected here -->
+    <div class="no-image" id="no-image-msg">
+      <div class="icon">🗺</div>
+      <div>Επίλεξε ένα σημείο στο timeline</div>
+    </div>
+  </div>
+  <div class="image-overlay"></div>
+
+  <!-- Media type badge -->
+  <div id="media-badge"></div>
+
+  <!-- Google Slides button -->
+  <button id="slides-btn" onclick="openSlides()">▶ Άνοιγμα Slides</button>
+
+  <!-- Info -->
+  <div id="info-panel">
+    <div id="info-year"></div>
+    <div id="info-title"></div>
+    <div id="info-desc"></div>
+  </div>
+
+  <!-- Edit toggle -->
+  <button id="edit-toggle" onclick="togglePanel()">⚙ Επεξεργασία</button>
+
+  <!-- Map -->
+  <div id="map-container">
+    <div class="map-label">Τοποθεσία</div>
+    <div id="map"></div>
+    <div id="map-city-name">—</div>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div id="timeline-section">
+  <button class="tl-arrow" id="arrow-left" onclick="scrollTimeline(-200)">‹</button>
+  <div id="timeline-track"></div>
+  <button class="tl-arrow" id="arrow-right" onclick="scrollTimeline(200)">›</button>
+</div>
+
+<!-- EDIT PANEL -->
+<div id="edit-panel">
+  <button id="close-panel" onclick="togglePanel()">✕</button>
+  <h2>Timeline Editor</h2>
+
+  <div class="ep-section">
+    <h3>Σημεία Timeline</h3>
+    <div class="item-list" id="item-list"></div>
+    <button class="ep-btn" onclick="addNewItem()">+ Νέο Σημείο</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="ep-section">
+    <h3>📁 Σενάρια</h3>
+    <div class="ep-field">
+      <label>Όνομα Σεναρίου</label>
+      <input type="text" id="f-scenario-name" placeholder="π.χ. Βυζαντινή Ιστορία"/>
+    </div>
+    <button class="ep-btn" onclick="saveScenario()">💾 Αποθήκευση Σεναρίου</button>
+    <div style="margin-top:12px;">
+      <div class="ep-field" style="margin-bottom:6px;">
+        <label>Φόρτωση / Διαχείριση</label>
+      </div>
+      <div class="item-list" id="scenario-list"></div>
+    </div>
+    <div style="margin-top:10px; display:flex; gap:6px;">
+      <button class="ep-btn" onclick="exportScenario()" style="flex:1">⬇ Export JSON</button>
+      <label class="ep-btn" style="flex:1; text-align:center; cursor:pointer; margin-top:0;">
+        ⬆ Import JSON
+        <input type="file" accept=".json" onchange="importScenario(event)" style="display:none"/>
+      </label>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="ep-section" id="item-editor" style="display:none;">
+    <h3>Επεξεργασία Σημείου</h3>
+    <div class="ep-field">
+      <label>Θέση στο Timeline (1 = πρώτο)</label>
+      <input type="number" id="f-pos" placeholder="π.χ. 2" min="1"/>
+    </div>
+    <div class="ep-field">
+      <label>Έτος / Ημερομηνία</label>
+      <input type="text" id="f-year" placeholder="π.χ. 1453, 1821, Ιούνιος 1940"/>
+    </div>
+    <div class="ep-field">
+      <label>Τίτλος</label>
+      <input type="text" id="f-title" placeholder="Τίτλος γεγονότος"/>
+    </div>
+    <div class="ep-field">
+      <label>Περιγραφή</label>
+      <textarea id="f-desc" placeholder="Σύντομη περιγραφή..."></textarea>
+    </div>
+    <div class="ep-field">
+      <label>URL Εικόνας / Βίντεο (MP4, YouTube)</label>
+      <input type="text" id="f-img" placeholder="https://... (.jpg / .mp4 / youtube)"/>
+    </div>
+    <div class="ep-field">
+      <label>Google Slides URL (προαιρετικό)</label>
+      <input type="text" id="f-slides" placeholder="https://docs.google.com/presentation/d/…"/>
+    </div>
+    <div class="ep-field">
+      <label>Πόλη / Χώρα (για χάρτη)</label>
+      <input type="text" id="f-location" placeholder="π.χ. Κωνσταντινούπολη, Αθήνα"/>
+    </div>
+    <div class="ep-field">
+      <label>Γεωγρ. Πλάτος (lat)</label>
+      <input type="number" id="f-lat" placeholder="π.χ. 37.9838" step="0.0001"/>
+    </div>
+    <div class="ep-field">
+      <label>Γεωγρ. Μήκος (lng)</label>
+      <input type="number" id="f-lng" placeholder="π.χ. 23.7275" step="0.0001"/>
+    </div>
+    <div class="ep-field">
+      <label>Zoom χάρτη (1–18)</label>
+      <input type="number" id="f-zoom" placeholder="7" min="1" max="18"/>
+    </div>
+    <button class="ep-btn" onclick="saveItem()">✓ Αποθήκευση</button>
+    <button class="ep-btn danger" onclick="deleteItem()" style="margin-top:8px">✕ Διαγραφή</button>
+  </div>
+</div>
+
+<script>
+// ── CONFIG — προσαρμοσε το REPO_BASE ─────────────────────────────────────
+const REPO_BASE = (window.TL_CONFIG||{}).REPO_BASE ||
+  'https://raw.githubusercontent.com/dporpatonelis-crypto/Map-Timeline/main/';
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let timelineData = [];
+let activeId     = null;
+let editingId    = null;
+let map          = null;
+let marker       = null;
+let CATALOG      = [];
+let ACTIVE_LESSON_ID = null;
+
+// ── CATALOG FUNCTIONS ─────────────────────────────────────────────────────
+async function initApp() {
+  const previewUrl = new URLSearchParams(window.location.search).get('dataUrl');
+  if (previewUrl) {
+    try {
+      const response = await fetch(previewUrl, {cache:'no-store'});
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      const data = await response.json();
+      const events = Array.isArray(data) ? data : data.timeline;
+      if (!Array.isArray(events) || !events.length) throw new Error('Invalid timeline preview');
+      timelineData = events;
+      initMap(); renderTimeline(); renderItemList(); renderScenarioList(); updateActiveBar();
+      selectItem(timelineData[0].id);
+    } catch (error) {
+      console.error('Timeline preview failed:', error);
+      document.getElementById('ab-title').textContent = 'Σφάλμα φόρτωσης προεπισκόπησης';
+      document.getElementById('active-bar').style.display = 'flex';
+    }
+    return;
+  }
+  // 1. Φόρτωσε catalog
+  try {
+    const cr = await fetch(REPO_BASE + 'catalog.json', {cache:'no-store'});
+    if (cr.ok) {
+      const cat = await cr.json();
+      CATALOG = Array.isArray(cat) ? cat : (cat.scenarios || cat.lessons || []);
+    }
+  } catch(e) { console.warn('catalog.json not found:', e.message); }
+
+  // 2. Φόρτωσε active_lesson
+  try {
+    const ar = await fetch(REPO_BASE + 'active_lesson.json', {cache:'no-store'});
+    if (ar.ok) {
+      const al = await ar.json();
+      ACTIVE_LESSON_ID = al.lesson_id || null;
+    }
+  } catch(e) {}
+
+  // 3. Φόρτωσε δεδομένα
+  // Προτεραιότητα: sessionStorage (από σελίδα που ήρθαμε) → active lesson → πρώτο του catalog
+  const stored = sessionStorage.getItem('tl_data');
+  if (stored) {
+    try { timelineData = JSON.parse(stored); } catch(e) {}
+    sessionStorage.removeItem('tl_data');
+  }
+
+  if (!timelineData.length && ACTIVE_LESSON_ID) {
+    await loadLessonById(ACTIVE_LESSON_ID, false);
+  }
+
+  if (!timelineData.length && CATALOG.length) {
+    await loadLessonById(CATALOG[0].id, false);
+  }
+
+  initMap();
+  renderTimeline();
+  renderItemList();
+  renderScenarioList();
+  if (timelineData.length > 0) {
+    setTimeout(() => selectItem(timelineData[0].id), 300);
+  }
+
+  // Εμφάνισε active bar
+  updateActiveBar();
+
+  // Αν δεν υπάρχουν data, άνοιξε catalog αυτόματα
+  if (!timelineData.length && CATALOG.length) openCatalog();
+}
+
+async function loadLessonById(lessonId, showFeedback = true) {
+  const entry = CATALOG.find(c => c.id === lessonId);
+  const url = entry && entry.dataFile
+    ? REPO_BASE + entry.dataFile
+    : REPO_BASE + 'data/' + lessonId + '.json';
+  try {
+    const r = await fetch(url, {cache:'no-store'});
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    timelineData = Array.isArray(data) ? data : [data];
+    ACTIVE_LESSON_ID = lessonId;
+    updateActiveBar();
+    resetView();
+    if (showFeedback) { closeCatalog(); showToast('Φορτώθηκε: ' + (entry && entry.title || lessonId)); }
+    return true;
+  } catch(e) {
+    if (showFeedback) showToast('Σφάλμα: ' + e.message);
+    return false;
+  }
+}
+
+async function loadFromUrl() {
+  const val = (document.getElementById('cat-url-input').value || '').trim();
+  if (!val) return;
+  const url = val.startsWith('http') ? val : REPO_BASE + 'data/' + val + '.json';
+  try {
+    const r = await fetch(url, {cache:'no-store'});
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    timelineData = Array.isArray(data) ? data : [data];
+    resetView();
+    closeCatalog();
+    showToast('Φορτώθηκε από URL');
+    updateActiveBar();
+  } catch(e) { showToast('Σφάλμα: ' + e.message); }
+}
+
+function openCatalog() {
+  const list = document.getElementById('cat-list');
+  if (!CATALOG.length) {
+    list.innerHTML = '<div class="cat-empty">Δεν βρέθηκε catalog.json</div>';
+  } else {
+    list.innerHTML = CATALOG.map(c => {
+      const isAct = c.id === ACTIVE_LESSON_ID;
+      return '<div class="cat-item' + (isAct ? ' is-active' : '') +
+        '" onclick="loadLessonById(\'' + c.id + '\')">' +
+        (isAct ? '<span class="cat-badge">ΕΝΕΡΓΟ</span>' : '') +
+        '<div class="cat-item-title">' + (c.title || c.id) + '</div>' +
+        '<div class="cat-item-meta">' + (c.type || '') + (c.updatedAt ? ' · ' + c.updatedAt : '') + '</div>' +
+        '</div>';
+    }).join('');
+  }
+  document.getElementById('cat-modal').classList.add('on');
+}
+function closeCatalog() { document.getElementById('cat-modal').classList.remove('on'); }
+document.getElementById('cat-modal').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('cat-modal')) closeCatalog();
+});
+
+function updateActiveBar() {
+  const bar = document.getElementById('active-bar');
+  const entry = CATALOG.find(c => c.id === ACTIVE_LESSON_ID);
+  const title = entry ? entry.title : (timelineData.length ? timelineData[0].title || 'Timeline' : '—');
+  document.getElementById('ab-title').textContent = title;
+  bar.style.display = timelineData.length ? 'flex' : 'none';
+  // Πέρασε data στο puzzle μέσω sessionStorage link
+  document.getElementById('puzzle-link').onclick = function(e) {
+    e.preventDefault();
+    sessionStorage.setItem('tl_data', JSON.stringify(timelineData));
+    window.location.href = 'puzzle.html';
+  };
+}
+
+function resetView() {
+  activeId = null; editingId = null;
+  document.getElementById('item-editor').style.display = 'none';
+  document.querySelectorAll('.scene-image, .scene-video, .scene-iframe').forEach(el => el.remove());
+  document.getElementById('no-image-msg').style.display = '';
+  document.getElementById('info-year').textContent = '';
+  document.getElementById('info-title').textContent = '';
+  document.getElementById('info-desc').textContent = '';
+  document.getElementById('slides-btn').style.display = 'none';
+  document.getElementById('media-badge').style.display = 'none';
+  renderTimeline(); renderItemList(); renderScenarioList();
+  if (timelineData.length > 0) setTimeout(() => selectItem(timelineData[0].id), 300);
+}
+
+// Εκκίνηση
+document.addEventListener('DOMContentLoaded', initApp);
+
+// ── MAP INIT ──────────────────────────────────────────────────────────────
+function initMap() {
+  map = L.map('map', {
+    zoomControl: false,
+    attributionControl: false,
+    dragging: false,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+    touchZoom: false
+  }).setView([37.98, 23.73], 5);
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    maxZoom: 18
+  }).addTo(map);
+
+  const customIcon = L.divIcon({
+    className: '',
+    html: `<div style="
+      width:12px; height:12px;
+      background: #c8a96e;
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(200,169,110,0.3), 0 0 12px rgba(200,169,110,0.5);
+    "></div>`,
+    iconSize: [12,12],
+    iconAnchor: [6,6]
+  });
+
+  marker = L.marker([37.98, 23.73], { icon: customIcon }).addTo(map);
+}
+
+function updateMap(item) {
+  if (!map) return;
+  map.flyTo([item.lat, item.lng], item.zoom || 8, { duration: 1.2 });
+  marker.setLatLng([item.lat, item.lng]);
+  document.getElementById('map-city-name').textContent = item.location || '—';
+}
+
+// ── TIMELINE RENDER ───────────────────────────────────────────────────────
+function renderTimeline() {
+  const track = document.getElementById('timeline-track');
+  track.innerHTML = '';
+
+  timelineData.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'timeline-item' + (item.id === activeId ? ' active' : '');
+    el.dataset.id = item.id;
+    el.innerHTML = `
+      <div class="tl-top">
+        <div class="tl-year">${item.year}</div>
+        <div class="tl-dot"></div>
+      </div>
+      <div class="tl-label">${item.title}</div>
+    `;
+    el.addEventListener('click', () => selectItem(item.id));
+    track.appendChild(el);
+  });
+}
+
+function scrollTimeline(delta) {
+  document.getElementById('timeline-track').scrollBy({ left: delta, behavior: 'smooth' });
+}
+
+// ── MEDIA HELPERS ─────────────────────────────────────────────────────────
+let currentSlidesUrl = '';
+
+function mediaType(url) {
+  if (!url) return 'none';
+  const u = url.toLowerCase();
+  if (u.includes('youtube.com') || u.includes('youtu.be')) return 'youtube';
+  if (u.includes('vimeo.com')) return 'vimeo';
+  if (u.match(/\.mp4(\?|$)/)) return 'mp4';
+  return 'image';
+}
+
+function youtubeEmbedUrl(url) {
+  // Handle youtu.be/ID and youtube.com/watch?v=ID
+  let id = '';
+  const m1 = url.match(/youtu\.be\/([^?&]+)/);
+  const m2 = url.match(/[?&]v=([^&]+)/);
+  if (m1) id = m1[1];
+  else if (m2) id = m2[1];
+  return id ? `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=1` : url;
+}
+
+function openSlides() {
+  if (!currentSlidesUrl) return;
+  window.open(currentSlidesUrl, '_blank');
+}
+
+// ── SELECT ITEM ───────────────────────────────────────────────────────────
+function selectItem(id) {
+  activeId = id;
+  const item = timelineData.find(i => i.id === id);
+  if (!item) return;
+
+  // Update timeline active state
+  document.querySelectorAll('.timeline-item').forEach(el => {
+    el.classList.toggle('active', parseInt(el.dataset.id) === id);
+  });
+
+  // Hide all existing media
+  document.getElementById('no-image-msg').style.display = 'none';
+  document.querySelectorAll('.scene-image, .scene-video, .scene-iframe').forEach(el => {
+    el.classList.remove('active');
+    // Pause any playing video/iframe
+    if (el.tagName === 'VIDEO') el.pause();
+    if (el.tagName === 'IFRAME') el.src = el.src; // reset iframe
+  });
+
+  const display = document.getElementById('image-display');
+  const badge = document.getElementById('media-badge');
+  const slidesBtn = document.getElementById('slides-btn');
+  const type = mediaType(item.img);
+  const elId = 'media-' + id;
+  let mediaEl = document.getElementById(elId);
+
+  if (type === 'none') {
+    document.getElementById('no-image-msg').style.display = '';
+    badge.style.display = 'none';
+  } else if (type === 'image') {
+    if (!mediaEl) {
+      mediaEl = document.createElement('img');
+      mediaEl.className = 'scene-image';
+      mediaEl.id = elId;
+      mediaEl.src = item.img;
+      mediaEl.alt = item.title;
+      display.appendChild(mediaEl);
+    }
+    badge.style.display = 'none';
+    setTimeout(() => mediaEl.classList.add('active'), 20);
+
+  } else if (type === 'mp4') {
+    if (!mediaEl) {
+      mediaEl = document.createElement('video');
+      mediaEl.className = 'scene-video';
+      mediaEl.id = elId;
+      mediaEl.src = item.img;
+      mediaEl.autoplay = true;
+      mediaEl.muted = true;
+      mediaEl.loop = true;
+      mediaEl.controls = true;
+      mediaEl.style.objectFit = 'cover';
+      display.appendChild(mediaEl);
+    }
+    mediaEl.play().catch(() => {});
+    badge.textContent = '▶ VIDEO';
+    badge.style.display = 'block';
+    setTimeout(() => mediaEl.classList.add('active'), 20);
+
+  } else if (type === 'youtube' || type === 'vimeo') {
+    // Always recreate iframe to avoid autoplay issues
+    if (mediaEl) mediaEl.remove();
+    mediaEl = document.createElement('iframe');
+    mediaEl.className = 'scene-iframe';
+    mediaEl.id = elId;
+    mediaEl.src = type === 'youtube' ? youtubeEmbedUrl(item.img) : item.img;
+    mediaEl.allow = 'autoplay; fullscreen';
+    mediaEl.allowFullscreen = true;
+    display.appendChild(mediaEl);
+    badge.textContent = type === 'youtube' ? '▶ YOUTUBE' : '▶ VIMEO';
+    badge.style.display = 'block';
+    setTimeout(() => mediaEl.classList.add('active'), 20);
+  }
+
+  // Google Slides button
+  currentSlidesUrl = item.slides || '';
+  slidesBtn.style.display = currentSlidesUrl ? 'block' : 'none';
+
+  // Update info panel
+  document.getElementById('info-year').textContent = item.year;
+  document.getElementById('info-title').textContent = item.title;
+  document.getElementById('info-desc').textContent = item.desc;
+
+  // Update map
+  updateMap(item);
+}
+
+// ── EDIT PANEL ────────────────────────────────────────────────────────────
+function togglePanel() {
+  document.getElementById('edit-panel').classList.toggle('open');
+  renderItemList();
+  renderScenarioList();
+}
+
+function renderItemList() {
+  const list = document.getElementById('item-list');
+  list.innerHTML = '';
+  timelineData.forEach(item => {
+    const chip = document.createElement('div');
+    chip.className = 'item-chip' + (item.id === editingId ? ' selected' : '');
+    chip.innerHTML = `
+      <span>${item.year} — ${item.title.substring(0,22)}${item.title.length>22?'…':''}</span>
+      <div class="chip-actions">
+        <button class="chip-btn" onclick="editItem(${item.id})">✎</button>
+      </div>
+    `;
+    chip.addEventListener('click', () => editItem(item.id));
+    list.appendChild(chip);
+  });
+}
+
+function editItem(id) {
+  editingId = id;
+  const item = timelineData.find(i => i.id === id);
+  if (!item) return;
+
+  document.getElementById('f-pos').value = timelineData.findIndex(i => i.id === id) + 1;
+  document.getElementById('f-year').value = item.year;
+  document.getElementById('f-title').value = item.title;
+  document.getElementById('f-desc').value = item.desc;
+  document.getElementById('f-img').value = item.img;
+  document.getElementById('f-slides').value = item.slides || '';
+  document.getElementById('f-location').value = item.location || '';
+  document.getElementById('f-lat').value = item.lat || '';
+  document.getElementById('f-lng').value = item.lng || '';
+  document.getElementById('f-zoom').value = item.zoom || 8;
+
+  document.getElementById('item-editor').style.display = 'block';
+  renderItemList();
+}
+
+function addNewItem() {
+  const newId = Date.now();
+  timelineData.push({
+    id: newId,
+    year: 'Νέο',
+    title: 'Νέο Γεγονός',
+    desc: '',
+    img: '',
+    location: '',
+    lat: 38,
+    lng: 23,
+    zoom: 7
+  });
+  renderTimeline();
+  renderItemList();
+  editItem(newId);
+}
+
+function saveItem() {
+  const item = timelineData.find(i => i.id === editingId);
+  if (!item) return;
+
+  item.year = document.getElementById('f-year').value;
+  item.title = document.getElementById('f-title').value;
+  item.desc = document.getElementById('f-desc').value;
+  item.img = document.getElementById('f-img').value;
+  item.slides = document.getElementById('f-slides').value.trim();
+  item.location = document.getElementById('f-location').value;
+  item.lat = parseFloat(document.getElementById('f-lat').value) || 38;
+  item.lng = parseFloat(document.getElementById('f-lng').value) || 23;
+  item.zoom = parseInt(document.getElementById('f-zoom').value) || 7;
+
+  // Handle position reorder
+  const desiredPos = parseInt(document.getElementById('f-pos').value);
+  if (!isNaN(desiredPos)) {
+    const curIdx = timelineData.findIndex(i => i.id === editingId);
+    const newIdx = Math.max(0, Math.min(timelineData.length - 1, desiredPos - 1));
+    if (curIdx !== newIdx) {
+      timelineData.splice(curIdx, 1);
+      timelineData.splice(newIdx, 0, item);
+    }
+  }
+
+  // Refresh cached media element if URL changed
+  const mediaEl = document.getElementById('media-' + editingId);
+  if (mediaEl) { mediaEl.remove(); } // force recreate on next select
+
+  // Refresh active view if this is the selected item
+  if (activeId === editingId) {
+    selectItem(editingId);
+  }
+
+  renderTimeline();
+  renderItemList();
+}
+
+function deleteItem() {
+  if (!editingId) return;
+  timelineData = timelineData.filter(i => i.id !== editingId);
+  editingId = null;
+  document.getElementById('item-editor').style.display = 'none';
+  if (activeId === editingId) activeId = null;
+  renderTimeline();
+  renderItemList();
+}
+
+// ── SCENARIOS ─────────────────────────────────────────────────────────────
+function getSavedScenarios() {
+  try { return JSON.parse(localStorage.getItem('tl_scenarios') || '{}'); } catch { return {}; }
+}
+
+function saveScenario() {
+  const name = document.getElementById('f-scenario-name').value.trim();
+  if (!name) { alert('Δώσε όνομα στο σενάριο πρώτα.'); return; }
+  const scenarios = getSavedScenarios();
+  scenarios[name] = { name, data: JSON.parse(JSON.stringify(timelineData)), savedAt: new Date().toLocaleDateString('el') };
+  localStorage.setItem('tl_scenarios', JSON.stringify(scenarios));
+  renderScenarioList();
+  document.getElementById('f-scenario-name').value = '';
+  showToast('Σενάριο "' + name + '" αποθηκεύτηκε!');
+}
+
+function loadScenario(name) {
+  const scenarios = getSavedScenarios();
+  if (!scenarios[name]) return;
+  if (!confirm('Φόρτωση "' + name + '"; Οι αλλαγές δεν θα αποθηκευτούν.')) return;
+  timelineData = scenarios[name].data;
+  activeId = null; editingId = null;
+  document.getElementById('item-editor').style.display = 'none';
+  document.querySelectorAll('.scene-image, .scene-video, .scene-iframe').forEach(el => el.remove());
+  document.getElementById('no-image-msg').style.display = '';
+  document.getElementById('info-year').textContent = '';
+  document.getElementById('info-title').textContent = '';
+  document.getElementById('info-desc').textContent = '';
+  document.getElementById('slides-btn').style.display = 'none';
+  document.getElementById('media-badge').style.display = 'none';
+  renderTimeline();
+  renderItemList();
+  renderScenarioList();
+  if (timelineData.length > 0) setTimeout(() => selectItem(timelineData[0].id), 300);
+}
+
+function deleteScenario(name) {
+  if (!confirm('Διαγραφή "' + name + '";')) return;
+  const scenarios = getSavedScenarios();
+  delete scenarios[name];
+  localStorage.setItem('tl_scenarios', JSON.stringify(scenarios));
+  renderScenarioList();
+}
+
+function renderScenarioList() {
+  const list = document.getElementById('scenario-list');
+  const scenarios = getSavedScenarios();
+  const keys = Object.keys(scenarios);
+  list.innerHTML = '';
+  if (keys.length === 0) {
+    list.innerHTML = '<div style="font-size:0.65rem;color:var(--text-dim);padding:6px 0;">Δεν υπάρχουν αποθηκευμένα σενάρια</div>';
+    return;
+  }
+  keys.forEach(name => {
+    const s = scenarios[name];
+    const chip = document.createElement('div');
+    chip.className = 'item-chip';
+    chip.style.cursor = 'default';
+    chip.innerHTML = `
+      <div>
+        <div style="font-size:0.7rem;">${name}</div>
+        <div style="font-size:0.6rem;color:var(--text-dim)">${s.data.length} σημεία · ${s.savedAt}</div>
+      </div>
+      <div class="chip-actions">
+        <button class="chip-btn" title="Φόρτωση" onclick="loadScenario('${name.replace(/'/g,"\\'")}')">▶</button>
+        <button class="chip-btn" title="Διαγραφή" onclick="deleteScenario('${name.replace(/'/g,"\\'")}')">✕</button>
+      </div>`;
+    list.appendChild(chip);
+  });
+}
+
+function exportScenario() {
+  const name = document.getElementById('f-scenario-name').value.trim() || 'timeline-export';
+  const blob = new Blob([JSON.stringify(timelineData, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name + '.json';
+  a.click();
+}
+
+function importScenario(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!Array.isArray(data)) throw new Error();
+      timelineData = data;
+      activeId = null; editingId = null;
+      document.getElementById('item-editor').style.display = 'none';
+      document.querySelectorAll('.scene-image, .scene-video, .scene-iframe').forEach(el => el.remove());
+      document.getElementById('no-image-msg').style.display = '';
+      renderTimeline(); renderItemList(); renderScenarioList();
+      if (timelineData.length > 0) setTimeout(() => selectItem(timelineData[0].id), 300);
+      showToast('Import επιτυχές: ' + file.name);
+    } catch { alert('Μη έγκυρο αρχείο JSON.'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function showToast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toast';
+    t.style.cssText = 'position:fixed;bottom:160px;left:50%;transform:translateX(-50%);background:#c8a96e;color:#0a0a0f;padding:8px 18px;border-radius:3px;font-size:0.72rem;font-family:DM Mono,monospace;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  setTimeout(() => { t.style.opacity = '0'; }, 2200);
+}
+
+// ── SCENARIOS ─────────────────────────────────────────────────────────────
+// (initMap, renderTimeline, renderItemList, renderScenarioList
+//  καλούνται από initApp — δεν χρειάζονται εδώ)
+</script>
+</body>
+</html>

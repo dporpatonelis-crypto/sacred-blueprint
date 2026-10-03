@@ -1,0 +1,94 @@
+--- a/workflows/sync_github.sh
++++ b/workflows/sync_github.sh
+@@ -47,6 +47,91 @@
+   exit 1
+ fi
+ 
++# Lesson publication uses a fresh remote checkout and only this lesson's
++# current files. Existing local edits and unpublished commits stay local.
++if [ -n "$LESSON_DIR" ]; then
++  (
++    set -e
++    [ -f "$BASE/$LESSON_DIR/master_output.json" ] || exit 1
++    PUBLICATION_ROOT=$(mktemp -d /tmp/sacred-blueprint-publication.XXXXXX)
++    PUBLICATION_TREE="$PUBLICATION_ROOT/worktree"
++    cleanup_publication() {
++      cd "$BASE" || return
++      if [ -d "$PUBLICATION_TREE" ]; then
++        git worktree remove --force "$PUBLICATION_TREE" >/dev/null 2>&1 || true
++      fi
++      rmdir "$PUBLICATION_ROOT" >/dev/null 2>&1 || true
++    }
++    trap cleanup_publication EXIT
++    git worktree add --detach "$PUBLICATION_TREE" origin/main
++    CURRENT_NAMES=$(python3 - "$BASE/$LESSON_DIR/master_output.json" << 'PYEOF'
++import json, sys
++with open(sys.argv[1], encoding='utf-8') as source:
++    master = json.load(source)
++names = {'timeline': 'timeline', 'timeline_item': 'timeline',
++         'investigation': 'investigation', 'investigation_board': 'investigation',
++         'mindpalace': 'mindpalace', 'mind_palace': 'mindpalace',
++         'personalpage': 'personalpage', 'personal_page': 'personalpage',
++         'history3d': 'history3d', 'anchor': 'anchor', 'books': 'books',
++         'notebook': 'notebook', 'media': 'media'}
++ignored = {'title','subtitle','description','date','era','location','coordinates',
++           '_comment','_version','draft_modules','media_enrichment_audit'}
++unknown = set(master) - set(names) - ignored
++if unknown:
++    raise SystemExit('Unsupported scoped publication keys: ' + ', '.join(sorted(unknown)))
++print('\n'.join(sorted({names[key] for key in master if key in names})))
++PYEOF
++)
++    PUBLICATION_PATHS=("$LESSON_DIR" "lessons/index.html" "data/current/active_lesson.json")
++    mkdir -p "$PUBLICATION_TREE/data/current" "$PUBLICATION_TREE/$LESSON_DIR"
++    cp "$BASE/data/current/active_lesson.json" "$PUBLICATION_TREE/data/current/active_lesson.json"
++    for name in $CURRENT_NAMES; do
++      cp "$BASE/data/current/$name.json" "$PUBLICATION_TREE/data/current/$name.json"
++      PUBLICATION_PATHS+=("data/current/$name.json")
++    done
++    if [ -f "$BASE/$LESSON_DIR/sculpture_output.json" ]; then
++      cp "$BASE/data/current/sculpture.json" "$PUBLICATION_TREE/data/current/sculpture.json"
++      PUBLICATION_PATHS+=("data/current/sculpture.json")
++    fi
++    rsync -a --delete --exclude '.DS_Store' "$BASE/$LESSON_DIR/" "$PUBLICATION_TREE/$LESSON_DIR/"
++    python3 - "$PUBLICATION_TREE/$LESSON_DIR/meta.json" << 'PYEOF'
++import json, sys
++from pathlib import Path
++p = Path(sys.argv[1])
++meta = json.loads(p.read_text(encoding='utf-8'))
++meta['status'] = 'published'
++p.write_text(json.dumps(meta, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
++PYEOF
++    # Build the dashboard from retained remote lessons plus the new lesson.
++    # Helper files are copied for execution only and are never staged here.
++    for helper in scripts/history3d_contract.py scripts/validate_sculpture.py templates/history3d/default.json templates/sculpture/default.json; do
++      mkdir -p "$PUBLICATION_TREE/$(dirname "$helper")"
++      cp "$BASE/$helper" "$PUBLICATION_TREE/$helper"
++    done
++    cd "$PUBLICATION_TREE"
++    bash "$BASE/workflows/generate_dashboard.sh"
++    git add -- "${PUBLICATION_PATHS[@]}"
++    if git diff --cached --quiet -- "${PUBLICATION_PATHS[@]}"; then
++      echo "ⓘ Το remote περιέχει ήδη τα ίδια publication data."
++      exit 0
++    fi
++    git config user.name "Sacred Blueprint Publisher"
++    git config user.email "publisher@sacred-blueprint.local"
++    git commit -m "$MSG" -- "${PUBLICATION_PATHS[@]}"
++    git push origin HEAD:main
++    python3 - "$BASE/$LESSON_DIR/meta.json" << 'PYEOF'
++import json, sys
++from pathlib import Path
++p = Path(sys.argv[1])
++meta = json.loads(p.read_text(encoding='utf-8'))
++meta['status'] = 'published'
++p.write_text(json.dumps(meta, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
++PYEOF
++    echo "✓ Δημοσιεύτηκε το συγκεκριμένο μάθημα και τα επιλεγμένα current αρχεία."
++  )
++  exit $?
++fi
++
+ echo "🔧 Staging: data/current/"
+ git add data/current/
+ 

@@ -1,0 +1,23 @@
+--- a/workflows/generate_dashboard.sh
++++ b/workflows/generate_dashboard.sh
+@@ -52,7 +52,7 @@
+ with open(sys.argv[1], encoding='utf-8') as source:
+     template = json.load(source)
+ print(json.dumps({'contributions': [
+-    {key: item[key] for key in ('region', 'text', 'source', 'category')}
++    {key: item[key] for key in ('id', 'region', 'label', 'prompt', 'text', 'source', 'category') if key in item}
+     for item in template.get('contributions', [])
+ ]}, ensure_ascii=False, separators=(',', ':')))
+ PYEOF
+@@ -112,10 +112,7 @@
+ investigation_value = m['investigation'] if 'investigation' in m else m.get('investigation_board')
+ if investigation_value is not None:
+     ib = investigation_value
+-    out['investigation'] = {'topic': ib.get('topic', ''),
+-        'clues': [{'title': c.get('title',''),
+-            'description': c.get('description', c.get('content','')),
+-            'type': c.get('type','evidence')} for c in ib.get('clues',[])]}
++    out['investigation'] = ib
+ 
+ if 'history3d' in m:
+     h = m['history3d'] if isinstance(m['history3d'], dict) else {}

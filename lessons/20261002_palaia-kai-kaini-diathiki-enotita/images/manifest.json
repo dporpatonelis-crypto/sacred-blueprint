@@ -1,0 +1,110 @@
+{
+  "lessonId": "20261002_palaia-kai-kaini-diathiki-enotita",
+  "status": "approved-urls-registered",
+  "published": false,
+  "assets": [
+    {
+      "id": "01-abraham-sarah",
+      "title": "Η κλήση του Αβραάμ και η πορεία της υποσχέσεως",
+      "targets": [
+        "timeline.[0].img"
+      ],
+      "sourcePath": "/Users/dimitriosporpatonelis/.codex/generated_images/01a0fdb5-41ae-7d73-a9a5-353a3919a624/exec-acd44650-3d74-4ccc-b01f-b182f2424fbb.png",
+      "localPath": "/Users/dimitriosporpatonelis/sacred-blueprint/lessons/20261002_palaia-kai-kaini-diathiki-enotita/images/01-abraham-sarah.png",
+      "publicUrl": "https://i.ibb.co/fYDxnyxX/image.png",
+      "approval": "approved",
+      "generator": "built-in image_gen",
+      "prompt": "Create one finished educational theological illustration, widescreen 16:9, mature visual language suitable for Greek secondary education from Gymnasium through final Lyceum. Neo-Byzantine painted illustration: disciplined clear forms, dignified faces, luminous gold and warm earth pigments, deep blue accents, subtle mineral-pigment texture, sophisticated balanced composition. Full bleed, no border, no written words, no labels, no lettering, no watermark. Carefully distinguish all people and limbs. The scene must communicate the specified lesson concept and stand alone at small screen size. Use case: historical-scene. Main request: Abraham and Sarah begin their journey of trust in God's promise, walking together from their homeland toward the land of Canaan. Two mature ancient Near Eastern adults wearing modest ancient robes, carrying simple travel bundles, leading a single pack animal on a winding path across an expansive ancient Near Eastern landscape. Sarah is equally visible beside Abraham. The path leads toward a broad luminous horizon; a spreading tree in the distance hints at hospitality. Three-quarter wide view, figures clearly readable, no representation of God as a human figure, no modern buildings, no armor, no ethnic caricatures. Convey a free step of faith and a promise that opens toward all peoples.",
+      "sha256": "b71d6fee104eac95ac4554c2d8223106157976ad6dc0b854c086f0b171dd7126",
+      "bytes": 3256938,
+      "mediaId": "IMG-075",
+      "remoteSha256Verified": true
+    },
+    {
+      "id": "02-apostolic-council",
+      "title": "Η Αποστολική Σύνοδος και το άνοιγμα στα έθνη",
+      "targets": [
+        "timeline.[5].img"
+      ],
+      "sourcePath": "/Users/dimitriosporpatonelis/.codex/generated_images/01a0fdb5-41ae-7d73-a9a5-353a3919a624/exec-c2c7fe56-18b9-4391-ad87-9264c51d0803.png",
+      "localPath": "/Users/dimitriosporpatonelis/sacred-blueprint/lessons/20261002_palaia-kai-kaini-diathiki-enotita/images/02-apostolic-council.png",
+      "publicUrl": "https://i.ibb.co/LznJ2JGv/image.png",
+      "approval": "approved",
+      "generator": "built-in image_gen",
+      "prompt": "Create one finished educational theological illustration, widescreen 16:9, mature visual language suitable for Greek secondary education from Gymnasium through final Lyceum. Neo-Byzantine painted illustration: disciplined clear forms, dignified faces, luminous gold and warm earth pigments, deep blue accents, subtle mineral-pigment texture, sophisticated balanced composition. Full bleed, no border, no written words, no labels, no lettering, no watermark. Carefully distinguish all people and limbs. The scene must communicate the specified lesson concept and stand alone at small screen size. Use case: historical-scene. Main request: the Apostolic Council in Jerusalem, around the middle of the first century AD, showing Peter, James, Paul and Barnabas among a small assembly of apostles, elders and believers listening and deliberating about the reception of Gentile believers. An austere limestone courtyard or room in first-century Jerusalem, simple ancient robes, diverse adult faces from the eastern Mediterranean, dignified engaged expressions. One speaker gently gestures while others listen; an open unmarked scroll rests on a simple table. Welcoming, thoughtful common discernment, not confrontation. No imperial court, no medieval episcopal crowns, no modern furniture or clothing, no surgical depiction, no writing on the scroll, no invented modern national flags.",
+      "sha256": "c01928649df1917b11a4924d870c069eb3f76811c8944bd5f9e19f1bc656def6",
+      "bytes": 2503593,
+      "mediaId": "IMG-076",
+      "remoteSha256Verified": true
+    },
+    {
+      "id": "03-transfiguration",
+      "title": "Η Μεταμόρφωση: Νόμος, Προφήτες και πλήρωση",
+      "targets": [
+        "investigation.clues[5].image"
+      ],
+      "sourcePath": "/Users/dimitriosporpatonelis/.codex/generated_images/01a0fdb5-41ae-7d73-a9a5-353a3919a624/exec-355a1f9c-13c9-408f-9193-e9c808b7e4d8.png",
+      "localPath": "/Users/dimitriosporpatonelis/sacred-blueprint/lessons/20261002_palaia-kai-kaini-diathiki-enotita/images/03-transfiguration.png",
+      "publicUrl": "https://i.ibb.co/Y7Br8m4h/image.png",
+      "approval": "approved",
+      "generator": "built-in image_gen",
+      "prompt": "Create one finished educational theological illustration, widescreen 16:9, mature visual language suitable for Greek secondary education from Gymnasium through final Lyceum. Neo-Byzantine painted illustration: disciplined clear forms, dignified faces, luminous gold and warm earth pigments, deep blue accents, subtle mineral-pigment texture, sophisticated balanced composition. Full bleed, no border, no written words, no labels, no lettering, no watermark. Carefully distinguish all people and limbs. The scene must communicate the specified lesson concept and stand alone at small screen size. Use case: historical-scene with Byzantine iconographic composition. Main request: the Transfiguration of Christ on Mount Tabor, faithful to traditional Orthodox composition. Exactly SIX people total: Christ standing at upper center within a luminous blue-white mandorla, Moses at upper viewer-right holding closed tablets without lettering, Elijah at upper viewer-left; at the lower foreground exactly three apostles, Peter, James and John, reacting in awe, kneeling or prostrate on rocky slopes. Christ in brilliant white robes; radiant light connects the upper and lower registers. Christ's halo contains no letters. Moses and Elijah are distinct dignified elders. Preserve Orthodox theological visual order: Christ is the center and fulfillment of Law and Prophets, prophets stand beside Him, apostles below. Ensure six clearly distinct bodies, two arms and two legs per person, no extra people, no wings, no angel substitutions, no written inscriptions.",
+      "sha256": "856eae7742fb4b82d21d45c69d79fe293b0202acbbc07df90358834b683d4939",
+      "bytes": 2899615,
+      "mediaId": "IMG-077",
+      "remoteSha256Verified": true
+    },
+    {
+      "id": "04-room-fulfilment",
+      "title": "Η αίθουσα της Πληρώσεως",
+      "targets": [
+        "mindpalace.mind_palace.rooms[0].image"
+      ],
+      "sourcePath": "/Users/dimitriosporpatonelis/.codex/generated_images/01a0fdb5-41ae-7d73-a9a5-353a3919a624/exec-9df70784-e551-43c7-97d5-a85c9dad303e.png",
+      "localPath": "/Users/dimitriosporpatonelis/sacred-blueprint/lessons/20261002_palaia-kai-kaini-diathiki-enotita/images/04-room-fulfilment.png",
+      "publicUrl": "https://i.ibb.co/nMKstLJq/image.png",
+      "approval": "approved",
+      "generator": "built-in image_gen",
+      "prompt": "Create one finished educational theological illustration, widescreen 16:9, mature visual language suitable for Greek secondary education from Gymnasium through final Lyceum. Neo-Byzantine painted illustration: disciplined clear forms, dignified faces, luminous gold and warm earth pigments, deep blue accents, subtle mineral-pigment texture, sophisticated balanced composition. Full bleed, no border, no written words, no labels, no lettering, no watermark. Carefully distinguish all people and limbs. The scene must communicate the specified lesson concept and stand alone at small screen size. Use case: stylized-concept. Main request: a symbolic learning chamber for the unity and fulfillment of Old and New Testaments. An austere contemplative stone study room, a simple reading table with two distinct ancient rolled scrolls beside one open book. The book's pages are entirely blank: NO letters or illegible faux-script. Soft luminous light falls across the scrolls and the open book together, joining them in one visual field. No human figures. Wide composition, coherent scale, modest unornamented setting, gentle arch in background, no fantasy magical effects, no modern library, no false archaeological assertion. The central objects remain clear in thumbnail, visually communicate preparation and fulfillment belonging to one sacred history.",
+      "sha256": "ec3d082e2dba90b5c28f139ef99212e3fb35bf823dc34c055ce50f5d23a125e5",
+      "bytes": 2660354,
+      "mediaId": "IMG-078",
+      "remoteSha256Verified": true
+    },
+    {
+      "id": "05-room-oikoumene",
+      "title": "Η αίθουσα της Οικουμένης",
+      "targets": [
+        "mindpalace.mind_palace.rooms[1].image"
+      ],
+      "sourcePath": "/Users/dimitriosporpatonelis/.codex/generated_images/01a0fdb5-41ae-7d73-a9a5-353a3919a624/exec-32bf8370-e209-4fd6-9c1d-d3d9933447e7.png",
+      "localPath": "/Users/dimitriosporpatonelis/sacred-blueprint/lessons/20261002_palaia-kai-kaini-diathiki-enotita/images/05-room-oikoumene.png",
+      "publicUrl": "https://i.ibb.co/PZ4PGgwQ/image.png",
+      "approval": "approved",
+      "generator": "built-in image_gen",
+      "prompt": "Create one finished educational theological illustration, widescreen 16:9, mature visual language suitable for Greek secondary education from Gymnasium through final Lyceum. Neo-Byzantine painted illustration: disciplined clear forms, dignified faces, luminous gold and warm earth pigments, deep blue accents, subtle mineral-pigment texture, sophisticated balanced composition. Full bleed, no border, no written words, no labels, no lettering, no watermark. Carefully distinguish all people and limbs. The scene must communicate the specified lesson concept and stand alone at small screen size. Use case: stylized-concept. Main request: a symbolic council chamber of universal communion and welcome. A modest round wooden discussion table with seven empty stools arranged around it, one unobstructed empty place toward the viewer inviting entry. Behind the table an open stone doorway leads toward a luminous horizon. The room is calm and dignified, no people. Wide interior composition, table and doorway are both clear, modest ancient Mediterranean architectural vocabulary. Light touches all seats equally. Convey communion of persons, hospitality and a place for the other. No modern conference equipment, no thrones, no national emblems, no text, no ornate royal spectacle.",
+      "sha256": "1d3d395848c54980028657b02280f5559244868dd5ab213d1e02a13ef29e2926",
+      "bytes": 2845564,
+      "mediaId": "IMG-079",
+      "remoteSha256Verified": true
+    }
+  ],
+  "qualityReview": {
+    "abrahamSarah": "Διακριτές μορφές Αβραάμ και Σάρρας, πορεία και ορίζοντας υποσχέσεως.",
+    "apostolicCouncil": "Διορθώθηκε η αναχρονιστική αρχιτεκτονική του βάθους. Διατηρήθηκαν οι μορφές και ο διάλογος.",
+    "transfiguration": "Έξι διακριτές μορφές: Χριστός, Μωυσής με πλάκες, Ηλίας, τρεις Απόστολοι. Η εικονογραφική διάταξη επαληθεύτηκε.",
+    "rooms": "Αίθουσα Πληρώσεως με ειλητάρια και ανοιχτό βιβλίο· αίθουσα Οικουμένης με κοινό τραπέζι και ανοιχτή είσοδο."
+  },
+  "editPrompts": [
+    {
+      "asset": "02-apostolic-council",
+      "prompt": "Replace only the later domed skyline monument with modest flat-roofed first-century Jerusalem limestone buildings; preserve foreground."
+    },
+    {
+      "asset": "03-transfiguration",
+      "prompt": "Remove small halo inscriptions only; preserve all figures and composition.",
+      "outcome": "Οι μικρές παραδοσιακές σημάνσεις του φωτοστεφάνου διατηρήθηκαν από το μοντέλο. Η σύνθεση παραμένει αναγνώσιμη."
+    }
+  ],
+  "approvalNote": "Ο χρήστης ενέκρινε τις εικόνες και τη συνέχεια προς δημοσίευση. Θα δώσει ο ίδιος τα δημόσια URL για καταχώριση στη Media Library."
+}
