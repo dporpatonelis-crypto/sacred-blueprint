@@ -54,8 +54,9 @@
           "lat": 28.539,
           "lng": 33.975,
           "zoom": 6,
-          "img": "",
-          "slides": ""
+          "img": "https://i.ibb.co/QFtsqRBq/file-0000000074d081fb833a67a8aff438c0.png",
+          "slides": "",
+          "imageAlt": "Ο Μωυσής ενώπιον της καιόμενης βάτου, ως εικαστική αναφορά στην κλήση και τη θεοφάνεια."
         },
         {
           "id": "t3",
@@ -66,8 +67,10 @@
           "lat": 31.778,
           "lng": 35.235,
           "zoom": 7,
-          "img": "",
-          "slides": ""
+          "img": "https://i.ibb.co/JW30jQ8t/Slide-04.png",
+          "slides": "",
+          "imageAlt": "Οι Προφήτες προαναγγέλλουν την αναμενόμενη σωτηρία και τη σάρκωση.",
+          "imageFit": "contain"
         },
         {
           "id": "t4",
@@ -78,8 +81,10 @@
           "lat": 31.705,
           "lng": 35.202,
           "zoom": 7,
-          "img": "",
-          "slides": ""
+          "img": "https://i.ibb.co/bgDPJHS1/Slide-05.png",
+          "slides": "",
+          "imageAlt": "Ο Χριστός και οι σταθμοί του σωτηριώδους έργου Του: Γέννηση, Διδασκαλία, Θαύματα, Πάθος και Ανάσταση.",
+          "imageFit": "contain"
         },
         {
           "id": "t5",
@@ -90,8 +95,9 @@
           "lat": 31.778,
           "lng": 35.235,
           "zoom": 8,
-          "img": "",
-          "slides": ""
+          "img": "https://i.ibb.co/SD7zfYdm/file-000000006a0c81f5aea827f8ae91f68a.png",
+          "slides": "",
+          "imageAlt": "Συμβολική απεικόνιση της Εκκλησίας, της κοινωνίας προσώπων και της μεταμορφώσεως εν Αγίω Πνεύματι."
         },
         {
           "id": "t6",
@@ -124,6 +130,38 @@
           "score": 100,
           "selected": true,
           "reason": "Εγκεκριμένη εικόνα που δημιουργήθηκε ειδικά για αυτόν τον στόχο."
+        },
+        {
+          "target": "[1].img",
+          "mediaId": "IMG-065",
+          "url": "https://i.ibb.co/QFtsqRBq/file-0000000074d081fb833a67a8aff438c0.png",
+          "title": "Μωυσής και η καιόμενη βάτος",
+          "selected": true,
+          "reason": "Συνδέει τον σταθμό του Μωυσή με την κλήση και την αποκάλυψη στο Σινά. Απεικονίζει την καιόμενη βάτο, όχι την παράδοση των πλακών."
+        },
+        {
+          "target": "[2].img",
+          "mediaId": "IMG-050",
+          "url": "https://i.ibb.co/JW30jQ8t/Slide-04.png",
+          "title": "Οι Προφήτες ως Διερμηνείς",
+          "selected": true,
+          "reason": "Ελέγχθηκε οπτικά: η διαφάνεια παρουσιάζει τους Προφήτες και τη μεσσιανική προσδοκία."
+        },
+        {
+          "target": "[3].img",
+          "mediaId": "IMG-051",
+          "url": "https://i.ibb.co/bgDPJHS1/Slide-05.png",
+          "title": "Η Έλευση του Σωτήρα",
+          "selected": true,
+          "reason": "Ελέγχθηκε οπτικά: παρουσιάζει την Ενανθρώπηση και το σωτηριώδες έργο του Χριστού."
+        },
+        {
+          "target": "[4].img",
+          "mediaId": "IMG-066",
+          "url": "https://i.ibb.co/SD7zfYdm/file-000000006a0c81f5aea827f8ae91f68a.png",
+          "title": "Εκκλησία, Ανάσταση και κοινωνία",
+          "selected": true,
+          "reason": "Η κοινωνία προσώπων και η μεταμόρφωση φωτίζουν την ενότητα εν Αγίω Πνεύματι. Συμβολική εικόνα, όχι ιστορική απεικόνιση του γεγονότος της Πεντηκοστής."
         }
       ],
       "manualMedia": [],
@@ -159,7 +197,8 @@
       ],
       "warnings": [
         "Οι πατριαρχικές και μωσαϊκές χρονολογίες αποτελούν ενδεικτικές παραδοσιακές τοποθετήσεις. Οι γεωγραφικές θέσεις είναι ενδεικτικές.",
-        "Η φόρτωση dataUrl και οι περιορισμένες διορθώσεις runtime ελέγχθηκαν τοπικά, μεταφέρθηκαν στα app repos και επαληθεύτηκαν με νέα ανάγνωση."
+        "Η φόρτωση dataUrl και οι περιορισμένες διορθώσεις runtime ελέγχθηκαν τοπικά, μεταφέρθηκαν στα app repos και επαληθεύτηκαν με νέα ανάγνωση.",
+        "Η εικόνα της βάτου παραπέμπει στην κλήση του Μωυσή και η εικόνα IMG-066 στην κοινωνία εν Αγίω Πνεύματι· τα imageAlt περιγράφουν με ακρίβεια τις εικαστικές αναφορές."
       ]
     },
     "investigation": {
@@ -1232,30 +1271,6 @@
   },
   "validations": [
     {
-      "draftHash": "b90792eb74a7d234df56d3fc806732f54d1bbe27bdb24679c56d4f50492a82af",
-      "appId": "timeline",
-      "timestamp": "2026-10-03T05:59:04.982Z",
-      "status": "passed",
-      "expected": {
-        "runtimeSource": "local",
-        "directory": "/Users/dimitriosporpatonelis/apps/Map-Timeline"
-      },
-      "observed": {
-        "eventCount": 6,
-        "firstEvent": "Η κλήση του Αβραάμ και η οικουμενική υπόσχεση",
-        "lastEvent": "Αποστολική Σύνοδος: η οικουμενική κοινωνία",
-        "mapMarkerVisible": true,
-        "imageWidths": [
-          1672,
-          1672
-        ],
-        "lessonMatches": true
-      },
-      "warnings": [],
-      "consoleErrors": [],
-      "previewUrl": "http://127.0.0.1:43131/?dataUrl=http%3A%2F%2F127.0.0.1%3A43117%2Fpreview%2Fb90792eb74a7d234df56d3fc806732f54d1bbe27bdb24679c56d4f50492a82af%2Ftimeline.json"
-    },
-    {
       "draftHash": "3668448daae2cf6a96f2245ff7c34cc414e4bc3c82c0c0d2263f31552b666299",
       "appId": "investigation",
       "timestamp": "2026-10-03T05:59:04.999Z",
@@ -1327,6 +1342,37 @@
       "warnings": [],
       "consoleErrors": [],
       "previewUrl": "http://127.0.0.1:43133/?dataUrl=http%3A%2F%2F127.0.0.1%3A43117%2Fpreview%2Fba449322d7d14548cb6deb930cc250ef7d07c5bee504b3a0d7945b6a353325c1%2Fmindpalace.json"
+    },
+    {
+      "draftHash": "d9fadd97f0732f11ff54a60baade8cb31573e0de1a07404673ba463c24a22a8e",
+      "appId": "timeline",
+      "timestamp": "2026-10-04T09:10:23.476Z",
+      "status": "passed",
+      "expected": {},
+      "observed": {
+        "events": 6,
+        "images": 6,
+        "naturalWidths": [
+          1672,
+          1672,
+          1376,
+          1376,
+          1672,
+          1672
+        ],
+        "runtime": {
+          "source": "local",
+          "name": "Timeline Explorer",
+          "directory": "/Users/dimitriosporpatonelis/apps/Map-Timeline",
+          "route": "/",
+          "port": 43131
+        },
+        "emptyImageFields": 0,
+        "slidesContain": true
+      },
+      "warnings": [],
+      "consoleErrors": [],
+      "previewUrl": "http://127.0.0.1:43131/?dataUrl=http%3A%2F%2F127.0.0.1%3A43117%2Fpreview%2Fd9fadd97f0732f11ff54a60baade8cb31573e0de1a07404673ba463c24a22a8e%2Ftimeline.json"
     }
   ],
   "quality": {
@@ -1350,8 +1396,8 @@
       "criticalIssues": 0,
       "warningIssues": 0
     },
-    "evaluatedAt": "2026-10-03T06:09:46.883Z"
+    "evaluatedAt": "2026-10-04T09:10:23.498Z"
   },
   "createdAt": "2026-10-02T17:53:11.075Z",
-  "updatedAt": "2026-10-03T06:09:46.881Z"
+  "updatedAt": "2026-10-04T09:10:23.490Z"
 }
