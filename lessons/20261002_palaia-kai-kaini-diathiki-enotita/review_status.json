@@ -43,7 +43,7 @@
     "history3d",
     "sculpture"
   ],
-  "published": false,
+  "published": true,
   "imageReview": {
     "status": "approved-urls-registered",
     "assetCount": 5,
@@ -54,5 +54,18 @@
   "publicationHash": "85153cb579ab9899ecc550999253175f9f0bedf1a048758fa7cee91a27ae8a9b",
   "localValidation": "passed-all-four",
   "publicationReview": "/Users/dimitriosporpatonelis/sacred-blueprint/lessons/20261002_palaia-kai-kaini-diathiki-enotita/publication-review.md",
-  "runtimeDeployment": "verified-all-four-repos"
+  "runtimeDeployment": "verified-all-four-repos",
+  "publicationCommit": "4374c34a252130c5249be03b41ecff0d2cf04387",
+  "publicationDistribution": "success",
+  "timelineMediaFix": {
+    "date": "2026-10-04",
+    "authorization": "explicit-user-request-to-correct-published-timeline-images",
+    "commit": "efaa2bf61b2d8e5d1b86e278d347e2b895ad72c8",
+    "runtimeCommit": "c132bfa017238630bfb74d7492c779d41c30413c",
+    "masterSha256": "c133e321d6c56006fe0f1226ec89472d5f8d2c1206da3fa04426e3047f7b3020",
+    "localValidation": "passed-six-images",
+    "publishedBrowserValidation": "passed-six-images",
+    "distributionRun": 37191327280,
+    "distributionConclusion": "success"
+  }
 }
